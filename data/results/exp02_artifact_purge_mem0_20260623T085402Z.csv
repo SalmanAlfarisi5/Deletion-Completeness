@@ -1,0 +1,13 @@
+fact_id,category,value_rows_before,residual_before,residual_naive,residual_artifact_aware,extra_artifacts_purged
+F001,personal_contact,2,1.0,1.0,0.0,1
+F002,medical,4,1.0,1.0,0.0,3
+F003,medical,3,1.0,1.0,0.0,2
+F004,financial,2,1.0,1.0,0.0,1
+F005,personal_contact,3,1.0,1.0,0.0,2
+F006,preference,2,1.0,1.0,0.0,1
+F007,location,2,1.0,1.0,0.0,1
+F008,personal_contact,2,1.0,1.0,0.0,1
+F009,medical,2,1.0,1.0,0.0,1
+F010,financial,1,1.0,0.0,0.0,0
+F011,preference,2,1.0,1.0,0.0,1
+F012,location,1,1.0,0.0,0.0,0

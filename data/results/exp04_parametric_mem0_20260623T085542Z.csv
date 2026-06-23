@@ -1,0 +1,7 @@
+fact_id,basis,category,exact_before,rederiv_before,exact_after_purge,rederiv_after_purge,parametric_rho,exact_after_codelete,rederiv_after_codelete,final_recoverability,status,collateral_k
+F040,stored,financial,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,COMPLETE,2
+F041,stored+world,personal_contact,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,COMPLETE,1
+F042,stored+world,medical,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,COMPLETE,2
+F043,stored+world,location,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,COMPLETE,2
+F044,stored+world,financial,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,COMPLETE,2
+F045,stored+world,preference,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,COMPLETE,2

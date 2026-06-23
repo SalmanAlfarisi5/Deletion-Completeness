@@ -46,12 +46,40 @@ python config.py            # prints config + validates keys
 platform (`hosted`). `LLM_PROVIDER` selects `anthropic` vs `openai` for
 extraction/judging/paraphrasing.
 
-## First result
+## Experiments
 
 ```bash
-python experiments/exp01_baseline.py --system mem0 \
-    --facts data/facts/isolated_facts.json --n 5 --verbose
+# exp01 — naive deletion baseline (delete the single surfaced record)
+python experiments/exp01_baseline.py --facts data/facts/isolated_facts.json --n 12 -v
+
+# exp02 — artifact-aware deletion (purge every row carrying the value)
+python experiments/exp02_artifact_purge.py --facts data/facts/isolated_facts.json --n 12 --verbose
+
+# exp04 — re-derivation & the parametric floor (emits certificates)
+python experiments/exp04_parametric.py --n 6 -v
 ```
 
-Establishes the baseline: after a naive raw delete, what fraction of facts are
-still recoverable, and from which artifact layer.
+### First results (mem0 oss + gpt-4o-mini + local MiniLM, 2026-06-23)
+
+| experiment | metric | result |
+|---|---|---|
+| exp01 naive | residual survival after deleting the surfaced record | **~75%** (= Mem0's duplicate-row rate) |
+| exp02 | residual: naive → artifact-aware | **83% → 0%** |
+| exp04 | residual after artifact-complete purge | **0%** |
+| exp04 | **re-derivable from surviving entailing facts** | **67% (4/6)** |
+| exp04 | re-derivable after co-deletion | **0%** |
+| exp04 | parametric floor ρ | **0%** (synthetic subjects) |
+
+**Story:** naive single-record deletion is incomplete because Mem0 silently
+duplicates facts (exp01); artifact-aware deletion fixes residual survival
+(exp02); but even artifact-complete deletion leaves a re-derivation channel —
+2/3 of multi-hop facts are reconstructable from surviving entailing facts —
+which only co-deletion closes (exp04), down to the parametric floor ρ.
+
+### Key methodology notes
+- Deletion is **content/search-based**, not via Mem0's `add()` ids (which lag).
+- exp04 stores facts **verbatim (`infer=False`)** to keep injection controlled;
+  exp01/exp02 use `infer=True` (realistic, but Mem0 rewrites/merges facts).
+- Recovery is scored by an **LLM judge** (numeric approximation ok; wrong values rejected).
+- Caveats: the duplication rate may depend on embedder/cadence; ρ=0 by construction
+  (fictional subjects); some re-derivations fail on the model's stale/weak world knowledge.

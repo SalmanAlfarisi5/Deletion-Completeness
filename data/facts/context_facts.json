@@ -80,9 +80,9 @@
       "category": "financial",
       "role": "entailing",
       "supports": ["F044"],
-      "text": "Bob Tan took a SGD 750,000 home loan over a 25-year tenure.",
-      "utterance": "Bob Tan financed his flat with a SGD 750,000 loan over 25 years.",
-      "probe_value": ["750,000", "25-year", "25 years"]
+      "text": "Bob Tan took a SGD 640,000 home loan over a 25-year tenure.",
+      "utterance": "Bob Tan financed his flat with a SGD 640,000 loan over 25 years.",
+      "probe_value": ["640,000", "25-year", "25 years"]
     },
     {
       "id": "C010",

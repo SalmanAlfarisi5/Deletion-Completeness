@@ -62,6 +62,11 @@ TAU = 0.10               # recoverability threshold below which deletion is "COM
 ENTAILMENT_THRESHOLD = 0.50  # min judge confidence to draw an ENTAILS edge
 N_PARAPHRASES = 5        # paraphrase probe variants per fact
 
+# Settle time between injections. Mem0's add() decides ADD-vs-UPDATE by searching
+# existing memories; without a pause, rapid back-to-back writes race and create
+# duplicate rows (a measurement artifact). 1.5s eliminates it in our setup.
+INJECT_SETTLE_SECONDS = float(os.getenv("INJECT_SETTLE_SECONDS", "1.5"))
+
 # --------------------------------------------------------------------------- #
 # Mem0 (open-source) config — local Chroma + local embedder + chosen LLM.
 # Kept fully local for reproducibility; hosted mode ignores this.

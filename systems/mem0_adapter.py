@@ -27,8 +27,11 @@ class Mem0Adapter(MemorySystemAdapter):
             raise ValueError(f"Unknown MEM0_MODE: {self.mode!r}")
 
     # ---- writes ------------------------------------------------------------
-    def inject_fact(self, user_id: str, conversation: list[dict]) -> dict:
-        return self.client.add(conversation, user_id=user_id)
+    def inject_fact(self, user_id: str, conversation: list[dict],
+                    infer: bool = True) -> dict:
+        # infer=True: Mem0 extracts/consolidates facts (realistic, but rewrites
+        # text). infer=False: store verbatim (controlled experiments).
+        return self.client.add(conversation, user_id=user_id, infer=infer)
 
     def delete_memory(self, user_id: str, memory_id: str) -> bool:
         self.client.delete(memory_id)

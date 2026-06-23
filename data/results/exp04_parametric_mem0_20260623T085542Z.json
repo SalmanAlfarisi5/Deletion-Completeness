@@ -1,0 +1,113 @@
+{
+  "experiment": "exp04_parametric",
+  "timestamp_utc": "20260623T085542Z",
+  "judge_model": "gpt-4o-mini",
+  "seed": 42,
+  "metrics": {
+    "rederiv_after_purge_rate": 0.6666666666666666,
+    "rederiv_after_codelete_rate": 0.0,
+    "parametric_rho_mean": 0.0,
+    "residual_after_purge_rate": 0.0,
+    "certified_complete": 6
+  },
+  "rows": [
+    {
+      "fact_id": "F040",
+      "basis": "stored",
+      "category": "financial",
+      "exact_before": 1.0,
+      "rederiv_before": 1.0,
+      "exact_after_purge": 0.0,
+      "rederiv_after_purge": 1.0,
+      "parametric_rho": 0.0,
+      "exact_after_codelete": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "collateral_k": 2
+    },
+    {
+      "fact_id": "F041",
+      "basis": "stored+world",
+      "category": "personal_contact",
+      "exact_before": 1.0,
+      "rederiv_before": 1.0,
+      "exact_after_purge": 0.0,
+      "rederiv_after_purge": 0.0,
+      "parametric_rho": 0.0,
+      "exact_after_codelete": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "collateral_k": 1
+    },
+    {
+      "fact_id": "F042",
+      "basis": "stored+world",
+      "category": "medical",
+      "exact_before": 1.0,
+      "rederiv_before": 1.0,
+      "exact_after_purge": 0.0,
+      "rederiv_after_purge": 1.0,
+      "parametric_rho": 0.0,
+      "exact_after_codelete": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "collateral_k": 2
+    },
+    {
+      "fact_id": "F043",
+      "basis": "stored+world",
+      "category": "location",
+      "exact_before": 1.0,
+      "rederiv_before": 1.0,
+      "exact_after_purge": 0.0,
+      "rederiv_after_purge": 0.0,
+      "parametric_rho": 0.0,
+      "exact_after_codelete": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "collateral_k": 2
+    },
+    {
+      "fact_id": "F044",
+      "basis": "stored+world",
+      "category": "financial",
+      "exact_before": 1.0,
+      "rederiv_before": 1.0,
+      "exact_after_purge": 0.0,
+      "rederiv_after_purge": 1.0,
+      "parametric_rho": 0.0,
+      "exact_after_codelete": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "collateral_k": 2
+    },
+    {
+      "fact_id": "F045",
+      "basis": "stored+world",
+      "category": "preference",
+      "exact_before": 1.0,
+      "rederiv_before": 1.0,
+      "exact_after_purge": 0.0,
+      "rederiv_after_purge": 1.0,
+      "parametric_rho": 0.0,
+      "exact_after_codelete": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "collateral_k": 2
+    }
+  ],
+  "certificates": [
+    "cert-F040-b8c69f",
+    "cert-F041-4268fe",
+    "cert-F042-9f5767",
+    "cert-F043-2e8865",
+    "cert-F044-a248ef",
+    "cert-F045-6407c2"
+  ]
+}

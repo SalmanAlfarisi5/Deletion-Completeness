@@ -1,3 +1,0 @@
-fact_id,category,type,n_owned_records,raw_deleted_ok,exact_before,exact_after,retr_before,retr_after,residual_layer_after,residual_evidence
-F001,personal_contact,,1,True,1.0,0.0,,,,[]
-F002,medical,,1,True,1.0,0.0,,,,[]

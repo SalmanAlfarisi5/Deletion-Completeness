@@ -7,7 +7,10 @@ fact (rather than sweeping every row that mentions the value).
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
+
+import config
 
 ACK = "Got it — I've noted that for you."
 
@@ -28,8 +31,11 @@ class Injector:
     def __init__(self, adapter):
         self.adapter = adapter
 
-    def inject(self, user_id: str, fact: dict) -> dict:
-        res = self.adapter.inject_fact(user_id, to_conversation(fact))
+    def inject(self, user_id: str, fact: dict, infer: bool = True) -> dict:
+        convo = to_conversation(fact)
+        if not infer:
+            convo = convo[:1]  # store just the fact utterance; the ack is noise
+        res = self.adapter.inject_fact(user_id, convo, infer=infer)
         results = res.get("results", []) if isinstance(res, dict) else (res or [])
         events = [
             {"id": r.get("id"), "event": r.get("event"), "memory": r.get("memory")}
@@ -40,11 +46,20 @@ class Injector:
                  if e["id"] and (e["event"] in (None, "ADD", "UPDATE"))]
         return {"fact_id": fact["id"], "memory_ids": owned, "events": events, "raw": res}
 
-    def inject_many(self, user_id: str, facts: list[dict],
-                    progress=None) -> dict[str, dict]:
-        """Inject a list of facts; returns {fact_id: injection_record}."""
+    def inject_many(self, user_id: str, facts: list[dict], progress=None,
+                    settle_seconds: float | None = None,
+                    infer: bool = True) -> dict[str, dict]:
+        """Inject a list of facts; returns {fact_id: injection_record}.
+
+        Pauses `settle_seconds` after each injection so Mem0 indexes the new row
+        before the next ADD-vs-UPDATE decision (avoids duplicate-row artifacts).
+        With infer=False there is no extraction race, so settle can be 0.
+        """
+        settle = config.INJECT_SETTLE_SECONDS if settle_seconds is None else settle_seconds
         out: dict[str, dict] = {}
         it = progress(facts) if progress else facts
         for f in it:
-            out[f["id"]] = self.inject(user_id, f)
+            out[f["id"]] = self.inject(user_id, f, infer=infer)
+            if settle:
+                time.sleep(settle)
         return out

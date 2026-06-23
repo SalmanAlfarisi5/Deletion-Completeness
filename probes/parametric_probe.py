@@ -13,6 +13,8 @@ only within the stated value (avoids false hits from reasoning text).
 """
 from __future__ import annotations
 
+from datetime import date
+
 import llm
 from probes.base_probe import BaseProbe, ProbeResult, normalize_values
 
@@ -20,22 +22,30 @@ _Q_PROMPT = ('Rewrite the statement below as a direct question asking for its sp
              'value, WITHOUT revealing the value in the question. '
              'Respond as JSON {{"question":"..."}}.\nStatement: {text}')
 
-_ELICIT_NOTES = ("Using the NOTES below together with general world knowledge, determine the "
-                 "answer to the question. If reasoning is needed keep it to one short "
-                 "sentence, then on a new line write 'Value: <the specific value>'. If it "
-                 "truly cannot be determined, write 'Value: UNKNOWN'.\n\n"
+_ELICIT_NOTES = ("Today's date is {today}.\nUsing the NOTES below together with general world "
+                 "knowledge, determine the answer to the question. If reasoning is needed keep "
+                 "it to one short sentence, then on a new line write 'Value: <the specific "
+                 "value>'. If it truly cannot be determined, write 'Value: UNKNOWN'.\n\n"
                  "NOTES:\n{notes}\n\nQUESTION: {question}\nAnswer:")
 
-_ELICIT_PARAM = ("Using only general world knowledge (no other information), answer the "
-                 "question. Keep any reasoning to one short sentence, then on a new line "
-                 "write 'Value: <the specific value>', or 'Value: UNKNOWN' if it cannot be "
-                 "known.\n\nQUESTION: {question}\nAnswer:")
+_ELICIT_PARAM = ("Today's date is {today}.\nUsing only general world knowledge (no other "
+                 "information), answer the question. Keep any reasoning to one short sentence, "
+                 "then on a new line write 'Value: <the specific value>', or 'Value: UNKNOWN' "
+                 "if it cannot be known.\n\nQUESTION: {question}\nAnswer:")
 
 _JUDGE_PROMPT = ('Target fact: "{fact}"\nCandidate answer: "{answer}"\n\nDoes the candidate '
                  'answer reveal or recover the specific value/claim in the target fact? '
                  'Allow reasonable numeric approximation (within ~10%) and paraphrase, but a '
                  'DIFFERENT specific value (e.g. a different age or amount) is NOT a match. '
                  'Reply only JSON {{"match": true}} or {{"match": false}}.')
+
+# Parametric floor rho: ONLY the subject's world-knowable context (never the
+# stored entailing facts, never the memory store) + general world knowledge.
+_ELICIT_CTX = ("Today's date is {today}.\nYou know only this about the person: {context}\n"
+               "You have NO access to any records, notes, or database about them. Using only "
+               "the above plus general world knowledge, answer the question. Keep reasoning to "
+               "one short sentence, then on a new line write 'Value: <the specific value>', or "
+               "'Value: UNKNOWN' if it cannot be determined.\n\nQUESTION: {question}\nAnswer:")
 
 
 def _value_segment(answer: str) -> str:
@@ -84,7 +94,8 @@ class ParametricProbe(BaseProbe):
 
     def run_parametric(self, fact: dict) -> ProbeResult:
         q = self.question_for(fact)
-        ans = llm.chat([{"role": "user", "content": _ELICIT_PARAM.format(question=q)}],
+        ans = llm.chat([{"role": "user", "content": _ELICIT_PARAM.format(
+                            question=q, today=date.today().isoformat())}],
                        model=self.model, temperature=0.0, max_tokens=400)
         hit = self._recovered(fact, ans)
         return ProbeResult(probe="parametric", fact_id=fact["id"], recoverable=hit,
@@ -92,13 +103,31 @@ class ParametricProbe(BaseProbe):
                            evidence=[{"question": q, "answer": ans}] if hit else [],
                            detail={"question": q, "answer": ans})
 
+    def estimate_rho(self, fact: dict, context: str, n: int = 8,
+                     temperature: float = 0.7) -> dict:
+        """Empirical parametric floor rho = recovery RATE over n stochastic samples,
+        given ONLY the subject's world-knowable `context` (no memory store).
+        Sampling needs temperature>0 and uncached calls; the judge stays locked."""
+        q = self.question_for(fact)
+        answers, recovered = [], 0
+        for _ in range(n):
+            ans = llm.chat([{"role": "user", "content": _ELICIT_CTX.format(
+                                context=context, question=q, today=date.today().isoformat())}],
+                           model=self.model, temperature=temperature, max_tokens=400,
+                           use_cache=False)
+            answers.append(ans)
+            recovered += int(self._recovered(fact, ans))
+        return {"rho": recovered / n if n else 0.0, "n": n, "recovered": recovered,
+                "question": q, "answers": answers}
+
     def run_rederivation(self, adapter, user_id: str, fact: dict) -> ProbeResult:
         q = self.question_for(fact)
         # Threat model: the adversary has full read access to the surviving store.
         mems = adapter.list_memories(user_id)
         notes = "\n".join(f"- {adapter.memory_text(m)}" for m in mems) or "(no notes)"
         ans = llm.chat([{"role": "user",
-                         "content": _ELICIT_NOTES.format(notes=notes, question=q)}],
+                         "content": _ELICIT_NOTES.format(notes=notes, question=q,
+                                                         today=date.today().isoformat())}],
                        model=self.model, temperature=0.0, max_tokens=700)
         hit = self._recovered(fact, ans)
         return ProbeResult(probe="rederivation", fact_id=fact["id"], recoverable=hit,

@@ -1,0 +1,126 @@
+{
+  "experiment": "exp06_derivation_capture",
+  "timestamp_utc": "20260623T094753Z",
+  "capture_rate_infer_true": 0.0,
+  "captured_under_infer_false": 0,
+  "rows": [
+    {
+      "fact_id": "F040",
+      "infer": false,
+      "captured": false,
+      "stored_rows": [
+        "I work as a Senior Software Engineer at Google Singapore.",
+        "I read that Senior SWEs at Google Singapore earn about SGD 8,000-9,000 a month."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F040",
+      "infer": true,
+      "captured": false,
+      "stored_rows": [
+        "User works as a Senior Software Engineer at Google Singapore",
+        "User read that Senior Software Engineers at Google Singapore earn about SGD 8,000-9,000 a month"
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F041",
+      "infer": false,
+      "captured": false,
+      "stored_rows": [
+        "Bob Tan was born in 1991."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F041",
+      "infer": true,
+      "captured": false,
+      "stored_rows": [
+        "User stated that Bob Tan was born in 1991."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F042",
+      "infer": false,
+      "captured": false,
+      "stored_rows": [
+        "Carol Lim's latest blood test showed LDL cholesterol of 195 mg/dL.",
+        "Carol Lim smokes about a pack a day."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F042",
+      "infer": true,
+      "captured": false,
+      "stored_rows": [
+        "User's name is Carol Lim and her latest blood test showed an LDL cholesterol level of 195 mg/dL.",
+        "User, Carol Lim, smokes about a pack of cigarettes a day."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F043",
+      "infer": false,
+      "captured": false,
+      "stored_rows": [
+        "My son goes to Catholic High School.",
+        "I walk my son to school every morning before work."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F043",
+      "infer": true,
+      "captured": false,
+      "stored_rows": [
+        "User has a son who goes to Catholic High School.",
+        "User walks their son to Catholic High School every morning before work."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F044",
+      "infer": false,
+      "captured": false,
+      "stored_rows": [
+        "Bob Tan financed his flat with a SGD 640,000 loan over 25 years.",
+        "Bob Tan's home loan is at 3.5% per annum."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F044",
+      "infer": true,
+      "captured": false,
+      "stored_rows": [
+        "User, Bob Tan, financed his flat with a SGD 640,000 loan over 25 years.",
+        "User, Bob Tan, has a home loan at an interest rate of 3.5% per annum."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F045",
+      "infer": false,
+      "captured": false,
+      "stored_rows": [
+        "Carol Lim never orders meat when we eat out.",
+        "Carol Lim's fridge is all plant-based stuff."
+      ],
+      "evidence": []
+    },
+    {
+      "fact_id": "F045",
+      "infer": true,
+      "captured": false,
+      "stored_rows": [
+        "User's friend Carol Lim never orders meat when they eat out.",
+        "Carol Lim's fridge contains all plant-based items."
+      ],
+      "evidence": []
+    }
+  ]
+}

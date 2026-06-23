@@ -1,0 +1,431 @@
+{
+  "experiment": "exp07_rho_gradient",
+  "timestamp_utc": "20260623T103708Z",
+  "tau": 0.1,
+  "n_samples": 6,
+  "reasoners": [
+    "gpt-4o-mini-2024-07-18",
+    "gpt-4o-2024-08-06"
+  ],
+  "rho_by_tier": {
+    "gpt-4o-mini-2024-07-18": {
+      "low": 0.0,
+      "mid": 0.067,
+      "high": 0.833
+    },
+    "gpt-4o-2024-08-06": {
+      "low": 0.0,
+      "mid": 0.5,
+      "high": 1.0
+    }
+  },
+  "rho_rows": [
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R01",
+      "tier": "low",
+      "subject": "Encik Rahim",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R02",
+      "tier": "low",
+      "subject": "Wei Lin",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R03",
+      "tier": "low",
+      "subject": "Mr Devan",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R04",
+      "tier": "low",
+      "subject": "Siti",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R05",
+      "tier": "low",
+      "subject": "Jun Hao",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R06",
+      "tier": "mid",
+      "subject": "Pak Joko",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R07",
+      "tier": "mid",
+      "subject": "Mei",
+      "rho": 0.3333333333333333,
+      "recovered": 2,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R08",
+      "tier": "mid",
+      "subject": "the Lim family",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R09",
+      "tier": "mid",
+      "subject": "Ravi",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R10",
+      "tier": "mid",
+      "subject": "Mrs Koh",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R11",
+      "tier": "high",
+      "subject": "Ms Chua",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R12",
+      "tier": "high",
+      "subject": "Dr Lina Halim",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R13",
+      "tier": "high",
+      "subject": "Hafiz",
+      "rho": 0.3333333333333333,
+      "recovered": 2,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R14",
+      "tier": "high",
+      "subject": "Daniel",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "R15",
+      "tier": "high",
+      "subject": "Capt Soh",
+      "rho": 0.8333333333333334,
+      "recovered": 5,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R01",
+      "tier": "low",
+      "subject": "Encik Rahim",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R02",
+      "tier": "low",
+      "subject": "Wei Lin",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R03",
+      "tier": "low",
+      "subject": "Mr Devan",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R04",
+      "tier": "low",
+      "subject": "Siti",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R05",
+      "tier": "low",
+      "subject": "Jun Hao",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R06",
+      "tier": "mid",
+      "subject": "Pak Joko",
+      "rho": 0.16666666666666666,
+      "recovered": 1,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R07",
+      "tier": "mid",
+      "subject": "Mei",
+      "rho": 0.6666666666666666,
+      "recovered": 4,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R08",
+      "tier": "mid",
+      "subject": "the Lim family",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R09",
+      "tier": "mid",
+      "subject": "Ravi",
+      "rho": 0.0,
+      "recovered": 0,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R10",
+      "tier": "mid",
+      "subject": "Mrs Koh",
+      "rho": 0.6666666666666666,
+      "recovered": 4,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R11",
+      "tier": "high",
+      "subject": "Ms Chua",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R12",
+      "tier": "high",
+      "subject": "Dr Lina Halim",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R13",
+      "tier": "high",
+      "subject": "Hafiz",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R14",
+      "tier": "high",
+      "subject": "Daniel",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "R15",
+      "tier": "high",
+      "subject": "Capt Soh",
+      "rho": 1.0,
+      "recovered": 6,
+      "n": 6
+    }
+  ],
+  "certificates": [
+    {
+      "fact_id": "R01",
+      "tier": "low",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R02",
+      "tier": "low",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R03",
+      "tier": "low",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R04",
+      "tier": "low",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R05",
+      "tier": "low",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R06",
+      "tier": "mid",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R07",
+      "tier": "mid",
+      "rho": 0.333,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.333,
+      "status": "PARTIAL",
+      "certified_complete": false
+    },
+    {
+      "fact_id": "R08",
+      "tier": "mid",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R09",
+      "tier": "mid",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R10",
+      "tier": "mid",
+      "rho": 0.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.0,
+      "status": "COMPLETE",
+      "certified_complete": true
+    },
+    {
+      "fact_id": "R11",
+      "tier": "high",
+      "rho": 1.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 1.0,
+      "status": "INCOMPLETE",
+      "certified_complete": false
+    },
+    {
+      "fact_id": "R12",
+      "tier": "high",
+      "rho": 1.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 1.0,
+      "status": "INCOMPLETE",
+      "certified_complete": false
+    },
+    {
+      "fact_id": "R13",
+      "tier": "high",
+      "rho": 0.333,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.333,
+      "status": "PARTIAL",
+      "certified_complete": false
+    },
+    {
+      "fact_id": "R14",
+      "tier": "high",
+      "rho": 1.0,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 1.0,
+      "status": "INCOMPLETE",
+      "certified_complete": false
+    },
+    {
+      "fact_id": "R15",
+      "tier": "high",
+      "rho": 0.833,
+      "residual_after_delete": 0.0,
+      "final_recoverability": 0.833,
+      "status": "INCOMPLETE",
+      "certified_complete": false
+    }
+  ]
+}

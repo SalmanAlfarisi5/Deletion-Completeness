@@ -1,0 +1,13 @@
+reasoner,fact_id,bin,basis,contaminated,residual_survival,rederiv_with_operands,rho,rederiv_after_codelete,final_recoverability,collateral_k
+gpt-4o-mini-2024-07-18,F040,1,stored,False,0.0,1.0,0.0,0.0,0.0,2
+gpt-4o-mini-2024-07-18,F041,2,stored+world,False,0.0,1.0,0.0,0.0,0.0,1
+gpt-4o-mini-2024-07-18,F042,2,stored+world,False,0.0,1.0,0.0,0.0,0.0,2
+gpt-4o-mini-2024-07-18,F043,2,stored+world,False,0.0,0.0,0.0,0.0,0.0,2
+gpt-4o-mini-2024-07-18,F044,2,stored+world,False,0.0,1.0,0.0,0.0,0.0,2
+gpt-4o-mini-2024-07-18,F045,2,stored+world,False,0.0,1.0,0.0,0.0,0.0,2
+gpt-4o-2024-08-06,F040,1,stored,False,0.0,1.0,0.0,0.0,0.0,2
+gpt-4o-2024-08-06,F041,2,stored+world,False,0.0,1.0,0.0,0.0,0.0,1
+gpt-4o-2024-08-06,F042,2,stored+world,False,0.0,1.0,0.0,0.0,0.0,2
+gpt-4o-2024-08-06,F043,2,stored+world,False,0.0,0.0,0.0,0.0,0.0,2
+gpt-4o-2024-08-06,F044,2,stored+world,False,0.0,1.0,0.0,0.0,0.0,2
+gpt-4o-2024-08-06,F045,2,stored+world,False,0.0,1.0,0.0,0.0,0.0,2

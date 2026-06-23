@@ -13,12 +13,15 @@ from systems.base import MemorySystemAdapter
 class Mem0Adapter(MemorySystemAdapter):
     name = "mem0"
 
-    def __init__(self) -> None:
+    def __init__(self, embedder: str = "huggingface",
+                 collection: str = "deletion_completeness") -> None:
         self.mode = config.MEM0_MODE
+        self.embedder = embedder
         if self.mode == "oss":
             from mem0 import Memory
 
-            self.client = Memory.from_config(config.mem0_oss_config())
+            self.client = Memory.from_config(
+                config.mem0_oss_config(embedder=embedder, collection=collection))
         elif self.mode == "hosted":
             from mem0 import MemoryClient
 

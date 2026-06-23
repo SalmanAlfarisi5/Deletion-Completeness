@@ -39,6 +39,7 @@ class DeletionCertificate(BaseModel):
 
     # ---- Validation --------------------------------------------------------
     human_judge_agreement: float | None = None  # Cohen's kappa, if computed
+    judge_recall: float | None = None           # recovery-judge recall (sensitivity)
     completeness_certified: bool = False
 
     def to_text(self) -> str:
@@ -71,5 +72,8 @@ class DeletionCertificate(BaseModel):
         ]
         if self.human_judge_agreement is not None:
             lines.append(f"  Judge kappa    : {self.human_judge_agreement:.3f}")
+        if self.completeness_certified and self.judge_recall is not None:
+            lines.append(f"  CAVEAT         : COMPLETE is modulo recovery-judge recall "
+                         f"~{self.judge_recall:.0%}; a missed recovery is possible.")
         lines.append("=" * 64)
         return "\n".join(lines)

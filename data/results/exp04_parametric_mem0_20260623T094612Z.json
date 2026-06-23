@@ -1,0 +1,210 @@
+{
+  "experiment": "exp04_parametric",
+  "timestamp_utc": "20260623T094612Z",
+  "design": "operands-only control",
+  "reasoners": [
+    "gpt-4o-mini-2024-07-18",
+    "gpt-4o-2024-08-06"
+  ],
+  "judge_model": "gpt-4o-mini-2024-07-18",
+  "per_reasoner_bin": {
+    "gpt-4o-2024-08-06": {
+      "bin1": {
+        "n": 1,
+        "rederiv_with_operands": 1.0,
+        "rederiv_after_codelete": 0.0,
+        "rho": 0.0,
+        "residual_survival": 0.0
+      },
+      "bin2": {
+        "n": 5,
+        "rederiv_with_operands": 0.8,
+        "rederiv_after_codelete": 0.0,
+        "rho": 0.0,
+        "residual_survival": 0.0
+      }
+    },
+    "gpt-4o-mini-2024-07-18": {
+      "bin1": {
+        "n": 1,
+        "rederiv_with_operands": 1.0,
+        "rederiv_after_codelete": 0.0,
+        "rho": 0.0,
+        "residual_survival": 0.0
+      },
+      "bin2": {
+        "n": 5,
+        "rederiv_with_operands": 0.8,
+        "rederiv_after_codelete": 0.0,
+        "rho": 0.0,
+        "residual_survival": 0.0
+      }
+    }
+  },
+  "rows": [
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "F040",
+      "bin": 1,
+      "basis": "stored",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "F041",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 1
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "F042",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "F043",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 0.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "F044",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-mini-2024-07-18",
+      "fact_id": "F045",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "F040",
+      "bin": 1,
+      "basis": "stored",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "F041",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 1
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "F042",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "F043",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 0.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "F044",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    },
+    {
+      "reasoner": "gpt-4o-2024-08-06",
+      "fact_id": "F045",
+      "bin": 2,
+      "basis": "stored+world",
+      "contaminated": false,
+      "residual_survival": 0.0,
+      "rederiv_with_operands": 1.0,
+      "rho": 0.0,
+      "rederiv_after_codelete": 0.0,
+      "final_recoverability": 0.0,
+      "collateral_k": 2
+    }
+  ],
+  "certificates": [
+    "cert-F040-78c917",
+    "cert-F041-f7a658",
+    "cert-F042-4fb45c",
+    "cert-F043-3412d9",
+    "cert-F044-c65efd",
+    "cert-F045-42254b"
+  ]
+}

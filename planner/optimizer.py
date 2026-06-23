@@ -44,9 +44,15 @@ class GreedyPlanner:
 
     def _purge_value_artifacts(self, user_id: str, fact: dict,
                                exclude: set[str]) -> list[str]:
-        """Delete every surviving memory row that physically contains the value."""
+        """Delete every surviving row containing the target's OWN value.
+
+        Uses the narrow `delete_value` (not the broad recovery `probe_value`) so
+        residual-cleanup does not accidentally remove entailing operands — those
+        are stage-3's job to co-delete.
+        """
         from probes.base_probe import normalize_values
-        values = [v.lower() for v in normalize_values(fact.get("probe_value"))]
+        values = [v.lower() for v in
+                  normalize_values(fact.get("delete_value", fact.get("probe_value")))]
         purged = []
         for m in self.adapter.list_memories(user_id):
             if m.get("id") in exclude:

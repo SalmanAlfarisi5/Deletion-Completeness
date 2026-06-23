@@ -13,6 +13,10 @@ DEFAULT_THREAT_MODEL = (
     "surfaces a ground-truth surface form of the deleted value."
 )
 
+# Recovery-judge recall from evaluation/judge.py (1 - false_reject_rate). A
+# COMPLETE certificate is only "complete modulo" this recall.
+DEFAULT_JUDGE_RECALL = 0.78
+
 
 def make_certificate(*, fact: dict, system: str, residual: float, rederivation: float,
                      rho: float, probe_scores: dict | None = None,
@@ -21,6 +25,7 @@ def make_certificate(*, fact: dict, system: str, residual: float, rederivation: 
                      final_recoverability: float | None = None,
                      threat_model: str | None = None,
                      probe_battery: list | None = None, tau: float | None = None,
+                     judge_recall: float | None = None,
                      system_version: str = "mem0ai-2.0.7") -> DeletionCertificate:
     tau = config.TAU if tau is None else tau
     final = (final_recoverability if final_recoverability is not None
@@ -45,6 +50,7 @@ def make_certificate(*, fact: dict, system: str, residual: float, rederivation: 
         facts_co_deleted=facts_co_deleted or [],
         collateral_k=len(facts_co_deleted or []),
         final_recoverability=final, completeness_certified=certified,
+        judge_recall=DEFAULT_JUDGE_RECALL if judge_recall is None else judge_recall,
     )
 
 

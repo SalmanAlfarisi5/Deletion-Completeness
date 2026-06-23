@@ -44,9 +44,14 @@ MEM0_API_KEY = os.getenv("MEM0_API_KEY", "")
 # --------------------------------------------------------------------------- #
 _DEFAULT_JUDGE = {
     "anthropic": "claude-haiku-4-5-20251001",
-    "openai": "gpt-4o-mini",
+    "openai": "gpt-4o-mini-2024-07-18",   # pinned snapshot — the judge is load-bearing
 }
-JUDGE_MODEL = os.getenv("JUDGE_MODEL", _DEFAULT_JUDGE.get(LLM_PROVIDER, "gpt-4o-mini"))
+JUDGE_MODEL = os.getenv("JUDGE_MODEL", _DEFAULT_JUDGE.get(LLM_PROVIDER, "gpt-4o-mini-2024-07-18"))
+
+# Re-derivation reasoner (the adversary's model) and a SECOND model for
+# reasoner-vs-reasoner and judge-vs-judge agreement checks. Pinned snapshots.
+REASONER_MODEL = os.getenv("REASONER_MODEL", JUDGE_MODEL)
+SECOND_MODEL = os.getenv("SECOND_MODEL", "gpt-4o-2024-08-06")
 
 # Local embedding model — free, runs on the GPU. Used by embedding probes and
 # (optionally) as Mem0's embedder in OSS mode.
@@ -71,30 +76,31 @@ INJECT_SETTLE_SECONDS = float(os.getenv("INJECT_SETTLE_SECONDS", "1.5"))
 # Mem0 (open-source) config — local Chroma + local embedder + chosen LLM.
 # Kept fully local for reproducibility; hosted mode ignores this.
 # --------------------------------------------------------------------------- #
-def mem0_oss_config() -> dict:
-    """Build the config dict for open-source Mem0 (`Memory.from_config`)."""
+def mem0_oss_config(embedder: str = "huggingface",
+                    collection: str = "deletion_completeness") -> dict:
+    """Build the config dict for open-source Mem0 (`Memory.from_config`).
+
+    `embedder` is "huggingface" (local MiniLM, free) or "openai"
+    (text-embedding-3-small). Each embedder uses its own Chroma path so the
+    differing vector dimensions never collide.
+    """
     if LLM_PROVIDER == "anthropic":
-        llm = {
-            "provider": "anthropic",
-            "config": {"model": "claude-haiku-4-5-20251001", "temperature": 0.0},
-        }
+        llm = {"provider": "anthropic",
+               "config": {"model": "claude-haiku-4-5-20251001", "temperature": 0.0}}
     else:
-        llm = {
-            "provider": "openai",
-            "config": {"model": "gpt-4o-mini", "temperature": 0.0},
-        }
+        llm = {"provider": "openai",
+               "config": {"model": "gpt-4o-mini-2024-07-18", "temperature": 0.0}}
+    if embedder == "openai":
+        emb = {"provider": "openai", "config": {"model": "text-embedding-3-small"}}
+    else:
+        emb = {"provider": "huggingface", "config": {"model": EMBED_MODEL}}
     return {
         "llm": llm,
-        "embedder": {
-            "provider": "huggingface",
-            "config": {"model": EMBED_MODEL},
-        },
+        "embedder": emb,
         "vector_store": {
             "provider": "chroma",
-            "config": {
-                "collection_name": "deletion_completeness",
-                "path": str(RESULTS_DIR / "chroma_db"),
-            },
+            "config": {"collection_name": collection,
+                       "path": str(RESULTS_DIR / f"chroma_{embedder}")},
         },
         "version": "v1.1",
     }

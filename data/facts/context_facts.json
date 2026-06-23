@@ -1,0 +1,218 @@
+{
+  "_meta": {
+    "description": "Context facts that live in the memory store but are NOT deletion targets. Two roles: 'entailing' facts are the operands that let a multi-hop target be re-derived (referenced by multi_hop_facts.json -> entailed_by / co_delete_required); 'bystander' facts are innocent and should NEVER be touched by a good planner (they measure collateral damage). All persons are fictional.",
+    "account_owner": "Alice Chen"
+  },
+  "facts": [
+    {
+      "id": "C001",
+      "subject": "Alice Chen",
+      "category": "employment",
+      "role": "entailing",
+      "supports": ["F040"],
+      "text": "Alice Chen is a Senior Software Engineer at Google Singapore.",
+      "utterance": "I work as a Senior Software Engineer at Google Singapore.",
+      "probe_value": ["Senior Software Engineer", "Google Singapore"]
+    },
+    {
+      "id": "C002",
+      "subject": "Google Singapore",
+      "category": "reference",
+      "role": "entailing",
+      "supports": ["F040"],
+      "text": "At Google Singapore, the Senior Software Engineer monthly salary band is SGD 8,000-9,000.",
+      "utterance": "I read that Senior SWEs at Google Singapore earn about SGD 8,000-9,000 a month.",
+      "probe_value": ["8,000-9,000", "8000", "9000"]
+    },
+    {
+      "id": "C003",
+      "subject": "Bob Tan",
+      "category": "personal_contact",
+      "role": "entailing",
+      "supports": ["F041"],
+      "text": "Bob Tan was born in 1991.",
+      "utterance": "Bob Tan was born in 1991.",
+      "probe_value": ["1991"]
+    },
+    {
+      "id": "C005",
+      "subject": "Carol Lim",
+      "category": "medical",
+      "role": "entailing",
+      "supports": ["F042"],
+      "text": "Carol Lim's LDL cholesterol is 195 mg/dL.",
+      "utterance": "Carol Lim's latest blood test showed LDL cholesterol of 195 mg/dL.",
+      "probe_value": ["195", "LDL"]
+    },
+    {
+      "id": "C006",
+      "subject": "Carol Lim",
+      "category": "medical",
+      "role": "entailing",
+      "supports": ["F042"],
+      "text": "Carol Lim is a one-pack-a-day smoker.",
+      "utterance": "Carol Lim smokes about a pack a day.",
+      "probe_value": ["pack a day", "smoker", "smokes"]
+    },
+    {
+      "id": "C007",
+      "subject": "Alice Chen",
+      "category": "location",
+      "role": "entailing",
+      "supports": ["F043"],
+      "text": "Alice Chen's son attends Catholic High School.",
+      "utterance": "My son goes to Catholic High School.",
+      "probe_value": ["Catholic High School"]
+    },
+    {
+      "id": "C008",
+      "subject": "Alice Chen",
+      "category": "location",
+      "role": "entailing",
+      "supports": ["F043"],
+      "text": "Alice Chen walks her son to school every morning.",
+      "utterance": "I walk my son to school every morning before work.",
+      "probe_value": ["walks", "every morning"]
+    },
+    {
+      "id": "C009",
+      "subject": "Bob Tan",
+      "category": "financial",
+      "role": "entailing",
+      "supports": ["F044"],
+      "text": "Bob Tan took a SGD 750,000 home loan over a 25-year tenure.",
+      "utterance": "Bob Tan financed his flat with a SGD 750,000 loan over 25 years.",
+      "probe_value": ["750,000", "25-year", "25 years"]
+    },
+    {
+      "id": "C010",
+      "subject": "Bob Tan",
+      "category": "financial",
+      "role": "entailing",
+      "supports": ["F044"],
+      "text": "Bob Tan's mortgage interest rate is 3.5% per annum.",
+      "utterance": "Bob Tan's home loan is at 3.5% per annum.",
+      "probe_value": ["3.5%", "3.5 percent"]
+    },
+    {
+      "id": "C011",
+      "subject": "Carol Lim",
+      "category": "preference",
+      "role": "entailing",
+      "supports": ["F045"],
+      "text": "Carol Lim never orders meat dishes when eating out.",
+      "utterance": "Carol Lim never orders meat when we eat out.",
+      "probe_value": ["never", "meat"]
+    },
+    {
+      "id": "C012",
+      "subject": "Carol Lim",
+      "category": "preference",
+      "role": "entailing",
+      "supports": ["F045"],
+      "text": "Carol Lim keeps only plant-based products in her fridge.",
+      "utterance": "Carol Lim's fridge is all plant-based stuff.",
+      "probe_value": ["plant-based"]
+    },
+    {
+      "id": "C013",
+      "subject": "Alice Chen",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Alice Chen enjoys hiking at MacRitchie Reservoir on weekends.",
+      "utterance": "I love hiking at MacRitchie Reservoir on weekends.",
+      "probe_value": ["MacRitchie"]
+    },
+    {
+      "id": "C014",
+      "subject": "Bob Tan",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Bob Tan supports Liverpool FC.",
+      "utterance": "Bob Tan is a die-hard Liverpool fan.",
+      "probe_value": ["Liverpool"]
+    },
+    {
+      "id": "C015",
+      "subject": "Carol Lim",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Carol Lim is learning to play the guitar.",
+      "utterance": "Carol Lim recently started learning guitar.",
+      "probe_value": ["guitar"]
+    },
+    {
+      "id": "C016",
+      "subject": "Alice Chen",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Alice Chen's usual coffee order is a flat white.",
+      "utterance": "My usual coffee is a flat white.",
+      "probe_value": ["flat white"]
+    },
+    {
+      "id": "C017",
+      "subject": "Bob Tan",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Bob Tan recently watched the film Dune: Part Two.",
+      "utterance": "Bob Tan just watched Dune: Part Two and loved it.",
+      "probe_value": ["Dune"]
+    },
+    {
+      "id": "C018",
+      "subject": "Carol Lim",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Carol Lim prefers window seats on flights.",
+      "utterance": "Carol Lim always books a window seat when she flies.",
+      "probe_value": ["window seat"]
+    },
+    {
+      "id": "C019",
+      "subject": "Alice Chen",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Alice Chen uses an Android phone.",
+      "utterance": "I'm an Android user.",
+      "probe_value": ["Android"]
+    },
+    {
+      "id": "C020",
+      "subject": "Bob Tan",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Bob Tan goes to the gym on Tuesday and Thursday evenings.",
+      "utterance": "Bob Tan hits the gym Tuesday and Thursday evenings.",
+      "probe_value": ["Tuesday", "Thursday", "gym"]
+    },
+    {
+      "id": "C021",
+      "subject": "Carol Lim",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Carol Lim is planning a trip to Japan in December.",
+      "utterance": "Carol Lim is planning a Japan trip this December.",
+      "probe_value": ["Japan"]
+    },
+    {
+      "id": "C022",
+      "subject": "Alice Chen",
+      "category": "employment",
+      "role": "bystander",
+      "supports": [],
+      "text": "Alice Chen's manager is named David Wong.",
+      "utterance": "My manager's name is David Wong.",
+      "probe_value": ["David Wong"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# local vector store + caches (regenerable, large)
+data/results/chroma_db/
+data/results/**/cache/
+*.log

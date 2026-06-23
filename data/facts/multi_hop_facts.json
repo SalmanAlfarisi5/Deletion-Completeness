@@ -1,0 +1,80 @@
+{
+  "_meta": {
+    "description": "Multi-hop facts: each can be reconstructed from a COMBINATION of other stored (context) facts, optionally plus world knowledge. After raw deletion, recovery can occur by RE-DERIVATION even with zero residual survival. 'co_delete_required' lists the context-fact IDs that must also be removed to close the stored re-derivation path. 'rederivation_basis' = 'stored' means co-deleting those context facts drives recoverability to ~0; 'stored+world' means a parametric residual rho remains because world knowledge alone partially re-derives the fact. All persons are fictional.",
+    "account_owner": "Alice Chen"
+  },
+  "facts": [
+    {
+      "id": "F040",
+      "subject": "Alice Chen",
+      "category": "financial",
+      "text": "Alice Chen's approximate monthly salary is SGD 8,500.",
+      "utterance": "My pay is around SGD 8,500 a month, for budgeting.",
+      "probe_value": ["8,500", "8500", "8,000", "9,000", "8000-9000"],
+      "entailed_by": ["C001", "C002"],
+      "co_delete_required": ["C001", "C002"],
+      "rederivation_basis": "stored",
+      "entailment_note": "C001 (Senior SWE at Google SG) + C002 (that band is SGD 8,000-9,000) jointly pin the value. Both operands are stored, so co-deleting C001+C002 removes the path entirely (rho ~ 0)."
+    },
+    {
+      "id": "F041",
+      "subject": "Bob Tan",
+      "category": "personal_contact",
+      "text": "Bob Tan is 35 years old.",
+      "utterance": "Bob Tan just turned 35 this year.",
+      "probe_value": ["35", "thirty-five", "thirty five"],
+      "entailed_by": ["C003"],
+      "co_delete_required": ["C003"],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "C003 (born 1991) + world knowledge (current year 2026) => age 35. Stored operand is the birth year; the current year is parametric, so a small rho remains if the adversary later learns the birth year by other means."
+    },
+    {
+      "id": "F042",
+      "subject": "Carol Lim",
+      "category": "medical",
+      "text": "Carol Lim has an elevated cardiovascular disease risk.",
+      "utterance": "I'm a bit worried about Carol Lim's heart health lately.",
+      "probe_value": ["elevated", "high", "cardiovascular", "heart disease risk"],
+      "entailed_by": ["C005", "C006"],
+      "co_delete_required": ["C005", "C006"],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "C005 (LDL 195 mg/dL) + C006 (1-pack-a-day smoker) + medical world knowledge => elevated CVD risk. The clinical inference is parametric, so rho > 0 even after co-deletion."
+    },
+    {
+      "id": "F043",
+      "subject": "Alice Chen",
+      "category": "location",
+      "text": "Alice Chen lives in the Bishan area.",
+      "utterance": "We're a Bishan family these days.",
+      "probe_value": ["Bishan"],
+      "entailed_by": ["C007", "C008"],
+      "co_delete_required": ["C007", "C008"],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "C007 (son attends Catholic High School) + world knowledge (CHS is in Bishan) + C008 (walks son to school daily) => lives near Bishan. The school's location is parametric world knowledge."
+    },
+    {
+      "id": "F044",
+      "subject": "Bob Tan",
+      "category": "financial",
+      "text": "Bob Tan's monthly home-loan repayment is about SGD 3,200.",
+      "utterance": "Bob Tan was saying his housing loan costs him roughly SGD 3,200 a month.",
+      "probe_value": ["3,200", "3200", "3,100", "3,300"],
+      "entailed_by": ["C009", "C010"],
+      "co_delete_required": ["C009", "C010"],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "C009 (SGD 750k loan, 25-year tenure) + C010 (3.5% p.a.) + amortization formula (world knowledge) => ~SGD 3,200/month. Operands stored; the computation is parametric."
+    },
+    {
+      "id": "F045",
+      "subject": "Carol Lim",
+      "category": "preference",
+      "text": "Carol Lim is most likely vegetarian.",
+      "utterance": "I think Carol Lim has gone fully vegetarian.",
+      "probe_value": ["vegetarian", "vegan", "plant-based"],
+      "entailed_by": ["C011", "C012"],
+      "co_delete_required": ["C011", "C012"],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "C011 (never orders meat) + C012 (only plant-based food at home) + commonsense => vegetarian. Operands stored; the abductive step is parametric."
+    }
+  ]
+}

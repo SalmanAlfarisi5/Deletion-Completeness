@@ -37,6 +37,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Planner end-to-end (threshold)")
     ap.add_argument("--n", type=int, default=6)
     ap.add_argument("--bystanders", type=int, default=4)
+    ap.add_argument("--entailment-model", default=config.JUDGE_MODEL,
+                    help="entailment judge (use gpt-4o: 0%% partial-operand false-fire)")
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()
@@ -53,8 +55,9 @@ def main() -> None:
     injector, deleter = Injector(adapter), Deleter(adapter)
     planner = GreedyPlanner(adapter, deleter, ExactMatchProbe(),
                             ParametricProbe(model=config.REASONER_MODEL),
-                            EntailmentDetector(model=config.JUDGE_MODEL),
+                            EntailmentDetector(model=args.entailment_model),
                             threshold_tau=config.TAU)
+    print(f"entailment judge = {args.entailment_model}")
 
     rows, certs = [], []
     for fact in tqdm(targets, desc="targets"):

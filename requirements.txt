@@ -4,7 +4,7 @@
 
 # --- memory systems under test (install per the mode you choose) -----------
 mem0ai            # Mem0 client (open-source `Memory` and hosted `MemoryClient`)
-# graphiti-core   # Zep/Graphiti (secondary system — enable in phase 2)
+graphiti-core==0.29.2   # Zep/Graphiti (secondary); needs a local Neo4j 5.x (see README)
 # letta           # MemGPT/Letta (tertiary system — enable in phase 2)
 
 # --- vector store for open-source Mem0 (local, no Docker) ------------------

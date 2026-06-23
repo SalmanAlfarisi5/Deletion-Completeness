@@ -30,10 +30,13 @@
   "entailment_judge": {
     "model_a": "gpt-4o-mini-2024-07-18",
     "model_b": "gpt-4o-2024-08-06",
-    "n_pairs": 12,
-    "kappa_a_vs_b": 0.833,
-    "acc_a_vs_expected": 0.917,
-    "acc_b_vs_expected": 1.0
+    "n_pairs": 24,
+    "n_near_miss": 12,
+    "kappa_a_vs_b": 0.455,
+    "acc_a_vs_expected": 0.75,
+    "acc_b_vs_expected": 1.0,
+    "false_fire_near_miss_a": 0.417,
+    "false_fire_near_miss_b": 0.0
   },
-  "timestamp_utc": "20260623T095043Z"
+  "timestamp_utc": "20260623T123729Z"
 }

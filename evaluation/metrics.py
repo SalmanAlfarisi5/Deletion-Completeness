@@ -21,11 +21,17 @@ def rate(scores, threshold: float = 0.5) -> float:
 
 
 def cohens_kappa(a: list[int], b: list[int]) -> float:
-    """Cohen's kappa between two binary label sequences (e.g., judge vs oracle)."""
+    """Cohen's kappa between two binary label sequences (e.g., judge vs oracle).
+
+    Returns nan when kappa is UNDEFINED — i.e. a rater is constant so there is no
+    chance-agreement variance (pe == 1). Do not report this as perfect agreement.
+    """
     a, b = np.asarray(a), np.asarray(b)
     if len(a) == 0:
         return float("nan")
     po = float(np.mean(a == b))
     pa1, pb1 = a.mean(), b.mean()
     pe = pa1 * pb1 + (1 - pa1) * (1 - pb1)
-    return float((po - pe) / (1 - pe)) if pe != 1 else 1.0
+    if pe >= 1.0:
+        return float("nan")  # undefined (constant rater), NOT 1.0
+    return float((po - pe) / (1 - pe))

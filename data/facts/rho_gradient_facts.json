@@ -105,7 +105,7 @@
      "world_context": "Capt Soh is a licensed commercial airline pilot (holds an ATPL).",
      "text": "Capt Soh is at least 21 years old.",
      "utterance": "Capt Soh is at least 21 years old.",
-     "question": "What is the minimum age Capt Soh must be to hold this licence?",
+     "question": "What can you infer about Capt Soh's age?",
      "delete_value": ["21"], "probe_value": ["21", "at least 21", "twenty-one", "18", "adult", "over 21"]}
   ]
 }

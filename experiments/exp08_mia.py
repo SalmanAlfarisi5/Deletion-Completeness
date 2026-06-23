@@ -1,15 +1,23 @@
-"""Experiment 8 — membership inference via retrieval scores (never-stored prior).
+"""Experiment 8 — membership inference via retrieval scores (powered).
 
-Control = a CONTROL store with the same corpus but the fact NEVER inserted.
-Member = corpus + fact, then the fact deleted. We query the fact (+ paraphrases)
-against both and test whether member scores exceed control scores
-(Mann-Whitney one-sided, AUC effect size). We measure this after NAIVE deletion
-(single record) and after ARTIFACT-AWARE deletion (all value-bearing rows):
+Members = ALL controlled facts (isolated + multi-hop + rho), injected into a
+store alongside a permanent bystander background, then deleted. Each member has
+one matched never-stored near-twin (same template, different value).
 
-  - naive  -> if Mem0 left a duplicate, member > control, AUC -> 1 (leak)
-  - aware  -> member ~ control, AUC ~ 0.5 (indistinguishable from never-stored)
+Per fact we take the top-1 retrieval similarity (continuous) of its exact-text
+query against the store. AUC = P(member > twin) from these continuous scores,
+with a bootstrap 95% CI (resampling facts) and a label-permutation p-value.
 
-Usage:  python experiments/exp08_mia.py --n 6 -v
+Stages:
+  intact -> members present (sanity: AUC high)
+  naive  -> each member deleted by its single surfaced record
+  aware  -> every value-bearing row purged
+
+If the artifact-aware CI includes 0.50, the honest finding is that artifact-aware
+deletion RESTORES membership-indistinguishability. Until the CI is in, an AUC
+near 0.5 is "not shown != 0.5".
+
+Usage:  python experiments/exp08_mia.py -v
 """
 from __future__ import annotations
 
@@ -21,7 +29,6 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 from tqdm import tqdm  # noqa: E402
 
@@ -30,92 +37,77 @@ import llm  # noqa: E402
 from pipeline.deleter import Deleter  # noqa: E402
 from pipeline.injector import Injector, load_facts  # noqa: E402
 from probes.base_probe import normalize_values  # noqa: E402
-from probes.membership_inference import membership_test  # noqa: E402
+from probes.membership_inference import membership_auc, top1_scores  # noqa: E402
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="MIA via retrieval scores")
-    ap.add_argument("--n", type=int, default=6, help="number of target facts")
-    ap.add_argument("--corpus", type=int, default=27,
-                    help="background size; >~25 reaches Mem0's duplication regime")
-    ap.add_argument("--paraphrases", type=int, default=4)
-    ap.add_argument("--alpha", type=float, default=0.05)
+    ap = argparse.ArgumentParser(description="Powered MIA via retrieval scores")
+    ap.add_argument("--n-boot", type=int, default=1000)
+    ap.add_argument("--n-perm", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()
     if config.validate():
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
-    np.random.seed(args.seed)
 
-    corpus = (load_facts(config.FACTS_DIR / "context_facts.json")
-              + load_facts(config.FACTS_DIR / "multi_hop_facts.json"))[: args.corpus]
-    targets = load_facts(config.FACTS_DIR / "isolated_facts.json")[: args.n]
+    members = (load_facts(config.FACTS_DIR / "isolated_facts.json")
+               + load_facts(config.FACTS_DIR / "multi_hop_facts.json")
+               + load_facts(config.FACTS_DIR / "rho_gradient_facts.json"))
+    background = [c for c in load_facts(config.FACTS_DIR / "context_facts.json")
+                 if c.get("role") == "bystander"]
+    member_queries = [m["text"] for m in members]
+    print(f"Members={len(members)}  background(bystander)={len(background)}")
+    print("Generating matched near-twins ...")
+    twin_queries = [llm.value_twin(m["text"]) for m in tqdm(members)]
 
     from systems.mem0_adapter import Mem0Adapter
     adapter = Mem0Adapter()
     injector, deleter = Injector(adapter), Deleter(adapter)
+    uid = f"{config.USER_ID_PREFIX}_mia"
+    adapter.delete_all_memories(uid)
 
-    # control store: corpus only, target NEVER inserted (shared)
-    uid_ctrl = f"{config.USER_ID_PREFIX}_mia_ctrl"
-    adapter.delete_all_memories(uid_ctrl)
-    injector.inject_many(uid_ctrl, corpus, infer=True)
+    print("Injecting background + members (infer=True) ...")
+    injector.inject_many(uid, background + members, progress=tqdm, infer=True)
 
-    rows = []
-    for fact in tqdm(targets, desc="targets"):
-        del_vals = normalize_values(fact.get("probe_value"))
-        queries = [fact["text"]] + llm.paraphrase(fact["text"], args.paraphrases)
-        uid_m = f"{config.USER_ID_PREFIX}_mia_m_{fact['id']}"
-        adapter.delete_all_memories(uid_m)
-        injector.inject_many(uid_m, corpus + [fact], infer=True)
-        n_dup = len(deleter.rows_with_value(uid_m, del_vals))            # >1 => Mem0 duplicated F
-
-        deleter.delete_top_match(uid_m, fact["text"], del_vals)          # naive deletion
-        mia_naive = membership_test(adapter, uid_m, uid_ctrl, queries)
-        deleter.delete_value_rows(uid_m, del_vals)                       # artifact-aware purge
-        mia_aware = membership_test(adapter, uid_m, uid_ctrl, queries)
-
-        rows.append({"fact_id": fact["id"], "category": fact.get("category"),
-                     "value_rows_in_member": n_dup,
-                     "auc_naive": round(mia_naive["auc"], 3), "p_naive": mia_naive["p_value"],
-                     "auc_aware": round(mia_aware["auc"], 3), "p_aware": mia_aware["p_value"],
-                     "mean_member_naive": round(mia_naive["mean_member"], 3),
-                     "mean_control": round(mia_naive["mean_control"], 3)})
+    def stage(label: str) -> dict:
+        ms = top1_scores(adapter, uid, member_queries)
+        ts = top1_scores(adapter, uid, twin_queries)
+        res = membership_auc(ms, ts, n_boot=args.n_boot, n_perm=args.n_perm, seed=args.seed)
+        res["stage"] = label
         if args.verbose:
-            tqdm.write(f"  [{fact['id']} dup={n_dup}] AUC naive={mia_naive['auc']:.2f} "
-                       f"(p={mia_naive['p_value']:.3f}) -> aware={mia_aware['auc']:.2f} "
-                       f"(p={mia_aware['p_value']:.3f})")
-        adapter.delete_all_memories(uid_m)
-    adapter.delete_all_memories(uid_ctrl)
+            print(f"  {label:7s}: AUC={res['auc']:.3f} CI95={res['ci95']} "
+                  f"p_perm={res['p_perm']} (mean member={res['mean_member']} twin={res['mean_twin']})"
+                  + ("  [CI includes 0.5]" if res["ci_includes_half"] else ""))
+        return res
 
-    df = pd.DataFrame(rows)
+    results = [stage("intact")]
+    for m in members:                                  # naive: delete the surfaced record
+        deleter.delete_top_match(uid, m["text"], normalize_values(m.get("delete_value", m.get("probe_value"))))
+    results.append(stage("naive"))
+    for m in members:                                  # artifact-aware: purge all value rows
+        deleter.delete_value_rows(uid, normalize_values(m.get("delete_value", m.get("probe_value"))))
+    results.append(stage("aware"))
+    adapter.delete_all_memories(uid)
+
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     base = config.RESULTS_DIR / f"exp08_mia_mem0_{stamp}"
-    df.to_csv(base.with_suffix(".csv"), index=False)
-    metrics = {
-        "mean_auc_naive": round(float(df["auc_naive"].mean()), 3),
-        "mean_auc_aware": round(float(df["auc_aware"].mean()), 3),
-        "sig_member_naive": int((df["p_naive"] < args.alpha).sum()),
-        "sig_member_aware": int((df["p_aware"] < args.alpha).sum()),
-        "n": len(df), "alpha": args.alpha,
-        "n_duplicated": int((df["value_rows_in_member"] > 1).sum()),
-        "mean_auc_naive_duplicated": (round(float(df[df["value_rows_in_member"] > 1]["auc_naive"].mean()), 3)
-                                      if (df["value_rows_in_member"] > 1).any() else None),
-    }
+    pd.DataFrame(results).to_csv(base.with_suffix(".csv"), index=False)
     base.with_suffix(".json").write_text(json.dumps(
-        {"experiment": "exp08_mia", "timestamp_utc": stamp, "metrics": metrics,
-         "rows": rows}, indent=2, default=str))
+        {"experiment": "exp08_mia", "timestamp_utc": stamp, "n_members": len(members),
+         "n_background": len(background), "n_boot": args.n_boot, "n_perm": args.n_perm,
+         "stages": results, "twins": twin_queries}, indent=2, default=str))
 
-    print("\n" + "=" * 60)
-    print("  EXP08 — MEMBERSHIP INFERENCE (retrieval-score)")
-    print("=" * 60)
-    print(f"  Mean AUC, naive deletion          : {metrics['mean_auc_naive']:.2f}  (0.5=no signal, 1=leak)")
-    print(f"  Mean AUC, artifact-aware deletion : {metrics['mean_auc_aware']:.2f}")
-    print(f"  Significant membership (p<{args.alpha}): "
-          f"naive {metrics['sig_member_naive']}/{metrics['n']}, "
-          f"aware {metrics['sig_member_aware']}/{metrics['n']}")
-    print(f"  Facts Mem0 duplicated in member    : {metrics['n_duplicated']}/{metrics['n']}"
-          + (f"  (mean AUC among them, naive = {metrics['mean_auc_naive_duplicated']})"
-             if metrics["n_duplicated"] else ""))
+    print("\n" + "=" * 64)
+    print("  EXP08 — MEMBERSHIP INFERENCE (powered: bootstrap CI + permutation)")
+    print("=" * 64)
+    for r in results:
+        verdict = ("indistinguishable (CI incl. 0.5)" if r["ci_includes_half"]
+                   else f"distinguishable (p={r['p_perm']})")
+        print(f"  {r['stage']:7s}: AUC={r['auc']:.3f}  CI95={r['ci95']}  -> {verdict}")
+    aware = results[-1]
+    print("\n  Headline test — after ARTIFACT-AWARE deletion:")
+    print(f"    {'membership signal SURVIVES' if not aware['ci_includes_half'] else 'indistinguishability RESTORED'}"
+          f"  (AUC={aware['auc']:.3f}, CI95={aware['ci95']})")
     print(f"\n  Results: {base.with_suffix('.csv')}")
 
 

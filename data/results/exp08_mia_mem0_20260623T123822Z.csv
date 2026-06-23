@@ -1,0 +1,4 @@
+auc,ci95,p_perm,n_member,n_twin,mean_member,mean_twin,ci_includes_half,stage
+0.719,"[0.59, 0.837]",0.002,33,33,0.84,0.723,False,intact
+0.613,"[0.474, 0.736]",0.0649,33,33,0.705,0.629,True,naive
+0.514,"[0.381, 0.649]",0.4436,33,33,0.422,0.42,True,aware

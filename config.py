@@ -39,6 +39,16 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 MEM0_API_KEY = os.getenv("MEM0_API_KEY", "")
 
+# Neo4j for the Zep/Graphiti adapter (local, no-sudo tarball install).
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "deletetest123")
+
+# Letta/MemGPT (tertiary system) — local server over local Postgres.
+LETTA_BASE_URL = os.getenv("LETTA_BASE_URL", "http://localhost:8283")
+LETTA_MODEL = os.getenv("LETTA_MODEL", "openai/gpt-4o-mini")
+LETTA_EMBEDDING = os.getenv("LETTA_EMBEDDING", "openai/text-embedding-3-small")
+
 # --------------------------------------------------------------------------- #
 # Models
 # --------------------------------------------------------------------------- #

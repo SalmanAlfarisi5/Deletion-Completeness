@@ -1,0 +1,4 @@
+target,keeper,edge_before,edge_after,kg_residue_before,kg_residue_after,channels_after
+F001,C013,0.0,0.0,1.0,1.0,"['community_summary', 'entity_summary']"
+F008,C014,1.0,1.0,1.0,1.0,"['active_edge', 'community_summary', 'entity_summary']"
+F003,C015,0.0,0.0,0.0,0.0,[]

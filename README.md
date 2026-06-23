@@ -46,6 +46,18 @@ python config.py            # prints config + validates keys
 platform (`hosted`). `LLM_PROVIDER` selects `anthropic` vs `openai` for
 extraction/judging/paraphrasing.
 
+### Zep/Graphiti (secondary system)
+
+Uses a local Neo4j — installed with **no Docker / no sudo** via JDK + Neo4j
+tarballs under `~/neo4j-stack`:
+
+```bash
+JAVA_HOME=~/neo4j-stack/jdk-21* ~/neo4j-stack/neo4j-community-5.26.0/bin/neo4j start  # bolt :7687
+pip install graphiti-core==0.29.2
+# stop:  JAVA_HOME=~/neo4j-stack/jdk-21* ~/neo4j-stack/neo4j-community-5.26.0/bin/neo4j stop
+```
+Credentials live in `config.NEO4J_*` (default user `neo4j`, password `deletetest123`).
+
 ## Experiments
 
 ```bash
@@ -67,6 +79,8 @@ python experiments/exp07_rho_gradient.py --n-samples 6 -v
 python experiments/exp08_mia.py --n 6 --corpus 27 -v
 # judge validation (recovery false-accept rate + entailment kappa)
 python evaluation/judge.py
+# exp09 — Zep/Graphiti KG-node residual (needs local Neo4j running; see Setup)
+python experiments/exp09_zep_kg_residual.py -v
 ```
 
 ### Results (mem0 oss + gpt-4o-mini-2024-07-18 + local MiniLM, 2026-06-23)
@@ -84,8 +98,9 @@ python evaluation/judge.py
 | exp03 | planner: completeness / spurious / mean k | **100% / 0 / 1.17** |
 | exp07 | parametric floor ρ by tier (gpt-4o-mini / gpt-4o) | low **0.00**, mid **0.03 / 0.63**, high **0.83 / 1.00** |
 | exp07 | certs NOT certified-complete (ρ>τ, residual=0) | **6/15** (the limit result) |
-| exp08 | membership-inference AUC: naive → artifact-aware | **0.64 → 0.56** (consolidation trace persists) |
-| judge | recovery **false-accept** / entailment κ | **0%** / **0.83** |
+| exp08 | MIA AUC (n=33, bootstrap CI): intact / naive / aware | **0.72** (p=.002) / 0.61 (p=.07, ns) / **0.51** (CI incl. 0.5) → artifact-aware restores indistinguishability |
+| judge | recovery false-accept / entailment κ (trivial→hard neg) | **0%** / 0.83 → **0.46**; gpt-4o-mini false-fires **42%** on partial operands (gpt-4o 0%) |
+| exp09 | Zep/Graphiti KG residue after `remove_episode` (n=3) | edge **33%**, **summary 67%** (entity+community) — residual via stale summaries, not edge-invalidation |
 
 **Story:** naive single-record deletion is incomplete because Mem0 silently
 **duplicates** facts (exp01/05, a documented Mem0 limitation, not our embedder);
@@ -108,3 +123,17 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
   completeness cannot be certified (ρ>τ) even with residual=0 — the limit result.
 - Both re-derivation and ρ are **reasoner-model-dependent**, so they are run on
   ≥2 reasoners (gpt-4o-mini, gpt-4o).
+- **Membership inference (exp08)** is powered (n=33, bootstrap 95% CI +
+  label-permutation p, continuous scores): artifact-aware deletion **restores
+  membership-indistinguishability** (AUC 0.51, CI includes 0.5). Naive shows a
+  residual signal that does **not reach significance at this n** (AUC 0.61,
+  p=0.07, CI includes 0.5) — *not* a demonstrated leak; a planned n≈60 run (a 2nd
+  matched control per fact) will test whether it becomes significant. The intact
+  sanity (AUC 0.72, p=0.002) shows the test has power.
+- The **entailment judge** is validated against hard near-miss negatives (partial
+  operands): use **gpt-4o** for the planner — gpt-4o-mini false-fires on 42% of
+  insufficient operands, which would inflate collateral *k*.
+- **Cross-system (exp09, Zep/Graphiti):** explicit `remove_episode` is *clean* for
+  edges, but the deleted fact survives in **stale entity/community summaries** (not
+  recomputed on deletion) — a by-design KG-residual channel, distinct from Mem0's
+  dedup-failure duplication. Same probe/planner/certificate stack, new adapter.

@@ -72,7 +72,28 @@ def validate_recovery_judge(model: str) -> dict:
     }
 
 
-def build_entailment_pairs() -> list[tuple[str, str, int]]:
+# HARD near-miss negatives: topically related but INSUFFICIENT operand sets
+# (drop the quantitative operands). The judge must NOT fire (gold=0); if it does,
+# the planner co-deletes non-closing facts and inflates collateral k.
+NEAR_MISS = {
+    "F040": ["Alice Chen works in the tech industry in Singapore.",
+             "Alice Chen has a full-time office job."],
+    "F041": ["Bob Tan is an adult.",
+             "Bob Tan recently celebrated a birthday."],
+    "F042": ["Carol Lim went for a routine health screening.",
+             "Carol Lim has been feeling tired lately."],
+    "F043": ["Alice Chen's son is of school-going age.",
+             "Alice Chen commutes within Singapore."],
+    "F044": ["Bob Tan has a home loan.",
+             "Bob Tan owns a property in Singapore."],
+    "F045": ["Carol Lim is health-conscious about food.",
+             "Carol Lim enjoys cooking at home."],
+}
+
+
+def build_entailment_pairs() -> list[tuple[str, str, int, str]]:
+    """(surviving, target, gold, type) with positives, trivial negatives, and
+    HARD near-miss negatives (insufficient operands)."""
     mh = load_facts(config.FACTS_DIR / "multi_hop_facts.json")
     ctx = {c["id"]: c for c in load_facts(config.FACTS_DIR / "context_facts.json")}
     bystanders = [c for c in ctx.values() if c.get("role") == "bystander"]
@@ -80,23 +101,31 @@ def build_entailment_pairs() -> list[tuple[str, str, int]]:
     for i, f in enumerate(mh):
         operands = [ctx[c]["text"] for c in f.get("co_delete_required", []) if c in ctx]
         if operands:
-            pairs.append((" ; ".join(operands), f["text"], 1))            # operands -> target
-        pairs.append((bystanders[i % len(bystanders)]["text"], f["text"], 0))  # bystander -> target
+            pairs.append((" ; ".join(operands), f["text"], 1, "positive"))
+        pairs.append((bystanders[i % len(bystanders)]["text"], f["text"], 0, "trivial_neg"))
+        for nm in NEAR_MISS.get(f["id"], []):
+            pairs.append((nm, f["text"], 0, "near_miss"))
     return pairs
 
 
 def validate_entailment(model_a: str, model_b: str) -> dict:
     pairs = build_entailment_pairs()
     da, db = EntailmentDetector(model_a), EntailmentDetector(model_b)
-    a, b, gold = [], [], []
-    for surviving, target, g in pairs:
+    a, b, gold, types = [], [], [], []
+    for surviving, target, g, typ in pairs:
         a.append(int(da.check(surviving, target) > config.ENTAILMENT_THRESHOLD))
         b.append(int(db.check(surviving, target) > config.ENTAILMENT_THRESHOLD))
         gold.append(g)
+        types.append(typ)
     acc = lambda x: round(sum(p == q for p, q in zip(x, gold)) / len(gold), 3)  # noqa: E731
+    # false-fire = fires (predicts entail) on a near-miss negative
+    nm_idx = [i for i, t in enumerate(types) if t == "near_miss"]
+    ff = lambda x: (round(sum(x[i] for i in nm_idx) / len(nm_idx), 3) if nm_idx else None)  # noqa: E731
     return {"model_a": model_a, "model_b": model_b, "n_pairs": len(gold),
+            "n_near_miss": len(nm_idx),
             "kappa_a_vs_b": round(cohens_kappa(a, b), 3),
-            "acc_a_vs_expected": acc(a), "acc_b_vs_expected": acc(b)}
+            "acc_a_vs_expected": acc(a), "acc_b_vs_expected": acc(b),
+            "false_fire_near_miss_a": ff(a), "false_fire_near_miss_b": ff(b)}
 
 
 def main() -> None:
@@ -121,9 +150,11 @@ def main() -> None:
     if rec["errors"]:
         for e in rec["errors"]:
             print(f"      MISS gold={e['gold']} pred={e['pred']}: {e['answer']!r} ~ {e['fact'][:45]!r}")
-    print(f"\n  Entailment judge: kappa({ent['model_a'].split('-')[0]} vs "
-          f"{ent['model_b'].split('-')[0]})={ent['kappa_a_vs_b']}  "
-          f"acc_a={ent['acc_a_vs_expected']:.0%} acc_b={ent['acc_b_vs_expected']:.0%} (n={ent['n_pairs']})")
+    print(f"\n  Entailment judge (n={ent['n_pairs']}, incl. {ent['n_near_miss']} hard near-miss):")
+    print(f"    kappa({ent['model_a'].split('-')[0]} vs {ent['model_b'].split('-')[0]}) = {ent['kappa_a_vs_b']}")
+    print(f"    acc vs expected: a={ent['acc_a_vs_expected']:.0%}  b={ent['acc_b_vs_expected']:.0%}")
+    print(f"    FALSE-FIRE on near-miss (insufficient operands): "
+          f"a={ent['false_fire_near_miss_a']}  b={ent['false_fire_near_miss_b']}  <- planner over-collateral risk")
     print(f"\n  Saved: {out}")
 
 

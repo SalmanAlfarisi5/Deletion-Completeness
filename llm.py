@@ -96,6 +96,21 @@ def paraphrase(text: str, n: int = 5) -> list[str]:
     return [p for p in paras if isinstance(p, str)][:n] or [text]
 
 
+def value_twin(text: str) -> str:
+    """A matched near-twin: same template/wording, only the specific value changed
+    to a different plausible (never-stored) one. Used as the MIA control."""
+    msgs = [
+        {"role": "system", "content": "Rewrite the statement keeping the EXACT template, "
+         "subject and wording, but replace ONLY the specific value (number, code, name, "
+         "amount, or category) with a different, plausible, clearly different value. "
+         'Respond only as JSON {"twin": "..."}.'},
+        {"role": "user", "content": text},
+    ]
+    out = chat_json(msgs, temperature=0.0, max_tokens=120)
+    twin = out.get("twin")
+    return twin if isinstance(twin, str) and twin.strip() else text
+
+
 def embed(texts: list[str]):
     """Local sentence-transformer embeddings (free, on GPU). L2-normalized."""
     global _st_model

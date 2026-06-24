@@ -49,50 +49,122 @@
 \maketitle
 
 \begin{abstract}
-% HELD — drafted last per skeleton order (after §1 Introduction).
+Deleting a fact from an LLM agent's memory does not mean the agent has forgotten
+it. A realistic ``please forget X'' request to a paging agent makes it scrub the
+working-memory block it reasons over while silently leaving X in its archival
+store---a deletion that is acknowledged and looks complete, yet is not. This is
+one instance of a general gap: existing audits check whether a forget command
+removes a value from retrieval, which is \emph{necessary but not sufficient},
+because the value can persist in a derived artifact or be re-derived from facts
+that were never deleted. We formalize \emph{deletion-completeness} for agent
+memory, decomposing post-deletion recoverability into three causally distinct
+channels---residual survival, re-derivation from surviving facts, and a parametric
+floor recoverable from the base model alone---and give a planner that computes the
+minimal co-deletion closing the deletable channels, emitting an auditable
+certificate. Because the parametric floor cannot be deleted, certification has a
+hard limit: under the strongest modeled adversary, \textbf{9 of 15} facts cannot
+be certified erased even when nothing of them survives in the store and no
+co-deletion would help---a bound invariant to the certification threshold. The
+same stack, run across three memory architectures (a deduplication pipeline, a
+bi-temporal knowledge graph, and a paging agent), finds residual survival in all
+three through different by-design mechanisms: the gap is a property of how agent
+memory derives and retains facts, not of any single system.
 \end{abstract}
 
 %========================================================================
 \section{Introduction}\label{sec:intro}
-% HELD. Open on the agent-loop scenario (C7); gap = nobody asks WHY deleted
-% facts recover or what minimum co-deletion closes it; contributions C1/C4/C5/C7;
-% state necessary-but-not-sufficient vs ForgetEval on page 1.
+
+A user invokes their right to be forgotten and asks an LLM agent to delete their
+home address. A modern agent with long-term memory---a paging architecture such as
+MemGPT/Letta---acknowledges and rewrites the working-memory block it is currently
+reasoning over. But the address was also written to the agent's archival vector
+store in an earlier session; reasoning only over its working context, the agent
+never touches it, and weeks later an ordinary retrieval surfaces the address again.
+The deletion was confirmed, looked complete, and was not.
+
+This is not a one-off bug. Even a \emph{faithful} delete of a record need not erase
+the fact it carried: the fact can survive in a derived artifact the system built
+from it---a duplicate, a summary, a consolidated note---or be re-derived from facts
+that remain, such as a salary from a job title plus a public pay band, or a
+diagnosis from stored symptoms. The most thorough current audits of agent
+forgetting \citep{forgeteval} check whether a forget command removes a value from
+top-$k$ retrieval. That check is \emph{necessary but not sufficient}: it does not
+ask \emph{why} a deleted fact returns, nor \emph{what minimal further deletion}
+would actually close the leak. Those two questions are the subject of this paper.
+
+We cast deletion-completeness as whether a deleted fact remains recoverable, and
+decompose recoverability into three causally distinct channels: residual survival
+(a surviving artifact still contains the value), re-derivation (surviving facts
+entail it), and a parametric floor (the base model recovers it from world knowledge
+alone). The first two are closable by deleting more; the third is not. A greedy
+planner computes the minimal additional co-deletion that closes the closable
+channels, and a certificate records what deletion achieved, at what collateral
+cost, and---crucially---when the parametric floor makes erasure impossible to
+certify. Concretely, we contribute:
+
+\begin{itemize}
+\item a formal, \emph{adversary-relative} deletion-completeness criterion for agent
+memory, strictly stronger than dependency-bounded database erasure, decomposing
+recoverability into residual, re-derivation, and parametric channels (\S\ref{sec:formulation});
+\item a minimal co-deletion planner for the resulting NP-hard problem, reaching
+completeness at mean collateral $k=1.17$ with zero spurious deletions, plus an
+auditable certificate that separates what deletion achieved from what it cannot
+(\S\ref{sec:method},\,\S\ref{sec:res-planner});
+\item a \emph{measured} parametric floor and its limit result: under the strongest
+modeled adversary, $9/15$ facts cannot be certified erased even at zero residual
+survival---a bound invariant to the certification threshold (\S\ref{sec:res-rho});
+\item evidence of generality: the same probe/planner/certificate stack, run on
+three memory architectures, exposes residual survival in all three through
+different by-design mechanisms, including the agent-loop failure above that prior
+audits bypass (\S\ref{sec:res-converge}).
+\end{itemize}
+
+The breadth across systems is evidence for a stronger, causally-decomposed notion
+of erasure---not a claim to be first to evaluate these systems, which prior work
+already does. What is new is asking, and answering, why deleted facts return and
+what it costs to make them stay gone.
 
 \section{Related Work}\label{sec:related}
 
-\paragraph{Auditing forgetting in agent memory.} The closest work,
-\textsc{ForgetEval} \citep{forgeteval}, benchmarks forgetting across Mem0,
-Graphiti, Letta, and others, so \emph{system coverage is not our contribution}.
-Its criterion---whether a forget command removes the value from top-$k$
-retrieval---is \emph{necessary but not sufficient} for the erasure we define
-(\S\ref{sec:formulation}): a value absent from top-$k$ may still be re-derivable
-from surviving facts or recoverable from the base model. We adopt the same systems
-under a strictly stronger, channel-decomposed criterion; our Mem0 figures
-(post-deletion recoverability by \emph{any} channel) are therefore complementary
-to theirs (top-$k$ forget-command success), not contradictory. ForgetEval also
-deliberately \emph{bypasses} Letta's agent loop, addressing archival endpoints
-directly; we test that loop and find agent-mediated deletion surface-incomplete
-(\S\ref{sec:res-converge}). Tellingly, ForgetEval's own per-system
-observations---Graphiti shedding synthesized fact strings, Mem0's router favoring
-link-and-keep over delete-old---name the very mechanisms our decomposition
-isolates, an independent corroboration of the convergence result.
+\paragraph{Auditing forgetting in agent memory.} The closest prior work is
+\textsc{ForgetEval} \citep{forgeteval}, the most thorough existing audit of
+forgetting in deployed agent memory---a careful retrieval-based protocol spanning
+Mem0, Graphiti, Letta, and roughly a dozen further systems---and we build directly
+on it. Its criterion, whether a forget command removes a value from top-$k$
+retrieval, is \emph{necessary but not sufficient} for the erasure we define
+(\S\ref{sec:formulation}): a value absent from top-$k$ can still survive in a
+derived artifact or be re-derived from facts that were never deleted. Our
+contribution is therefore the stronger, channel-decomposed criterion, not the
+system coverage ForgetEval already establishes; correspondingly, our Mem0 figures
+(recoverability by \emph{any} channel) are complementary to its top-$k$
+forget-command rates, not in tension with them. Two of our results extend it
+directly. ForgetEval deliberately bypasses Letta's agent loop---addressing
+archival endpoints to keep the model out of the recall path---which is exactly the
+loop we exercise and find surface-incomplete (\S\ref{sec:res-converge}); and its
+own per-system observations (Graphiti shedding synthesized fact strings, Mem0's
+router favoring link-and-keep) name the mechanisms our decomposition isolates,
+independently corroborating the convergence result.
 
 \paragraph{Unlearning methods.} \textsc{ForgetAgent} \citep{forgetagent}
-contributes a \emph{synthetic} unlearning \emph{method} with deletion receipts and
-counterfactual-indistinguishability guarantees. It is complementary on every axis:
-it builds a system that forgets, we \emph{audit} whether deployed systems have; it
-certifies a construction, we diagnose re-derivation and the parametric floor on
-real stores. \textsc{Agentic Unlearning} \citep{agenticunlearning} separates
-parametric from memory recovery (its ``backflow''), but assumes \emph{weight
-access} to edit the model; we operate black-box and memory-store-only, so we
-neither claim the parametric/memory split as novel nor perform model surgery.
+contributes an unlearning \emph{method} with deletion receipts and
+counterfactual-indistinguishability guarantees. It is complementary on three
+technical axes: it offers a method where we offer a diagnostic; it is evaluated on
+a synthetic construction where we audit deployed systems; and it addresses a single
+forgetting mechanism where we decompose recovery into residual, re-derivation, and
+parametric channels. \textsc{Agentic Unlearning} \citep{agenticunlearning}
+separates parametric from memory recovery (its ``backflow''), but assumes
+\emph{weight access} to edit the model; we operate black-box and
+memory-store-only, so we neither claim the parametric/memory split as novel nor
+perform model surgery.
 
 \paragraph{Deletion under dependencies.} Our formal grounding is the database line
-on erasure when records are inter-derivable: the meaningful-erasure criterion of
-P2E2 \citep{p2e2} and inference-aware deletion \citep{seqdb}. We port that
-criterion to agent memory and \emph{strengthen} it (\S\ref{sec:formulation}),
-inheriting its hardness---the bridge from relational deletion theory to LLM agent
-memory that the agent-memory works above do not make.
+on erasure when records are inter-derivable: P2E2's meaningful-erasure criterion
+\citep{p2e2} and inference-aware deletion \citep{seqdb}. We port P2E2's
+\emph{dependency-bounded} criterion to agent memory and deliberately
+\emph{strengthen} it---its baseline keeps pre-existing operands present, which is
+vacuous for the right to be forgotten---while inheriting its NP-hardness. This
+bridge, from relational deletion theory to LLM agent memory, is one the
+agent-memory works above do not make, and it is where the next section begins.
 
 \section{Problem Formulation}\label{sec:formulation}
 
@@ -342,15 +414,15 @@ so using \texttt{gpt-4o} is precisely what prevents $k$ from inflating. The
 planner targets the NP-hard Opt-P2E2 problem; ``minimal'' here denotes a
 sufficient co-deletion subset, not a certified optimum.
 
-\textbf{Comparator.} The aggressive depth-first heuristic (co-delete every
-entailer above $\tau$ in one shot, no re-probing) also reaches $100\%$
-completeness but at \textbf{$k=5.5$ with $22$ spurious bystander deletions}: with
-no stopping rule it deletes every candidate whose (cap-bounded) entailment exceeds
-$\tau$. The threshold heuristic's re-probe-and-stop is therefore what buys
-\emph{both} minimality ($k\!:5.5\!\to\!1.17$, $\sim\!4.3$ fewer deletions per fact)
-\emph{and} selectivity ($22\!\to\!0$ spurious). Naive single-record deletion
-(\S\ref{sec:res-residual}) is the lower baseline: it deletes one record and closes
-no re-derivation path.
+\textbf{Comparator.} Depth-first guarantees floor-reaching \emph{without}
+iterative probing---one pass co-deleting every entailer above $\tau$---and reaches
+$100\%$ completeness at \textbf{$k=5.5$} (with $22$ spurious bystander deletions,
+since a probe-free pass cannot detect when to stop and removes every cap-bounded
+candidate above $\tau$). Threshold attains the \emph{same} completeness at
+\textbf{$k=1.17$}: iterative re-probing converts that guarantee into a
+near-$5\times$ reduction in collateral ($5.5\!\to\!1.17$) and full selectivity
+($22\!\to\!0$ spurious). Naive single-record deletion (\S\ref{sec:res-residual})
+is the lower baseline---one record, no re-derivation path closed.
 
 \begin{table}[t]
 \centering
@@ -394,8 +466,11 @@ monotone in tier (\texttt{gpt-4o-mini}\,/\,\texttt{gpt-4o}):
 (Table~\ref{tab:rho}). Certifying erasure under the \emph{worst} modeled adversary
 (the $\sup$ of Def.~4), \textbf{9 of 15 certificates are \emph{not}
 erasure-certifiable} ($\rho\geq\tau$) \emph{even though residual survival is $0$};
-under the weaker reasoner alone the bracket drops to $6/15$, so reporting the
-worst adversary only \emph{strengthens} the limit. This count is robust to $\tau$:
+under the weaker reasoner alone only $6/15$ would be flagged. The three-certificate
+gap is not noise but Def.~4's \emph{adversary-relative} recoverability made
+concrete: a weaker-reasoner attacker would wrongly certify three facts the stronger
+adversary recovers, so certifying under the $\sup$ is the conservative choice a
+privacy certificate must make. This count is robust to $\tau$:
 the worst-adversary $\rho$ is sharply \emph{bimodal} ($0$ for $6$ facts,
 $\geq\!0.5$ for $9$, none in between), so $9/15$ is invariant for every
 $\tau\in(0,0.5)$---it is not a cherry-picked threshold. This is the limit result:

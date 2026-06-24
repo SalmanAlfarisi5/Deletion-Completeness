@@ -65,9 +65,85 @@
 % P2E2 / SeQureDB (deletion-under-dependencies theory we operationalize).
 
 \section{Problem Formulation}\label{sec:formulation}
-% HELD. Deletion-completeness vs never-stored prior (port P2E2); the three
-% recoverability channels formally; recoverability = max over channels;
-% Opt-P2E2 and its NP-hardness.
+
+\paragraph{Setup.} Let $f$ be a target fact with value $v$ and let $\Sigma(v)$ be
+its set of ground-truth surface forms. A memory store $S$ is a set of records; a
+deletion operation yields a surviving store $S'\subseteq S$. The adversary
+$\mathcal{A}$ has full read access to $S'$, black-box access to a base model $M$,
+and general world knowledge $W$; a query $q_f$ asks for $v$. Write
+$\mathrm{rec}(a)=1$ iff answer $a$ reveals a surface form in $\Sigma(v)$ (within
+the stated value), as scored by the validated recovery judge
+(\S\ref{sec:res-judge}). We decompose recoverability into three channels.
+
+\paragraph{Definition 1 (Residual survival).}
+$\sigma_{\mathrm{res}}(f,S')=\mathbb{1}\!\left[\exists\, r\in S':\;
+\Sigma(v)\cap\mathrm{txt}(r)\neq\emptyset\right]$: a surviving record physically
+contains the value.
+
+\paragraph{Definition 2 (Re-derivation).}
+$\sigma_{\mathrm{red}}(f,S')=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid
+S',M,W)\right)$: the adversary reconstructs $v$ by reasoning over the
+\emph{surviving store} plus world knowledge.
+
+\paragraph{Definition 3 (Parametric floor).}
+$\rho(f)=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid \emptyset, M, C)\right)$, where
+$C\subseteq W$ is the subject's world-knowable context and the store is
+\emph{empty}. $\rho$ has no dependence on $S$ and is therefore
+\emph{system-independent}; we estimate it as a recovery rate over stochastic
+samples.
+
+\paragraph{Definition 4 (Recoverability).}
+$R(f,S')=\max\!\left(\sigma_{\mathrm{res}},\,\sigma_{\mathrm{red}},\,\rho\right)$.
+A single surviving channel suffices to recover $v$, so the channels combine by
+$\max$, not by sum.
+
+\paragraph{Definition 5 (Deletion-completeness; never-stored prior).}
+Following the \emph{meaningful-erasure} criterion for deletion under dependencies
+\citep{p2e2}, the \emph{never-stored prior} recoverability of $f$ is exactly
+$\rho(f)$: what $\mathcal{A}$ recovers had $f$ never been stored. A deletion is
+\textbf{complete} iff it returns recoverability to this prior, i.e.,
+$\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}=0$ so that $R(f,S')=\rho$; it is
+\textbf{$\tau$-certifiable} iff additionally $R(f,S')<\tau$, equivalently
+$\rho<\tau$. This is the never-stored prior ported from the database setting:
+completeness is indistinguishability, up to $\tau$, from a world in which $f$ was
+never inserted---accounting for the dependencies (other stored facts) that may
+re-imply it.
+
+\paragraph{Remark 1 (the limit, C5).} When $\rho\geq\tau$ the fact is
+\emph{complete but not certifiable}: $\rho$ carries no store dependence, so no
+co-deletion can lower it and $R(f,S')\geq\tau$ irreducibly. The certificate
+correctly returns \textsc{incomplete} even at $\sigma_{\mathrm{res}}=
+\sigma_{\mathrm{red}}=0$ (e.g.\ R11, Table~\ref{tab:certs}).
+
+\paragraph{Remark 2 (residual--floor boundary, C1/C5).} The same constraining
+context can land in either channel depending on \emph{where it lives}. If $v$ is
+pinned by a stored operand $o\in S'$, the recovery is re-derivation
+($\sigma_{\mathrm{red}}$) and is removable by co-deleting $o$; if $v$ is pinned by
+world-knowable context $C\subseteq W$, the recovery is parametric ($\rho$) and is
+\emph{not} removable. Our multi-hop operands are synthetic and live only in $S'$,
+so their world-knowledge component is generic and inert without the stored
+operand: $\rho=0$ and $\sigma_{\mathrm{red}}\!\to\!0$ under co-deletion
+(\S\ref{sec:res-rederiv}). Our gradient contexts are themselves world-knowable and
+target-constraining, so they enter $W$: $\rho>0$ (\S\ref{sec:res-rho}). This
+boundary---deletable re-derivation vs.\ irreducible floor---is the C1/C5 spine.
+
+\paragraph{The optimization problem.} Let $R_f\subseteq S$ be $f$'s own records.
+\textsc{Opt-P2E2} seeks a minimal co-deletion set:
+\begin{equation*}
+\min_{D\,\subseteq\, S\setminus R_f} |D| \quad\text{s.t.}\quad
+R\!\left(f,\; S\setminus(R_f\cup D)\right) < \tau ,
+\end{equation*}
+i.e., close every recovery channel while disturbing as few bystander facts as
+possible ($|D|$ is the collateral $k$).
+
+\paragraph{Proposition 1 (NP-hardness).} \textsc{Opt-P2E2} is NP-hard. The
+re-derivation paths of $f$ form a hypergraph $H$ whose hyperedges are the minimal
+subsets of $S\setminus R_f$ that jointly re-imply $v$; a feasible $D$ must
+intersect every hyperedge, so minimizing $|D|$ is \textsc{Minimum Hitting Set},
+which is NP-hard, and the hardness of erasure under dependencies is established by
+\citet{p2e2}. We therefore adopt the greedy, entailment-confidence-ordered planner
+of \S\ref{sec:method}, which is exact on the small dependency graphs that arise in
+practice (mean $k=1.17$, \S\ref{sec:res-planner}).
 
 \section{Method}\label{sec:method}
 % HELD. Probe battery; entailment detector; three greedy planner heuristics;
@@ -90,8 +166,9 @@ model-dependent: \texttt{gpt-4o-mini-2024-07-18} (primary) and
 completeness threshold is $\tau=0.10$. Datasets are synthetic subjects placed in
 realistic statistical contexts: 12 isolated PII facts, 6 multi-hop facts with
 their stored operands and bystanders, and 15 parametric-gradient facts across
-three difficulty tiers. Recovery is scored by a validated LLM judge whose
-false-accept rate is $0\%$ (\S\ref{sec:res-judge}), so \emph{every reported
+three difficulty tiers. Recovery is scored by a validated LLM judge with no
+observed false accepts (\S\ref{sec:res-judge}: $0/8$ gold negatives, $95\%$
+Wilson upper bound $\approx\!0.32$), so under that bound \emph{every reported
 recovery rate is a conservative lower bound}. Table~\ref{tab:master} summarizes
 the headline numbers; results are presented in decreasing order of confidence.
 
@@ -103,15 +180,18 @@ the headline numbers; results are presented in decreasing order of confidence.
 \textbf{Result} & \textbf{System} & \textbf{Headline} & \textbf{Backing control} \\
 \midrule
 Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, $k{=}1.17$ & spare-bystander + gpt-4o entailment judge \\
-$\rho$ floor (\S\ref{sec:res-rho})       & Mem0     & 6/15 \emph{uncertifiable} at residual $0$ & world-context-only $\rho$ probe; refusal audit \\
+$\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 6/15 \emph{uncertifiable} at residual $0$ & world-context-only $\rho$ probe; refusal audit \\
 Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 80\%$\to$0\% & operands-only; verified-faithful co-delete \\
 Convergence (\S\ref{sec:res-converge})   & all three & 67\% / 100\% residue by family & clean-delete verified first; explicit baseline \\
 Residual (\S\ref{sec:res-residual})      & Mem0     & 75\%; 83\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
-Judge (\S\ref{sec:res-judge})            & ---      & 0\% false-accept; entail.\ gpt-4o 0\% & gold set + 12 hard near-miss negatives \\
+Judge (\S\ref{sec:res-judge})            & ---      & $0/8$ false-accept (CI $\le\!.32$) & gold set + 12 hard near-miss negatives \\
 \bottomrule
 \end{tabular}
 \caption{Headline results, ordered by confidence. Each row's claim is admitted
-only because the named control rules out the obvious confound.}
+only because the named control rules out the obvious confound. $^\dagger$$\rho$ is
+measured world-context-only against the base model and is therefore
+\emph{system-independent}---that independence is precisely the limit result;
+the corresponding certificates were emitted during the Mem0 run.}
 \label{tab:master}
 \end{table*}
 
@@ -136,6 +216,34 @@ so using \texttt{gpt-4o} is precisely what prevents $k$ from inflating. The
 planner targets the NP-hard Opt-P2E2 problem; ``minimal'' here denotes a
 sufficient co-deletion subset, not a certified optimum.
 
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+field & \textsc{complete} & \textsc{incomplete} \\
+\midrule
+example (system)                 & F040 (Letta)   & R11 (base model) \\
+\texttt{residual\_survival}      & 0.0            & 0.0 \\
+\texttt{rederiv\_with\_operands} (pre)  & 1.0     & --- \\
+\texttt{re\_derivation\_score} (final)  & 0.0     & 0.0 \\
+\texttt{parametric\_risk\_rho}   & 0.0            & \textbf{1.0} \\
+\texttt{facts\_co\_deleted} ($k$)& C001,C002 (2)  & --- (0) \\
+\texttt{final\_recoverability}   & 0.0            & 1.0 \\
+\texttt{completeness\_certified} & \textbf{true}  & \textbf{false} \\
+\bottomrule
+\end{tabular}
+\caption{Two representative certificates. \emph{Left:} the re-derivation channel
+was open \emph{before} co-deletion (\texttt{rederiv\_with\_operands}$=1.0$, the
+\emph{pre} probe) and closed \emph{after} (\texttt{re\_derivation\_score}$=0.0$,
+the \emph{final}/post-co-delete score), giving \textsc{complete}. \emph{Right:}
+residual and re-derivation are both $0$, but the system-independent base-model
+floor $\rho{=}1.0$ forces \textsc{incomplete}. The aggregate planner result
+($k{=}1.17$; \S\ref{sec:res-planner}) is on \emph{Mem0}; this \textsc{complete}
+example is a \emph{Letta} certificate, so the format is system-general.}
+\label{tab:certs}
+\end{table}
+
 \subsection{The Parametric Floor and the Limit of Certifiable Deletion}\label{sec:res-rho}
 
 Not every fact can be certified deleted. We \emph{measure} the parametric floor
@@ -147,6 +255,12 @@ monotone in tier (\texttt{gpt-4o-mini}\,/\,\texttt{gpt-4o}):
 \emph{not} certifiable-complete} ($\rho>\tau$) \emph{even though residual survival
 is $0$}. This is the limit result: when the value is recoverable from
 non-deletable world knowledge, no amount of co-deletion can certify completeness.
+This gradient $\rho>0$ does not contradict the $\rho{=}0$ of the multi-hop facts
+in \S\ref{sec:res-rederiv}: there the world-knowledge component is generic and
+inert without the (fictional) stored operand, so co-deletion collapses $\rho$ to
+$0$; here the context is \emph{itself} world-knowable \emph{and}
+target-constraining, so $\rho$ stays positive. This residual--vs--floor boundary
+is the C1/C5 spine and is formalized in \S\ref{sec:formulation}.
 
 \textbf{Control.} The $\rho$ probe sees \emph{only} the subject's world-knowable
 context, never the stored facts, so co-deletion provably cannot lower it. Three
@@ -185,7 +299,8 @@ which the target's own value is never stored, so residual survival is $0$ by
 construction (verified with the narrow deletion surface form, not the broad
 recovery set, so an operand sharing a token is not miscounted)---we isolate the
 re-derivation channel. On Mem0, the leak is \textbf{100\% for stored-alone (bin~1)
-and $80\%$ for stored+world (bin~2)}, collapsing to \textbf{$0\%$ after
+and $80\%$ for stored+world (bin~2)}---identical across both reasoners
+(\texttt{gpt-4o-mini}, \texttt{gpt-4o})---collapsing to \textbf{$0\%$ after
 co-deleting the operands}, with parametric floor $\rho=0\%$. The same control
 \textbf{ports unchanged to Letta}: bin~1 $100\%$, bin~2 $80\%$
 (\texttt{gpt-4o-mini})\,/\,$100\%$ (\texttt{gpt-4o}), again $\to 0\%$ after
@@ -206,7 +321,9 @@ finding of \S\ref{sec:res-converge}.
 \subsection{Generalization: Three Families, One Phenomenon}\label{sec:res-converge}
 
 Residual survival is not a Mem0 quirk; it recurs across all three families by
-\emph{different by-design mechanisms}. In \textbf{Graphiti}, the explicit
+\emph{different by-design mechanisms}. The two cross-system probes here are run on
+$n{=}3$ sensitive-PII targets per system (a deliberately small, high-stakes set;
+see \S\ref{sec:limitations}). In \textbf{Graphiti}, the explicit
 \texttt{remove\_episode} is clean for the graph---it hard-deletes the episode,
 its \texttt{RELATES\_TO} edges, and orphaned entities (we verify the hard delete
 first)---yet the deleted fact survives in \textbf{stale entity and community
@@ -240,7 +357,11 @@ The motivating failure on Mem0 is that naive single-record deletion is residuall
 incomplete because the store \emph{silently duplicates} facts. Deleting the single
 surfaced record leaves the value present in \textbf{$75\%$} of isolated PII
 targets; an artifact-aware deletion drives residual survival from
-\textbf{$83\%$ to $0\%$}.
+\textbf{$83\%$ to $0\%$}. Both rates are measured over the \emph{same} 12 isolated
+PII targets: the $75\%$ ($9/12$) is the stricter duplication-driven criterion (the
+deleted value survives because the fact was duplicated), and the $83\%$ ($10/12$)
+is the broader naive-arm criterion (any surviving value-bearing row), so the
+one-fact gap is an operationalization difference, not a different denominator.
 
 \textbf{Control.} A $2{\times}2$ factorial over embedder
 (MiniLM\,/\,OpenAI) $\times$ injection cadence ($0\,$s\,/\,$1.5\,$s) shows
@@ -259,11 +380,16 @@ completeness.
 \subsection{Judge Validation}\label{sec:res-judge}
 
 Two LLM judges are load-bearing, so both are validated against gold labels. The
-\textbf{recovery judge} has a \textbf{$0\%$ false-accept rate} ($n{=}17$; 7 true
-positives, 0 false positives, 8 true negatives, 2 false negatives; $\kappa=0.767$
-vs.\ gold). Its only errors are \emph{conservative} rejections (e.g., scoring
-``$\approx$SGD~3{,}142'' as a non-recovery of $3{,}200$), so all reported leak
-rates are lower bounds. The \textbf{entailment judge} is validated on 24 pairs
+\textbf{recovery judge} produced \textbf{no false accepts} on the gold set
+($n{=}17$; 7 true positives, 0 false positives, 8 true negatives, 2 false
+negatives; $\kappa=0.767$ vs.\ gold). Because this rests on only $8$ negatives,
+the $0$ false-accept count carries a $95\%$ Wilson upper bound of $\approx\!0.32$;
+the lower-bound framing holds \emph{up to that bound}, and its two errors are both
+\emph{conservative} rejections (e.g., scoring ``$\approx$SGD~3{,}142'' as a
+non-recovery of $3{,}200$). Tightening this bound with an expanded gold set of
+adversarial near-miss \emph{recoveries} (``$\approx$3{,}190'' for $3{,}200$;
+``AB+'' for ``AB negative'') is the single most valuable validation extension
+(\S\ref{sec:limitations}). The \textbf{entailment judge} is validated on 24 pairs
 including 12 hard near-miss negatives (partial operands that should \emph{not}
 entail): inter-judge agreement falls from $\kappa=0.83$ on trivial pairs to
 $0.455$ on the hard near-misses, and \texttt{gpt-4o-mini} false-fires on $41.7\%$
@@ -280,6 +406,11 @@ justification for using \texttt{gpt-4o} as the planner's entailment judge
 % (ii) entailment near-miss (kappa 0.83 -> 0.455) -> gpt-4o judge.
 % (iii) rho as adversarial lower bound for sensitive attrs (refusals).
 % (iv) COMPLETE certificate is "modulo ~78% recovery-judge recall."
+% (v) recovery-judge gold set thin on NEGATIVES (n=8 -> false-accept 95% CI <= .32);
+%     expand with adversarial near-miss RECOVERIES ("~3,190" for 3,200; "AB+" for
+%     "AB negative") -> the single most valuable validation extension (ref 5.6).
+% (vi) cross-system convergence (5.4) probed on n=3 sensitive-PII targets/system
+%     (small, high-stakes); more targets/family + a 4th architecture = named extension.
 
 \section{Conclusion and Future Work}\label{sec:conclusion}
 % HELD. Paging family done; named extensions: MIA n->60 (2nd matched control/fact)
@@ -288,6 +419,11 @@ justification for using \texttt{gpt-4o} as the planner's entailment judge
 %========================================================================
 % Minimal bibliography for the works cited in §5; full set in REFERENCES.md.
 \begin{thebibliography}{}
+\bibitem[P2E2(2025)]{p2e2}
+2025.
+\newblock Meaningful Data Erasure in the Presence of Dependencies. VLDB'25;
+arXiv:2507.00343. Formal deletion-completeness under dependencies (never-stored
+prior) and the hardness of erasure under dependencies.
 \bibitem[ForgetEval(2026)]{forgeteval}
 ForgetEval. 2026.
 \newblock arXiv:2606.15903 (MIT). Benchmarks Mem0, Graphiti, and Letta (+more)

@@ -81,6 +81,10 @@ python experiments/exp08_mia.py --n 6 --corpus 27 -v
 python evaluation/judge.py
 # exp09 — Zep/Graphiti KG-node residual (needs local Neo4j running; see Setup)
 python experiments/exp09_zep_kg_residual.py -v
+# exp10 — Letta/MemGPT agent-mediated deletion faithfulness (needs Letta server; see Setup)
+python experiments/exp10_letta.py -v
+# exp11 — Letta/MemGPT re-derivation + faithful co-delete (operands-only control, 2 reasoners)
+python experiments/exp11_letta_rederivation.py --n 6 -v
 ```
 
 ### Results (mem0 oss + gpt-4o-mini-2024-07-18 + local MiniLM, 2026-06-23)
@@ -101,6 +105,8 @@ python experiments/exp09_zep_kg_residual.py -v
 | exp08 | MIA AUC (n=33, bootstrap CI): intact / naive / aware | **0.72** (p=.002) / 0.61 (p=.07, ns) / **0.51** (CI incl. 0.5) → artifact-aware restores indistinguishability |
 | judge | recovery false-accept / entailment κ (trivial→hard neg) | **0%** / 0.83 → **0.46**; gpt-4o-mini false-fires **42%** on partial operands (gpt-4o 0%) |
 | exp09 | Zep/Graphiti KG residue after `remove_episode` (n=3) | edge **33%**, **summary 67%** (entity+community) — residual via stale summaries, not edge-invalidation |
+| exp10 | Letta/MemGPT agent-mediated deletion faithfulness (n=3) | **explicit dual-surface → 100% faithful**; **vague RTBF → 0% faithful / 100% archival residue** (agent scrubs core, misses archival) |
+| exp11 | Letta re-derivation (operands-only control, 2 reasoners) | bin1 **100%**, bin2 **80%/100%** (mini/4o) → **0% after co-delete**; ρ **0%**; faithful direct co-delete **100%**, bystanders intact **100%** |
 
 **Story:** naive single-record deletion is incomplete because Mem0 silently
 **duplicates** facts (exp01/05, a documented Mem0 limitation, not our embedder);
@@ -137,3 +143,14 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
   edges, but the deleted fact survives in **stale entity/community summaries** (not
   recomputed on deletion) — a by-design KG-residual channel, distinct from Mem0's
   dedup-failure duplication. Same probe/planner/certificate stack, new adapter.
+- **Cross-system (exp10–11, Letta/MemGPT):** deletion is **agent-mediated** across
+  two surfaces (core blocks + archival). A vague but realistic RTBF request makes
+  the agent scrub the *core* block it reasons about and **silently miss archival**
+  (exp10: 0% faithful, 100% archival residue) — surface-incomplete deletion. The
+  re-derivation channel and minimal co-deletion **port unchanged** (exp11: same
+  probe/certificate stack), with the planner's co-deletes issued through the
+  **direct, verified-faithful** op (not the agent) so the channel is measured cleanly.
+- **Three architecture families, one phenomenon:** residual survival appears in all
+  three by *different by-design mechanisms* — Mem0 **duplication** (dedup pipeline),
+  Graphiti **stale summaries** (bi-temporal KG), Letta **surface-incomplete
+  agent-mediated deletion** (LLM-paging) — generalising the deletion-completeness gap.

@@ -1,0 +1,297 @@
+%% Deletion-Completeness for LLM Agent Memory — AAAI 2027 submission (DRAFT)
+%% Drafting order (web-brain locked): §5 Results FIRST. Other sections are stubs.
+%% Requires the AAAI author kit style file (aaai2027.sty) on the TeX path.
+%%
+%% ── TITLE OPTIONS (web brain to pick; all name the decomposition + planner,
+%%    none use "benchmark/audit/evaluation" — ForgetEval owns those words) ──
+%% (T1) Decomposing Recoverability: Minimal Co-Deletion for the
+%%      Right to be Forgotten in LLM Agent Memory
+%% (T2) Why Deleted Facts Recur: A Causal Recoverability Decomposition
+%%      and Co-Deletion Planner for Agent Memory
+%% (T3) Certifying Deletion-Completeness in LLM Agent Memory: Recoverability
+%%      Decomposition, Minimal Co-Deletion, and the Parametric Floor
+
+\documentclass[letterpaper]{article}
+\usepackage{aaai2027}  % AAAI author kit
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage[hyphens]{url}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\urlstyle{rm}
+\def\UrlFont{\rm}
+\usepackage{natbib}
+\frenchspacing
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+
+\pdfinfo{
+/Title (Decomposing Recoverability: Minimal Co-Deletion for the Right to be Forgotten in LLM Agent Memory)
+/Author (Muhammad Salman Al Farisi)
+}
+
+\setcounter{secnumdepth}{2}
+
+\title{Decomposing Recoverability: Minimal Co-Deletion for the\\
+       Right to be Forgotten in LLM Agent Memory}
+\author{
+    Muhammad Salman Al Farisi\\
+}
+\affiliations{
+    National University of Singapore\\
+    Advisor: Tan Tian Huat\\
+    salman26080@gmail.com
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% HELD — drafted last per skeleton order (after §1 Introduction).
+\end{abstract}
+
+%========================================================================
+\section{Introduction}\label{sec:intro}
+% HELD. Open on the agent-loop scenario (C7); gap = nobody asks WHY deleted
+% facts recover or what minimum co-deletion closes it; contributions C1/C4/C5/C7;
+% state necessary-but-not-sufficient vs ForgetEval on page 1.
+
+\section{Related Work}\label{sec:related}
+% HELD. Three neighbors + DB lineage (see REFERENCES.md / ledger §G):
+% ForgetEval (stronger, decomposed question + the agent path it bypassed),
+% ForgetAgent (synthetic method w/ receipts), Agentic Unlearning (weight-access),
+% P2E2 / SeQureDB (deletion-under-dependencies theory we operationalize).
+
+\section{Problem Formulation}\label{sec:formulation}
+% HELD. Deletion-completeness vs never-stored prior (port P2E2); the three
+% recoverability channels formally; recoverability = max over channels;
+% Opt-P2E2 and its NP-hardness.
+
+\section{Method}\label{sec:method}
+% HELD. Probe battery; entailment detector; three greedy planner heuristics;
+% certificate emitter.
+
+%========================================================================
+\section{Experiments}\label{sec:results}
+
+We evaluate on three deployed agent-memory systems spanning three architecture
+families: \textbf{Mem0} (\texttt{mem0ai} 2.0.7, a deduplicating extraction
+pipeline over local Chroma), \textbf{Zep/Graphiti} (\texttt{graphiti-core} 0.29.2,
+a bi-temporal knowledge graph over Neo4j~5.26), and \textbf{Letta/MemGPT}
+(\texttt{letta}~0.16.8, an LLM-paging agent over Postgres + pgvector). Every
+component runs locally with pinned versions and disabled telemetry, so the
+pipeline is reproducible from a clean checkout. The deletion adversary has full
+read access to the surviving store and black-box access to the base model (no
+training-time access). Two pinned reasoners are used wherever recovery is
+model-dependent: \texttt{gpt-4o-mini-2024-07-18} (primary) and
+\texttt{gpt-4o-2024-08-06}; embeddings are local \texttt{all-MiniLM-L6-v2}. The
+completeness threshold is $\tau=0.10$. Datasets are synthetic subjects placed in
+realistic statistical contexts: 12 isolated PII facts, 6 multi-hop facts with
+their stored operands and bystanders, and 15 parametric-gradient facts across
+three difficulty tiers. Recovery is scored by a validated LLM judge whose
+false-accept rate is $0\%$ (\S\ref{sec:res-judge}), so \emph{every reported
+recovery rate is a conservative lower bound}. Table~\ref{tab:master} summarizes
+the headline numbers; results are presented in decreasing order of confidence.
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Result} & \textbf{System} & \textbf{Headline} & \textbf{Backing control} \\
+\midrule
+Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, $k{=}1.17$ & spare-bystander + gpt-4o entailment judge \\
+$\rho$ floor (\S\ref{sec:res-rho})       & Mem0     & 6/15 \emph{uncertifiable} at residual $0$ & world-context-only $\rho$ probe; refusal audit \\
+Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 80\%$\to$0\% & operands-only; verified-faithful co-delete \\
+Convergence (\S\ref{sec:res-converge})   & all three & 67\% / 100\% residue by family & clean-delete verified first; explicit baseline \\
+Residual (\S\ref{sec:res-residual})      & Mem0     & 75\%; 83\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
+Judge (\S\ref{sec:res-judge})            & ---      & 0\% false-accept; entail.\ gpt-4o 0\% & gold set + 12 hard near-miss negatives \\
+\bottomrule
+\end{tabular}
+\caption{Headline results, ordered by confidence. Each row's claim is admitted
+only because the named control rules out the obvious confound.}
+\label{tab:master}
+\end{table*}
+
+\subsection{Minimal Co-Deletion: The Planner}\label{sec:res-planner}
+
+Our central operational claim is that completeness is reachable with
+\emph{minimal collateral}. On the 6 multi-hop targets, the threshold planner
+(probe~$\to$ purge the target's own artifacts~$\to$ co-delete entailing facts in
+entailment-confidence order, re-probing until recoverability $<\tau$) achieves
+\textbf{100\% completeness with 0 spurious bystander deletions} and a
+\textbf{mean collateral of $k=1.17$}; minimality spares 4 operands whose deletion
+was unnecessary once a sufficient subset was removed.
+
+\textbf{Control.} The 0-spurious figure \emph{is} the selectivity test: the
+candidate pool mixes true operands with bystanders the planner must not touch. The
+result is also robust to the entailment judge: re-running with the stronger
+\texttt{gpt-4o} judge leaves completeness, spurious count, and $k$ unchanged. This
+robustness is not incidental---our entailment-judge validation
+(\S\ref{sec:res-judge}) shows \texttt{gpt-4o-mini} false-fires on $41.7\%$ of
+\emph{insufficient} partial operands while \texttt{gpt-4o} false-fires on $0\%$,
+so using \texttt{gpt-4o} is precisely what prevents $k$ from inflating. The
+planner targets the NP-hard Opt-P2E2 problem; ``minimal'' here denotes a
+sufficient co-deletion subset, not a certified optimum.
+
+\subsection{The Parametric Floor and the Limit of Certifiable Deletion}\label{sec:res-rho}
+
+Not every fact can be certified deleted. We \emph{measure} the parametric floor
+$\rho$---the rate at which the base model alone reconstructs a value from
+world-knowable context---rather than asserting it. Across the gradient, $\rho$ is
+monotone in tier (\texttt{gpt-4o-mini}\,/\,\texttt{gpt-4o}):
+\textbf{low $0.00/0.00$}, \textbf{mid $0.033/0.633$}, \textbf{high $0.833/1.00$}
+(Table~\ref{tab:rho}). Consequently \textbf{6 of 15 certificates are
+\emph{not} certifiable-complete} ($\rho>\tau$) \emph{even though residual survival
+is $0$}. This is the limit result: when the value is recoverable from
+non-deletable world knowledge, no amount of co-deletion can certify completeness.
+
+\textbf{Control.} The $\rho$ probe sees \emph{only} the subject's world-knowable
+context, never the stored facts, so co-deletion provably cannot lower it. Three
+hardening checks back the gradient: a mid-tier numeric-tolerance sweep shows the
+floor persists at every tolerance (its magnitude, not its existence, is
+tolerance-dependent); a base-rate vs.\ context-lift split separates genuine
+inference from prior plausibility; and a high-tier refusal audit (e.g., the
+sensitive-attribute item R13, refused on $5/6$ samples by \texttt{gpt-4o-mini})
+means $\rho$ for sensitive attributes is an \emph{adversarial lower bound}. A
+\textsc{complete} certificate is complete \emph{modulo} the recovery judge's
+$\approx\!78\%$ recall; \textsc{incomplete} and aggregate figures are safe lower
+bounds.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Reasoner & low & mid & high \\
+\midrule
+\texttt{gpt-4o-mini-2024-07-18} & 0.00 & 0.033 & 0.833 \\
+\texttt{gpt-4o-2024-08-06}      & 0.00 & 0.633 & 1.000 \\
+\bottomrule
+\end{tabular}
+\caption{Measured parametric floor $\rho$ by difficulty tier (recovery rate over
+$n{=}6$ samples, temperature $0.7$). The mid tier is reasoner-dependent---why
+$\geq 2$ reasoners are mandatory. 6/15 facts have $\rho>\tau$ at residual $0$.}
+\label{tab:rho}
+\end{table}
+
+\subsection{Decomposing Recovery: Re-Derivation at Zero Residual}\label{sec:res-rederiv}
+
+A fact can be unrecoverable by inspection yet trivially \emph{re-derivable} from
+surviving facts. Using an operands-only control---the post-deletion state in
+which the target's own value is never stored, so residual survival is $0$ by
+construction (verified with the narrow deletion surface form, not the broad
+recovery set, so an operand sharing a token is not miscounted)---we isolate the
+re-derivation channel. On Mem0, the leak is \textbf{100\% for stored-alone (bin~1)
+and $80\%$ for stored+world (bin~2)}, collapsing to \textbf{$0\%$ after
+co-deleting the operands}, with parametric floor $\rho=0\%$. The same control
+\textbf{ports unchanged to Letta}: bin~1 $100\%$, bin~2 $80\%$
+(\texttt{gpt-4o-mini})\,/\,$100\%$ (\texttt{gpt-4o}), again $\to 0\%$ after
+co-deletion. Re-derivation is thus a recovery channel orthogonal to residual
+survival, and minimal co-deletion closes it down to the parametric floor.
+
+\textbf{Control.} Recovery is binned by mechanism and \emph{never} aggregated
+across bins, and run on two reasoners, because re-derivation is model-dependent
+(the honest negative F043, a CHS$\to$Bishan geographic leap, does not leak on
+either). Crucially, on Letta the co-deletion is issued through the
+\emph{direct, deterministic} \texttt{passages.delete} (by captured passage id),
+not a conversational request, and we \emph{verify} every operand passage is gone:
+faithful co-deletion $=100\%$, bystanders intact $=100\%$. ``Re-derivation
+closed'' therefore cannot be confounded with ``the delete silently did not
+execute''---keeping this result cleanly separate from the agent-mediated-deletion
+finding of \S\ref{sec:res-converge}.
+
+\subsection{Generalization: Three Families, One Phenomenon}\label{sec:res-converge}
+
+Residual survival is not a Mem0 quirk; it recurs across all three families by
+\emph{different by-design mechanisms}. In \textbf{Graphiti}, the explicit
+\texttt{remove\_episode} is clean for the graph---it hard-deletes the episode,
+its \texttt{RELATES\_TO} edges, and orphaned entities (we verify the hard delete
+first)---yet the deleted fact survives in \textbf{stale entity and community
+summaries that are not recomputed on deletion}: edge residue $33\%$ but
+\textbf{summary residue $67\%$}. In \textbf{Letta}, deletion is agent-mediated
+across two surfaces (core blocks and archival passages). An explicit dual-surface
+instruction is \textbf{$100\%$ faithful}; but a \emph{vague, deployment-realistic}
+right-to-be-forgotten request (``I'm not comfortable with you keeping X'') with
+the fact also in archival makes the agent scrub the core block it reasons about
+and \textbf{silently miss archival}: \textbf{$0\%$ faithful, $100\%$ archival
+residue, $0\%$ core residue}. Agent-mediated deletion is \emph{surface-incomplete}
+and instruction-dependent.
+
+\textbf{Novelty and corroboration.} This agent-loop failure is genuinely new:
+ForgetEval \citep{forgeteval} deliberately bypassed Letta's agent loop
+(addressing the archival REST endpoints directly, keeping the LLM out of the
+recall hot path), so we test exactly the path it excluded. Conversely,
+ForgetEval's own per-system notes \emph{independently corroborate} our convergence
+thesis---its observation that Graphiti ``sheds surface forms / synthesised fact
+strings'' is our stale-summary residue, and that Mem0's router prefers
+``link-and-keep over delete-old'' is our duplication residue.
+
+\textbf{Control.} For Graphiti, verifying the clean hard delete \emph{first}
+establishes that the residue is stale summaries, not failed edge removal. For
+Letta, the $100\%$-faithful explicit baseline isolates the failure to
+phrasing/surface coverage, not to a missing capability.
+
+\subsection{Residual Survival and the Duplication Mechanism}\label{sec:res-residual}
+
+The motivating failure on Mem0 is that naive single-record deletion is residually
+incomplete because the store \emph{silently duplicates} facts. Deleting the single
+surfaced record leaves the value present in \textbf{$75\%$} of isolated PII
+targets; an artifact-aware deletion drives residual survival from
+\textbf{$83\%$ to $0\%$}.
+
+\textbf{Control.} A $2{\times}2$ factorial over embedder
+(MiniLM\,/\,OpenAI) $\times$ injection cadence ($0\,$s\,/\,$1.5\,$s) shows
+row-inflation of $24$--$42\%$ and duplication incidence of $30$--$39\%$ in
+\emph{all four} cells, with paraphrase-variant duplicates outnumbering
+byte-identical ones in every cell. The duplication is therefore a semantic-dedup
+\emph{design limitation}, not an artifact of our embedder or an injection-timing
+race; it is independently documented in Mem0 issues \#4896 (hash-only dedup),
+\#4573 ($\sim\!37.6\%$ near-duplicates in a production audit), and \#687 (the
+byte-identical write race). We note that these rates are \emph{not} in tension
+with ForgetEval's Mem0 numbers: their figure is forget-command success in
+top-$k$ retrieval, whereas ours is post-deletion recoverability by \emph{any}
+channel---complementary measurements of necessary vs.\ sufficient conditions for
+completeness.
+
+\subsection{Judge Validation}\label{sec:res-judge}
+
+Two LLM judges are load-bearing, so both are validated against gold labels. The
+\textbf{recovery judge} has a \textbf{$0\%$ false-accept rate} ($n{=}17$; 7 true
+positives, 0 false positives, 8 true negatives, 2 false negatives; $\kappa=0.767$
+vs.\ gold). Its only errors are \emph{conservative} rejections (e.g., scoring
+``$\approx$SGD~3{,}142'' as a non-recovery of $3{,}200$), so all reported leak
+rates are lower bounds. The \textbf{entailment judge} is validated on 24 pairs
+including 12 hard near-miss negatives (partial operands that should \emph{not}
+entail): inter-judge agreement falls from $\kappa=0.83$ on trivial pairs to
+$0.455$ on the hard near-misses, and \texttt{gpt-4o-mini} false-fires on $41.7\%$
+of insufficient operands versus $0\%$ for \texttt{gpt-4o}. This is the direct
+justification for using \texttt{gpt-4o} as the planner's entailment judge
+(\S\ref{sec:res-planner}).
+
+%========================================================================
+\section{Limitations}\label{sec:limitations}
+% HELD. Lead with the found-and-fixed limitations (reads as rigor):
+% (i) MIA power — n=33+33 twins, bootstrap CI + permutation p: intact AUC 0.719
+%     (p=.002), naive 0.613 (p=.065, CI incl .5, NOT significant), aware 0.514;
+%     the earlier n=6 "trace survives" claim was retracted; n->60 planned.
+% (ii) entailment near-miss (kappa 0.83 -> 0.455) -> gpt-4o judge.
+% (iii) rho as adversarial lower bound for sensitive attrs (refusals).
+% (iv) COMPLETE certificate is "modulo ~78% recovery-judge recall."
+
+\section{Conclusion and Future Work}\label{sec:conclusion}
+% HELD. Paging family done; named extensions: MIA n->60 (2nd matched control/fact)
+% to test if naive crosses p<.05; a 4th architecture family.
+
+%========================================================================
+% Minimal bibliography for the works cited in §5; full set in REFERENCES.md.
+\begin{thebibliography}{}
+\bibitem[ForgetEval(2026)]{forgeteval}
+ForgetEval. 2026.
+\newblock arXiv:2606.15903 (MIT). Benchmarks Mem0, Graphiti, and Letta (+more)
+for forget-command success in top-$k$ retrieval; bypasses the Letta agent loop.
+\end{thebibliography}
+
+\end{document}

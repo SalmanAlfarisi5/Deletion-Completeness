@@ -57,10 +57,14 @@ class LettaAdapter(MemorySystemAdapter):
             agent_id=aid, input=f"Please remember the following information: {text}")
         return {"agent_id": aid, "memory_ids": [], "tool_calls": self._tool_calls(resp)}
 
-    def archival_insert(self, user_id: str, text: str) -> None:
+    def archival_insert(self, user_id: str, text: str) -> list[str]:
         """Directly seed an archival passage (simulating a fact already in the
-        vector store the agent didn't itself write)."""
-        self.client.agents.passages.create(agent_id=self._agent(user_id), text=text)
+        vector store the agent didn't itself write). Returns the created passage
+        id(s) so a caller can build a fact->row map for faithful, direct deletion
+        (long text may be chunked into several passages)."""
+        res = self.client.agents.passages.create(agent_id=self._agent(user_id), text=text)
+        items = res if isinstance(res, list) else getattr(res, "passages", None) or [res]
+        return [p.id for p in items if getattr(p, "id", None)]
 
     def agent_forget(self, user_id: str, instruction: str) -> dict:
         """Agent-mediated deletion: the agent decides how to comply."""
@@ -113,3 +117,10 @@ class LettaAdapter(MemorySystemAdapter):
     def core_blocks(self, user_id: str) -> dict[str, str]:
         aid = self._agent(user_id)
         return {b.label: (b.value or "") for b in self.client.agents.blocks.list(aid)}
+
+    def set_core_block(self, user_id: str, label: str, value: str) -> None:
+        """Overwrite a core memory block directly (faithful, non-agent-mediated).
+        Used to seed the agent's known user identity (the default human block says
+        '(no information about the user yet)', which otherwise tells a re-derivation
+        adversary nothing is known about 'the user')."""
+        self.client.agents.blocks.update(label, agent_id=self._agent(user_id), value=value)

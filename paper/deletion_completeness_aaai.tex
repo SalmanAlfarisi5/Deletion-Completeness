@@ -212,8 +212,10 @@ $\mathcal{A}$ recovers had $f$ never been stored, with \emph{every} stored opera
 excluded. A deletion is \textbf{floor-reaching} for $\mathcal{A}$ iff
 $\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}^{\mathcal{A}}=0$---recoverability is
 driven to the parametric floor and nothing further is deletable---and
-\textbf{erasure-certified} iff additionally $R_{\mathcal{A}}(f,S')=
-\rho^{\mathcal{A}}<\tau$.
+\textbf{erasure-certified} iff it is floor-reaching for every modeled adversary and
+additionally $\sup_{\mathcal{A}} R_{\mathcal{A}}(f,S')=\max_{\mathcal{A}}
+\rho^{\mathcal{A}}<\tau$, i.e.\ the floor is below $\tau$ under the worst modeled
+adversary.
 
 \paragraph{Stronger than P2E2 (and why).} This criterion is deliberately
 \emph{stronger} than the dependency-bounded erasure of \citet{p2e2}, whose
@@ -380,7 +382,7 @@ the headline numbers; results are presented in decreasing order of confidence.
 Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, $k{=}1.17$ & spare-bystander + gpt-4o entailment judge \\
 $\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 9/15 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; $\tau$-stable; refusal audit \\
 Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 80\%$\to$0\% & operands-only; verified-faithful co-delete \\
-Convergence (\S\ref{sec:res-converge})   & all three & 67\% / 100\% residue by family & clean-delete verified first; explicit baseline \\
+Convergence (\S\ref{sec:res-converge})   & all three & 67\% / 100\% (Graphiti/Letta) & clean-delete verified first; explicit baseline \\
 Residual (\S\ref{sec:res-residual})      & Mem0     & 75\%; 83\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
 Judge (\S\ref{sec:res-judge})            & ---      & $0/8$ false-accept (CI $\le\!.32$) & gold set + 12 hard near-miss negatives \\
 \bottomrule
@@ -431,7 +433,7 @@ is the lower baseline---one record, no re-derivation path closed.
 \toprule
 field & \textsc{complete} & \textsc{incomplete} \\
 \midrule
-example (system)                 & F040 (Letta)   & R11 (base model) \\
+example (system)                 & F040 (Letta)   & R11 (Mem0 run) \\
 \texttt{residual\_survival}      & 0.0            & 0.0 \\
 \texttt{rederiv\_with\_operands} (pre)  & 1.0     & --- \\
 \texttt{re\_derivation\_score} (final)  & 0.0     & 0.0 \\
@@ -498,18 +500,31 @@ bounds.
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{@{}lccc@{}}
+\begin{tabular}{@{}llccc@{}}
 \toprule
-Reasoner & low & mid & high \\
+fact & tier & $\rho_{\text{mini}}$ & $\rho_{4o}$ & $\rho_{\max}$ \\
 \midrule
-\texttt{gpt-4o-mini-2024-07-18} & 0.00 & 0.033 & 0.833 \\
-\texttt{gpt-4o-2024-08-06}      & 0.00 & 0.633 & 1.000 \\
+R01--R05         & low  & 0.00 & 0.00 & 0.00 \\
+R06              & mid  & 0.00 & 0.50 & 0.50 \\
+R07              & mid  & 0.17 & 0.83 & 0.83 \\
+R08              & mid  & 0.00 & 1.00 & 1.00 \\
+R09              & mid  & 0.00 & 0.00 & \textbf{0.00} \\
+R10              & mid  & 0.00 & 0.83 & 0.83 \\
+R11,R12,R14,R15  & high & 1.00 & 1.00 & 1.00 \\
+R13              & high & 0.17 & 1.00 & 1.00 \\
 \bottomrule
 \end{tabular}
-\caption{Measured parametric floor $\rho$ by difficulty tier (recovery rate over
-$n{=}6$ samples, temperature $0.7$). The mid tier is reasoner-dependent---why
-$\geq 2$ reasoners are mandatory. Under the worst modeled adversary $9/15$ facts
-have $\rho\geq\tau$ at residual $0$ ($6/15$ under \texttt{gpt-4o-mini} alone).}
+\caption{Per-fact parametric floor $\rho$ (recovery rate, $n{=}6$ samples,
+temperature $0.7$) for the two reasoners and the worst adversary
+$\rho_{\max}{=}\max(\rho_{\text{mini}},\rho_{4o})$. Tier means are
+$0.00/0.00$, $0.033/0.633$, $0.833/1.00$ (\texttt{mini}/\texttt{4o}). The
+worst-adversary $\rho$ is bimodal: \textbf{six} facts at $\rho_{\max}{=}0$ (five
+low plus the mid-tier outlier \textbf{R09}, which \emph{both} reasoners fail) and
+\textbf{nine} at $\rho_{\max}{\geq}0.5$, nothing between---hence $9/15$
+uncertifiable, invariant for $\tau\in(0,0.5)$. The naive tier-mean reading
+($5$ mid $+\,5$ high) over-counts by exactly R09. R13's low $\rho_{\text{mini}}{=}0.17$
+is a refusal artifact on the sensitive-attribute item (its worst-adversary $\rho$
+is still $1.0$).}
 \label{tab:rho}
 \end{table}
 
@@ -526,8 +541,13 @@ and $80\%$ for stored+world (bin~2)}---identical across both reasoners
 co-deleting the operands}, with parametric floor $\rho=0\%$. The same control
 \textbf{ports unchanged to Letta}: bin~1 $100\%$, bin~2 $80\%$
 (\texttt{gpt-4o-mini})\,/\,$100\%$ (\texttt{gpt-4o}), again $\to 0\%$ after
-co-deletion. Re-derivation is thus a recovery channel orthogonal to residual
-survival, and minimal co-deletion closes it down to the parametric floor.
+co-deletion. The lone bin~2 fact separating the two reasoners on Letta is F043
+(the CHS$\to$Bishan geographic leap), which does not leak on Mem0 under \emph{either}
+reasoner; on Letta the adversary's notes also include the agent's core identity
+block, and that extra context tips this single borderline inference for the
+stronger reasoner---a system-mediated difference, not a contradiction.
+Re-derivation is thus a recovery channel orthogonal to residual survival, and
+minimal co-deletion closes it down to the parametric floor.
 
 \textbf{Control.} Recovery is binned by mechanism and \emph{never} aggregated
 across bins, and run on two reasoners, because re-derivation is model-dependent

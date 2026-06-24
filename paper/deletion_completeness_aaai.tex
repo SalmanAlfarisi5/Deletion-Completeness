@@ -49,26 +49,25 @@
 \maketitle
 
 \begin{abstract}
-Deleting a fact from an LLM agent's memory does not mean the agent has forgotten
-it. A realistic ``please forget X'' request to a paging agent makes it scrub the
-working-memory block it reasons over while silently leaving X in its archival
-store---a deletion that is acknowledged and looks complete, yet is not. This is
-one instance of a general gap: existing audits check whether a forget command
-removes a value from retrieval, which is \emph{necessary but not sufficient},
-because the value can persist in a derived artifact or be re-derived from facts
-that were never deleted. We formalize \emph{deletion-completeness} for agent
-memory, decomposing post-deletion recoverability into three causally distinct
-channels---residual survival, re-derivation from surviving facts, and a parametric
-floor recoverable from the base model alone---and give a planner that computes the
-minimal co-deletion closing the deletable channels, emitting an auditable
-certificate. Because the parametric floor cannot be deleted, certification has a
-hard limit: under the strongest modeled adversary, \textbf{9 of 15} facts cannot
-be certified erased even when nothing of them survives in the store and no
-co-deletion would help---a bound invariant to the certification threshold. The
-same stack, run across three memory architectures (a deduplication pipeline, a
-bi-temporal knowledge graph, and a paging agent), finds residual survival in all
-three through different by-design mechanisms: the gap is a property of how agent
-memory derives and retains facts, not of any single system.
+Ask a paging LLM agent to forget a fact and it may scrub the working-memory block
+it reasons over while silently leaving the fact in its archival store: the deletion
+is acknowledged, looks complete, and is not. More generally, deleting a fact from
+an LLM agent's memory does not mean the agent has forgotten it---existing audits
+check whether a forget command removes a value from retrieval, which is
+\emph{necessary but not sufficient}, because the value can persist in a derived
+artifact or be re-derived from facts that were never deleted. We formalize
+\emph{deletion-completeness} for agent memory, decomposing post-deletion
+recoverability into three causally distinct channels---residual survival,
+re-derivation from surviving facts, and a parametric floor recoverable from the
+base model alone---and give a planner that computes the minimal co-deletion
+closing the deletable channels, emitting an auditable certificate. Because the
+parametric floor cannot be deleted, certification has a hard limit: under the
+strongest modeled adversary, \textbf{9 of 15} facts cannot be certified erased at
+any threshold below $0.5$, even with zero residual survival and no helpful
+co-deletion. The same stack, run across three memory architectures (a
+deduplication pipeline, a bi-temporal knowledge graph, and a paging agent), finds
+residual survival in all three through different by-design mechanisms: the gap is a
+property of how agent memory derives and retains facts, not of any single system.
 \end{abstract}
 
 %========================================================================
@@ -120,9 +119,10 @@ audits bypass (\S\ref{sec:res-converge}).
 \end{itemize}
 
 The breadth across systems is evidence for a stronger, causally-decomposed notion
-of erasure---not a claim to be first to evaluate these systems, which prior work
-already does. What is new is asking, and answering, why deleted facts return and
-what it costs to make them stay gone.
+of erasure---not a claim to be first to evaluate these systems, since ForgetEval
+\citep{forgeteval} already benchmarks all three, but a stronger question asked of
+them. What is new is asking, and answering, why deleted facts return and what it
+costs to make them stay gone.
 
 \section{Related Work}\label{sec:related}
 
@@ -620,22 +620,72 @@ justification for using \texttt{gpt-4o} as the planner's entailment judge
 
 %========================================================================
 \section{Limitations}\label{sec:limitations}
-% HELD. Lead with the found-and-fixed limitations (reads as rigor):
-% (i) MIA power — n=33+33 twins, bootstrap CI + permutation p: intact AUC 0.719
-%     (p=.002), naive 0.613 (p=.065, CI incl .5, NOT significant), aware 0.514;
-%     the earlier n=6 "trace survives" claim was retracted; n->60 planned.
-% (ii) entailment near-miss (kappa 0.83 -> 0.455) -> gpt-4o judge.
-% (iii) rho as adversarial lower bound for sensitive attrs (refusals).
-% (iv) COMPLETE certificate is "modulo ~78% recovery-judge recall."
-% (v) recovery-judge gold set thin on NEGATIVES (n=8 -> false-accept 95% CI <= .32);
-%     expand with adversarial near-miss RECOVERIES ("~3,190" for 3,200; "AB+" for
-%     "AB negative") -> the single most valuable validation extension (ref 5.6).
-% (vi) cross-system convergence (5.4) probed on n=3 sensitive-PII targets/system
-%     (small, high-stakes); more targets/family + a 4th architecture = named extension.
+
+We state the boundaries of the evidence, leading with issues we found and
+corrected---the measurement discipline is itself part of what the paper offers.
+
+\paragraph{A retracted membership claim.} An early result suggested a membership
+signal survived artifact-aware deletion; at $n{=}6$ it was underpowered and we
+retract it. Re-run with $33$ members and matched near-twins, bootstrap $95\%$ CIs,
+and a label-permutation test, the picture reverses: artifact-aware deletion
+restores membership-indistinguishability (AUC $0.51$, CI includes $0.5$), the
+intact store is detectable (AUC $0.72$, $p{=}.002$, so the test \emph{has} power),
+and the naive-deletion signal is not significant at this $n$ (AUC $0.61$,
+$p{=}.065$). We thus claim only non-significance for naive deletion, not the
+absence of a leak; a planned $n{\approx}60$ (a second matched control per fact)
+will test whether it crosses significance.
+
+\paragraph{Judge-dependent measurements, bounded.} Both LLM judges are validated,
+neither is perfect. The entailment judge's inter-rater agreement falls to
+$\kappa{=}0.455$ on hard near-miss negatives, where \texttt{gpt-4o-mini}
+false-fires on $41.7\%$; we use \texttt{gpt-4o} (no false-fires on our cases) as
+the planner's judge, but adversarial partial-operand entailments remain the
+hardest case. The recovery judge had \emph{no} false accepts, but over only $8$
+gold negatives---a $95\%$ Wilson upper bound of $\approx\!0.32$---so the
+lower-bound framing holds up to that bound; tightening it with adversarial
+near-miss \emph{recoveries} (e.g.\ ``$\approx$3{,}190'' for $3{,}200$) is the most
+valuable validation extension. \textsc{Complete} verdicts are additionally modulo
+the recovery judge's recall.
+
+\paragraph{$\rho$ is a lower bound where it matters most.} The parametric floor is
+estimated by eliciting the value from the base model; for sensitive attributes the
+model often refuses (one item drew $5/6$ refusals under \texttt{gpt-4o-mini}), so
+the measured $\rho$ \emph{understates} true world-inferability for exactly the
+attributes a privacy audit cares about. A more willing adversary could only push
+the uncertifiable count above $9/15$, never below.
+
+\paragraph{Small cross-system samples.} The convergence result probes $n{=}3$
+high-stakes targets per system. The mechanisms are qualitatively distinct and each
+is independently corroborated \citep{forgeteval}, but the per-system rates (e.g.\
+$67\%$ summary residue in the graph store) are indicative, not precise; more
+targets per family is the obvious next step. Finally, all subjects are synthetic,
+so recoveries reflect re-derivability rather than memorized real individuals, and
+we model two reasoner adversaries rather than the supremum over all of them.
 
 \section{Conclusion and Future Work}\label{sec:conclusion}
-% HELD. Paging family done; named extensions: MIA n->60 (2nd matched control/fact)
-% to test if naive crosses p<.05; a 4th architecture family.
+
+Deleting a record is not erasing a fact. We gave a causal decomposition of
+post-deletion recoverability, a planner that closes the deletable channels with
+minimal collateral, and a certificate that states, per fact, both the cost of
+erasure and whether it can be certified at all. Across three memory architectures
+the same gap recurs through different by-design mechanisms, and a \emph{measured}
+parametric floor sets a hard limit on what any deletion can promise.
+
+That limit is the paper's broadest implication. For a fact recoverable from world
+knowledge alone ($\rho\geq\tau$)---$9$ of our $15$ gradient facts under the
+strongest modeled adversary---\emph{no} external-store deletion method can achieve
+erasure, because the value can be reconstructed without ever reading the store.
+For such facts, right-to-be-forgotten compliance cannot be a deletion operation:
+it requires not storing the fact in the first place, or explicitly accepting and
+disclosing the residual floor. Deletion engineering can close the re-derivation and
+residual channels; it cannot close the parametric one.
+
+Two extensions are immediate: powering the membership-inference test to
+$n{\approx}60$ to resolve the naive-deletion borderline, and adding a fourth memory
+architecture to test whether the three-family convergence is universal. The deeper
+open problem is certifying erasure against an unbounded adversary rather than a
+modeled bracket: the floor we measure is a lower bound, so the true limit of
+forgetting in agent memory may be higher still.
 
 %========================================================================
 % Minimal bibliography for the works cited in §5; full set in REFERENCES.md.

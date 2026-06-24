@@ -654,6 +654,16 @@ the measured $\rho$ \emph{understates} true world-inferability for exactly the
 attributes a privacy audit cares about. A more willing adversary could only push
 the uncertifiable count above $9/15$, never below.
 
+\paragraph{The entailment graph must be known.} The decomposition and planner
+assume the entailment graph is specified---the operands that re-imply a fact are
+known, as they are in our controlled setup because we injected them. In a deployed
+store the graph is neither given nor easily recovered: the planner closes only
+re-derivation paths through \emph{known} entailers, so an unmodeled entailer is an
+uncloseable path, and discovering the entailment graph of a live memory is itself
+an open problem. This bounds the method's guarantee independently of the parametric
+floor---even at $\rho{=}0$, completeness is relative to the entailers the auditor
+can see.
+
 \paragraph{Small cross-system samples.} The convergence result probes $n{=}3$
 high-stakes targets per system. The mechanisms are qualitatively distinct and each
 is independently corroborated \citep{forgeteval}, but the per-system rates (e.g.\
@@ -688,28 +698,7 @@ modeled bracket: the floor we measure is a lower bound, so the true limit of
 forgetting in agent memory may be higher still.
 
 %========================================================================
-% Minimal bibliography for the works cited in §5; full set in REFERENCES.md.
-\begin{thebibliography}{}
-\bibitem[P2E2(2025)]{p2e2}
-2025.
-\newblock Meaningful Data Erasure in the Presence of Dependencies. VLDB'25;
-arXiv:2507.00343. Formal deletion-completeness under dependencies (never-stored
-prior) and the hardness of erasure under dependencies.
-\bibitem[ForgetEval(2026)]{forgeteval}
-ForgetEval. 2026.
-\newblock arXiv:2606.15903 (MIT). Benchmarks Mem0, Graphiti, and Letta (+more)
-for forget-command success in top-$k$ retrieval; bypasses the Letta agent loop.
-\bibitem[ForgetAgent(2026)]{forgetagent}
-ForgetAgent. 2026.
-\newblock A synthetic unlearning method with deletion receipts and
-counterfactual-indistinguishability guarantees.
-\bibitem[Agentic Unlearning(2026)]{agenticunlearning}
-Agentic Unlearning. 2026.
-\newblock arXiv:2602.17692. Weight-access dual-pathway (``backflow'') separating
-parametric from memory recovery.
-\bibitem[Inference-Aware Deletion(2026)]{seqdb}
-Inference-Aware and Privacy-Preserving Deletion in Databases. 2026.
-\newblock arXiv:2604.00326.
-\end{thebibliography}
+\bibliographystyle{aaai}
+\bibliography{references}
 
 \end{document}

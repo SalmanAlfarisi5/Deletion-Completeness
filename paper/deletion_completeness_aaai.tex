@@ -20,6 +20,8 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
 \urlstyle{rm}
 \def\UrlFont{\rm}
 \usepackage{natbib}
@@ -558,6 +560,46 @@ finding of \S\ref{sec:res-converge}.
 
 \subsection{Generalization: Three Families, One Phenomenon}\label{sec:res-converge}
 
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  surf/.style={rectangle, rounded corners, draw, minimum width=24mm, minimum height=10mm, align=center},
+  cleared/.style={surf, fill=black!4},
+  residual/.style={surf, draw=red!70!black, fill=red!10, very thick},
+  agent/.style={rectangle, rounded corners, draw, fill=blue!5, minimum width=36mm, minimum height=9mm, align=center},
+  instr/.style={align=center, text width=48mm},
+  arr/.style={-{Latex[length=2.2mm]}, thick},
+  faith/.style={align=center}
+]
+% ----- Panel A: explicit -----
+\node[instr] (iA) {\textbf{Explicit instruction}\\``delete X from core \textbf{and} archival''};
+\node[agent, below=3mm of iA] (aA) {agent $\to$ \texttt{memory\_replace}\\\footnotesize(acts on both surfaces)};
+\node[cleared, below=9mm of aA, xshift=-15mm] (cA) {\textbf{core block}\\\footnotesize(X removed)};
+\node[cleared, below=9mm of aA, xshift=15mm]  (rA) {\textbf{archival}\\\footnotesize(X removed)};
+\draw[arr] (aA) -- (cA);
+\draw[arr] (aA) -- (rA);
+\node[faith, below=23mm of aA] {\textbf{100\% faithful}\\\footnotesize both surfaces cleared};
+% ----- Panel B: vague -----
+\node[instr, right=30mm of iA] (iB) {\textbf{Vague, realistic request}\\``I'm not comfortable with you keeping X''};
+\node[agent, below=3mm of iB] (aB) {agent $\to$ \texttt{memory\_replace}\\\footnotesize(acts on core only)};
+\node[cleared, below=9mm of aB, xshift=-15mm]  (cB) {\textbf{core block}\\\footnotesize(X removed)};
+\node[residual, below=9mm of aB, xshift=15mm]  (rB) {\textbf{archival}\\{\large\textbf{X}}~\footnotesize(retained)};
+\draw[arr] (aB) -- (cB);
+\draw[arr, red!70!black, dashed] (aB) -- (rB) node[midway, right, red!70!black, font=\footnotesize] {misses};
+\node[faith, below=23mm of aB] {\textbf{0\% faithful} / 100\% archival residue\\\footnotesize core cleared, archival silently missed};
+\end{tikzpicture}
+\caption{\textbf{Same Letta agent, opposite outcomes by phrasing.} An explicit
+dual-surface instruction (left) makes the agent scrub \emph{both} the core block
+and the archival store---$100\%$ faithful. A vague, deployment-realistic request
+(right) makes the \emph{same} agent call \texttt{memory\_replace} on the core block
+it reasons over and \emph{silently miss} archival---$0\%$ faithful, $100\%$
+archival residue. The gap is phrasing and surface coverage, not capability: the
+explicit baseline proves the agent \emph{can} clear both. This is the agent loop
+ForgetEval \citep{forgeteval} bypassed by writing archival endpoints directly.}
+\label{fig:agentloop}
+\end{figure*}
+
 Residual survival is not a Mem0 quirk; it recurs across all three families by
 \emph{different by-design mechanisms}. The two cross-system probes here are run on
 $n{=}3$ sensitive-PII targets per system (a deliberately small, high-stakes set;
@@ -572,8 +614,8 @@ instruction is \textbf{$100\%$ faithful}; but a \emph{vague, deployment-realisti
 right-to-be-forgotten request (``I'm not comfortable with you keeping X'') with
 the fact also in archival makes the agent scrub the core block it reasons about
 and \textbf{silently miss archival}: \textbf{$0\%$ faithful, $100\%$ archival
-residue, $0\%$ core residue}. Agent-mediated deletion is \emph{surface-incomplete}
-and instruction-dependent.
+residue, $0\%$ core residue} (Figure~\ref{fig:agentloop}). Agent-mediated deletion
+is \emph{surface-incomplete} and instruction-dependent.
 
 \textbf{Novelty and corroboration.} This agent-loop failure is genuinely new:
 ForgetEval \citep{forgeteval} deliberately bypassed Letta's agent loop

@@ -73,7 +73,8 @@ $\mathcal{A}$ has full read access to $S'$, black-box access to a base model $M$
 and general world knowledge $W$; a query $q_f$ asks for $v$. Write
 $\mathrm{rec}(a)=1$ iff answer $a$ reveals a surface form in $\Sigma(v)$ (within
 the stated value), as scored by the validated recovery judge
-(\S\ref{sec:res-judge}). We decompose recoverability into three channels.
+(\S\ref{sec:res-judge}). Two of the three channels below depend on $\mathcal{A}$'s
+reasoning model, so recoverability is \emph{adversary-relative} (Def.~4).
 
 \paragraph{Definition 1 (Residual survival).}
 $\sigma_{\mathrm{res}}(f,S')=\mathbb{1}\!\left[\exists\, r\in S':\;
@@ -81,39 +82,57 @@ $\sigma_{\mathrm{res}}(f,S')=\mathbb{1}\!\left[\exists\, r\in S':\;
 contains the value.
 
 \paragraph{Definition 2 (Re-derivation).}
-$\sigma_{\mathrm{red}}(f,S')=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid
+$\sigma_{\mathrm{red}}^{\mathcal{A}}(f,S')=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid
 S',M,W)\right)$: the adversary reconstructs $v$ by reasoning over the
 \emph{surviving store} plus world knowledge.
 
 \paragraph{Definition 3 (Parametric floor).}
-$\rho(f)=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid \emptyset, M, C)\right)$, where
+$\rho^{\mathcal{A}}(f)=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid \emptyset, M, C)\right)$, where
 $C\subseteq W$ is the subject's world-knowable context and the store is
-\emph{empty}. $\rho$ has no dependence on $S$ and is therefore
+\emph{empty}. $\rho^{\mathcal{A}}$ has no dependence on $S$ and is therefore
 \emph{system-independent}; we estimate it as a recovery rate over stochastic
 samples.
 
-\paragraph{Definition 4 (Recoverability).}
-$R(f,S')=\max\!\left(\sigma_{\mathrm{res}},\,\sigma_{\mathrm{red}},\,\rho\right)$.
-A single surviving channel suffices to recover $v$, so the channels combine by
-$\max$, not by sum.
+\paragraph{Definition 4 (Recoverability, adversary-relative).}
+$R_{\mathcal{A}}(f,S')=\max\!\left(\sigma_{\mathrm{res}},\,
+\sigma_{\mathrm{red}}^{\mathcal{A}},\,\rho^{\mathcal{A}}\right)$; the superscript
+marks the two adversary-dependent channels (residual is adversary-independent).
+The $\max$ is the worst-case-channel principle: one open channel suffices, so a
+rational adversary uses whichever is open. True recoverability is
+$\sup_{\mathcal{A}}R_{\mathcal{A}}$; we bracket it with two concrete adversaries,
+$\mathcal{A}_{\text{mini}}$ (\texttt{gpt-4o-mini}) and $\mathcal{A}_{4o}$
+(\texttt{gpt-4o}), so the two per-reasoner values of $\rho$ are principled points
+bracketing the floor, not measurement noise.
 
-\paragraph{Definition 5 (Deletion-completeness; never-stored prior).}
-Following the \emph{meaningful-erasure} criterion for deletion under dependencies
-\citep{p2e2}, the \emph{never-stored prior} recoverability of $f$ is exactly
-$\rho(f)$: what $\mathcal{A}$ recovers had $f$ never been stored. A deletion is
-\textbf{complete} iff it returns recoverability to this prior, i.e.,
-$\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}=0$ so that $R(f,S')=\rho$; it is
-\textbf{$\tau$-certifiable} iff additionally $R(f,S')<\tau$, equivalently
-$\rho<\tau$. This is the never-stored prior ported from the database setting:
-completeness is indistinguishability, up to $\tau$, from a world in which $f$ was
-never inserted---accounting for the dependencies (other stored facts) that may
-re-imply it.
+\paragraph{Definition 5 (Floor-reaching and erasure-certification).}
+The \emph{never-stored} recoverability of $f$ is $\rho^{\mathcal{A}}(f)$: what
+$\mathcal{A}$ recovers had $f$ never been stored, with \emph{every} stored operand
+excluded. A deletion is \textbf{floor-reaching} for $\mathcal{A}$ iff
+$\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}^{\mathcal{A}}=0$---recoverability is
+driven to the parametric floor and nothing further is deletable---and
+\textbf{erasure-certified} iff additionally $R_{\mathcal{A}}(f,S')=
+\rho^{\mathcal{A}}<\tau$.
 
-\paragraph{Remark 1 (the limit, C5).} When $\rho\geq\tau$ the fact is
-\emph{complete but not certifiable}: $\rho$ carries no store dependence, so no
-co-deletion can lower it and $R(f,S')\geq\tau$ irreducibly. The certificate
-correctly returns \textsc{incomplete} even at $\sigma_{\mathrm{res}}=
-\sigma_{\mathrm{red}}=0$ (e.g.\ R11, Table~\ref{tab:certs}).
+\paragraph{Stronger than P2E2 (and why).} This criterion is deliberately
+\emph{stronger} than the dependency-bounded erasure of \citet{p2e2}, whose
+baseline is the pre-insertion database with other, pre-existing facts
+\emph{present}; under it, deleting $f$'s own records already suffices even when $f$
+re-derives from surviving independent operands, so our operand co-deletion would
+count as over-deletion. We reject that baseline as \emph{vacuous for the right to
+be forgotten}: a diagnosis still re-inferable from stored symptoms has not been
+forgotten. We therefore set the baseline at $\rho^{\mathcal{A}}$ (world knowledge
+only, every stored operand removed) and cite P2E2 as the weaker criterion we
+strengthen.
+
+\paragraph{Remark 1 (the limit result, C5).} Floor-reaching is \emph{always}
+achievable by co-deletion (remove operands until $\sigma_{\mathrm{red}}=0$);
+erasure-\emph{certification} fails exactly when $\rho^{\mathcal{A}}\geq\tau$,
+because $\rho$ has no store dependence and no co-deletion can lower it. The
+certificate then reports \emph{floor-reaching but not erasure-certified} even at
+$\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}=0$ (e.g.\ R11, Table~\ref{tab:certs}):
+the fact is as erased as deletion can make it, yet remains world-inferable. This
+split---always floor-reaching, certification gated by $\rho<\tau$---is exact and
+avoids the misleading ``complete but recoverable.''
 
 \paragraph{Remark 2 (residual--floor boundary, C1/C5).} The same constraining
 context can land in either channel depending on \emph{where it lives}. If $v$ is
@@ -127,27 +146,93 @@ operand: $\rho=0$ and $\sigma_{\mathrm{red}}\!\to\!0$ under co-deletion
 target-constraining, so they enter $W$: $\rho>0$ (\S\ref{sec:res-rho}). This
 boundary---deletable re-derivation vs.\ irreducible floor---is the C1/C5 spine.
 
-\paragraph{The optimization problem.} Let $R_f\subseteq S$ be $f$'s own records.
-\textsc{Opt-P2E2} seeks a minimal co-deletion set:
+\paragraph{Remark 3 (over-deletion is the measured price of erasure).}
+Erasure-certification deletes entailers (e.g.\ C001, C002) the user never named,
+which a reviewer may read as a data-minimization violation. It is the opposite:
+co-deleting un-requested entailers is the \emph{measured, minimized} cost---the
+collateral $k$---of an actual erasure guarantee, because leaving them is not
+minimization but \emph{failed} erasure ($f$ simply re-derives). The planner
+minimizes $k$ (\S\ref{sec:method}), the floor $\rho$ bounds what no deletion can
+remove, and the certificate \emph{surfaces} $k$, so paying it (strong erasure)
+versus not (data minimization) is an explicit, audited policy choice rather than a
+hidden side effect.
+
+\paragraph{The optimization problem (Opt-P2E2).} Let $R_f\subseteq S$ be $f$'s own
+records. We seek the minimal-collateral co-deletion that makes $f$ floor-reaching:
 \begin{equation*}
 \min_{D\,\subseteq\, S\setminus R_f} |D| \quad\text{s.t.}\quad
-R\!\left(f,\; S\setminus(R_f\cup D)\right) < \tau ,
+\sigma_{\mathrm{red}}^{\mathcal{A}}\!\left(f,\; S\setminus(R_f\cup D)\right) = 0 ,
 \end{equation*}
-i.e., close every recovery channel while disturbing as few bystander facts as
-possible ($|D|$ is the collateral $k$).
+where $|D|=k$ is the surfaced collateral cost (Remark~3); erasure-certification
+additionally requires $\rho^{\mathcal{A}}<\tau$ (Def.~5).
 
-\paragraph{Proposition 1 (NP-hardness).} \textsc{Opt-P2E2} is NP-hard. The
-re-derivation paths of $f$ form a hypergraph $H$ whose hyperedges are the minimal
-subsets of $S\setminus R_f$ that jointly re-imply $v$; a feasible $D$ must
-intersect every hyperedge, so minimizing $|D|$ is \textsc{Minimum Hitting Set},
-which is NP-hard, and the hardness of erasure under dependencies is established by
-\citet{p2e2}. We therefore adopt the greedy, entailment-confidence-ordered planner
-of \S\ref{sec:method}, which is exact on the small dependency graphs that arise in
-practice (mean $k=1.17$, \S\ref{sec:res-planner}).
+\paragraph{Proposition 1 (NP-hardness).} \textsc{Opt-P2E2} is NP-hard, by
+reduction \emph{from} \textsc{Minimum Hitting Set}. Given a universe $U$ and sets
+$\mathcal{S}=\{S_1,\dots,S_m\}$ with $S_j\subseteq U$, construct an instance with
+one fact $x_u$ per element $u\in U$ and, for each $S_j$, an entailment
+$\bigwedge_{u\in S_j} x_u \vdash f$ (so each $S_j$ is a re-derivation path); set
+$\sigma_{\mathrm{res}}=0$ and $\rho=0$. The surviving store re-derives $f$ iff some
+path $S_j$ survives intact, so a co-deletion $D$ achieves
+$\sigma_{\mathrm{red}}=0$ iff $D\cap S_j\neq\varnothing$ for every $j$---i.e.\
+$\{u:x_u\in D\}$ is a hitting set of $\mathcal{S}$. Thus $\min|D|$ equals the
+minimum hitting set, which is NP-hard (\textsc{Vertex Cover} is the $2$-uniform
+special case); P2E2's relational-deletion hardness \citep{p2e2} corroborates.
+``A feasible $D$ hits every minimal re-implying subset'' is the intuition; the
+hardness comes from the reduction. We therefore adopt the greedy,
+entailment-confidence-ordered planner of \S\ref{sec:method}, exact on the small
+dependency graphs seen in practice (mean $k=1.17$, \S\ref{sec:res-planner}).
 
 \section{Method}\label{sec:method}
-% HELD. Probe battery; entailment detector; three greedy planner heuristics;
-% certificate emitter.
+
+Our pipeline instantiates each object of \S\ref{sec:formulation} as a concrete,
+reusable component behind a single \texttt{MemorySystemAdapter} interface, so the
+identical probe/planner/certificate stack runs unchanged on all three systems.
+
+\paragraph{Probe battery.} Three probes measure the three channels of Def.~4.
+The \emph{exact-match} probe scans every surviving record for a surface form of
+$v$ ($\sigma_{\mathrm{res}}$). The \emph{re-derivation} probe gives the adversary
+the full surviving store as notes (plus today's date and general world knowledge)
+and elicits $v$ in a value-first format ($\sigma_{\mathrm{red}}^{\mathcal{A}}$).
+The \emph{parametric} probe withholds the store entirely, conditioning only on the
+subject's world-knowable context, and estimates $\rho^{\mathcal{A}}$ as a recovery
+rate over $n$ stochastic samples. Recovery is decided by the validated judge
+(\S\ref{sec:res-judge}): a substring match on the ground-truth surface forms,
+falling back to an LLM adjudication for numeric/semantic approximation. Three
+auxiliary probes support specific results---a \emph{paraphrase} probe (residual by
+implication), a retrieval-score \emph{membership-inference} probe (\S\ref{sec:limitations}),
+and a \emph{KG-summary} probe for the graph system (\S\ref{sec:res-converge}).
+
+\paragraph{Entailment detector.} Re-derivation paths are found by an
+LLM-as-judge that scores, for a candidate surviving fact (or set), the confidence
+that it entails $v$ given world knowledge, returning a value in $[0,1]$
+(\textsc{partial}/\textsc{no} are capped so a near-miss cannot read as full
+entailment). The detector both draws the dependency edges and orders co-deletion.
+Its validation (\S\ref{sec:res-judge}) dictates the choice of \texttt{gpt-4o}
+here, since a judge that false-fires on partial operands inflates the collateral.
+
+\paragraph{Co-deletion planner.} We implement three co-deletion strategies along
+the minimality--aggressiveness spectrum. \emph{Naive} deletes only the single
+surfaced record (no co-deletion; the \S\ref{sec:res-residual} baseline).
+\emph{Threshold} (the recommended heuristic) probes, purges the target's own
+artifacts using the narrow deletion surface form, then co-deletes entailing facts
+in descending entailment confidence, re-probing after each until
+$\sigma_{\mathrm{red}}^{\mathcal{A}}<\tau$---making $f$ floor-reaching with a
+greedily minimal $D$. \emph{Depth-first} co-deletes every entailer above $\tau$ in
+one shot (maximal collateral, minimal probing). The reported collateral
+$k=|D|$ is exactly the measured price of the strong erasure notion (Remark~3): the
+threshold heuristic is the one that minimizes it.
+
+\paragraph{Certificate emitter.} For each target the emitter records the three
+channel scores, the final recoverability $R_{\mathcal{A}}=\max(\cdot)$, the
+heuristic, the co-deleted set and its size $k$, and the threat model. The status
+field operationalizes Def.~5: \texttt{completeness\_certified} is
+$R_{\mathcal{A}}<\tau$ (erasure-certified), while a positive
+\texttt{parametric\_risk\_rho} with $\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}=0$
+records a floor-reaching but \emph{uncertified} deletion---the floor-vs-certified
+boundary (Remark~1) made machine-readable. The certificate thus surfaces both the
+price ($k$) and the limit ($\rho$) of erasure as audited fields; a recall caveat
+(\S\ref{sec:res-judge}) qualifies certified-\textsc{complete} verdicts, while
+\textsc{incomplete} verdicts are sound lower bounds.
 
 %========================================================================
 \section{Experiments}\label{sec:results}

@@ -30,6 +30,9 @@ def make_certificate(*, fact: dict, system: str, residual: float, rederivation: 
     tau = config.TAU if tau is None else tau
     final = (final_recoverability if final_recoverability is not None
              else max(residual, rederivation, rho))
+    # floor-reaching: the deletable channels are closed (Def. 5). Erasure is
+    # certified only if additionally the (worst-adversary) floor rho < tau.
+    floor_reaching = max(residual, rederivation) < tau
     certified = final < tau
     if certified:
         status = "COMPLETE"
@@ -49,7 +52,8 @@ def make_certificate(*, fact: dict, system: str, residual: float, rederivation: 
         artifacts_purged=artifacts_purged or [],
         facts_co_deleted=facts_co_deleted or [],
         collateral_k=len(facts_co_deleted or []),
-        final_recoverability=final, completeness_certified=certified,
+        final_recoverability=final, floor_reaching=floor_reaching,
+        completeness_certified=certified,
         judge_recall=DEFAULT_JUDGE_RECALL if judge_recall is None else judge_recall,
     )
 

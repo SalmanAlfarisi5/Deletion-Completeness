@@ -40,6 +40,11 @@ class DeletionCertificate(BaseModel):
     # ---- Validation --------------------------------------------------------
     human_judge_agreement: float | None = None  # Cohen's kappa, if computed
     judge_recall: float | None = None           # recovery-judge recall (sensitivity)
+    # floor_reaching: deletable channels closed (residual=re-derivation<tau), i.e. as
+    # erased as deletion can make it. completeness_certified additionally requires the
+    # (irreducible, worst-adversary) parametric floor rho<tau. floor_reaching && !certified
+    # is the limit result (e.g. R11): forgotten from the store, still world-inferable.
+    floor_reaching: bool = False
     completeness_certified: bool = False
 
     def to_text(self) -> str:
@@ -54,7 +59,10 @@ class DeletionCertificate(BaseModel):
             f"  Fact           : [{self.fact_id}] {self.fact_text}",
             "-" * 64,
             f"  STATUS         : {self.status}",
-            f"  Certified      : {'YES' if self.completeness_certified else 'NO'}",
+            f"  Floor-reaching : {'YES' if self.floor_reaching else 'NO'}  "
+            f"(deletable channels closed)",
+            f"  Erasure-certified : {'YES' if self.completeness_certified else 'NO'}  "
+            f"(also rho<tau, worst adversary)",
             "-" * 64,
             "  Recoverability decomposition",
             f"    residual survival   : {self.residual_survival_score:.3f}",

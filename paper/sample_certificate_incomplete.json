@@ -1,6 +1,6 @@
 {
-  "certificate_id": "cert-R11-a82e45",
-  "issued_at": "2026-06-24T03:50:04.154241Z",
+  "certificate_id": "cert-R11-cc3612",
+  "issued_at": "2026-06-24T04:53:53.624812Z",
   "fact_id": "R11",
   "fact_text": "Ms Chua is at least 18 years old.",
   "system": "mem0",
@@ -29,5 +29,6 @@
   "final_recoverability": 1.0,
   "human_judge_agreement": null,
   "judge_recall": 0.78,
+  "floor_reaching": true,
   "completeness_certified": false
 }

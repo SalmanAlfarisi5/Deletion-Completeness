@@ -1,6 +1,6 @@
 {
-  "certificate_id": "cert-F040-a2f4ca",
-  "issued_at": "2026-06-24T02:55:31.869930Z",
+  "certificate_id": "cert-F040-1d9768",
+  "issued_at": "2026-06-24T04:53:53.624980Z",
   "fact_id": "F040",
   "fact_text": "Alice Chen's approximate monthly salary is SGD 8,500.",
   "system": "letta",
@@ -31,5 +31,6 @@
   "final_recoverability": 0.0,
   "human_judge_agreement": null,
   "judge_recall": 0.78,
+  "floor_reaching": true,
   "completeness_certified": true
 }

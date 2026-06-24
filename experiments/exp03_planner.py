@@ -39,6 +39,8 @@ def main() -> None:
     ap.add_argument("--bystanders", type=int, default=4)
     ap.add_argument("--entailment-model", default=config.JUDGE_MODEL,
                     help="entailment judge (use gpt-4o: 0%% partial-operand false-fire)")
+    ap.add_argument("--heuristic", choices=["threshold", "depth_first"], default="threshold",
+                    help="threshold = minimal (recommended); depth_first = aggressive comparator")
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()
@@ -69,7 +71,8 @@ def main() -> None:
         adapter.delete_all_memories(user_id)
         inj_map = injector.inject_many(user_id, store, infer=False, settle_seconds=0.0)
 
-        plan = planner.heuristic_threshold(user_id, fact, candidates, inj_map)
+        plan = getattr(planner, f"heuristic_{args.heuristic}")(
+            user_id, fact, candidates, inj_map)
 
         deleted_set = set(plan.facts_co_deleted)
         spurious = sorted(deleted_set - entail_ids)     # bystanders wrongly co-deleted (BAD)
@@ -102,7 +105,7 @@ def main() -> None:
 
     df = pd.DataFrame(rows)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    base = config.RESULTS_DIR / f"exp03_planner_mem0_{stamp}"
+    base = config.RESULTS_DIR / f"exp03_planner_mem0_{args.heuristic}_{stamp}"
     df.to_csv(base.with_suffix(".csv"), index=False)
     metrics = {
         "completeness_rate": round(float(df["achieved_completeness"].mean()), 3),

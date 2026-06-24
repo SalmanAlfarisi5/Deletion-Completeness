@@ -59,10 +59,40 @@
 % state necessary-but-not-sufficient vs ForgetEval on page 1.
 
 \section{Related Work}\label{sec:related}
-% HELD. Three neighbors + DB lineage (see REFERENCES.md / ledger §G):
-% ForgetEval (stronger, decomposed question + the agent path it bypassed),
-% ForgetAgent (synthetic method w/ receipts), Agentic Unlearning (weight-access),
-% P2E2 / SeQureDB (deletion-under-dependencies theory we operationalize).
+
+\paragraph{Auditing forgetting in agent memory.} The closest work,
+\textsc{ForgetEval} \citep{forgeteval}, benchmarks forgetting across Mem0,
+Graphiti, Letta, and others, so \emph{system coverage is not our contribution}.
+Its criterion---whether a forget command removes the value from top-$k$
+retrieval---is \emph{necessary but not sufficient} for the erasure we define
+(\S\ref{sec:formulation}): a value absent from top-$k$ may still be re-derivable
+from surviving facts or recoverable from the base model. We adopt the same systems
+under a strictly stronger, channel-decomposed criterion; our Mem0 figures
+(post-deletion recoverability by \emph{any} channel) are therefore complementary
+to theirs (top-$k$ forget-command success), not contradictory. ForgetEval also
+deliberately \emph{bypasses} Letta's agent loop, addressing archival endpoints
+directly; we test that loop and find agent-mediated deletion surface-incomplete
+(\S\ref{sec:res-converge}). Tellingly, ForgetEval's own per-system
+observations---Graphiti shedding synthesized fact strings, Mem0's router favoring
+link-and-keep over delete-old---name the very mechanisms our decomposition
+isolates, an independent corroboration of the convergence result.
+
+\paragraph{Unlearning methods.} \textsc{ForgetAgent} \citep{forgetagent}
+contributes a \emph{synthetic} unlearning \emph{method} with deletion receipts and
+counterfactual-indistinguishability guarantees. It is complementary on every axis:
+it builds a system that forgets, we \emph{audit} whether deployed systems have; it
+certifies a construction, we diagnose re-derivation and the parametric floor on
+real stores. \textsc{Agentic Unlearning} \citep{agenticunlearning} separates
+parametric from memory recovery (its ``backflow''), but assumes \emph{weight
+access} to edit the model; we operate black-box and memory-store-only, so we
+neither claim the parametric/memory split as novel nor perform model surgery.
+
+\paragraph{Deletion under dependencies.} Our formal grounding is the database line
+on erasure when records are inter-derivable: the meaningful-erasure criterion of
+P2E2 \citep{p2e2} and inference-aware deletion \citep{seqdb}. We port that
+criterion to agent memory and \emph{strengthen} it (\S\ref{sec:formulation}),
+inheriting its hardness---the bridge from relational deletion theory to LLM agent
+memory that the agent-memory works above do not make.
 
 \section{Problem Formulation}\label{sec:formulation}
 
@@ -175,8 +205,11 @@ $\sigma_{\mathrm{res}}=0$ and $\rho=0$. The surviving store re-derives $f$ iff s
 path $S_j$ survives intact, so a co-deletion $D$ achieves
 $\sigma_{\mathrm{red}}=0$ iff $D\cap S_j\neq\varnothing$ for every $j$---i.e.\
 $\{u:x_u\in D\}$ is a hitting set of $\mathcal{S}$. Thus $\min|D|$ equals the
-minimum hitting set, which is NP-hard (\textsc{Vertex Cover} is the $2$-uniform
-special case); P2E2's relational-deletion hardness \citep{p2e2} corroborates.
+minimum hitting set, which is NP-hard. \textsc{Vertex Cover} is the $2$-uniform
+special case, which is exactly our dataset's pairwise-entailment regime (e.g.\
+F040 re-derived from C001$\wedge$C002): \emph{hardness already holds when every
+fact has exactly two operands}, so the difficulty is intrinsic, not an artifact of
+high-arity rules. P2E2's relational-deletion hardness \citep{p2e2} corroborates.
 ``A feasible $D$ hits every minimal re-implying subset'' is the intuition; the
 hardness comes from the reduction. We therefore adopt the greedy,
 entailment-confidence-ordered planner of \S\ref{sec:method}, exact on the small
@@ -195,7 +228,11 @@ the full surviving store as notes (plus today's date and general world knowledge
 and elicits $v$ in a value-first format ($\sigma_{\mathrm{red}}^{\mathcal{A}}$).
 The \emph{parametric} probe withholds the store entirely, conditioning only on the
 subject's world-knowable context, and estimates $\rho^{\mathcal{A}}$ as a recovery
-rate over $n$ stochastic samples. Recovery is decided by the validated judge
+rate over $n$ stochastic samples. The re-derivation \emph{probe} reads the full
+surviving store (the threat model) and is distinct from the operands-only
+\emph{injection control} of \S\ref{sec:res-rederiv}, which instead never stores the
+target value so as to isolate $\sigma_{\mathrm{red}}$ at $\sigma_{\mathrm{res}}=0$.
+Recovery is decided by the validated judge
 (\S\ref{sec:res-judge}): a substring match on the ground-truth surface forms,
 falling back to an LLM adjudication for numeric/semantic approximation. Three
 auxiliary probes support specific results---a \emph{paraphrase} probe (residual by
@@ -210,29 +247,33 @@ entailment). The detector both draws the dependency edges and orders co-deletion
 Its validation (\S\ref{sec:res-judge}) dictates the choice of \texttt{gpt-4o}
 here, since a judge that false-fires on partial operands inflates the collateral.
 
-\paragraph{Co-deletion planner.} We implement three co-deletion strategies along
-the minimality--aggressiveness spectrum. \emph{Naive} deletes only the single
-surfaced record (no co-deletion; the \S\ref{sec:res-residual} baseline).
-\emph{Threshold} (the recommended heuristic) probes, purges the target's own
-artifacts using the narrow deletion surface form, then co-deletes entailing facts
-in descending entailment confidence, re-probing after each until
+\paragraph{Co-deletion planner.} Against a \emph{naive} baseline that deletes only
+the single surfaced record (no co-deletion; \S\ref{sec:res-residual}), we implement
+two co-deletion heuristics. \emph{Threshold} (the method) probes, purges the
+target's own artifacts using the narrow deletion surface form, then co-deletes
+entailing facts in descending entailment confidence, re-probing after each until
 $\sigma_{\mathrm{red}}^{\mathcal{A}}<\tau$---making $f$ floor-reaching with a
-greedily minimal $D$. \emph{Depth-first} co-deletes every entailer above $\tau$ in
-one shot (maximal collateral, minimal probing). The reported collateral
-$k=|D|$ is exactly the measured price of the strong erasure notion (Remark~3): the
-threshold heuristic is the one that minimizes it.
+greedily minimal $D$. \emph{Depth-first} (an aggressive comparator) co-deletes
+every entailer above $\tau$ in one shot, with no re-probe stopping rule. The
+reported collateral $k=|D|$ is the measured price of the strong erasure notion
+(Remark~3); the threshold heuristic minimizes it ($k=1.17$ vs.\ depth-first's
+$5.5$, \S\ref{sec:res-planner}).
 
 \paragraph{Certificate emitter.} For each target the emitter records the three
 channel scores, the final recoverability $R_{\mathcal{A}}=\max(\cdot)$, the
-heuristic, the co-deleted set and its size $k$, and the threat model. The status
-field operationalizes Def.~5: \texttt{completeness\_certified} is
-$R_{\mathcal{A}}<\tau$ (erasure-certified), while a positive
-\texttt{parametric\_risk\_rho} with $\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}=0$
-records a floor-reaching but \emph{uncertified} deletion---the floor-vs-certified
-boundary (Remark~1) made machine-readable. The certificate thus surfaces both the
-price ($k$) and the limit ($\rho$) of erasure as audited fields; a recall caveat
-(\S\ref{sec:res-judge}) qualifies certified-\textsc{complete} verdicts, while
-\textsc{incomplete} verdicts are sound lower bounds.
+heuristic, the co-deleted set and its size $k$, and the threat model. It exposes
+\emph{two} machine-readable predicates from Def.~5: \texttt{floor\_reaching}
+($\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}<\tau$, the deletable channels closed)
+and \texttt{completeness\_certified}. The latter certifies erasure only under the
+\emph{worst modeled adversary}---the $\sup$ of Def.~4, i.e.\
+$\rho=\max_{\mathcal{A}}\rho^{\mathcal{A}}<\tau$---so a fact recoverable by the
+stronger reasoner is reported uncertified even when the weaker one fails; this
+conservative choice is why $9/15$, not $6/15$, are uncertifiable
+(\S\ref{sec:res-rho}). A \texttt{floor\_reaching} but uncertified verdict is
+precisely the limit result (Remark~1), now an audited field. The certificate thus
+surfaces both the price ($k$) and the limit ($\rho$) of erasure; a recall caveat
+(\S\ref{sec:res-judge}) qualifies certified verdicts, while uncertified ones are
+sound lower bounds.
 
 %========================================================================
 \section{Experiments}\label{sec:results}
@@ -265,7 +306,7 @@ the headline numbers; results are presented in decreasing order of confidence.
 \textbf{Result} & \textbf{System} & \textbf{Headline} & \textbf{Backing control} \\
 \midrule
 Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, $k{=}1.17$ & spare-bystander + gpt-4o entailment judge \\
-$\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 6/15 \emph{uncertifiable} at residual $0$ & world-context-only $\rho$ probe; refusal audit \\
+$\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 9/15 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; $\tau$-stable; refusal audit \\
 Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 80\%$\to$0\% & operands-only; verified-faithful co-delete \\
 Convergence (\S\ref{sec:res-converge})   & all three & 67\% / 100\% residue by family & clean-delete verified first; explicit baseline \\
 Residual (\S\ref{sec:res-residual})      & Mem0     & 75\%; 83\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
@@ -301,6 +342,16 @@ so using \texttt{gpt-4o} is precisely what prevents $k$ from inflating. The
 planner targets the NP-hard Opt-P2E2 problem; ``minimal'' here denotes a
 sufficient co-deletion subset, not a certified optimum.
 
+\textbf{Comparator.} The aggressive depth-first heuristic (co-delete every
+entailer above $\tau$ in one shot, no re-probing) also reaches $100\%$
+completeness but at \textbf{$k=5.5$ with $22$ spurious bystander deletions}: with
+no stopping rule it deletes every candidate whose (cap-bounded) entailment exceeds
+$\tau$. The threshold heuristic's re-probe-and-stop is therefore what buys
+\emph{both} minimality ($k\!:5.5\!\to\!1.17$, $\sim\!4.3$ fewer deletions per fact)
+\emph{and} selectivity ($22\!\to\!0$ spurious). Naive single-record deletion
+(\S\ref{sec:res-residual}) is the lower baseline: it deletes one record and closes
+no re-derivation path.
+
 \begin{table}[t]
 \centering
 \small
@@ -315,6 +366,7 @@ example (system)                 & F040 (Letta)   & R11 (base model) \\
 \texttt{parametric\_risk\_rho}   & 0.0            & \textbf{1.0} \\
 \texttt{facts\_co\_deleted} ($k$)& C001,C002 (2)  & --- (0) \\
 \texttt{final\_recoverability}   & 0.0            & 1.0 \\
+\texttt{floor\_reaching}         & true           & \textbf{true} \\
 \texttt{completeness\_certified} & \textbf{true}  & \textbf{false} \\
 \bottomrule
 \end{tabular}
@@ -323,7 +375,10 @@ was open \emph{before} co-deletion (\texttt{rederiv\_with\_operands}$=1.0$, the
 \emph{pre} probe) and closed \emph{after} (\texttt{re\_derivation\_score}$=0.0$,
 the \emph{final}/post-co-delete score), giving \textsc{complete}. \emph{Right:}
 residual and re-derivation are both $0$, but the system-independent base-model
-floor $\rho{=}1.0$ forces \textsc{incomplete}. The aggregate planner result
+floor $\rho{=}1.0$ (worst adversary) forces \textsc{incomplete}. Both are
+\texttt{floor\_reaching} (deletion did its job); only the left is
+\texttt{completeness\_certified}---the right is the limit result. The aggregate
+planner result
 ($k{=}1.17$; \S\ref{sec:res-planner}) is on \emph{Mem0}; this \textsc{complete}
 example is a \emph{Letta} certificate, so the format is system-general.}
 \label{tab:certs}
@@ -336,10 +391,16 @@ $\rho$---the rate at which the base model alone reconstructs a value from
 world-knowable context---rather than asserting it. Across the gradient, $\rho$ is
 monotone in tier (\texttt{gpt-4o-mini}\,/\,\texttt{gpt-4o}):
 \textbf{low $0.00/0.00$}, \textbf{mid $0.033/0.633$}, \textbf{high $0.833/1.00$}
-(Table~\ref{tab:rho}). Consequently \textbf{6 of 15 certificates are
-\emph{not} certifiable-complete} ($\rho>\tau$) \emph{even though residual survival
-is $0$}. This is the limit result: when the value is recoverable from
-non-deletable world knowledge, no amount of co-deletion can certify completeness.
+(Table~\ref{tab:rho}). Certifying erasure under the \emph{worst} modeled adversary
+(the $\sup$ of Def.~4), \textbf{9 of 15 certificates are \emph{not}
+erasure-certifiable} ($\rho\geq\tau$) \emph{even though residual survival is $0$};
+under the weaker reasoner alone the bracket drops to $6/15$, so reporting the
+worst adversary only \emph{strengthens} the limit. This count is robust to $\tau$:
+the worst-adversary $\rho$ is sharply \emph{bimodal} ($0$ for $6$ facts,
+$\geq\!0.5$ for $9$, none in between), so $9/15$ is invariant for every
+$\tau\in(0,0.5)$---it is not a cherry-picked threshold. This is the limit result:
+when the value is recoverable from non-deletable world knowledge, no co-deletion
+can certify erasure.
 This gradient $\rho>0$ does not contradict the $\rho{=}0$ of the multi-hop facts
 in \S\ref{sec:res-rederiv}: there the world-knowledge component is generic and
 inert without the (fictional) stored operand, so co-deletion collapses $\rho$ to
@@ -513,6 +574,17 @@ prior) and the hardness of erasure under dependencies.
 ForgetEval. 2026.
 \newblock arXiv:2606.15903 (MIT). Benchmarks Mem0, Graphiti, and Letta (+more)
 for forget-command success in top-$k$ retrieval; bypasses the Letta agent loop.
+\bibitem[ForgetAgent(2026)]{forgetagent}
+ForgetAgent. 2026.
+\newblock A synthetic unlearning method with deletion receipts and
+counterfactual-indistinguishability guarantees.
+\bibitem[Agentic Unlearning(2026)]{agenticunlearning}
+Agentic Unlearning. 2026.
+\newblock arXiv:2602.17692. Weight-access dual-pathway (``backflow'') separating
+parametric from memory recovery.
+\bibitem[Inference-Aware Deletion(2026)]{seqdb}
+Inference-Aware and Privacy-Preserving Deletion in Databases. 2026.
+\newblock arXiv:2604.00326.
 \end{thebibliography}
 
 \end{document}

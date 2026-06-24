@@ -1,0 +1,177 @@
+{
+  "experiment": "exp03_planner",
+  "timestamp_utc": "20260624T045149Z",
+  "tau": 0.1,
+  "metrics": {
+    "completeness_rate": 1.0,
+    "mean_collateral_k": 5.5,
+    "spurious_bystander_deletions": 22,
+    "operands_spared_by_minimality": 0
+  },
+  "rows": [
+    {
+      "fact_id": "F040",
+      "basis": "stored",
+      "co_deleted": [
+        "C001",
+        "C002",
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "collateral_k": 6,
+      "operands_required_set": [
+        "C001",
+        "C002"
+      ],
+      "spurious_bystanders": [
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F041",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C003",
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "collateral_k": 5,
+      "operands_required_set": [
+        "C003"
+      ],
+      "spurious_bystanders": [
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F042",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C005",
+        "C006",
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "collateral_k": 6,
+      "operands_required_set": [
+        "C005",
+        "C006"
+      ],
+      "spurious_bystanders": [
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F043",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C007",
+        "C008",
+        "C013",
+        "C014"
+      ],
+      "collateral_k": 4,
+      "operands_required_set": [
+        "C007",
+        "C008"
+      ],
+      "spurious_bystanders": [
+        "C013",
+        "C014"
+      ],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F044",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C009",
+        "C010",
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "collateral_k": 6,
+      "operands_required_set": [
+        "C009",
+        "C010"
+      ],
+      "spurious_bystanders": [
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F045",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C011",
+        "C012",
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "collateral_k": 6,
+      "operands_required_set": [
+        "C011",
+        "C012"
+      ],
+      "spurious_bystanders": [
+        "C013",
+        "C014",
+        "C015",
+        "C016"
+      ],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    }
+  ],
+  "certificates": [
+    "cert-F040-1c69f3",
+    "cert-F041-541c5c",
+    "cert-F042-017b7c",
+    "cert-F043-38ad7d",
+    "cert-F044-a04fa0",
+    "cert-F045-9a825a"
+  ]
+}

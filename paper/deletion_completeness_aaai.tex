@@ -130,10 +130,8 @@ costs to make them stay gone.
 \textsc{ForgetEval} \citep{forgeteval}, the most thorough existing audit of
 forgetting in deployed agent memory---a careful retrieval-based protocol spanning
 Mem0, Graphiti, Letta, and roughly a dozen further systems---and we build directly
-on it. Its criterion, whether a forget command removes a value from top-$k$
-retrieval, is \emph{necessary but not sufficient} for the erasure we define
-(\S\ref{sec:formulation}): a value absent from top-$k$ can still survive in a
-derived artifact or be re-derived from facts that were never deleted. Our
+on it. Its retrieval-based criterion is the \emph{necessary-but-not-sufficient}
+gap of \S\ref{sec:intro}. Our
 contribution is therefore the stronger, channel-decomposed criterion, not the
 system coverage ForgetEval already establishes; correspondingly, our Mem0 figures
 (recoverability by \emph{any} channel) are complementary to its top-$k$
@@ -397,8 +395,7 @@ the corresponding certificates were emitted during the Mem0 run.}
 
 \subsection{Minimal Co-Deletion: The Planner}\label{sec:res-planner}
 
-Our central operational claim is that completeness is reachable with
-\emph{minimal collateral}. On the 6 multi-hop targets, the threshold planner
+On the 6 multi-hop targets, the threshold planner
 (probe~$\to$ purge the target's own artifacts~$\to$ co-delete entailing facts in
 entailment-confidence order, re-probing until recoverability $<\tau$) achieves
 \textbf{100\% completeness with 0 spurious bystander deletions} and a
@@ -460,7 +457,7 @@ example is a \emph{Letta} certificate, so the format is system-general.}
 
 \subsection{The Parametric Floor and the Limit of Certifiable Deletion}\label{sec:res-rho}
 
-Not every fact can be certified deleted. We \emph{measure} the parametric floor
+We \emph{measure} the parametric floor
 $\rho$---the rate at which the base model alone reconstructs a value from
 world-knowable context---rather than asserting it. Across the gradient, $\rho$ is
 monotone in tier (\texttt{gpt-4o-mini}\,/\,\texttt{gpt-4o}):
@@ -530,8 +527,7 @@ is still $1.0$).}
 
 \subsection{Decomposing Recovery: Re-Derivation at Zero Residual}\label{sec:res-rederiv}
 
-A fact can be unrecoverable by inspection yet trivially \emph{re-derivable} from
-surviving facts. Using an operands-only control---the post-deletion state in
+Using an operands-only control---the post-deletion state in
 which the target's own value is never stored, so residual survival is $0$ by
 construction (verified with the narrow deletion surface form, not the broad
 recovery set, so an operand sharing a token is not miscounted)---we isolate the
@@ -595,7 +591,7 @@ phrasing/surface coverage, not to a missing capability.
 
 \subsection{Residual Survival and the Duplication Mechanism}\label{sec:res-residual}
 
-The motivating failure on Mem0 is that naive single-record deletion is residually
+Naive single-record deletion on Mem0 is residually
 incomplete because the store \emph{silently duplicates} facts. Deleting the single
 surfaced record leaves the value present in \textbf{$75\%$} of isolated PII
 targets; an artifact-aware deletion drives residual survival from

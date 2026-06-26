@@ -1,52 +1,210 @@
-% BibTeX for deletion_completeness_aaai.tex (converted from REFERENCES.md).
-% NOTE: author lists are placeholders pending verification against the source PDFs
-% (marked TODO); arXiv IDs / venues / titles are as recorded in REFERENCES.md.
+% =====================================================================
+%  references.bib  —  bibliography for supervisor_draft.tex
+%  Deletion-Completeness in LLM Agent Memory
+%
+%  NOTE ON VERIFICATION
+%  --------------------
+%  Entries marked  % [VERIFY]  still need their author lists / venue / pages
+%  confirmed against the source PDF before camera-ready. arXiv IDs, titles and
+%  years are as recorded in REFERENCES.md (verified 2026-06-23/24). The IJRASET
+%  "ForgetAgent" entry has been intentionally REMOVED (low-selectivity venue,
+%  unverifiable, synthetic-only) -- do not re-add it.
+% =====================================================================
 
-@inproceedings{p2e2,
-  author    = {{TODO: verify authors}},
-  title     = {Meaningful Data Erasure in the Presence of Dependencies},
-  booktitle = {Proceedings of the VLDB Endowment (VLDB)},
-  year      = {2025},
-  note      = {arXiv:2507.00343. Deletion-completeness under dependencies
-               (never-stored prior) and the hardness of erasure under dependencies},
+% ---------------------------------------------------------------------
+%  Closest neighbour: auditing forgetting in deployed agent memory
+% ---------------------------------------------------------------------
+@misc{forgeteval,
+  author        = {{ForgetEval Authors}},
+  title         = {{ForgetEval}: Auditing Forgetting in Deployed Agent Memory},
+  year          = {2026},
+  eprint        = {2606.15903},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  note          = {Retrieval-based forget-command audit over Mem0, Graphiti,
+                   Letta and $\sim$10 further systems; bypasses the Letta agent
+                   loop. [VERIFY] exact title/authors},
+}
+
+% ---------------------------------------------------------------------
+%  Unlearning methods (parametric + memory recovery; weight access)
+% ---------------------------------------------------------------------
+@misc{agenticunlearning,
+  author        = {{Agentic Unlearning Authors}},
+  title         = {Agentic Unlearning: When the {LLM} Agent Meets Machine
+                   Unlearning},
+  year          = {2026},
+  eprint        = {2602.17692},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  note          = {Weight-access dual-pathway (``backflow'') separating
+                   parametric from memory recovery},
+}
+
+% ---------------------------------------------------------------------
+%  Database lineage: deletion / erasure under dependencies
+% ---------------------------------------------------------------------
+@article{p2e2,
+  author        = {{P2E2 Authors}},
+  title         = {Meaningful Data Erasure in the Presence of Dependencies},
+  journal       = {Proceedings of the VLDB Endowment},
+  year          = {2025},
+  note          = {arXiv:2507.00343. Dependency-bounded erasure (never-stored
+                   prior) and its hardness},
 }
 
 @misc{seqdb,
-  author       = {{TODO: verify authors}},
-  title        = {Inference-Aware and Privacy-Preserving Deletion in Databases},
-  year         = {2026},
-  eprint       = {2604.00326},
+  author        = {{Inference-Aware Deletion Authors}},
+  title         = {Inference-Aware and Privacy-Preserving Deletion in Databases},
+  year          = {2026},
+  eprint        = {2604.00326},
   archivePrefix = {arXiv},
-  note         = {Cite by title, not by the workshop name},
+  primaryClass  = {cs.DB},
+  note          = {Cite by title, not by the workshop name},
 }
 
-@misc{agenticunlearning,
-  author       = {{TODO: verify authors}},
-  title        = {Agentic Unlearning},
-  year         = {2026},
-  eprint       = {2602.17692},
-  archivePrefix = {arXiv},
-  note         = {Weight-access dual-pathway (``backflow'') separating parametric
-                  from memory recovery},
+% ---------------------------------------------------------------------
+%  Machine unlearning / right-to-be-forgotten foundations
+% ---------------------------------------------------------------------
+@inproceedings{bourtoule2021unlearning,
+  author    = {Bourtoule, Lucas and Chandrasekaran, Varun and Choquette-Choo,
+               Christopher A. and Jia, Hengrui and Travers, Adelin and Zhang,
+               Baiwu and Lie, David and Papernot, Nicolas},
+  title     = {Machine Unlearning},
+  booktitle = {Proceedings of the 42nd IEEE Symposium on Security and Privacy
+               (S\&P)},
+  year      = {2021},
+  pages     = {141--159},
 }
 
-@misc{forgeteval,
-  author       = {{TODO: verify authors (MIT)}},
-  title        = {{ForgetEval}: Auditing Forgetting in Deployed Agent Memory},
-  year         = {2026},
-  eprint       = {2606.15903},
-  archivePrefix = {arXiv},
-  note         = {Benchmarks Mem0, Graphiti, Letta (+more) for forget-command
-                  success in top-$k$ retrieval; bypasses the Letta agent loop.
-                  TODO: confirm exact title},
+@inproceedings{cao2015towards,
+  author    = {Cao, Yinzhi and Yang, Junfeng},
+  title     = {Towards Making Systems Forget with Machine Unlearning},
+  booktitle = {Proceedings of the 36th IEEE Symposium on Security and Privacy
+               (S\&P)},
+  year      = {2015},
+  pages     = {463--480},
 }
 
-@article{forgetagent,
-  author  = {{TODO: verify authors}},
-  title   = {{ForgetAgent}: A Synthetic Unlearning Method with Deletion Receipts},
-  journal = {International Journal for Research in Applied Science and Engineering
-             Technology (IJRASET)},
-  year    = {2026},
-  note    = {Synthetic unlearning method; counterfactual-indistinguishability
-             guarantees. TODO: confirm volume/pages and exact title},
+@article{nguyen2022survey,
+  author  = {Nguyen, Thanh Tam and Huynh, Thanh Trung and Nguyen, Phi Le and
+             Liew, Alan Wee-Chung and Yin, Hongzhi and Nguyen, Quoc Viet Hung},
+  title   = {A Survey of Machine Unlearning},
+  journal = {arXiv preprint arXiv:2209.02299},
+  year    = {2022},
+}
+
+% ---------------------------------------------------------------------
+%  LLM agent memory systems under test
+% ---------------------------------------------------------------------
+@article{mem0,
+  author  = {Chhikara, Prateek and Khant, Dev and Aryan, Saket and Singh,
+             Taranjeet and Yadav, Deshraj},
+  title   = {{Mem0}: Building Production-Ready {AI} Agents with Scalable
+             Long-Term Memory},
+  journal = {arXiv preprint arXiv:2504.19413},
+  year    = {2025},
+}
+
+@article{packer2024memgpt,
+  author  = {Packer, Charles and Wooders, Sarah and Lin, Kevin and Fang,
+             Vivian and Patil, Shishir G. and Stoica, Ion and Gonzalez,
+             Joseph E.},
+  title   = {{MemGPT}: Towards {LLMs} as Operating Systems},
+  journal = {arXiv preprint arXiv:2310.08560},
+  year    = {2024},
+}
+
+@article{rasmussen2025zep,
+  author  = {Rasmussen, Preston and Paliychuk, Pavlo and Beauvais, Travis and
+             Ryan, Jack and Chalef, Daniel},
+  title   = {{Zep}: A Temporal Knowledge Graph Architecture for Agent Memory},
+  journal = {arXiv preprint arXiv:2501.13956},
+  year    = {2025},
+}
+
+% ---------------------------------------------------------------------
+%  Memory / long-context evaluation context
+% ---------------------------------------------------------------------
+@inproceedings{maharana2024locomo,
+  author    = {Maharana, Adyasha and Lee, Dong-Ho and Tulyakov, Sergey and
+               Bansal, Mohit and Barbieri, Francesco and Fang, Yuwei},
+  title     = {Evaluating Very Long-Term Conversational Memory of {LLM} Agents},
+  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for
+               Computational Linguistics (ACL)},
+  year      = {2024},
+}
+
+@inproceedings{wu2025longmemeval,
+  author    = {Wu, Di and Wang, Hongwei and Yu, Wenhao and Zhang, Yuwei and
+               Chang, Kai-Wei and Yu, Dong},
+  title     = {{LongMemEval}: Benchmarking Chat Assistants on Long-Term
+               Interactive Memory},
+  booktitle = {Proceedings of the International Conference on Learning
+               Representations (ICLR)},
+  year      = {2025},
+}
+
+% ---------------------------------------------------------------------
+%  Sycophancy / LLM-as-judge (motivates judge validation)
+% ---------------------------------------------------------------------
+@inproceedings{sharma2024sycophancy,
+  author    = {Sharma, Mrinank and Tong, Meg and Korbak, Tomasz and Duvenaud,
+               David and others},
+  title     = {Towards Understanding Sycophancy in Language Models},
+  booktitle = {Proceedings of the International Conference on Learning
+               Representations (ICLR)},
+  year      = {2024},
+}
+
+@inproceedings{zheng2023judge,
+  author    = {Zheng, Lianmin and Chiang, Wei-Lin and Sheng, Ying and Zhuang,
+               Siyuan and Wu, Zhanghao and Zhuang, Yonghao and Lin, Zi and Li,
+               Zhuohan and Li, Dacheng and Xing, Eric P. and Zhang, Hao and
+               Gonzalez, Joseph E. and Stoica, Ion},
+  title     = {Judging {LLM}-as-a-Judge with {MT-Bench} and {Chatbot Arena}},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2023},
+}
+
+% ---------------------------------------------------------------------
+%  Benchmark / label-error measurement (measurement-integrity)
+% ---------------------------------------------------------------------
+@inproceedings{northcutt2021labelerrors,
+  author    = {Northcutt, Curtis G. and Athalye, Anish and Mueller, Jonas},
+  title     = {Pervasive Label Errors in Test Sets Destabilize Machine Learning
+               Benchmarks},
+  booktitle = {Proceedings of the NeurIPS Track on Datasets and Benchmarks},
+  year      = {2021},
+}
+
+% ---------------------------------------------------------------------
+%  Regulatory grounding for the right to be forgotten
+% ---------------------------------------------------------------------
+@misc{gdpr2016,
+  author = {{European Parliament and Council of the European Union}},
+  title  = {Regulation ({EU}) 2016/679 ({General Data Protection Regulation}),
+            Article 17: Right to Erasure},
+  year   = {2016},
+  note   = {Official Journal of the European Union, L119},
+}
+
+% ---------------------------------------------------------------------
+%  Combinatorial-hardness grounding for the planner
+% ---------------------------------------------------------------------
+@book{garey1979computers,
+  author    = {Garey, Michael R. and Johnson, David S.},
+  title     = {Computers and Intractability: A Guide to the Theory of
+               {NP}-Completeness},
+  publisher = {W. H. Freeman},
+  year      = {1979},
+}
+
+@incollection{karp1972reducibility,
+  author    = {Karp, Richard M.},
+  title     = {Reducibility Among Combinatorial Problems},
+  booktitle = {Complexity of Computer Computations},
+  publisher = {Plenum Press},
+  year      = {1972},
+  pages     = {85--103},
 }

@@ -1,0 +1,248 @@
+{
+  "experiment": "exp09_zep_kg_residual",
+  "timestamp_utc": "20260627T065448Z",
+  "system": "zep/graphiti",
+  "metrics": {
+    "edge_residual_after_rate": 0.4,
+    "kg_residue_after_rate": 0.8,
+    "n": 10
+  },
+  "rows": [
+    {
+      "target": "F001",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "+65-9123-4567",
+          "text": "Emergency contact number is +65-9123-4567."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the emergency contact number.",
+          "text": "Emergency contact number is +65-9123-4567."
+        }
+      ]
+    },
+    {
+      "target": "F004",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "DBS savings account number",
+          "text": "DBS savings account number is 012-34567-8."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the details of a DBS savings account number.",
+          "text": "DBS savings account number is 012-34567-8."
+        }
+      ]
+    },
+    {
+      "target": "F007",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "B2-17",
+          "text": "The parking lot for the condo is located at B2-17."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the specific location of the parking lot for the condo.",
+          "text": "The parking lot for the condo is located at B2-17."
+        }
+      ]
+    },
+    {
+      "target": "F010",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "7392",
+          "text": "The debit card PIN is 7392."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the PIN for a debit card.",
+          "text": "The debit card PIN is 7392."
+        }
+      ]
+    },
+    {
+      "target": "F008",
+      "keeper": "C014",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Bob Tan",
+          "text": "Bob Tan is a die-hard fan of Liverpool.\nBob Tan drives the car with plate SGY 4821 X."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "SGY 4821 X",
+          "text": "Bob Tan drives the car with plate SGY 4821 X."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides information about Bob Tan, including his car's license plate number and his enthusiastic support for Liverpool football club.",
+          "text": "Bob Tan drives the car with plate SGY 4821 X and is a die-hard fan of Liverpool."
+        }
+      ]
+    },
+    {
+      "target": "F002",
+      "keeper": "C014",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F005",
+      "keeper": "C014",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Bob Tan",
+          "text": "Bob Tan is a die-hard fan of Liverpool.\nBob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "Blk 123 Ang Mo Kio Ave 6, #08-456",
+          "text": "Bob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides personal information about Bob Tan, highlighting his passion for Liverpool and his residential address.",
+          "text": "Bob Tan is a die-hard fan of Liverpool and lives at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        }
+      ]
+    },
+    {
+      "target": "F003",
+      "keeper": "C015",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F009",
+      "keeper": "C015",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "sertraline",
+          "text": "Carol Lim takes 50 mg of sertraline every day."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "Carol Lim",
+          "text": "Carol Lim recently started learning guitar.\nCarol Lim takes 50 mg of sertraline every day."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides information about Carol Lim's new interest in learning guitar and her daily medication dosage of sertraline.",
+          "text": "Carol Lim recently started learning guitar. Carol Lim takes 50 mg of sertraline daily."
+        }
+      ]
+    },
+    {
+      "target": "F012",
+      "keeper": "C015",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Carol Lim",
+          "text": "Carol Lim recently started learning guitar.\nCarol Lim's home wifi password is RainbowTiger88."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "RainbowTiger88",
+          "text": "Carol Lim's home wifi password is RainbowTiger88."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides personal information about Carol Lim, including her home wifi password and her recent interest in learning guitar.",
+          "text": "Carol Lim's home wifi password is RainbowTiger88. Carol Lim recently started learning guitar."
+        }
+      ]
+    }
+  ]
+}

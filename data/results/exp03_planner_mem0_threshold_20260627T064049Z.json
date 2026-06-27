@@ -1,0 +1,691 @@
+{
+  "experiment": "exp03_planner",
+  "timestamp_utc": "20260627T064049Z",
+  "tau": 0.1,
+  "metrics": {
+    "completeness_rate": 1.0,
+    "completeness_rate_ci95": [
+      0.8985,
+      1.0
+    ],
+    "mean_collateral_k": 0.912,
+    "mean_collateral_k_ci95": [
+      0.7353,
+      1.0882
+    ],
+    "spurious_bystander_deletions": 0,
+    "operands_spared_by_minimality": 36
+  },
+  "rows": [
+    {
+      "fact_id": "F040",
+      "basis": "stored",
+      "co_deleted": [
+        "C002"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C001",
+        "C002"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C001"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F041",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C003"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C003"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F042",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C006",
+        "C005"
+      ],
+      "collateral_k": 2,
+      "operands_required_set": [
+        "C005",
+        "C006"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F043",
+      "basis": "stored+world",
+      "co_deleted": [],
+      "collateral_k": 0,
+      "operands_required_set": [
+        "C007",
+        "C008"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C007",
+        "C008"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F044",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C009"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C009",
+        "C010"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C010"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F045",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C011",
+        "C012"
+      ],
+      "collateral_k": 2,
+      "operands_required_set": [
+        "C011",
+        "C012"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F046",
+      "basis": "stored",
+      "co_deleted": [
+        "C024"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C023",
+        "C024"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C023"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F047",
+      "basis": "stored",
+      "co_deleted": [
+        "C026"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C025",
+        "C026"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C025"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F048",
+      "basis": "stored",
+      "co_deleted": [
+        "C027"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C027",
+        "C028"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C028"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F049",
+      "basis": "stored",
+      "co_deleted": [
+        "C029"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C029",
+        "C030"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C030"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F050",
+      "basis": "stored",
+      "co_deleted": [
+        "C031"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C031",
+        "C032"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C032"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F051",
+      "basis": "stored",
+      "co_deleted": [
+        "C033"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C033",
+        "C034"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C034"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F052",
+      "basis": "stored",
+      "co_deleted": [
+        "C035"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C035",
+        "C036"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C036"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F053",
+      "basis": "stored",
+      "co_deleted": [
+        "C037"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C037",
+        "C038"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C038"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F054",
+      "basis": "stored",
+      "co_deleted": [
+        "C040"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C039",
+        "C040"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C039"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F055",
+      "basis": "stored",
+      "co_deleted": [
+        "C041"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C041",
+        "C042"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C042"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F056",
+      "basis": "stored",
+      "co_deleted": [
+        "C043"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C043",
+        "C044"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C044"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F057",
+      "basis": "stored",
+      "co_deleted": [
+        "C046"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C045",
+        "C046"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C045"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F058",
+      "basis": "stored",
+      "co_deleted": [
+        "C047"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C047",
+        "C048"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C048"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F059",
+      "basis": "stored",
+      "co_deleted": [
+        "C049"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C049",
+        "C050"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C050"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F060",
+      "basis": "stored",
+      "co_deleted": [
+        "C052"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C051",
+        "C052"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C051"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F061",
+      "basis": "stored",
+      "co_deleted": [
+        "C054"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C053",
+        "C054"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C053"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F062",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C055"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C055",
+        "C056"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C056"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F063",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C058"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C057",
+        "C058"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C057"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F064",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C060"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C059",
+        "C060"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C059"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F065",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C061"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C061",
+        "C062"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C062"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F066",
+      "basis": "stored+world",
+      "co_deleted": [],
+      "collateral_k": 0,
+      "operands_required_set": [
+        "C063",
+        "C064"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C063",
+        "C064"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F067",
+      "basis": "stored+world",
+      "co_deleted": [],
+      "collateral_k": 0,
+      "operands_required_set": [
+        "C065",
+        "C066"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C065",
+        "C066"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F068",
+      "basis": "stored+world",
+      "co_deleted": [],
+      "collateral_k": 0,
+      "operands_required_set": [
+        "C067",
+        "C068"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C067",
+        "C068"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F069",
+      "basis": "stored+world",
+      "co_deleted": [],
+      "collateral_k": 0,
+      "operands_required_set": [
+        "C069",
+        "C070"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C069",
+        "C070"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F070",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C071"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C071",
+        "C072"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C072"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F071",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C073",
+        "C074"
+      ],
+      "collateral_k": 2,
+      "operands_required_set": [
+        "C073",
+        "C074"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F072",
+      "basis": "stored+world",
+      "co_deleted": [
+        "C075"
+      ],
+      "collateral_k": 1,
+      "operands_required_set": [
+        "C075",
+        "C076"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C076"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    },
+    {
+      "fact_id": "F073",
+      "basis": "stored+world",
+      "co_deleted": [],
+      "collateral_k": 0,
+      "operands_required_set": [
+        "C077",
+        "C078"
+      ],
+      "spurious_bystanders": [],
+      "operands_not_needed": [
+        "C077",
+        "C078"
+      ],
+      "final_recoverability": 0.0,
+      "parametric_risk": 0.0,
+      "achieved_completeness": true
+    }
+  ],
+  "certificates": [
+    "cert-F040-e7d372",
+    "cert-F041-b3d4bf",
+    "cert-F042-aaeea2",
+    "cert-F043-da87b4",
+    "cert-F044-100d67",
+    "cert-F045-3e47e3",
+    "cert-F046-db3ed8",
+    "cert-F047-190722",
+    "cert-F048-de8ff6",
+    "cert-F049-508930",
+    "cert-F050-ec8ca9",
+    "cert-F051-013077",
+    "cert-F052-a32e54",
+    "cert-F053-9fed14",
+    "cert-F054-aa8f98",
+    "cert-F055-de7eb9",
+    "cert-F056-e96ca9",
+    "cert-F057-1fa945",
+    "cert-F058-9f50ab",
+    "cert-F059-9d17dd",
+    "cert-F060-f8ce76",
+    "cert-F061-d86f3e",
+    "cert-F062-70d3d5",
+    "cert-F063-6023c5",
+    "cert-F064-a377d5",
+    "cert-F065-84e315",
+    "cert-F066-f4fe7e",
+    "cert-F067-a562be",
+    "cert-F068-e7eac2",
+    "cert-F069-0d1d23",
+    "cert-F070-1e742c",
+    "cert-F071-c48115",
+    "cert-F072-61c7ed",
+    "cert-F073-534f48"
+  ]
+}

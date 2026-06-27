@@ -92,8 +92,8 @@
       from the base model alone---and give a planner that computes the minimal
       co-deletion closing the deletable channels, emitting an auditable
       certificate. Because the parametric floor cannot be deleted, certification
-      has a hard limit: under the strongest modeled adversary, \textbf{9 of 15}
-      facts cannot be certified erased at any threshold below $0.5$, even with
+      has a hard limit: under the strongest modeled adversary, \textbf{22 of 49}
+      facts cannot be certified erased at threshold $\tau{=}0.1$, even with
       zero residual survival and no helpful co-deletion. The same stack, run
       across three memory architectures (a deduplication pipeline, a bi-temporal
       knowledge graph, and a paging agent), finds residual survival in all three
@@ -145,14 +145,14 @@ impossible to certify. Concretely, we contribute:
     channels (\S\ref{sec:formulation}).
 
   \item A minimal co-deletion planner for the resulting NP-hard problem, reaching
-    completeness at mean collateral $k=1.17$ with zero spurious deletions, plus an
+    completeness at mean collateral $k=0.91$ with zero spurious deletions, plus an
     auditable certificate that separates what deletion achieved from what it
     cannot (\S\ref{sec:method}, \S\ref{sec:res-planner}).
 
   \item A \emph{measured} parametric floor and its limit result: under the
-    strongest modeled adversary, $9/15$ facts cannot be certified erased even at
-    zero residual survival---a bound invariant to the certification threshold
-    (\S\ref{sec:res-rho}).
+    strongest modeled adversary, $22/49$ facts cannot be certified erased even at
+    zero residual survival---a measured gradient in which the threshold $\tau$ is a
+    deliberate policy dial (\S\ref{sec:res-rho}).
 
   \item Evidence of generality: the same probe/planner/certificate stack, run on
     three memory architectures, exposes residual survival in all three through
@@ -369,7 +369,7 @@ re-probing after each until $\sred^{\Adv}<\tau$---making $f$ floor-reaching with
 greedily minimal $D$. \emph{Depth-first} (an aggressive comparator) co-deletes
 every entailer above $\tau$ in one shot, with no re-probe stopping rule. The
 reported collateral $k=|D|$ is the measured price of the strong erasure notion;
-the threshold heuristic minimizes it ($k=1.17$ vs.\ depth-first's $5.5$,
+the threshold heuristic minimizes it ($k=0.91$ vs.\ depth-first's $5.65$,
 \S\ref{sec:res-planner}).
 
 \paragraph{Certificate emitter.}
@@ -380,7 +380,7 @@ Definition~\ref{def:cert}: \code{floor\_reaching} (the deletable channels closed
 and \code{completeness\_certified}. The latter certifies erasure only under the
 \emph{worst modeled adversary}---$\rho=\max_{\Adv}\rho^{\Adv}<\tau$---so a fact
 recoverable by the stronger reasoner is reported uncertified even when the weaker
-one fails; this conservative choice is why $9/15$, not $6/15$, are uncertifiable
+one fails; this conservative choice is why $22/49$, not $14/49$, are uncertifiable
 (\S\ref{sec:res-rho}).
 
 % =============================================================================
@@ -398,8 +398,8 @@ black-box access to the base model. Two pinned reasoners are used wherever recov
 is model-dependent: \code{gpt-4o-mini-2024-07-18} (primary) and
 \code{gpt-4o-2024-08-06}; embeddings are local \code{all-MiniLM-L6-v2}. The
 completeness threshold is $\tau=0.10$. Datasets are synthetic subjects placed in
-realistic statistical contexts: 12 isolated PII facts, 6 multi-hop facts with their
-stored operands and bystanders, and 15 parametric-gradient facts across three
+realistic statistical contexts: 48 isolated PII facts, 34 multi-hop facts with their
+stored operands and bystanders, and 49 parametric-gradient facts across three
 difficulty tiers. Recovery is scored by a validated LLM judge with no observed
 false accepts (\S\ref{sec:res-judge}: $0/8$ gold negatives), so every reported
 recovery rate is a conservative lower bound. Table~\ref{tab:master} summarizes the
@@ -412,11 +412,11 @@ headline numbers, ordered by confidence.
 \toprule
 \textbf{Result} & \textbf{System} & \textbf{Headline} & \textbf{Backing control} \\
 \midrule
-Planner (\S\ref{sec:res-planner})     & Mem0          & 100\% complete, 0 spurious, $k{=}1.17$ & spare-bystander + gpt-4o entailment \\
-$\rho$ floor (\S\ref{sec:res-rho})    & base model    & 9/15 \emph{uncertifiable} at residual~0 & worst-adversary $\rho$; $\tau$-stable \\
-Re-derivation (\S\ref{sec:res-rederiv}) & Mem0, Letta & bin1 100\%, bin2 80\%$\to$0\%          & operands-only; faithful co-delete \\
-Convergence (\S\ref{sec:res-converge}) & all three    & 67\% / 100\% (Graphiti/Letta)          & clean-delete verified first \\
-Residual (\S\ref{sec:res-residual})   & Mem0          & 75\%; 83\%$\to$0\%                      & $2{\times}2$ embedder$\times$cadence factorial \\
+Planner (\S\ref{sec:res-planner})     & Mem0          & 100\% complete, 0 spurious, $k{=}0.91$ & spare-bystander + gpt-4o entailment \\
+$\rho$ floor (\S\ref{sec:res-rho})    & base model    & 22/49 \emph{uncertifiable} at residual~0 & worst-adversary $\rho$; refusal audit \\
+Re-derivation (\S\ref{sec:res-rederiv}) & Mem0, Letta & bin1 100\%, bin2 59--65\%$\to$0\%       & operands-only; faithful co-delete \\
+Convergence (\S\ref{sec:res-converge}) & all three    & 80\% / 100\% (Graphiti/Letta)          & clean-delete verified first \\
+Residual (\S\ref{sec:res-residual})   & Mem0          & 97.9\%; 68.75\%$\to$0\%                 & $2{\times}2$ embedder$\times$cadence factorial \\
 Judge (\S\ref{sec:res-judge})         & ---           & $0/8$ false-accept                     & gold set + 12 hard near-miss negatives \\
 \bottomrule
 \end{tabular}
@@ -429,10 +429,10 @@ world-context-only against the base model and is therefore system-independent.}
 % ---------------------------------------------------------------------------
 \subsection{Minimal Co-Deletion: The Planner}\label{sec:res-planner}
 
-On the 6 multi-hop targets, the threshold planner achieves \textbf{100\%
-completeness with 0 spurious bystander deletions} and a \textbf{mean collateral of
-$k=1.17$}; minimality spares 4 operands whose deletion was unnecessary once a
-sufficient subset was removed.
+On the full 34 multi-hop targets, the threshold planner achieves \textbf{100\%
+completeness} (Wilson $[0.90,1.0]$) \textbf{with 0 spurious bystander deletions} and
+a \textbf{mean collateral of $k=0.91$} (bootstrap $[0.74,1.09]$); minimality spares
+36 operands whose deletion was unnecessary once a sufficient subset was removed.
 
 \textbf{Control.} The 0-spurious figure is the selectivity test: the candidate pool
 mixes true operands with bystanders the planner must not touch. The result is
@@ -445,10 +445,10 @@ prevents $k$ from inflating.
 
 \textbf{Comparator.} Depth-first guarantees floor-reaching without iterative
 probing---one pass co-deleting every entailer above $\tau$---and reaches $100\%$
-completeness at $k=5.5$ (with $22$ spurious bystander deletions). Threshold attains
-the \emph{same} completeness at $k=1.17$: iterative re-probing converts that
-guarantee into a near-$5\times$ reduction in collateral ($5.5\to1.17$) and full
-selectivity ($22\to 0$ spurious).
+completeness at $k=5.65$ (with $126$ spurious bystander deletions). Threshold attains
+the \emph{same} completeness at $k=0.91$: iterative re-probing converts that
+guarantee into a $\sim6\times$ reduction in collateral ($5.65\to0.91$) and full
+selectivity ($126\to 0$ spurious).
 
 \begin{table}[t]
 \centering
@@ -483,23 +483,32 @@ base-model floor $\rho{=}1.0$ forces \textsc{incomplete}. Both are
 
 We \emph{measure} the parametric floor $\rho$---the rate at which the base model
 alone reconstructs a value from world-knowable context---rather than asserting it.
-Across the gradient, $\rho$ is monotone in tier
-(\code{gpt-4o-mini}\,/\,\code{gpt-4o}): \textbf{low $0.00/0.00$},
-\textbf{mid $0.033/0.633$}, \textbf{high $0.833/1.00$} (Table~\ref{tab:rho}).
+We report by the $\rho$ we \emph{measure}, not the authored tier: the two disagree
+for $16/49$ facts, which we retain and report by measured $\rho$ rather than
+discard---authored tiers are hypotheses, measured $\rho$ is the evidence. The
+worst-adversary $\rho_{\max}{=}\max_\Adv\rho^\Adv$ splits the set into \textbf{27 at
+$\rho_{\max}{\le}\tau$} (certifiable), \textbf{14 at $\rho_{\max}{\ge}0.5$} (a hard
+floor), and \textbf{8 in an intermediate band} (Table~\ref{tab:rho}). By authored
+tier the means are (\code{gpt-4o-mini}\,/\,\code{gpt-4o}) \textbf{low $0.00/0.00$},
+\textbf{mid $0.069/0.275$}, \textbf{high $0.367/0.656$}.
 
-Certifying erasure under the \emph{worst} modeled adversary, \textbf{9 of 15
-certificates are \emph{not} erasure-certifiable} ($\rho\geq\tau$) \emph{even though
-residual survival is $0$}; under the weaker reasoner alone only $6/15$ would be
-flagged. The three-certificate gap is Definition~\ref{def:rec}'s
+Certifying erasure under the \emph{worst} modeled adversary, \textbf{22 of 49
+certificates are \emph{not} erasure-certifiable} at $\tau{=}0.1$ ($\rho_{\max}>\tau$)
+\emph{even though residual survival is $0$}; under the weaker reasoner alone only
+$14/49$ would be flagged. That eight-certificate gap is Definition~\ref{def:rec}'s
 \emph{adversary-relative} recoverability made concrete: a weaker-reasoner attacker
-would wrongly certify three facts the stronger adversary recovers, so certifying
+would wrongly certify eight facts the stronger adversary recovers, so certifying
 under the $\sup$ is the conservative choice a privacy certificate must make.
 
-This count is robust to $\tau$: the worst-adversary $\rho$ is sharply
-\emph{bimodal} ($0$ for $6$ facts, $\geq 0.5$ for $9$, none in between), so $9/15$
-is invariant for every $\tau\in(0,0.5)$. This is the limit result: when the value
-is recoverable from non-deletable world knowledge, no co-deletion can certify
-erasure.
+The worst-adversary $\rho$ forms a \emph{measured gradient} of parametric
+recoverability---from 27 facts at the certifiable floor, through 8 in an
+intermediate band, to 14 at a hard floor---rather than an all-or-nothing split.
+Because the floor is graded, the uncertifiable count is genuinely
+\emph{threshold-dependent} ($22$ at $\tau{=}0.1$, falling to $14$ as
+$\tau\!\to\!0.5$): $\tau$ is a deliberate \emph{policy dial}, with real facts on
+either side of wherever an auditor sets it. This is the limit result: when the
+value is recoverable from non-deletable world knowledge, no co-deletion can
+certify erasure.
 
 \textbf{Control.} The $\rho$ probe sees \emph{only} the subject's world-knowable
 context, never the stored facts, so co-deletion provably cannot lower it. Three
@@ -512,27 +521,25 @@ attributes is an \emph{adversarial lower bound}.
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{@{}llccc@{}}
+\begin{tabular}{@{}lcc@{}}
 \toprule
-Fact & Tier & $\rho_{\text{mini}}$ & $\rho_{4o}$ & $\rho_{\max}$ \\
+measured worst-adversary band & \#facts ($n{=}49$) & certifiable \\
 \midrule
-R01--R05        & low  & 0.00 & 0.00 & 0.00 \\
-R06             & mid  & 0.00 & 0.50 & 0.50 \\
-R07             & mid  & 0.17 & 0.83 & 0.83 \\
-R08             & mid  & 0.00 & 1.00 & 1.00 \\
-R09             & mid  & 0.00 & 0.00 & \textbf{0.00} \\
-R10             & mid  & 0.00 & 0.83 & 0.83 \\
-R11,R12,R14,R15 & high & 1.00 & 1.00 & 1.00 \\
-R13             & high & 0.17 & 1.00 & 1.00 \\
+$\rho_{\max}\le\tau$ ($\tau{=}0.1$; certifiable floor) & 27 & 27 \\
+$\tau<\rho_{\max}<0.5$ (intermediate band)            & 8  & 0  \\
+$\rho_{\max}\ge0.5$ (hard floor)                      & 14 & 0  \\
+\midrule
+total                                                 & 49 & 27 \\
 \bottomrule
 \end{tabular}
-\caption{Per-fact parametric floor $\rho$ (recovery rate, $n{=}6$ samples,
-temperature $0.7$) for the two reasoners and the worst adversary
-$\rho_{\max}{=}\max(\rho_{\text{mini}},\rho_{4o})$. Tier means are $0.00/0.00$,
-$0.033/0.633$, $0.833/1.00$ (\code{mini}/\code{4o}). The worst-adversary $\rho$ is
-bimodal: \textbf{six} facts at $\rho_{\max}{=}0$ (five low plus the mid-tier
-outlier R09) and \textbf{nine} at $\rho_{\max}{\geq}0.5$---hence $9/15$
-uncertifiable, invariant for $\tau\in(0,0.5)$.}
+\caption{Parametric floor $\rho$ on $n{=}49$ facts ($6$ samples each, temperature
+$0.7$), binned by the \emph{measured} worst adversary
+$\rho_{\max}{=}\max(\rho_{\text{mini}},\rho_{4o})$. 27 facts sit at the certifiable
+floor ($\rho_{\max}{\le}\tau$), 14 at a hard floor, and 8 in an intermediate
+band---a graded floor, so the $22/49$ uncertifiable count is threshold-dependent
+($22$ at $\tau{=}0.1$, $14$ as $\tau\!\to\!0.5$). Authored tier disagrees with the
+measured band for $16/49$ facts; authored-tier means $0.00/0.00$ (low),
+$0.069/0.275$ (mid), $0.367/0.656$ (high) (\code{mini}/\code{4o}).}
 \label{tab:rho}
 \end{table}
 
@@ -542,9 +549,10 @@ uncertifiable, invariant for $\tau\in(0,0.5)$.}
 
 Using an operands-only control---the post-deletion state in which the target's own
 value is never stored, so residual survival is $0$ by construction---we isolate the
-re-derivation channel. On Mem0, the leak is \textbf{100\% for stored-alone (bin~1)
-and $80\%$ for stored+world (bin~2)}---identical across both reasoners---collapsing
-to \textbf{$0\%$ after co-deleting the operands}, with parametric floor $\rho=0\%$.
+re-derivation channel. On Mem0, the leak is \textbf{100\%/94\% for stored-alone (bin~1)
+and $59\%/65\%$ for stored+world (bin~2)} (\code{gpt-4o-mini}/\code{gpt-4o}, $n{=}17$
+per bin), collapsing to \textbf{$0\%$ after co-deleting the operands}, with
+parametric floor $\rho=0\%$.
 The same control \textbf{ports unchanged to Letta}: bin~1 $100\%$, bin~2 $80\%$
 (\code{gpt-4o-mini})\,/\,$100\%$ (\code{gpt-4o}), again $\to 0\%$ after
 co-deletion. The lone bin~2 fact separating the two reasoners on Letta is F043 (the
@@ -608,11 +616,11 @@ proves the agent \emph{can} clear both.}
 
 Residual survival is not a Mem0 quirk; it recurs across all three families by
 \emph{different by-design mechanisms}. The two cross-system probes here are run on
-$n{=}3$ sensitive-PII targets per system. In \textbf{Graphiti}, the explicit
+$n{=}10$ sensitive-PII targets per system. In \textbf{Graphiti}, the explicit
 \code{remove\_episode} is clean for the graph---it hard-deletes the episode, its
 \code{RELATES\_TO} edges, and orphaned entities---yet the deleted fact survives in
 \textbf{stale entity and community summaries that are not recomputed on deletion}:
-edge residue $33\%$ but \textbf{summary residue $67\%$}. In \textbf{Letta},
+edge residue $40\%$ but \textbf{summary residue $80\%$}. In \textbf{Letta},
 deletion is agent-mediated across two surfaces (core blocks and archival passages).
 An explicit dual-surface instruction is \textbf{$100\%$ faithful}; but a
 \emph{vague, deployment-realistic} right-to-be-forgotten request with the fact also
@@ -640,8 +648,11 @@ coverage, not to a missing capability.
 
 Naive single-record deletion on Mem0 is residually incomplete because the store
 \emph{silently duplicates} facts. Deleting the single surfaced record leaves the
-value present in \textbf{$75\%$} of isolated PII targets; an artifact-aware
-deletion drives residual survival from \textbf{$83\%$ to $0\%$}.
+value present in \textbf{$97.9\%$} of isolated PII targets ($47/48$); an
+artifact-aware deletion drives residual survival from \textbf{$68.75\%$ to $0\%$}.
+The two naive-arm rates ($97.9\%$ vs.\ $68.75\%$) come from separate injection runs
+whose stochastic Mem0 dedup draws differ, reported as two independent measurements
+of the same residual-incompleteness phenomenon.
 
 \textbf{Control.} A $2{\times}2$ factorial over embedder (MiniLM\,/\,OpenAI)
 $\times$ injection cadence ($0\,$s\,/\,$1.5\,$s) shows row-inflation of $24$--$42\%$
@@ -675,16 +686,17 @@ justification for using \code{gpt-4o} as the planner's entailment judge
 % =============================================================================
 \section{Limitations}\label{sec:limitations}
 
-\paragraph{A retracted membership claim.}
+\paragraph{A retracted---then powered---membership claim.}
 An early result suggested a membership signal survived artifact-aware deletion; at
-$n{=}6$ it was underpowered and we retract it. Re-run with $33$ members and matched
-near-twins, bootstrap $95\%$ CIs, and a label-permutation test, the picture
-reverses: artifact-aware deletion restores membership-indistinguishability (AUC
-$0.51$, CI includes $0.5$), the intact store is detectable (AUC $0.72$, $p{=}.002$,
-so the test \emph{has} power), and the naive-deletion signal is not significant at
-this $n$ (AUC $0.61$, $p{=}.065$). We thus claim only non-significance for naive
-deletion, not the absence of a leak; a planned $n{\approx}60$ will test whether it
-crosses significance.
+$n{=}6$ it was underpowered and we retracted it. Powered to $48$ members with two
+matched near-twins each ($96$ controls), bootstrap $95\%$ CIs, and a
+label-permutation test, the picture is sharp: artifact-aware deletion restores
+membership-indistinguishability (AUC $0.52$, CI $[0.41,0.62]$ includes $0.5$,
+$p{=}.36$), the intact store is detectable (AUC $0.69$, $p{=}.001$, so the test
+\emph{has} power), and the \textbf{naive-deletion signal is now significant} (AUC
+$0.68$, CI $[0.59,0.77]$ excludes $0.5$, $p{=}.001$). At this power, naive
+single-record deletion \emph{does} leave a detectable membership signal; only
+artifact-aware deletion removes it.
 
 \paragraph{Judge-dependent measurements, bounded.}
 Both LLM judges are validated, neither is perfect. The entailment judge's
@@ -697,11 +709,10 @@ for $3{,}200$) is the most valuable validation extension.
 
 \paragraph{$\rho$ is a lower bound where it matters most.}
 The parametric floor is estimated by eliciting the value from the base model; for
-sensitive attributes the model often refuses (one item drew $5/6$ refusals under
-\code{gpt-4o-mini}), so the measured $\rho$ \emph{understates} true
-world-inferability for exactly the attributes a privacy audit cares about. A more
-willing adversary could only push the uncertifiable count above $9/15$, never
-below.
+sensitive attributes the model often refuses ($7$ high-tier items drew refusals), so the measured $\rho$
+\emph{understates} true world-inferability for exactly the attributes a privacy
+audit cares about. A more willing adversary could only push the uncertifiable count
+above $22/49$, never below.
 
 \paragraph{The entailment graph must be known.}
 The decomposition and planner assume the entailment graph is specified---the
@@ -712,10 +723,10 @@ is an uncloseable path. Discovering the entailment graph of a live memory is its
 an open problem.
 
 \paragraph{Small cross-system samples.}
-The convergence result probes $n{=}3$ high-stakes targets per system. The
-mechanisms are qualitatively distinct and each is independently corroborated
-\citep{forgeteval}, but the per-system rates (e.g.\ $67\%$ summary residue in the
-graph store) are indicative, not precise. Finally, all subjects are synthetic, so
+The convergence result probes $n{=}10$ high-stakes targets per system (scaled
+from an initial $n{=}3$). The mechanisms are qualitatively distinct and each is
+independently corroborated \citep{forgeteval}, but the per-system rates (e.g.\ $80\%$
+summary residue in the graph store) remain indicative, not precise at this scale. Finally, all subjects are synthetic, so
 recoveries reflect re-derivability rather than memorized real individuals, and we
 model two reasoner adversaries rather than the supremum over all of them.
 
@@ -730,16 +741,15 @@ the same gap recurs through different by-design mechanisms, and a \emph{measured
 parametric floor sets a hard limit on what any deletion can promise.
 
 That limit is the paper's broadest implication. For a fact recoverable from world
-knowledge alone ($\rho\geq\tau$)---$9$ of our $15$ gradient facts under the
+knowledge alone ($\rho\geq\tau$)---$22$ of our $49$ gradient facts under the
 strongest modeled adversary---\emph{no} external-store deletion method can achieve
 erasure, because the value can be reconstructed without ever reading the store. For
 such facts, right-to-be-forgotten compliance cannot be a deletion operation: it
 requires not storing the fact in the first place, or explicitly accepting and
 disclosing the residual floor.
 
-Two extensions are immediate: powering the membership-inference test to
-$n{\approx}60$ to resolve the naive-deletion borderline, and adding a fourth memory
-architecture to test whether the three-family convergence is universal. The deeper
+One extension is immediate: adding a fourth memory architecture to test whether
+the three-family convergence is universal. The deeper
 open problem is certifying erasure against an unbounded adversary rather than a
 modeled bracket: the floor we measure is a lower bound, so the true limit of
 forgetting in agent memory may be higher still.

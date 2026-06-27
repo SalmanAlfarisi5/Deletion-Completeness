@@ -464,10 +464,12 @@ We \emph{measure} the parametric floor
 $\rho$---the rate at which the base model alone reconstructs a value from
 world-knowable context---rather than asserting it, on $n{=}49$ facts authored
 across a low/mid/high gradient. We report by the $\rho$ we \emph{measure}, not the
-authored tier (the two disagree for $16/49$ facts): the worst-adversary
+authored tier: the two disagree for $16/49$ facts, which we retain and report by
+measured $\rho$ rather than discard---authored tiers are hypotheses, measured
+$\rho$ is the evidence. The worst-adversary
 $\rho_{\max}{=}\max_{\mathcal{A}}\rho^{\mathcal{A}}$ splits the set into
 \textbf{27 facts at $\rho_{\max}{\le}\tau$} (certifiable), \textbf{14 at
-$\rho_{\max}{\ge}0.5$} (a hard floor), and \textbf{8 in the contested middle}
+$\rho_{\max}{\ge}0.5$} (a hard floor), and \textbf{8 in the intermediate band}
 ($\tau<\rho_{\max}<0.5$) (Table~\ref{tab:rho}). By authored tier the means are
 (\texttt{gpt-4o-mini}\,/\,\texttt{gpt-4o}) \textbf{low $0.00/0.00$}, \textbf{mid
 $0.069/0.275$}, \textbf{high $0.367/0.656$}. Certifying erasure under the
@@ -480,7 +482,7 @@ weaker-reasoner attacker would wrongly certify eight facts the stronger adversar
 recovers, so certifying under the $\sup$ is the conservative choice a privacy
 certificate must make. The worst-adversary $\rho$ forms a \emph{measured gradient}
 of parametric recoverability---from $27$ facts at the certifiable floor, through
-$8$ in a contested middle band, to $14$ at a hard floor---rather than an
+$8$ in an intermediate band, to $14$ at a hard floor---rather than an
 all-or-nothing split. Because the floor is graded, the uncertifiable count is
 genuinely \emph{threshold-dependent} ($22$ at $\tau{=}0.1$, falling to $14$ as
 $\tau\!\to\!0.5$): $\tau$ is a deliberate \emph{policy dial}, not a technicality,
@@ -515,7 +517,7 @@ bounds.
 measured worst-adversary band & \#facts ($n{=}49$) & certifiable \\
 \midrule
 $\rho_{\max}\le\tau$ ($\tau{=}0.1$; certifiable floor) & 27 & 27 \\
-$\tau<\rho_{\max}<0.5$ (contested middle)              & 8  & 0  \\
+$\tau<\rho_{\max}<0.5$ (intermediate band)              & 8  & 0  \\
 $\rho_{\max}\ge0.5$ (hard floor)                       & 14 & 0  \\
 \midrule
 total                                                  & 49 & 27 \\
@@ -525,7 +527,7 @@ total                                                  & 49 & 27 \\
 $0.7$), binned by the \emph{measured} worst adversary
 $\rho_{\max}{=}\max(\rho_{\text{mini}},\rho_{4o})$. 27 facts sit at the certifiable
 floor ($\rho_{\max}{\le}\tau$), 14 at a hard floor ($\rho_{\max}{\ge}0.5$), and
-\textbf{8 in the contested middle}---a graded floor, so the $22/49$ uncertifiable
+\textbf{8 in the intermediate band}---a graded floor, so the $22/49$ uncertifiable
 count is threshold-dependent ($22$ at $\tau{=}0.1$, $14$ as $\tau\!\to\!0.5$) and
 $\tau$ acts as a policy dial. Authored
 tier disagrees with the measured band for $16/49$ facts; authored-tier $\rho$ means

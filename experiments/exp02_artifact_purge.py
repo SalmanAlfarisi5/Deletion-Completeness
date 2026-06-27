@@ -26,6 +26,7 @@ import pandas as pd  # noqa: E402
 from tqdm import tqdm  # noqa: E402
 
 import config  # noqa: E402
+from evaluation.stats import wilson_ci  # noqa: E402
 from pipeline.deleter import Deleter  # noqa: E402
 from pipeline.injector import Injector, load_facts  # noqa: E402
 from probes.base_probe import normalize_values  # noqa: E402
@@ -83,9 +84,14 @@ def main() -> None:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     base = config.RESULTS_DIR / f"exp02_artifact_purge_mem0_{stamp}"
     df.to_csv(base.with_suffix(".csv"), index=False)
+    n_t = int(len(df))
+    naive_ci = wilson_ci(int((df["residual_naive"] >= 0.5).sum()), n_t)
+    aware_ci = wilson_ci(int((df["residual_artifact_aware"] >= 0.5).sum()), n_t)
     metrics = {
         "residual_naive_rate": float(df["residual_naive"].mean()),
+        "residual_naive_rate_ci95": [round(naive_ci[0], 4), round(naive_ci[1], 4)],
         "residual_artifact_aware_rate": float(df["residual_artifact_aware"].mean()),
+        "residual_artifact_aware_rate_ci95": [round(aware_ci[0], 4), round(aware_ci[1], 4)],
         "mean_extra_artifacts_purged": float(df["extra_artifacts_purged"].mean()),
     }
     base.with_suffix(".json").write_text(json.dumps(
@@ -98,8 +104,10 @@ def main() -> None:
     print("\n" + "=" * 60)
     print("  EXP02 — ARTIFACT-AWARE vs NAIVE DELETION")
     print("=" * 60)
-    print(f"  Residual survival, naive          : {metrics['residual_naive_rate']:.2%}")
-    print(f"  Residual survival, artifact-aware : {metrics['residual_artifact_aware_rate']:.2%}")
+    print(f"  Residual survival, naive          : {metrics['residual_naive_rate']:.2%} "
+          f"[{naive_ci[0]:.2%}, {naive_ci[1]:.2%}]")
+    print(f"  Residual survival, artifact-aware : {metrics['residual_artifact_aware_rate']:.2%} "
+          f"[{aware_ci[0]:.2%}, {aware_ci[1]:.2%}]")
     print(f"  Mean extra artifacts purged       : {metrics['mean_extra_artifacts_purged']:.2f}")
     print(f"\n  Results: {base.with_suffix('.csv')}")
 

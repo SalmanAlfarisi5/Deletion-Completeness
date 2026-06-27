@@ -6,5 +6,12 @@ __pycache__/
 
 # local vector store + caches (regenerable, large)
 data/results/chroma_db/
+data/results/chroma_huggingface/
+data/results/llm_cache.json
 data/results/**/cache/
 *.log
+
+.claude
+
+# vendored Letta OpenAPI spec (large, regenerable)
+openapi_letta.json

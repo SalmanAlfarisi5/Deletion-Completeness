@@ -111,6 +111,36 @@ def value_twin(text: str) -> str:
     return twin if isinstance(twin, str) and twin.strip() else text
 
 
+def value_twins(text: str, n: int = 2) -> list[str]:
+    """n matched near-twins: same template/subject/wording, only the specific value
+    swapped to n DIFFERENT plausible (never-stored) values. Used as MIA controls
+    (a 2nd matched control per fact boosts the test's power). Degrades gracefully
+    to the single-twin call if the model under-delivers."""
+    if n <= 1:
+        return [value_twin(text)]
+    msgs = [
+        {"role": "system", "content": "Rewrite the statement keeping the EXACT template, "
+         "subject and wording, but replace ONLY the specific value (number, code, name, "
+         "amount, or category) with DIFFERENT, plausible, clearly different values. Produce "
+         f"{n} variants, each using a DISTINCT replacement value (all different from the "
+         'original and from each other). Respond only as JSON {"twins": ["...", "..."]}.'},
+        {"role": "user", "content": text},
+    ]
+    out = chat_json(msgs, temperature=0.0, max_tokens=120 * n)
+    raw = out.get("twins", []) if isinstance(out, dict) else []
+    seen: set[str] = set()
+    uniq: list[str] = []
+    for t in raw:
+        if isinstance(t, str) and t.strip() and t not in seen:
+            seen.add(t)
+            uniq.append(t)
+    if not uniq:                       # model gave nothing usable -> single-twin fallback
+        uniq = [value_twin(text)]
+    while len(uniq) < n:               # pad if it returned fewer distinct twins than asked
+        uniq.append(uniq[-1])
+    return uniq[:n]
+
+
 def embed(texts: list[str]):
     """Local sentence-transformer embeddings (free, on GPU). L2-normalized."""
     global _st_model

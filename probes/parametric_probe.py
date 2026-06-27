@@ -16,6 +16,7 @@ from __future__ import annotations
 from datetime import date
 
 import llm
+from evaluation.recovery import value_segment
 from probes.base_probe import BaseProbe, ProbeResult, normalize_values
 
 _Q_PROMPT = ('Rewrite the statement below as a direct question asking for its specific '
@@ -48,13 +49,6 @@ _ELICIT_CTX = ("Today's date is {today}.\nYou know only this about the person: {
                "'Value: UNKNOWN' if it cannot be determined.\n\nQUESTION: {question}\nAnswer:")
 
 
-def _value_segment(answer: str) -> str:
-    """Text after the last 'Value:' marker (so reasoning text doesn't false-match)."""
-    low = answer or ""
-    idx = low.lower().rfind("value:")
-    return low[idx + 6:] if idx >= 0 else low
-
-
 class ParametricProbe(BaseProbe):
     name = "parametric"
 
@@ -78,7 +72,7 @@ class ParametricProbe(BaseProbe):
         """Did the answer recover the fact's value? Fast substring check on the
         stated value, falling back to an LLM judge for numeric/semantic matches."""
         values = normalize_values(fact.get("probe_value"))
-        seg = _value_segment(answer)
+        seg = value_segment(answer)
         low = seg.lower()
         if any(v.lower() in low for v in values):
             return True

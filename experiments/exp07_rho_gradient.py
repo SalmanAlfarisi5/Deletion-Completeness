@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -39,6 +40,7 @@ from tqdm import tqdm  # noqa: E402
 import config  # noqa: E402
 from certificate.emitter import make_certificate, save_certificate  # noqa: E402
 from evaluation.recovery import looks_like_refusal, numeric_recovered  # noqa: E402
+from evaluation.stats import wilson_ci  # noqa: E402
 from pipeline.deleter import Deleter  # noqa: E402
 from pipeline.injector import Injector, load_facts  # noqa: E402
 from probes.base_probe import normalize_values  # noqa: E402
@@ -59,6 +61,7 @@ def main() -> None:
     args = ap.parse_args()
     if config.validate():
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
+    random.seed(args.seed)
     np.random.seed(args.seed)
 
     facts = load_facts(config.FACTS_DIR / "rho_gradient_facts.json")
@@ -84,10 +87,23 @@ def main() -> None:
                            f"lift={ctx['rho']-base['rho']:+.2f} refusals={refusals}/{args.n_samples}")
 
     df = pd.DataFrame(rows)
-    by_tier = {r: {t: {"rho": round(float(df[(df.reasoner == r) & (df.tier == t)]["rho_context"].mean()), 3),
-                       "base": round(float(df[(df.reasoner == r) & (df.tier == t)]["rho_baserate"].mean()), 3),
-                       "lift": round(float(df[(df.reasoner == r) & (df.tier == t)]["context_lift"].mean()), 3)}
-                   for t in TIER_ORDER} for r in reasoners}
+    # Per-tier rho is a pooled recovery RATE over all samples in the tier
+    # (rho_context = recovered/n per fact, n constant), so the Wilson CI uses
+    # k = total recovered samples, N = total samples across the tier's facts.
+    by_tier = {}
+    for r in reasoners:
+        by_tier[r] = {}
+        for t in TIER_ORDER:
+            sub = df[(df.reasoner == r) & (df.tier == t)]
+            k = int((sub["rho_context"] * sub["n"]).round().sum())   # recovered samples
+            n_samp = int(sub["n"].sum())                             # total samples in tier
+            rho_ci = wilson_ci(k, n_samp)
+            by_tier[r][t] = {
+                "rho": round(float(sub["rho_context"].mean()), 3),
+                "rho_ci95": [round(rho_ci[0], 4), round(rho_ci[1], 4)],
+                "base": round(float(sub["rho_baserate"].mean()), 3),
+                "lift": round(float(sub["context_lift"].mean()), 3),
+            }
 
     # mid-tier tolerance sweep: re-score logged numeric answers (free)
     fact_by_id = {f["id"]: f for f in facts}
@@ -107,12 +123,12 @@ def main() -> None:
                       "refusals": row["refusals"], "n": row["n"]}
                      for row in rows if row["tier"] == "high" and row["refusals"] > 0]
 
-    # pipeline + certificate (primary reasoner)
+    # pipeline + certificate (worst modeled adversary: max rho over reasoners, Def. 4)
     adapter = __import__("systems.mem0_adapter", fromlist=["Mem0Adapter"]).Mem0Adapter()
     injector, deleter, exact = Injector(adapter), Deleter(adapter), ExactMatchProbe()
     cert_rows = []
     for f in facts:
-        rho = rho_by_fact[f["id"]][config.REASONER_MODEL]
+        rho = max(rho_by_fact[f["id"]].values())  # worst (highest) modeled adversary, Def. 4
         del_vals = normalize_values(f.get("delete_value", f["probe_value"]))
         uid = f"{config.USER_ID_PREFIX}_rho_{f['id']}"
         adapter.delete_all_memories(uid)
@@ -133,14 +149,48 @@ def main() -> None:
         if not args.keep:
             adapter.delete_all_memories(uid)
 
+    # ---- report by MEASURED rho (worst adversary), not the authored hypothesis tier.
+    # Surfaces (a) hypothesis-vs-measured tier mismatch and (b) the bimodality: the
+    # contested "mid" band is nearly empty -> rho is effectively {~0, >=0.5}. The
+    # authored-tier view (rho_by_tier) is kept above; this is the measured view.
+    def _measured_tier(rho_val: float) -> str:
+        if rho_val <= config.TAU:
+            return "low"            # rho <= tau -> certifiable floor (~0)
+        if rho_val >= 0.5:
+            return "high"           # rho >= 0.5 -> hard floor
+        return "mid"                # tau < rho < 0.5 -> the contested middle band
+    measured_bins = {t: {"n": 0, "certifiable": 0, "fact_ids": []} for t in TIER_ORDER}
+    hyp_vs_measured = {"mismatch": 0, "n": len(cert_rows), "mismatched_fact_ids": []}
+    for c in cert_rows:
+        mt = _measured_tier(c["rho"])
+        measured_bins[mt]["n"] += 1
+        measured_bins[mt]["certifiable"] += int(c["certified_complete"])
+        measured_bins[mt]["fact_ids"].append(c["fact_id"])
+        if mt != c["tier"]:
+            hyp_vs_measured["mismatch"] += 1
+            hyp_vs_measured["mismatched_fact_ids"].append(c["fact_id"])
+    n_mid = measured_bins["mid"]["n"]
+    bimodality = {"rho_le_tau": measured_bins["low"]["n"], "rho_ge_0.5": measured_bins["high"]["n"],
+                  "rho_in_mid_band": n_mid, "n": len(cert_rows),
+                  "is_bimodal": n_mid <= max(1, round(0.1 * len(cert_rows)))}
+
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     base_p = config.RESULTS_DIR / f"exp07_rho_gradient_{stamp}"
     df.drop(columns=["answers_context", "answers_baserate"]).to_csv(base_p.with_suffix(".csv"), index=False)
     n_false = sum(not c["certified_complete"] for c in cert_rows)
+    # Headline certifiable rate (X/N facts certified complete) -> Wilson CI.
+    n_certifiable = sum(c["certified_complete"] for c in cert_rows)
+    n_total = len(cert_rows)
+    cert_ci = wilson_ci(n_certifiable, n_total)
     base_p.with_suffix(".json").write_text(json.dumps(
         {"experiment": "exp07_rho_gradient", "timestamp_utc": stamp, "tau": config.TAU,
          "n_samples": args.n_samples, "reasoners": reasoners, "scoring": "_recovered (probe_value union judge); mid sweep = numeric tolerance",
-         "rho_by_tier": by_tier, "mid_tolerance_sweep": sweep, "refusal_flags": refusal_flags,
+         "certifiable_complete": n_certifiable, "n_certificates": n_total,
+         "certifiable_rate": round(n_certifiable / n_total, 3) if n_total else 0.0,
+         "certifiable_rate_ci95": [round(cert_ci[0], 4), round(cert_ci[1], 4)],
+         "rho_by_tier": by_tier, "rho_by_measured_bin": measured_bins,
+         "hypothesis_vs_measured": hyp_vs_measured, "bimodality": bimodality,
+         "mid_tolerance_sweep": sweep, "refusal_flags": refusal_flags,
          "certificates": cert_rows, "rows_with_logged_answers": rows}, indent=2, default=str))
 
     print("\n" + "=" * 70)
@@ -150,7 +200,9 @@ def main() -> None:
         print(f"  {r}:")
         for t in TIER_ORDER:
             s = by_tier[r][t]
-            print(f"    {t:4s}: rho={s['rho']:.2f}  base-rate={s['base']:.2f}  context-lift={s['lift']:+.2f}")
+            lo, hi = s["rho_ci95"]
+            print(f"    {t:4s}: rho={s['rho']:.2f} [{lo:.2f},{hi:.2f}]  "
+                  f"base-rate={s['base']:.2f}  context-lift={s['lift']:+.2f}")
         print(f"    mid tolerance sweep: " + "  ".join(
             f"{k.replace('tol_','').replace('pct','%')}={v:.2f}" for k, v in sweep[r].items()))
     if refusal_flags:
@@ -158,6 +210,16 @@ def main() -> None:
         for fl in refusal_flags:
             print(f"    {fl['fact_id']} [{fl['reasoner'].split('-')[0]}]: {fl['refusals']}/{fl['n']} refused")
     print(f"\n  tau={config.TAU}  ->  NOT certified-complete (rho>tau, limit result): {n_false}/{len(cert_rows)}")
+    print(f"  certifiable-complete (rho<=tau)        : {n_certifiable}/{n_total} "
+          f"[{cert_ci[0]:.0%}, {cert_ci[1]:.0%}]")
+    print(f"\n  MEASURED-rho binning (worst adversary, n={len(cert_rows)} facts):")
+    for mt in TIER_ORDER:
+        b = measured_bins[mt]
+        print(f"    {mt:4s}: n={b['n']:2d}  certifiable={b['certifiable']:2d}  fact_ids={b['fact_ids']}")
+    print(f"  hypothesis tier != measured tier   : {hyp_vs_measured['mismatch']}/{hyp_vs_measured['n']} facts")
+    print(f"  bimodality (mid band ~empty)       : rho<=tau:{bimodality['rho_le_tau']}  "
+          f"mid:{bimodality['rho_in_mid_band']}  rho>=0.5:{bimodality['rho_ge_0.5']}  "
+          f"is_bimodal={bimodality['is_bimodal']}")
     print(f"  Results: {base_p.with_suffix('.csv')}  (answers logged in .json for free re-scoring)")
 
 

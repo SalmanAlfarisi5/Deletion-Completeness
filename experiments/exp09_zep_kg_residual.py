@@ -29,8 +29,15 @@ from pipeline.injector import Injector, load_facts  # noqa: E402
 from probes.exact_match import ExactMatchProbe  # noqa: E402
 from probes.kg_node_residue import KGNodeResidueProbe  # noqa: E402
 
-# target (deleted) fact  +  keeper fact that shares the subject (keeps entity alive)
-PAIRS = [("F001", "C013"), ("F008", "C014"), ("F003", "C015")]
+# target (deleted) fact  +  keeper fact that shares the subject (keeps entity alive).
+# Scaled to ~10 pairs across the three subjects whose keepers (C013/C014/C015) are
+# known to share the subject; each pair runs in its own isolated graph (per-target
+# user_id), so a keeper can back several same-subject targets.
+PAIRS = [
+    ("F001", "C013"), ("F004", "C013"), ("F007", "C013"), ("F010", "C013"),  # Alice Chen
+    ("F008", "C014"), ("F002", "C014"), ("F005", "C014"),                    # Bob Tan
+    ("F003", "C015"), ("F009", "C015"), ("F012", "C015"),                    # Carol Lim
+]
 
 
 def main() -> None:

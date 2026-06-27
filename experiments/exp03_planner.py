@@ -15,15 +15,18 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import sys
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 from tqdm import tqdm  # noqa: E402
 
 import config  # noqa: E402
+from evaluation.stats import bootstrap_mean_ci, wilson_ci  # noqa: E402
 from certificate.emitter import make_certificate, save_certificate  # noqa: E402
 from pipeline.deleter import Deleter  # noqa: E402
 from pipeline.injector import Injector, load_facts  # noqa: E402
@@ -41,11 +44,14 @@ def main() -> None:
                     help="entailment judge (use gpt-4o: 0%% partial-operand false-fire)")
     ap.add_argument("--heuristic", choices=["threshold", "depth_first"], default="threshold",
                     help="threshold = minimal (recommended); depth_first = aggressive comparator")
+    ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()
     if config.validate():
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
+    random.seed(args.seed)
+    np.random.seed(args.seed)
 
     targets = load_facts(config.FACTS_DIR / "multi_hop_facts.json")[: args.n]
     context = load_facts(config.FACTS_DIR / "context_facts.json")
@@ -107,9 +113,13 @@ def main() -> None:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     base = config.RESULTS_DIR / f"exp03_planner_mem0_{args.heuristic}_{stamp}"
     df.to_csv(base.with_suffix(".csv"), index=False)
+    comp_ci = wilson_ci(int(df["achieved_completeness"].sum()), int(len(df)))
+    collat_ci = bootstrap_mean_ci(df["collateral_k"].tolist())
     metrics = {
         "completeness_rate": round(float(df["achieved_completeness"].mean()), 3),
+        "completeness_rate_ci95": [round(comp_ci[0], 4), round(comp_ci[1], 4)],
         "mean_collateral_k": round(float(df["collateral_k"].mean()), 3),
+        "mean_collateral_k_ci95": [round(collat_ci[0], 4), round(collat_ci[1], 4)],
         "spurious_bystander_deletions": int(df["spurious_bystanders"].map(len).sum()),
         "operands_spared_by_minimality": int(df["operands_not_needed"].map(len).sum()),
     }
@@ -120,8 +130,10 @@ def main() -> None:
     print("\n" + "=" * 60)
     print("  EXP03 — PLANNER (threshold heuristic)")
     print("=" * 60)
-    print(f"  Achieved completeness        : {metrics['completeness_rate']:.0%} of targets")
-    print(f"  Mean collateral k            : {metrics['mean_collateral_k']}")
+    print(f"  Achieved completeness        : {metrics['completeness_rate']:.0%} of targets "
+          f"[{comp_ci[0]:.0%}, {comp_ci[1]:.0%}]")
+    print(f"  Mean collateral k            : {metrics['mean_collateral_k']} "
+          f"[{collat_ci[0]:.2f}, {collat_ci[1]:.2f}]")
     print(f"  Spurious bystander deletions : {metrics['spurious_bystander_deletions']}  (want 0)")
     print(f"  Operands spared (minimality) : {metrics['operands_spared_by_minimality']}  "
           f"(co-deleted a sufficient subset)")

@@ -1,11 +1,11 @@
 {
   "_meta": {
-    "description": "Isolated facts: arbitrary values with NO entailment links to any other stored fact. Recovery after deletion can only be RESIDUAL SURVIVAL (a derived artifact still contains it), never re-derivation. Parametric risk rho is ~0 by construction (values are synthetic). All persons are fictional.",
+    "description": "Isolated facts: arbitrary values with NO entailment links to any other stored fact. Recovery after deletion can only be RESIDUAL SURVIVAL (a derived artifact still contains it), never re-derivation. Parametric risk rho is ~0 by construction (values are synthetic). All persons are fictional. [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)]",
     "account_owner": "Alice Chen",
     "fields": {
       "id": "stable identifier",
       "subject": "who the fact is about",
-      "category": "personal_contact | medical | financial | preference | location",
+      "category": "personal_contact | medical | financial | preference | location | education | employment | device",
       "text": "canonical third-person statement of the fact",
       "utterance": "natural first/third-person phrasing fed to the memory system",
       "probe_value": "the discriminating token(s) a probe must surface to count as recovered",
@@ -20,7 +20,11 @@
       "category": "personal_contact",
       "text": "Alice Chen's emergency contact phone number is +65-9123-4567.",
       "utterance": "By the way, please remember my emergency contact number is +65-9123-4567.",
-      "probe_value": ["+65-9123-4567", "9123-4567", "91234567"],
+      "probe_value": [
+        "+65-9123-4567",
+        "9123-4567",
+        "91234567"
+      ],
       "entailed_by": [],
       "note": "Phone number is arbitrary; no other stored fact implies it."
     },
@@ -30,7 +34,9 @@
       "category": "medical",
       "text": "Bob Tan is allergic to penicillin.",
       "utterance": "Noting for travel plans: my colleague Bob Tan is allergic to penicillin.",
-      "probe_value": ["penicillin"],
+      "probe_value": [
+        "penicillin"
+      ],
       "entailed_by": [],
       "note": "Specific allergen is arbitrary among many; not inferable from other facts."
     },
@@ -40,7 +46,10 @@
       "category": "medical",
       "text": "Carol Lim's blood type is AB negative.",
       "utterance": "My friend Carol Lim's blood type is AB negative, in case it ever comes up.",
-      "probe_value": ["AB negative", "AB-"],
+      "probe_value": [
+        "AB negative",
+        "AB-"
+      ],
       "entailed_by": [],
       "note": "Blood type is arbitrary; not derivable from other stored facts."
     },
@@ -50,7 +59,10 @@
       "category": "financial",
       "text": "Alice Chen's DBS savings account number is 012-34567-8.",
       "utterance": "Save my DBS savings account number: 012-34567-8.",
-      "probe_value": ["012-34567-8", "012345678"],
+      "probe_value": [
+        "012-34567-8",
+        "012345678"
+      ],
       "entailed_by": [],
       "note": "Account number is arbitrary."
     },
@@ -60,7 +72,10 @@
       "category": "personal_contact",
       "text": "Bob Tan's home address is Blk 123 Ang Mo Kio Ave 6, #08-456.",
       "utterance": "Bob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456 — keep it for the courier.",
-      "probe_value": ["#08-456", "Blk 123 Ang Mo Kio Ave 6"],
+      "probe_value": [
+        "#08-456",
+        "Blk 123 Ang Mo Kio Ave 6"
+      ],
       "entailed_by": [],
       "note": "Unit number is arbitrary."
     },
@@ -70,7 +85,9 @@
       "category": "preference",
       "text": "Carol Lim's favourite cuisine is Peranakan food.",
       "utterance": "Carol Lim absolutely loves Peranakan food — her favourite cuisine.",
-      "probe_value": ["Peranakan"],
+      "probe_value": [
+        "Peranakan"
+      ],
       "entailed_by": [],
       "note": "Preference is arbitrary; not implied by other facts."
     },
@@ -80,7 +97,9 @@
       "category": "location",
       "text": "Alice Chen parks her car at lot B2-17 in her condo carpark.",
       "utterance": "My condo parking lot is B2-17, remember that.",
-      "probe_value": ["B2-17"],
+      "probe_value": [
+        "B2-17"
+      ],
       "entailed_by": [],
       "note": "Lot label is arbitrary."
     },
@@ -90,7 +109,10 @@
       "category": "personal_contact",
       "text": "Bob Tan's car licence plate is SGY 4821 X.",
       "utterance": "Bob Tan drives the car with plate SGY 4821 X.",
-      "probe_value": ["SGY 4821 X", "SGY4821X"],
+      "probe_value": [
+        "SGY 4821 X",
+        "SGY4821X"
+      ],
       "entailed_by": [],
       "note": "Plate is arbitrary."
     },
@@ -100,7 +122,10 @@
       "category": "medical",
       "text": "Carol Lim takes 50 mg of sertraline daily.",
       "utterance": "Carol Lim takes 50 mg sertraline every day — noting it for her.",
-      "probe_value": ["sertraline", "50 mg"],
+      "probe_value": [
+        "sertraline",
+        "50 mg"
+      ],
       "entailed_by": [],
       "note": "Medication/dose is arbitrary; not implied by other stored facts."
     },
@@ -110,7 +135,9 @@
       "category": "financial",
       "text": "Alice Chen's debit card PIN is 7392.",
       "utterance": "My debit card PIN is 7392, keep it safe.",
-      "probe_value": ["7392"],
+      "probe_value": [
+        "7392"
+      ],
       "entailed_by": [],
       "note": "PIN is arbitrary."
     },
@@ -120,7 +147,9 @@
       "category": "preference",
       "text": "Bob Tan's pet cat is named Mochi.",
       "utterance": "Bob Tan has a pet cat called Mochi.",
-      "probe_value": ["Mochi"],
+      "probe_value": [
+        "Mochi"
+      ],
       "entailed_by": [],
       "note": "Pet name is arbitrary."
     },
@@ -130,9 +159,445 @@
       "category": "location",
       "text": "Carol Lim's home wifi password is RainbowTiger88.",
       "utterance": "Carol Lim's home wifi password is RainbowTiger88.",
-      "probe_value": ["RainbowTiger88"],
+      "probe_value": [
+        "RainbowTiger88"
+      ],
       "entailed_by": [],
       "note": "Password is arbitrary."
+    },
+    {
+      "id": "F100",
+      "subject": "Wei Jie Tan",
+      "category": "personal_contact",
+      "text": "Wei Jie Tan's emergency contact number is 9123-4567.",
+      "utterance": "Add my emergency contact number: 9123-4567.",
+      "probe_value": [
+        "9123-4567"
+      ],
+      "entailed_by": [],
+      "note": "The number is arbitrary; it cannot be derived from other information."
+    },
+    {
+      "id": "F101",
+      "subject": "Wei Jie Tan",
+      "category": "medical",
+      "text": "Wei Jie Tan's blood type is AB+.",
+      "utterance": "Record my blood type as AB+.",
+      "probe_value": [
+        "AB+"
+      ],
+      "entailed_by": [],
+      "note": "Blood type is arbitrary; no inference is possible from other facts."
+    },
+    {
+      "id": "F102",
+      "subject": "Hui Min Lim",
+      "category": "financial",
+      "text": "Hui Min Lim's bank account number is 7654-3210-9876.",
+      "utterance": "Store my bank account number: 7654-3210-9876.",
+      "probe_value": [
+        "7654-3210-9876"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary and non-inferable."
+    },
+    {
+      "id": "F103",
+      "subject": "Hui Min Lim",
+      "category": "preference",
+      "text": "Hui Min Lim's preferred vacation destination is the Maldives.",
+      "utterance": "Note my preferred vacation destination: the Maldives.",
+      "probe_value": [
+        "the Maldives"
+      ],
+      "entailed_by": [],
+      "note": "Destination is arbitrary; it cannot be inferred from other data."
+    },
+    {
+      "id": "F104",
+      "subject": "Jun Wei Ong",
+      "category": "location",
+      "text": "Jun Wei Ong's current residence is at 45 Orchard Road, #05-12.",
+      "utterance": "Save my current address: 45 Orchard Road, #05-12.",
+      "probe_value": [
+        "45 Orchard Road, #05-12"
+      ],
+      "entailed_by": [],
+      "note": "Address is arbitrary; it does not correlate with any other known facts."
+    },
+    {
+      "id": "F105",
+      "subject": "Jun Wei Ong",
+      "category": "education",
+      "text": "Jun Wei Ong's student ID is 2023-ENG-4567.",
+      "utterance": "Record my student ID as 2023-ENG-4567.",
+      "probe_value": [
+        "2023-ENG-4567"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary and unrelated to other identifiers."
+    },
+    {
+      "id": "F106",
+      "subject": "Mei Fang Goh",
+      "category": "employment",
+      "text": "Mei Fang Goh's employee ID is MF123456.",
+      "utterance": "Store my employee ID: MF123456.",
+      "probe_value": [
+        "MF123456"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; it cannot be inferred from other data."
+    },
+    {
+      "id": "F107",
+      "subject": "Mei Fang Goh",
+      "category": "device",
+      "text": "Mei Fang Goh's smartphone IMEI number is 356789012345678.",
+      "utterance": "Save my smartphone IMEI: 356789012345678.",
+      "probe_value": [
+        "356789012345678"
+      ],
+      "entailed_by": [],
+      "note": "IMEI number is arbitrary; it cannot be derived from other information."
+    },
+    {
+      "id": "F108",
+      "subject": "Boon Hock Teo",
+      "category": "personal_contact",
+      "text": "Boon Hock Teo's emergency contact number is 9123-4567.",
+      "utterance": "Add my emergency contact number: 9123-4567.",
+      "probe_value": [
+        "9123-4567"
+      ],
+      "entailed_by": [],
+      "note": "Number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F109",
+      "subject": "Boon Hock Teo",
+      "category": "medical",
+      "text": "Boon Hock Teo's blood type is AB+.",
+      "utterance": "Record my blood type as AB+.",
+      "probe_value": [
+        "AB+"
+      ],
+      "entailed_by": [],
+      "note": "Blood type is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F110",
+      "subject": "Xin Yi Chua",
+      "category": "financial",
+      "text": "Xin Yi Chua's bank account number is 7654321-09876.",
+      "utterance": "Store my bank account number: 7654321-09876.",
+      "probe_value": [
+        "7654321-09876"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F111",
+      "subject": "Xin Yi Chua",
+      "category": "preference",
+      "text": "Xin Yi Chua prefers green tea over coffee.",
+      "utterance": "Note that I prefer green tea over coffee.",
+      "probe_value": [
+        "green tea",
+        "coffee"
+      ],
+      "entailed_by": [],
+      "note": "Preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F112",
+      "subject": "Kai Xin Ng",
+      "category": "location",
+      "text": "Kai Xin Ng's home address is 14 Orchid Road, Singapore 123456.",
+      "utterance": "Save my home address: 14 Orchid Road, Singapore 123456.",
+      "probe_value": [
+        "14 Orchid Road, Singapore 123456"
+      ],
+      "entailed_by": [],
+      "note": "Address is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F113",
+      "subject": "Kai Xin Ng",
+      "category": "education",
+      "text": "Kai Xin Ng's student ID is S12345678.",
+      "utterance": "Keep my student ID as S12345678.",
+      "probe_value": [
+        "S12345678"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F114",
+      "subject": "Pei Shan Sim",
+      "category": "employment",
+      "text": "Pei Shan Sim's employee ID is E987654321.",
+      "utterance": "Store my employee ID: E987654321.",
+      "probe_value": [
+        "E987654321"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F115",
+      "subject": "Pei Shan Sim",
+      "category": "device",
+      "text": "Pei Shan Sim's smartphone IMEI number is 123456789012345.",
+      "utterance": "Record my smartphone IMEI: 123456789012345.",
+      "probe_value": [
+        "123456789012345"
+      ],
+      "entailed_by": [],
+      "note": "IMEI is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F116",
+      "subject": "Nurul Aisyah",
+      "category": "personal_contact",
+      "text": "Nurul Aisyah's emergency contact number is +65 9123 4567.",
+      "utterance": "Store my emergency contact number: +65 9123 4567.",
+      "probe_value": [
+        "+65 9123 4567"
+      ],
+      "entailed_by": [],
+      "note": "The number is arbitrary; it cannot be inferred from any other fact."
+    },
+    {
+      "id": "F117",
+      "subject": "Nurul Aisyah",
+      "category": "medical",
+      "text": "Nurul Aisyah's blood type is B positive.",
+      "utterance": "Record my blood type as B positive.",
+      "probe_value": [
+        "B positive"
+      ],
+      "entailed_by": [],
+      "note": "Blood type is arbitrary; it is not inferable from any other information."
+    },
+    {
+      "id": "F118",
+      "subject": "Faizal Osman",
+      "category": "financial",
+      "text": "Faizal Osman's bank account number is 7654321-1234.",
+      "utterance": "Save my bank account number: 7654321-1234.",
+      "probe_value": [
+        "7654321-1234"
+      ],
+      "entailed_by": [],
+      "note": "The account number is arbitrary; it cannot be deduced from any context."
+    },
+    {
+      "id": "F119",
+      "subject": "Faizal Osman",
+      "category": "preference",
+      "text": "Faizal Osman's preferred coffee order is a double espresso.",
+      "utterance": "Remember my coffee order: double espresso.",
+      "probe_value": [
+        "double espresso"
+      ],
+      "entailed_by": [],
+      "note": "The coffee preference is arbitrary; it cannot be inferred from other facts."
+    },
+    {
+      "id": "F120",
+      "subject": "Aishah Ibrahim",
+      "category": "location",
+      "text": "Aishah Ibrahim's favorite park is East Coast Park.",
+      "utterance": "Save my favorite park: East Coast Park.",
+      "probe_value": [
+        "East Coast Park"
+      ],
+      "entailed_by": [],
+      "note": "The park name is arbitrary; it does not connect to other information."
+    },
+    {
+      "id": "F121",
+      "subject": "Aishah Ibrahim",
+      "category": "education",
+      "text": "Aishah Ibrahim's student ID is S1234567A.",
+      "utterance": "Store my student ID: S1234567A.",
+      "probe_value": [
+        "S1234567A"
+      ],
+      "entailed_by": [],
+      "note": "The student ID is arbitrary; it cannot be inferred from any other data."
+    },
+    {
+      "id": "F122",
+      "subject": "Hakim Abdullah",
+      "category": "employment",
+      "text": "Hakim Abdullah's employee ID is HAK-2023-0045.",
+      "utterance": "Remember my employee ID: HAK-2023-0045.",
+      "probe_value": [
+        "HAK-2023-0045"
+      ],
+      "entailed_by": [],
+      "note": "The employee ID is arbitrary; it cannot be derived from any context."
+    },
+    {
+      "id": "F123",
+      "subject": "Hakim Abdullah",
+      "category": "device",
+      "text": "Hakim Abdullah's smartphone IMEI number is 356789123456789.",
+      "utterance": "Save my smartphone IMEI: 356789123456789.",
+      "probe_value": [
+        "356789123456789"
+      ],
+      "entailed_by": [],
+      "note": "The IMEI number is arbitrary; it does not connect to any other known fact."
+    },
+    {
+      "id": "F124",
+      "subject": "Zarina Mohd",
+      "category": "personal_contact",
+      "text": "Zarina Mohd's emergency contact number is 9123-4567.",
+      "utterance": "Set my emergency contact number to 9123-4567.",
+      "probe_value": [
+        "9123-4567"
+      ],
+      "entailed_by": [],
+      "note": "Contact number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F125",
+      "subject": "Zarina Mohd",
+      "category": "medical",
+      "text": "Zarina Mohd's blood type is AB+.",
+      "utterance": "Remember my blood type as AB+.",
+      "probe_value": [
+        "AB+"
+      ],
+      "entailed_by": [],
+      "note": "Blood type is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F126",
+      "subject": "Iskandar Yusof",
+      "category": "financial",
+      "text": "Iskandar Yusof's bank account number is 123-456-789.",
+      "utterance": "Save my bank account number: 123-456-789.",
+      "probe_value": [
+        "123-456-789"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F127",
+      "subject": "Iskandar Yusof",
+      "category": "preference",
+      "text": "Iskandar Yusof prefers coffee with almond milk.",
+      "utterance": "Note that I prefer my coffee with almond milk.",
+      "probe_value": [
+        "coffee with almond milk"
+      ],
+      "entailed_by": [],
+      "note": "Preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F128",
+      "subject": "Deepa Menon",
+      "category": "location",
+      "text": "Deepa Menon's favorite park is East Coast Park.",
+      "utterance": "Save my favorite park as East Coast Park.",
+      "probe_value": [
+        "East Coast Park"
+      ],
+      "entailed_by": [],
+      "note": "Location is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F129",
+      "subject": "Deepa Menon",
+      "category": "education",
+      "text": "Deepa Menon's university ID is U123456.",
+      "utterance": "Remember my university ID: U123456.",
+      "probe_value": [
+        "U123456"
+      ],
+      "entailed_by": [],
+      "note": "University ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F130",
+      "subject": "Suresh Pillai",
+      "category": "employment",
+      "text": "Suresh Pillai's employee ID is EMP-7890.",
+      "utterance": "Save my employee ID as EMP-7890.",
+      "probe_value": [
+        "EMP-7890"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F131",
+      "subject": "Suresh Pillai",
+      "category": "device",
+      "text": "Suresh Pillai's smartphone IMEI number is 123456789012345.",
+      "utterance": "Store my smartphone IMEI: 123456789012345.",
+      "probe_value": [
+        "123456789012345"
+      ],
+      "entailed_by": [],
+      "note": "IMEI number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F132",
+      "subject": "Anand Raj",
+      "category": "personal_contact",
+      "text": "Anand Raj's emergency contact number is 98765432.",
+      "utterance": "Store my emergency contact number: 98765432.",
+      "probe_value": [
+        "98765432"
+      ],
+      "entailed_by": [],
+      "note": "Number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F133",
+      "subject": "Anand Raj",
+      "category": "medical",
+      "text": "Anand Raj's blood type is AB-positive.",
+      "utterance": "Remember my blood type as AB-positive.",
+      "probe_value": [
+        "AB-positive"
+      ],
+      "entailed_by": [],
+      "note": "Blood type is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F134",
+      "subject": "Kavitha Subramaniam",
+      "category": "financial",
+      "text": "Kavitha Subramaniam's bank account number is 123-456-7890.",
+      "utterance": "Save my bank account number: 123-456-7890.",
+      "probe_value": [
+        "123-456-7890"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F135",
+      "subject": "Kavitha Subramaniam",
+      "category": "preference",
+      "text": "Kavitha Subramaniam prefers dark chocolate over milk chocolate.",
+      "utterance": "I prefer dark chocolate over milk chocolate.",
+      "probe_value": [
+        "dark chocolate",
+        "milk chocolate"
+      ],
+      "entailed_by": [],
+      "note": "Preference is arbitrary; not inferable from any other fact."
     }
   ]
 }

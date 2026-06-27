@@ -1,8 +1,10 @@
 """Experiment 8 — membership inference via retrieval scores (powered).
 
-Members = ALL controlled facts (isolated + multi-hop + rho), injected into a
-store alongside a permanent bystander background, then deleted. Each member has
-one matched never-stored near-twin (same template, different value).
+Members = the enlarged ISOLATED set (clean single-value templates -> well-matched
+twins), injected into a store alongside a permanent bystander background, then
+deleted. Each member has ``--twins`` matched never-stored near-twins (same
+template, different value). A 2nd matched control per fact lifts the powered test
+toward n~60 and sharpens the naive-stage permutation p.
 
 Per fact we take the top-1 retrieval similarity (continuous) of its exact-text
 query against the store. AUC = P(member > twin) from these continuous scores,
@@ -44,21 +46,23 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Powered MIA via retrieval scores")
     ap.add_argument("--n-boot", type=int, default=1000)
     ap.add_argument("--n-perm", type=int, default=1000)
+    ap.add_argument("--twins", type=int, default=2,
+                    help="matched never-stored near-twins per member (2 = the powered 2nd control)")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()
     if config.validate():
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
 
-    members = (load_facts(config.FACTS_DIR / "isolated_facts.json")
-               + load_facts(config.FACTS_DIR / "multi_hop_facts.json")
-               + load_facts(config.FACTS_DIR / "rho_gradient_facts.json"))
+    # Member pool = the enlarged ISOLATED set (n=48): single clear value per fact, so
+    # value-twins are well matched. multi-hop / rho facts have no single swappable value.
+    members = load_facts(config.FACTS_DIR / "isolated_facts.json")
     background = [c for c in load_facts(config.FACTS_DIR / "context_facts.json")
                  if c.get("role") == "bystander"]
     member_queries = [m["text"] for m in members]
-    print(f"Members={len(members)}  background(bystander)={len(background)}")
+    print(f"Members={len(members)}  background(bystander)={len(background)}  twins/fact={args.twins}")
     print("Generating matched near-twins ...")
-    twin_queries = [llm.value_twin(m["text"]) for m in tqdm(members)]
+    twin_queries = [t for m in tqdm(members) for t in llm.value_twins(m["text"], n=args.twins)]
 
     from systems.mem0_adapter import Mem0Adapter
     adapter = Mem0Adapter()
@@ -94,7 +98,8 @@ def main() -> None:
     pd.DataFrame(results).to_csv(base.with_suffix(".csv"), index=False)
     base.with_suffix(".json").write_text(json.dumps(
         {"experiment": "exp08_mia", "timestamp_utc": stamp, "n_members": len(members),
-         "n_background": len(background), "n_boot": args.n_boot, "n_perm": args.n_perm,
+         "n_background": len(background), "twins_per_fact": args.twins,
+         "n_twins": len(twin_queries), "n_boot": args.n_boot, "n_perm": args.n_perm,
          "stages": results, "twins": twin_queries}, indent=2, default=str))
 
     print("\n" + "=" * 64)

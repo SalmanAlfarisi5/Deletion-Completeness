@@ -3,12 +3,12 @@
 # paper's results are reproducible. Versions below reflect the working venv.
 
 # --- memory systems under test (install per the mode you choose) -----------
-mem0ai            # Mem0 client (open-source `Memory` and hosted `MemoryClient`)
+mem0ai==2.0.7     # Mem0 client (open-source `Memory` and hosted `MemoryClient`) — load-bearing, API relied on
 graphiti-core==0.29.2   # Zep/Graphiti (secondary); needs a local Neo4j 5.x (see README)
-# letta           # MemGPT/Letta (tertiary system — enable in phase 2)
+letta==0.16.8     # MemGPT/Letta (tertiary system — imported by exp10/exp11, real dependency)
 
 # --- vector store for open-source Mem0 (local, no Docker) ------------------
-chromadb          # only needed for MEM0_MODE=oss
+chromadb==1.5.9   # only needed for MEM0_MODE=oss
 
 # --- judges / probes -------------------------------------------------------
 openai==2.30.0

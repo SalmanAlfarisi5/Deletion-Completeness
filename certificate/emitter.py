@@ -1,6 +1,7 @@
 """Build and persist deletion-completeness certificates from probe/planner output."""
 from __future__ import annotations
 
+import json
 import uuid
 from pathlib import Path
 
@@ -13,9 +14,27 @@ DEFAULT_THREAT_MODEL = (
     "surfaces a ground-truth surface form of the deleted value."
 )
 
-# Recovery-judge recall from evaluation/judge.py (1 - false_reject_rate). A
-# COMPLETE certificate is only "complete modulo" this recall.
+# Recovery-judge recall = (1 - false_reject_rate). A COMPLETE certificate is only
+# "complete modulo" this recall. Resolved at runtime from the latest
+# data/results/judge_validation_*.json by _resolve_judge_recall(); this constant
+# is the documented fallback used when no validation file is available.
 DEFAULT_JUDGE_RECALL = 0.78
+
+
+def _resolve_judge_recall() -> float:
+    """Recovery-judge recall = (1 - false_reject_rate), read at runtime from the
+    most recent data/results/judge_validation_*.json (latest by mtime). Falls back
+    to the documented DEFAULT_JUDGE_RECALL when no validation file exists or it
+    cannot be parsed."""
+    try:
+        files = list(config.RESULTS_DIR.glob("judge_validation_*.json"))
+        if not files:
+            return DEFAULT_JUDGE_RECALL
+        latest = max(files, key=lambda p: p.stat().st_mtime)
+        data = json.loads(latest.read_text())
+        return 1.0 - float(data["recovery_judge"]["false_reject_rate"])
+    except (OSError, ValueError, TypeError, KeyError):
+        return DEFAULT_JUDGE_RECALL
 
 
 def make_certificate(*, fact: dict, system: str, residual: float, rederivation: float,
@@ -54,7 +73,7 @@ def make_certificate(*, fact: dict, system: str, residual: float, rederivation: 
         collateral_k=len(facts_co_deleted or []),
         final_recoverability=final, floor_reaching=floor_reaching,
         completeness_certified=certified,
-        judge_recall=DEFAULT_JUDGE_RECALL if judge_recall is None else judge_recall,
+        judge_recall=_resolve_judge_recall() if judge_recall is None else judge_recall,
     )
 
 

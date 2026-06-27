@@ -23,16 +23,19 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 from tqdm import tqdm  # noqa: E402
 
 import config  # noqa: E402
+from evaluation.stats import wilson_ci  # noqa: E402
 from certificate.emitter import make_certificate, save_certificate  # noqa: E402
 from pipeline.deleter import Deleter  # noqa: E402
 from pipeline.injector import Injector, load_facts  # noqa: E402
@@ -51,11 +54,14 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=6)
     ap.add_argument("--bystanders", type=int, default=3)
     ap.add_argument("--single", action="store_true", help="primary reasoner only (cheaper)")
+    ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()
     if config.validate():
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
+    random.seed(args.seed)
+    np.random.seed(args.seed)
 
     targets = load_facts(config.FACTS_DIR / "multi_hop_facts.json")[: args.n]
     context = load_facts(config.FACTS_DIR / "context_facts.json")
@@ -122,13 +128,20 @@ def main() -> None:
     base = config.RESULTS_DIR / f"exp04_parametric_mem0_{stamp}"
     df.to_csv(base.with_suffix(".csv"), index=False)
 
-    # per-(reasoner, bin) summary — never aggregated across bins
+    # per-(reasoner, bin) summary — never aggregated across bins.
+    # Per-fact re-derivation scores are binary (recovered or not), so each per-bin
+    # rate is a proportion -> Wilson CI on k = #recovered, n = #facts in the bin.
     summary = defaultdict(dict)
     for (r, b), g in df.groupby(["reasoner", "bin"]):
+        n_g = len(g)
+        leak_ci = wilson_ci(int((g["rederiv_with_operands"] >= 0.5).sum()), n_g)
+        after_ci = wilson_ci(int((g["rederiv_after_codelete"] >= 0.5).sum()), n_g)
         summary[r][f"bin{b}"] = {
-            "n": len(g),
+            "n": n_g,
             "rederiv_with_operands": round(g["rederiv_with_operands"].mean(), 3),
+            "rederiv_with_operands_ci95": [round(leak_ci[0], 4), round(leak_ci[1], 4)],
             "rederiv_after_codelete": round(g["rederiv_after_codelete"].mean(), 3),
+            "rederiv_after_codelete_ci95": [round(after_ci[0], 4), round(after_ci[1], 4)],
             "rho": round(g["rho"].mean(), 3),
             "residual_survival": round(g["residual_survival"].mean(), 3),
         }
@@ -145,9 +158,11 @@ def main() -> None:
         print(f"\n  reasoner = {r}")
         for b in sorted(summary[r]):
             s = summary[r][b]
-            print(f"    {b} (n={s['n']}): leak(operands)={s['rederiv_with_operands']:.0%}  "
-                  f"after co-delete={s['rederiv_after_codelete']:.0%}  rho={s['rho']:.0%}  "
-                  f"residual={s['residual_survival']:.0%}")
+            lo_l, hi_l = s["rederiv_with_operands_ci95"]
+            lo_a, hi_a = s["rederiv_after_codelete_ci95"]
+            print(f"    {b} (n={s['n']}): leak(operands)={s['rederiv_with_operands']:.0%} "
+                  f"[{lo_l:.0%},{hi_l:.0%}]  after co-delete={s['rederiv_after_codelete']:.0%} "
+                  f"[{lo_a:.0%},{hi_a:.0%}]  rho={s['rho']:.0%}  residual={s['residual_survival']:.0%}")
     print(f"\n  Certificates: {config.RESULTS_DIR / 'certificates'}   Results: {base.with_suffix('.csv')}")
 
 

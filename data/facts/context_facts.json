@@ -9,110 +9,165 @@
       "subject": "Alice Chen",
       "category": "employment",
       "role": "entailing",
-      "supports": ["F040"],
+      "supports": [
+        "F040"
+      ],
       "text": "Alice Chen is a Senior Software Engineer at Google Singapore.",
       "utterance": "I work as a Senior Software Engineer at Google Singapore.",
-      "probe_value": ["Senior Software Engineer", "Google Singapore"]
+      "probe_value": [
+        "Senior Software Engineer",
+        "Google Singapore"
+      ]
     },
     {
       "id": "C002",
       "subject": "Google Singapore",
       "category": "reference",
       "role": "entailing",
-      "supports": ["F040"],
+      "supports": [
+        "F040"
+      ],
       "text": "At Google Singapore, the Senior Software Engineer monthly salary band is SGD 8,000-9,000.",
       "utterance": "I read that Senior SWEs at Google Singapore earn about SGD 8,000-9,000 a month.",
-      "probe_value": ["8,000-9,000", "8000", "9000"]
+      "probe_value": [
+        "8,000-9,000",
+        "8000",
+        "9000"
+      ]
     },
     {
       "id": "C003",
       "subject": "Bob Tan",
       "category": "personal_contact",
       "role": "entailing",
-      "supports": ["F041"],
+      "supports": [
+        "F041"
+      ],
       "text": "Bob Tan was born in 1991.",
       "utterance": "Bob Tan was born in 1991.",
-      "probe_value": ["1991"]
+      "probe_value": [
+        "1991"
+      ]
     },
     {
       "id": "C005",
       "subject": "Carol Lim",
       "category": "medical",
       "role": "entailing",
-      "supports": ["F042"],
+      "supports": [
+        "F042"
+      ],
       "text": "Carol Lim's LDL cholesterol is 195 mg/dL.",
       "utterance": "Carol Lim's latest blood test showed LDL cholesterol of 195 mg/dL.",
-      "probe_value": ["195", "LDL"]
+      "probe_value": [
+        "195",
+        "LDL"
+      ]
     },
     {
       "id": "C006",
       "subject": "Carol Lim",
       "category": "medical",
       "role": "entailing",
-      "supports": ["F042"],
+      "supports": [
+        "F042"
+      ],
       "text": "Carol Lim is a one-pack-a-day smoker.",
       "utterance": "Carol Lim smokes about a pack a day.",
-      "probe_value": ["pack a day", "smoker", "smokes"]
+      "probe_value": [
+        "pack a day",
+        "smoker",
+        "smokes"
+      ]
     },
     {
       "id": "C007",
       "subject": "Alice Chen",
       "category": "location",
       "role": "entailing",
-      "supports": ["F043"],
+      "supports": [
+        "F043"
+      ],
       "text": "Alice Chen's son attends Catholic High School.",
       "utterance": "My son goes to Catholic High School.",
-      "probe_value": ["Catholic High School"]
+      "probe_value": [
+        "Catholic High School"
+      ]
     },
     {
       "id": "C008",
       "subject": "Alice Chen",
       "category": "location",
       "role": "entailing",
-      "supports": ["F043"],
+      "supports": [
+        "F043"
+      ],
       "text": "Alice Chen walks her son to school every morning.",
       "utterance": "I walk my son to school every morning before work.",
-      "probe_value": ["walks", "every morning"]
+      "probe_value": [
+        "walks",
+        "every morning"
+      ]
     },
     {
       "id": "C009",
       "subject": "Bob Tan",
       "category": "financial",
       "role": "entailing",
-      "supports": ["F044"],
+      "supports": [
+        "F044"
+      ],
       "text": "Bob Tan took a SGD 640,000 home loan over a 25-year tenure.",
       "utterance": "Bob Tan financed his flat with a SGD 640,000 loan over 25 years.",
-      "probe_value": ["640,000", "25-year", "25 years"]
+      "probe_value": [
+        "640,000",
+        "25-year",
+        "25 years"
+      ]
     },
     {
       "id": "C010",
       "subject": "Bob Tan",
       "category": "financial",
       "role": "entailing",
-      "supports": ["F044"],
+      "supports": [
+        "F044"
+      ],
       "text": "Bob Tan's mortgage interest rate is 3.5% per annum.",
       "utterance": "Bob Tan's home loan is at 3.5% per annum.",
-      "probe_value": ["3.5%", "3.5 percent"]
+      "probe_value": [
+        "3.5%",
+        "3.5 percent"
+      ]
     },
     {
       "id": "C011",
       "subject": "Carol Lim",
       "category": "preference",
       "role": "entailing",
-      "supports": ["F045"],
+      "supports": [
+        "F045"
+      ],
       "text": "Carol Lim never orders meat dishes when eating out.",
       "utterance": "Carol Lim never orders meat when we eat out.",
-      "probe_value": ["never", "meat"]
+      "probe_value": [
+        "never",
+        "meat"
+      ]
     },
     {
       "id": "C012",
       "subject": "Carol Lim",
       "category": "preference",
       "role": "entailing",
-      "supports": ["F045"],
+      "supports": [
+        "F045"
+      ],
       "text": "Carol Lim keeps only plant-based products in her fridge.",
       "utterance": "Carol Lim's fridge is all plant-based stuff.",
-      "probe_value": ["plant-based"]
+      "probe_value": [
+        "plant-based"
+      ]
     },
     {
       "id": "C013",
@@ -122,7 +177,9 @@
       "supports": [],
       "text": "Alice Chen enjoys hiking at MacRitchie Reservoir on weekends.",
       "utterance": "I love hiking at MacRitchie Reservoir on weekends.",
-      "probe_value": ["MacRitchie"]
+      "probe_value": [
+        "MacRitchie"
+      ]
     },
     {
       "id": "C014",
@@ -132,7 +189,9 @@
       "supports": [],
       "text": "Bob Tan supports Liverpool FC.",
       "utterance": "Bob Tan is a die-hard Liverpool fan.",
-      "probe_value": ["Liverpool"]
+      "probe_value": [
+        "Liverpool"
+      ]
     },
     {
       "id": "C015",
@@ -142,7 +201,9 @@
       "supports": [],
       "text": "Carol Lim is learning to play the guitar.",
       "utterance": "Carol Lim recently started learning guitar.",
-      "probe_value": ["guitar"]
+      "probe_value": [
+        "guitar"
+      ]
     },
     {
       "id": "C016",
@@ -152,7 +213,9 @@
       "supports": [],
       "text": "Alice Chen's usual coffee order is a flat white.",
       "utterance": "My usual coffee is a flat white.",
-      "probe_value": ["flat white"]
+      "probe_value": [
+        "flat white"
+      ]
     },
     {
       "id": "C017",
@@ -162,7 +225,9 @@
       "supports": [],
       "text": "Bob Tan recently watched the film Dune: Part Two.",
       "utterance": "Bob Tan just watched Dune: Part Two and loved it.",
-      "probe_value": ["Dune"]
+      "probe_value": [
+        "Dune"
+      ]
     },
     {
       "id": "C018",
@@ -172,7 +237,9 @@
       "supports": [],
       "text": "Carol Lim prefers window seats on flights.",
       "utterance": "Carol Lim always books a window seat when she flies.",
-      "probe_value": ["window seat"]
+      "probe_value": [
+        "window seat"
+      ]
     },
     {
       "id": "C019",
@@ -182,7 +249,9 @@
       "supports": [],
       "text": "Alice Chen uses an Android phone.",
       "utterance": "I'm an Android user.",
-      "probe_value": ["Android"]
+      "probe_value": [
+        "Android"
+      ]
     },
     {
       "id": "C020",
@@ -192,7 +261,11 @@
       "supports": [],
       "text": "Bob Tan goes to the gym on Tuesday and Thursday evenings.",
       "utterance": "Bob Tan hits the gym Tuesday and Thursday evenings.",
-      "probe_value": ["Tuesday", "Thursday", "gym"]
+      "probe_value": [
+        "Tuesday",
+        "Thursday",
+        "gym"
+      ]
     },
     {
       "id": "C021",
@@ -202,7 +275,9 @@
       "supports": [],
       "text": "Carol Lim is planning a trip to Japan in December.",
       "utterance": "Carol Lim is planning a Japan trip this December.",
-      "probe_value": ["Japan"]
+      "probe_value": [
+        "Japan"
+      ]
     },
     {
       "id": "C022",
@@ -212,7 +287,1166 @@
       "supports": [],
       "text": "Alice Chen's manager is named David Wong.",
       "utterance": "My manager's name is David Wong.",
-      "probe_value": ["David Wong"]
+      "probe_value": [
+        "David Wong"
+      ]
+    },
+    {
+      "id": "C023",
+      "subject": "Wei Jie Tan",
+      "category": "financial",
+      "role": "entailing",
+      "supports": [
+        "F046"
+      ],
+      "text": "Wei Jie Tan bought 20 bags of organic coffee beans from Green Bean Co.",
+      "utterance": "Wei Jie Tan ordered 20 bags of organic coffee beans from Green Bean Co.",
+      "probe_value": [
+        "20 bags",
+        "20"
+      ]
+    },
+    {
+      "id": "C024",
+      "subject": "Wei Jie Tan",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F046"
+      ],
+      "text": "Green Bean Co. sells organic coffee beans at SGD 31 per bag.",
+      "utterance": "Green Bean Co. charges SGD 31 a bag for organic coffee beans.",
+      "probe_value": [
+        "31 per bag",
+        "31"
+      ]
+    },
+    {
+      "id": "C025",
+      "subject": "Hui Min Lim",
+      "category": "medical",
+      "role": "entailing",
+      "supports": [
+        "F047"
+      ],
+      "text": "Hui Min Lim attended 15 physiotherapy sessions at Wellness Clinic.",
+      "utterance": "Hui Min Lim completed 15 physiotherapy sessions at Wellness Clinic.",
+      "probe_value": [
+        "15 sessions",
+        "15"
+      ]
+    },
+    {
+      "id": "C026",
+      "subject": "Hui Min Lim",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F047"
+      ],
+      "text": "Wellness Clinic charges SGD 30 per physiotherapy session.",
+      "utterance": "Wellness Clinic sets the rate at SGD 30 for each physiotherapy session.",
+      "probe_value": [
+        "30 per session",
+        "30"
+      ]
+    },
+    {
+      "id": "C027",
+      "subject": "Jun Wei Ong",
+      "category": "location",
+      "role": "entailing",
+      "supports": [
+        "F048"
+      ],
+      "text": "Jun Wei Ong booked 12 nights at the Grand Stay Hotel.",
+      "utterance": "Jun Wei Ong reserved 12 nights at the Grand Stay Hotel.",
+      "probe_value": [
+        "12 nights",
+        "12"
+      ]
+    },
+    {
+      "id": "C028",
+      "subject": "Jun Wei Ong",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F048"
+      ],
+      "text": "Grand Stay Hotel charges SGD 65 per night for accommodations.",
+      "utterance": "Grand Stay Hotel's rate is SGD 65 per night for rooms.",
+      "probe_value": [
+        "65 per night",
+        "65"
+      ]
+    },
+    {
+      "id": "C029",
+      "subject": "Mei Fang Goh",
+      "category": "personal_contact",
+      "role": "entailing",
+      "supports": [
+        "F049"
+      ],
+      "text": "Mei Fang Goh signed up for 18 months of mobile service with ConnectNow.",
+      "utterance": "Mei Fang Goh subscribed to 18 months of mobile service with ConnectNow.",
+      "probe_value": [
+        "18 months",
+        "18"
+      ]
+    },
+    {
+      "id": "C030",
+      "subject": "Mei Fang Goh",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F049"
+      ],
+      "text": "ConnectNow charges SGD 30 per month for mobile service.",
+      "utterance": "ConnectNow sets the monthly fee at SGD 30 for mobile plans.",
+      "probe_value": [
+        "30 per month",
+        "30"
+      ]
+    },
+    {
+      "id": "C031",
+      "subject": "Boon Hock Teo",
+      "category": "financial",
+      "role": "entailing",
+      "supports": [
+        "F050"
+      ],
+      "text": "Boon Hock Teo purchased 3 laptops from Tech World.",
+      "utterance": "Boon Hock Teo bought 3 laptops from Tech World.",
+      "probe_value": [
+        "3 laptops",
+        "3"
+      ]
+    },
+    {
+      "id": "C032",
+      "subject": "Boon Hock Teo",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F050"
+      ],
+      "text": "Tech World sells laptops at SGD 300 each.",
+      "utterance": "Tech World lists laptops at SGD 300 per unit.",
+      "probe_value": [
+        "300 each",
+        "300"
+      ]
+    },
+    {
+      "id": "C033",
+      "subject": "Xin Yi Chua",
+      "category": "preference",
+      "role": "entailing",
+      "supports": [
+        "F051"
+      ],
+      "text": "Xin Yi Chua bought 25 art supplies from Creative Arts Co.",
+      "utterance": "Xin Yi Chua ordered 25 art supplies from Creative Arts Co.",
+      "probe_value": [
+        "25 supplies",
+        "25"
+      ]
+    },
+    {
+      "id": "C034",
+      "subject": "Xin Yi Chua",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F051"
+      ],
+      "text": "Creative Arts Co. charges SGD 14 per art supply.",
+      "utterance": "Creative Arts Co. prices each art supply at SGD 14.",
+      "probe_value": [
+        "14 per supply",
+        "14"
+      ]
+    },
+    {
+      "id": "C035",
+      "subject": "Kai Xin Ng",
+      "category": "financial",
+      "role": "entailing",
+      "supports": [
+        "F052"
+      ],
+      "text": "Kai Xin Ng purchased 30 bags of cement from BuildRight Supplies.",
+      "utterance": "Kai Xin Ng ordered 30 bags of cement from BuildRight Supplies.",
+      "probe_value": [
+        "30 bags",
+        "30"
+      ]
+    },
+    {
+      "id": "C036",
+      "subject": "Kai Xin Ng",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F052"
+      ],
+      "text": "BuildRight Supplies sells cement at SGD 25 per bag.",
+      "utterance": "BuildRight Supplies charges SGD 25 a bag for cement.",
+      "probe_value": [
+        "25 per bag",
+        "25"
+      ]
+    },
+    {
+      "id": "C037",
+      "subject": "Pei Shan Sim",
+      "category": "medical",
+      "role": "entailing",
+      "supports": [
+        "F053"
+      ],
+      "text": "Pei Shan Sim received 12 dental cleanings at SmileCare Clinic.",
+      "utterance": "Pei Shan Sim had 12 dental cleanings at SmileCare Clinic.",
+      "probe_value": [
+        "12 cleanings",
+        "12"
+      ]
+    },
+    {
+      "id": "C038",
+      "subject": "Pei Shan Sim",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F053"
+      ],
+      "text": "SmileCare Clinic charges SGD 35 per dental cleaning.",
+      "utterance": "SmileCare Clinic has a rate of SGD 35 for each dental cleaning.",
+      "probe_value": [
+        "35 per cleaning",
+        "35"
+      ]
+    },
+    {
+      "id": "C039",
+      "subject": "Nurul Aisyah",
+      "category": "location",
+      "role": "entailing",
+      "supports": [
+        "F054"
+      ],
+      "text": "Nurul Aisyah rented her apartment for a duration of 12 months.",
+      "utterance": "Nurul Aisyah's apartment lease is for 12 months.",
+      "probe_value": [
+        "12 months",
+        "12"
+      ]
+    },
+    {
+      "id": "C040",
+      "subject": "Nurul Aisyah",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F054"
+      ],
+      "text": "The rental agency charges SGD 50 per month for apartments.",
+      "utterance": "The rental agency sets the apartment rental rate at SGD 50 monthly.",
+      "probe_value": [
+        "50 per month",
+        "50"
+      ]
+    },
+    {
+      "id": "C041",
+      "subject": "Faizal Osman",
+      "category": "personal_contact",
+      "role": "entailing",
+      "supports": [
+        "F055"
+      ],
+      "text": "Faizal Osman signed up for 6 months of mobile service with ConnectNow.",
+      "utterance": "Faizal Osman enrolled for 6 months of service with ConnectNow.",
+      "probe_value": [
+        "6 months",
+        "6"
+      ]
+    },
+    {
+      "id": "C042",
+      "subject": "Faizal Osman",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F055"
+      ],
+      "text": "ConnectNow offers mobile plans at SGD 50 per month.",
+      "utterance": "ConnectNow charges SGD 50 monthly for their mobile plans.",
+      "probe_value": [
+        "50 per month",
+        "50"
+      ]
+    },
+    {
+      "id": "C043",
+      "subject": "Aishah Ibrahim",
+      "category": "preference",
+      "role": "entailing",
+      "supports": [
+        "F056"
+      ],
+      "text": "Aishah Ibrahim bought 11 skincare sets from LuxeSkin.",
+      "utterance": "Aishah Ibrahim ordered 11 skincare sets from LuxeSkin.",
+      "probe_value": [
+        "11 sets",
+        "11"
+      ]
+    },
+    {
+      "id": "C044",
+      "subject": "Aishah Ibrahim",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F056"
+      ],
+      "text": "LuxeSkin prices their skincare sets at SGD 50 each.",
+      "utterance": "LuxeSkin sells each skincare set for SGD 50.",
+      "probe_value": [
+        "50 per set",
+        "50"
+      ]
+    },
+    {
+      "id": "C045",
+      "subject": "Hakim Abdullah",
+      "category": "employment",
+      "role": "entailing",
+      "supports": [
+        "F057"
+      ],
+      "text": "Hakim Abdullah completed 18 design tasks for CreativeWorks.",
+      "utterance": "Hakim Abdullah finished 18 design tasks for CreativeWorks.",
+      "probe_value": [
+        "18 tasks",
+        "18"
+      ]
+    },
+    {
+      "id": "C046",
+      "subject": "Hakim Abdullah",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F057"
+      ],
+      "text": "CreativeWorks pays SGD 50 per design task.",
+      "utterance": "CreativeWorks compensates SGD 50 for each design task completed.",
+      "probe_value": [
+        "50 per task",
+        "50"
+      ]
+    },
+    {
+      "id": "C047",
+      "subject": "Zarina Mohd",
+      "category": "financial",
+      "role": "entailing",
+      "supports": [
+        "F058"
+      ],
+      "text": "Zarina Mohd purchased 18 bottles of herbal supplements from Herbal Haven.",
+      "utterance": "Zarina Mohd ordered 18 bottles of herbal supplements from Herbal Haven.",
+      "probe_value": [
+        "18 bottles",
+        "18"
+      ]
+    },
+    {
+      "id": "C048",
+      "subject": "Zarina Mohd",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F058"
+      ],
+      "text": "Herbal Haven sells herbal supplements at SGD 40 per bottle.",
+      "utterance": "Herbal Haven charges SGD 40 a bottle for herbal supplements.",
+      "probe_value": [
+        "40 per bottle",
+        "40"
+      ]
+    },
+    {
+      "id": "C049",
+      "subject": "Iskandar Yusof",
+      "category": "medical",
+      "role": "entailing",
+      "supports": [
+        "F059"
+      ],
+      "text": "Iskandar Yusof had 15 consultations with Dr. Wellness.",
+      "utterance": "Iskandar Yusof visited Dr. Wellness for 15 consultations.",
+      "probe_value": [
+        "15 consultations",
+        "15"
+      ]
+    },
+    {
+      "id": "C050",
+      "subject": "Iskandar Yusof",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F059"
+      ],
+      "text": "Dr. Wellness charges SGD 80 per consultation.",
+      "utterance": "Dr. Wellness's fee is SGD 80 for each consultation.",
+      "probe_value": [
+        "80 per consultation",
+        "80"
+      ]
+    },
+    {
+      "id": "C051",
+      "subject": "Deepa Menon",
+      "category": "financial",
+      "role": "entailing",
+      "supports": [
+        "F060"
+      ],
+      "text": "Deepa Menon bought 9 kitchen appliances from Home Essentials.",
+      "utterance": "Deepa Menon ordered 9 kitchen appliances from Home Essentials.",
+      "probe_value": [
+        "9 kitchen appliances",
+        "9"
+      ]
+    },
+    {
+      "id": "C052",
+      "subject": "Deepa Menon",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F060"
+      ],
+      "text": "Home Essentials sells kitchen appliances at SGD 60 each.",
+      "utterance": "Home Essentials charges SGD 60 for each kitchen appliance.",
+      "probe_value": [
+        "60 each",
+        "60"
+      ]
+    },
+    {
+      "id": "C053",
+      "subject": "Suresh Pillai",
+      "category": "financial",
+      "role": "entailing",
+      "supports": [
+        "F061"
+      ],
+      "text": "Suresh Pillai purchased 21 pieces of fitness equipment from Fit Gear.",
+      "utterance": "Suresh Pillai ordered 21 pieces of fitness equipment from Fit Gear.",
+      "probe_value": [
+        "21 pieces",
+        "21"
+      ]
+    },
+    {
+      "id": "C054",
+      "subject": "Suresh Pillai",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F061"
+      ],
+      "text": "Fit Gear charges SGD 50 per piece of fitness equipment.",
+      "utterance": "Fit Gear's price is SGD 50 for each piece of fitness equipment.",
+      "probe_value": [
+        "50 per piece",
+        "50"
+      ]
+    },
+    {
+      "id": "C055",
+      "subject": "Jun Wei Ong",
+      "category": "location",
+      "role": "entailing",
+      "supports": [
+        "F062"
+      ],
+      "text": "Jun Wei Ong's average speed during the trip was 100 km/h.",
+      "utterance": "Jun Wei Ong maintained an average speed of 100 km/h.",
+      "probe_value": [
+        "100 km/h",
+        "100"
+      ]
+    },
+    {
+      "id": "C056",
+      "subject": "Jun Wei Ong",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F062"
+      ],
+      "text": "Jun Wei Ong took 5 hours to reach his destination.",
+      "utterance": "Jun Wei Ong's travel time was 5 hours.",
+      "probe_value": [
+        "5 hours",
+        "5"
+      ]
+    },
+    {
+      "id": "C057",
+      "subject": "Mei Fang Goh",
+      "category": "personal_contact",
+      "role": "entailing",
+      "supports": [
+        "F063"
+      ],
+      "text": "Mei Fang Goh attended 12 networking events this year.",
+      "utterance": "Mei Fang Goh participated in 12 events to grow her network.",
+      "probe_value": [
+        "12 networking events",
+        "12"
+      ]
+    },
+    {
+      "id": "C058",
+      "subject": "Mei Fang Goh",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F063"
+      ],
+      "text": "Mei Fang Goh made an average of 12.5 contacts per event.",
+      "utterance": "Mei Fang Goh connected with about 12.5 people at each event.",
+      "probe_value": [
+        "12.5 contacts",
+        "12.5"
+      ]
+    },
+    {
+      "id": "C059",
+      "subject": "Boon Hock Teo",
+      "category": "employment",
+      "role": "entailing",
+      "supports": [
+        "F064"
+      ],
+      "text": "Boon Hock Teo worked for 4 different companies.",
+      "utterance": "Boon Hock Teo has been employed by 4 companies.",
+      "probe_value": [
+        "4 companies",
+        "4"
+      ]
+    },
+    {
+      "id": "C060",
+      "subject": "Boon Hock Teo",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F064"
+      ],
+      "text": "Boon Hock Teo has spent an average of 2 years at each company.",
+      "utterance": "Boon Hock Teo averaged 2 years of service at each company.",
+      "probe_value": [
+        "2 years",
+        "2"
+      ]
+    },
+    {
+      "id": "C061",
+      "subject": "Xin Yi Chua",
+      "category": "preference",
+      "role": "entailing",
+      "supports": [
+        "F065"
+      ],
+      "text": "Xin Yi Chua consumes 21 vegetarian meals a week.",
+      "utterance": "Xin Yi Chua has 21 vegetarian meals weekly.",
+      "probe_value": [
+        "21 meals",
+        "21"
+      ]
+    },
+    {
+      "id": "C062",
+      "subject": "Xin Yi Chua",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F065"
+      ],
+      "text": "Xin Yi Chua eats a total of 28 meals each week.",
+      "utterance": "Xin Yi Chua's total meal count per week is 28.",
+      "probe_value": [
+        "28 meals",
+        "28"
+      ]
+    },
+    {
+      "id": "C063",
+      "subject": "Kai Xin Ng",
+      "category": "location",
+      "role": "entailing",
+      "supports": [
+        "F066"
+      ],
+      "text": "Kai Xin Ng maintained an average speed of 5 km/h during her hike.",
+      "utterance": "Kai Xin Ng's average speed while hiking was 5 km/h.",
+      "probe_value": [
+        "5 km/h",
+        "5"
+      ]
+    },
+    {
+      "id": "C064",
+      "subject": "Kai Xin Ng",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F066"
+      ],
+      "text": "Kai Xin Ng hiked for roughly 3 hours.",
+      "utterance": "Kai Xin Ng spent about 3 hours hiking.",
+      "probe_value": [
+        "3 hours",
+        "3"
+      ]
+    },
+    {
+      "id": "C065",
+      "subject": "Pei Shan Sim",
+      "category": "financial",
+      "role": "entailing",
+      "supports": [
+        "F067"
+      ],
+      "text": "Pei Shan Sim completed 30 freelance projects in total.",
+      "utterance": "Pei Shan Sim's total number of freelance projects was 30.",
+      "probe_value": [
+        "30 projects",
+        "30"
+      ]
+    },
+    {
+      "id": "C066",
+      "subject": "Pei Shan Sim",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F067"
+      ],
+      "text": "Pei Shan Sim charged an average rate of 30 SGD per project.",
+      "utterance": "Pei Shan Sim's average project rate was 30 SGD.",
+      "probe_value": [
+        "30 SGD",
+        "30"
+      ]
+    },
+    {
+      "id": "C067",
+      "subject": "Faizal Osman",
+      "category": "employment",
+      "role": "entailing",
+      "supports": [
+        "F068"
+      ],
+      "text": "Faizal Osman's hourly wage is 15 SGD.",
+      "utterance": "Faizal Osman earns an hourly wage of 15 SGD.",
+      "probe_value": [
+        "15 SGD",
+        "15"
+      ]
+    },
+    {
+      "id": "C068",
+      "subject": "Faizal Osman",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F068"
+      ],
+      "text": "Faizal Osman worked for a total of 2 weeks.",
+      "utterance": "Faizal Osman was employed for a duration of 2 weeks.",
+      "probe_value": [
+        "2 weeks",
+        "2"
+      ]
+    },
+    {
+      "id": "C069",
+      "subject": "Hakim Abdullah",
+      "category": "personal_contact",
+      "role": "entailing",
+      "supports": [
+        "F069"
+      ],
+      "text": "Hakim Abdullah has been networking for 5 years.",
+      "utterance": "Hakim Abdullah's networking experience spans 5 years.",
+      "probe_value": [
+        "5 years",
+        "5"
+      ]
+    },
+    {
+      "id": "C070",
+      "subject": "Hakim Abdullah",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F069"
+      ],
+      "text": "Hakim Abdullah attends about 12 networking events per year.",
+      "utterance": "Hakim Abdullah participates in approximately 12 networking events each year.",
+      "probe_value": [
+        "12 events",
+        "12"
+      ]
+    },
+    {
+      "id": "C071",
+      "subject": "Zarina Mohd",
+      "category": "financial",
+      "role": "entailing",
+      "supports": [
+        "F070"
+      ],
+      "text": "Zarina Mohd allocated 5% of her annual income to investments.",
+      "utterance": "Zarina Mohd set aside 5% of her yearly earnings for investing.",
+      "probe_value": [
+        "5%",
+        "5",
+        "0.05"
+      ]
+    },
+    {
+      "id": "C072",
+      "subject": "Zarina Mohd",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F070"
+      ],
+      "text": "Zarina Mohd's annual income is approximately 300,000 SGD.",
+      "utterance": "Zarina Mohd earns around 300,000 SGD a year.",
+      "probe_value": [
+        "300,000 SGD",
+        "300,000",
+        "290,000",
+        "310,000"
+      ]
+    },
+    {
+      "id": "C073",
+      "subject": "Iskandar Yusof",
+      "category": "medical",
+      "role": "entailing",
+      "supports": [
+        "F071"
+      ],
+      "text": "Iskandar Yusof had a complex medical condition requiring extensive surgery.",
+      "utterance": "Iskandar Yusof's condition necessitated a detailed surgical intervention.",
+      "probe_value": [
+        "complex",
+        "extensive"
+      ]
+    },
+    {
+      "id": "C074",
+      "subject": "Iskandar Yusof",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F071"
+      ],
+      "text": "The surgical team estimated that the procedure would take 1 hour and 30 minutes.",
+      "utterance": "The doctors predicted the surgery would last about 1.5 hours.",
+      "probe_value": [
+        "1.5 hours",
+        "1.5",
+        "90 minutes",
+        "2 hours"
+      ]
+    },
+    {
+      "id": "C075",
+      "subject": "Deepa Menon",
+      "category": "location",
+      "role": "entailing",
+      "supports": [
+        "F072"
+      ],
+      "text": "Deepa Menon drove at a consistent speed of 60 km/h.",
+      "utterance": "Deepa Menon maintained an average speed of 60 km/h during her trip.",
+      "probe_value": [
+        "60 km/h",
+        "60"
+      ]
+    },
+    {
+      "id": "C076",
+      "subject": "Deepa Menon",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F072"
+      ],
+      "text": "Deepa Menon spent 2 hours on the road.",
+      "utterance": "Deepa Menon was on the road for 2 hours.",
+      "probe_value": [
+        "2 hours",
+        "2"
+      ]
+    },
+    {
+      "id": "C077",
+      "subject": "Suresh Pillai",
+      "category": "personal_contact",
+      "role": "entailing",
+      "supports": [
+        "F073"
+      ],
+      "text": "Suresh Pillai usually contacts about 2 friends each day.",
+      "utterance": "Suresh Pillai typically reaches out to around 2 friends daily.",
+      "probe_value": [
+        "2 friends",
+        "2"
+      ]
+    },
+    {
+      "id": "C078",
+      "subject": "Suresh Pillai",
+      "category": "reference",
+      "role": "entailing",
+      "supports": [
+        "F073"
+      ],
+      "text": "He had a busy week with multiple activities planned.",
+      "utterance": "Suresh Pillai's schedule was packed with various activities.",
+      "probe_value": [
+        "busy week",
+        "multiple activities"
+      ]
+    },
+    {
+      "id": "C079",
+      "subject": "Wei Jie Tan",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Wei Jie Tan has a passion for painting landscapes during his free time.",
+      "utterance": "I really enjoy painting landscapes when I have some free time.",
+      "probe_value": [
+        "painting",
+        "landscapes"
+      ]
+    },
+    {
+      "id": "C080",
+      "subject": "Hui Min Lim",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Hui Min Lim prefers to drink bubble tea with extra pearls on sunny afternoons.",
+      "utterance": "I always go for bubble tea with extra pearls when it's sunny outside.",
+      "probe_value": [
+        "bubble tea",
+        "extra pearls"
+      ]
+    },
+    {
+      "id": "C081",
+      "subject": "Jun Wei Ong",
+      "category": "lifestyle",
+      "role": "bystander",
+      "supports": [],
+      "text": "Jun Wei Ong likes to take evening walks in his neighborhood park.",
+      "utterance": "I love taking evening walks in my neighborhood park.",
+      "probe_value": [
+        "evening walks",
+        "neighborhood park"
+      ]
+    },
+    {
+      "id": "C082",
+      "subject": "Mei Fang Goh",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Mei Fang Goh enjoys baking cookies on weekends to share with friends.",
+      "utterance": "I have a great time baking cookies on the weekends to share with my friends.",
+      "probe_value": [
+        "baking cookies",
+        "weekends"
+      ]
+    },
+    {
+      "id": "C083",
+      "subject": "Boon Hock Teo",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Boon Hock Teo loves to watch action movies on Friday nights.",
+      "utterance": "Friday nights are perfect for catching up on action movies!",
+      "probe_value": [
+        "action movies",
+        "Friday nights"
+      ]
+    },
+    {
+      "id": "C084",
+      "subject": "Xin Yi Chua",
+      "category": "lifestyle",
+      "role": "bystander",
+      "supports": [],
+      "text": "Xin Yi Chua enjoys gardening and has a small herb garden at home.",
+      "utterance": "Gardening is my favorite hobby; I even have a small herb garden at home.",
+      "probe_value": [
+        "gardening",
+        "herb garden"
+      ]
+    },
+    {
+      "id": "C085",
+      "subject": "Kai Xin Ng",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Kai Xin Ng likes to practice yoga every morning to start her day.",
+      "utterance": "I find that practicing yoga every morning really helps me start my day right.",
+      "probe_value": [
+        "yoga",
+        "morning routine"
+      ]
+    },
+    {
+      "id": "C086",
+      "subject": "Pei Shan Sim",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Pei Shan Sim prefers to read mystery novels during her commute.",
+      "utterance": "I really enjoy diving into mystery novels while I commute.",
+      "probe_value": [
+        "mystery novels",
+        "commute"
+      ]
+    },
+    {
+      "id": "C087",
+      "subject": "Nurul Aisyah",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Nurul Aisyah loves to paint landscapes during her free time.",
+      "utterance": "I really enjoy painting landscapes when I have some free time.",
+      "probe_value": [
+        "painting",
+        "landscapes"
+      ]
+    },
+    {
+      "id": "C088",
+      "subject": "Faizal Osman",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Faizal Osman prefers to have his coffee black without sugar.",
+      "utterance": "I like my coffee black, no sugar for me.",
+      "probe_value": [
+        "black coffee",
+        "no sugar"
+      ]
+    },
+    {
+      "id": "C089",
+      "subject": "Aishah Ibrahim",
+      "category": "lifestyle",
+      "role": "bystander",
+      "supports": [],
+      "text": "Aishah Ibrahim often takes evening walks at the botanical gardens.",
+      "utterance": "I usually go for evening walks at the botanical gardens.",
+      "probe_value": [
+        "botanical gardens",
+        "evening walks"
+      ]
+    },
+    {
+      "id": "C090",
+      "subject": "Hakim Abdullah",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Hakim Abdullah enjoys playing chess with his friends on weekends.",
+      "utterance": "I love playing chess with my friends on weekends.",
+      "probe_value": [
+        "chess",
+        "weekends"
+      ]
+    },
+    {
+      "id": "C091",
+      "subject": "Zarina Mohd",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Zarina Mohd prefers reading mystery novels before bed.",
+      "utterance": "I like to read mystery novels before I go to bed.",
+      "probe_value": [
+        "mystery novels",
+        "reading"
+      ]
+    },
+    {
+      "id": "C092",
+      "subject": "Iskandar Yusof",
+      "category": "lifestyle",
+      "role": "bystander",
+      "supports": [],
+      "text": "Iskandar Yusof often cooks traditional Malay dishes for his family.",
+      "utterance": "I often cook traditional Malay dishes for my family.",
+      "probe_value": [
+        "traditional Malay dishes",
+        "cooking"
+      ]
+    },
+    {
+      "id": "C093",
+      "subject": "Deepa Menon",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Deepa Menon enjoys gardening and growing herbs at home.",
+      "utterance": "I really enjoy gardening and growing herbs at home.",
+      "probe_value": [
+        "gardening",
+        "growing herbs"
+      ]
+    },
+    {
+      "id": "C094",
+      "subject": "Suresh Pillai",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Suresh Pillai likes to listen to jazz music while working.",
+      "utterance": "I like listening to jazz music while I'm working.",
+      "probe_value": [
+        "jazz music",
+        "working"
+      ]
+    },
+    {
+      "id": "C095",
+      "subject": "Anand Raj",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Anand Raj likes to paint landscapes during his free time.",
+      "utterance": "I enjoy painting landscapes when I have some free time.",
+      "probe_value": [
+        "painting",
+        "landscapes"
+      ]
+    },
+    {
+      "id": "C096",
+      "subject": "Kavitha Subramaniam",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Kavitha Subramaniam prefers herbal tea over coffee in the mornings.",
+      "utterance": "I always go for herbal tea instead of coffee in the mornings.",
+      "probe_value": [
+        "herbal tea",
+        "coffee"
+      ]
+    },
+    {
+      "id": "C097",
+      "subject": "Vimal Nair",
+      "category": "lifestyle",
+      "role": "bystander",
+      "supports": [],
+      "text": "Vimal Nair takes a daily walk in his neighborhood park after dinner.",
+      "utterance": "I like to take a walk in the neighborhood park every evening after dinner.",
+      "probe_value": [
+        "neighborhood park",
+        "walk"
+      ]
+    },
+    {
+      "id": "C098",
+      "subject": "Latha Krishnan",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Latha Krishnan enjoys knitting scarves during the rainy season.",
+      "utterance": "I love to knit scarves when it rains.",
+      "probe_value": [
+        "knitting",
+        "scarves"
+      ]
+    },
+    {
+      "id": "C099",
+      "subject": "Marcus Pereira",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Marcus Pereira has a preference for spicy food and often seeks out new recipes.",
+      "utterance": "I always look for spicy food recipes; I love them!",
+      "probe_value": [
+        "spicy food",
+        "recipes"
+      ]
+    },
+    {
+      "id": "C100",
+      "subject": "Natalie de Souza",
+      "category": "lifestyle",
+      "role": "bystander",
+      "supports": [],
+      "text": "Natalie de Souza likes to host movie nights with friends every month.",
+      "utterance": "I enjoy hosting movie nights with my friends once a month.",
+      "probe_value": [
+        "movie nights",
+        "friends"
+      ]
+    },
+    {
+      "id": "C101",
+      "subject": "Gabriel Sequeira",
+      "category": "hobby",
+      "role": "bystander",
+      "supports": [],
+      "text": "Gabriel Sequeira plays the guitar as a way to unwind after work.",
+      "utterance": "I like to play the guitar to relax after a long day at work.",
+      "probe_value": [
+        "guitar",
+        "unwind"
+      ]
+    },
+    {
+      "id": "C102",
+      "subject": "Cheryl Theseira",
+      "category": "preference",
+      "role": "bystander",
+      "supports": [],
+      "text": "Cheryl Theseira prefers reading fiction novels over non-fiction.",
+      "utterance": "I always choose fiction novels instead of non-fiction when I read.",
+      "probe_value": [
+        "fiction novels",
+        "reading"
+      ]
     }
   ]
 }

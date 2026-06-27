@@ -36,6 +36,7 @@ import pandas as pd  # noqa: E402
 from tqdm import tqdm  # noqa: E402
 
 import config  # noqa: E402
+from evaluation.stats import wilson_ci  # noqa: E402
 from pipeline.deleter import Deleter  # noqa: E402
 from pipeline.injector import Injector, load_facts  # noqa: E402
 from probes.base_probe import normalize_values  # noqa: E402
@@ -115,6 +116,7 @@ def main() -> None:
                  if para and df["retr_after"].notna().any() else None)
     extraction_fidelity = float(df["exact_before"].mean())
     dup_rate = float((df["value_rows_before"] > 1).mean())
+    residual_ci = wilson_ci(int((df["exact_after"] >= 0.5).sum()), int(len(df)))
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     base = config.RESULTS_DIR / f"exp01_baseline_{args.system}_{stamp}"
@@ -127,6 +129,8 @@ def main() -> None:
         "store_rows_after_inject": n_rows,
         "metrics": {"extraction_fidelity_before": extraction_fidelity,
                     "naive_deletion_residual_rate": residual_rate,
+                    "naive_deletion_residual_rate_ci95": [round(residual_ci[0], 4),
+                                                          round(residual_ci[1], 4)],
                     "naive_deletion_retrieval_rate": retr_rate,
                     "duplicated_fact_rate": dup_rate},
         "rows": rows}, indent=2, default=str))
@@ -140,7 +144,8 @@ def main() -> None:
     print(f"  Store rows / facts        : {n_rows} / {len(targets) + len(corpus)}")
     print(f"  Facts Mem0 duplicated     : {dup_rate:.2%}  (>1 row carries the value)")
     print(f"  Extraction fidelity (pre) : {extraction_fidelity:.2%}")
-    print(f"  Residual survival (post)  : {residual_rate:.2%}  (value remains after naive delete)")
+    print(f"  Residual survival (post)  : {residual_rate:.2%} "
+          f"[{residual_ci[0]:.2%}, {residual_ci[1]:.2%}]  (value remains after naive delete)")
     if retr_rate is not None:
         print(f"  Retrievable (post)        : {retr_rate:.2%}")
     print(f"\n  Results: {base.with_suffix('.csv')}")

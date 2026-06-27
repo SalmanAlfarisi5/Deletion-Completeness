@@ -40,8 +40,12 @@ caveat / what it does *not* say.
 
 ### C2 — Naive deletion is residually incomplete because the store silently duplicates *(Mem0)*
 - **Support:** exp01, exp02.
-- **H:** naive single-record delete leaves the value in **75%** of isolated PII
-  targets; residual **83% (naive) → 0% (artifact-aware)**.
+- **H:** naive single-record delete leaves the value in **97.9%** [Wilson 89.1,
+  99.6] of isolated PII targets (n=48, exp01 = duplication incidence); residual
+  **68.75%** [54.7, 80.1] (naive) **→ 0%** [0, 7.4] (artifact-aware), n=48 (exp02).
+  ⚠ FRAMING MOVED: at n=48 the exp01 (97.9%) and exp02-naive (68.75%) rates
+  **diverge and invert** vs the old 75% < 83% — separate Mem0 dedup draws, so the
+  old "nested 9/12 ⊂ 10/12 same-targets" gloss no longer holds.
 - **Ctrl:** exp05 **2×2 factorial** (embedder MiniLM/OpenAI × cadence 0 s/1.5 s):
   row-inflation **24–42%**, duplication incidence **30–39%** in **all four**
   cells, and **paraphrase-variant duplicates ≥ byte-identical in every cell** →
@@ -53,9 +57,11 @@ caveat / what it does *not* say.
 
 ### C3 — At residual = 0, facts still re-derive from surviving operands; faithful co-deletion closes the channel
 - **Support:** exp04 (Mem0), **exp11 (Letta)**.
-- **H (Mem0):** leak **bin1 100%** (stored-alone) / **bin2 80%** (stored+world)
-  → **0% after co-delete**; ρ = 0%. **Ports to Letta:** bin1 100%, bin2 80%
-  (gpt-4o-mini) / 100% (gpt-4o) → **0% after co-delete**; ρ = 0%.
+- **H (Mem0):** leak **bin1 100% / 94%** (stored-alone, n=17) / **bin2 59% / 65%**
+  (stored+world, n=17), gpt-4o-mini / gpt-4o → **0% after co-delete** [CI 0, .18];
+  ρ = 0%. (Now 17/17 per bin at n=34; was 1/5 at n=6, and leak no longer identical
+  across reasoners — bin2 dropped from 80%.) **Ports to Letta (exp11, unchanged):**
+  bin1 100%, bin2 80% (gpt-4o-mini) / 100% (gpt-4o) → **0% after co-delete**; ρ = 0%.
 - **Ctrl:** **operands-only** control — target value never stored, so residual = 0
   by construction (verified with the **narrow `delete_value`**, not the broad
   `probe_value`, so an operand sharing a surface form is not miscounted); **≥ 2
@@ -70,8 +76,10 @@ caveat / what it does *not* say.
 
 ### C4 — A greedy co-deletion planner reaches completeness with minimal collateral, and emits a certificate
 - **Support:** exp03.
-- **H:** **100% completeness, 0 spurious bystander deletions, mean collateral
-  k = 1.17** (operands spared by minimality = 4).
+- **H:** **100% completeness [Wilson .90, 1.0], 0 spurious bystander deletions,
+  mean collateral k = 0.912 [bootstrap .74, 1.09]** (operands spared by minimality
+  = 36) — on the **full n=34** multi-hop set, gpt-4o entailment judge. (Was k=1.17,
+  4 spared, at n=6.)
 - **Ctrl:** bystanders must be **spared** (0 spurious is the selectivity test);
   result is **robust to entailment-judge choice** — re-run with gpt-4o entailment
   judge leaves k / spurious / completeness unchanged; backed by entailment
@@ -82,32 +90,39 @@ caveat / what it does *not* say.
 
 ### C5 — The parametric floor ρ is *measured* on a gradient; when ρ > τ, completeness cannot be certified even at residual = 0 *(the limit result)*
 - **Support:** exp07.
-- **H:** ρ by tier (gpt-4o-mini / gpt-4o): **low 0.00 / 0.00**, **mid 0.033 /
-  0.633**, **high 0.833 / 1.00** — a monotone gradient. **6 of 15** certificates
-  are **NOT** certified-complete (ρ > τ) despite residual = 0.
+- **H:** measured worst-adversary ρ on **n=49** facts: **27 certifiable (ρ≤τ) /
+  8 contested-middle (τ<ρ<0.5) / 14 hard-floor (ρ≥0.5)** → **22 of 49 NOT
+  certified-complete** (ρ>τ) at τ=0.1 despite residual=0 [certifiable 27/49=.551,
+  Wilson .41–.68]; primary reasoner alone flags only 14/49. Authored-tier ρ means
+  (mini/gpt-4o): low 0.00/0.00, mid 0.069/0.275, high 0.367/0.656. ⚠ LIMIT-RESULT
+  MOVED: at n=49 the floor is **NOT cleanly bimodal** (8 facts in the middle), so
+  the count is **τ-dependent** (22 at τ=0.1 → 14 at τ→0.5) — the old "sharply
+  bimodal, τ-invariant 9/15" claim no longer holds; report as a gradient.
 - **Ctrl:** ρ probe sees **world-context only** (never stored facts) → co-deletion
   *cannot* lower it; **2 reasoners**; **mid-tier numeric-tolerance sweep** (floor
   persists at all tolerances, magnitude is tolerance-dependent); **base-rate vs
-  context-lift** split; **high-tier refusal audit** (R13 NSF→male: 5/6 refused on
-  gpt-4o-mini → ρ for sensitive attrs is an adversarial *lower* bound).
+  context-lift** split; **high-tier refusal audit** (7 high-tier facts drew refusals
+  → ρ for sensitive attrs is an adversarial *lower* bound).
 - **Scope:** ρ is reasoner-dependent (mid is the contested tier — why ≥ 2
   reasoners are mandatory). A COMPLETE certificate is "complete **modulo
   recovery-judge recall ≈ 78%**"; INCOMPLETE and aggregate numbers are safe lower
   bounds.
 
-### C6 — Artifact-aware deletion restores membership-indistinguishability; naive's residual signal is not significant at this n
+### C6 — Artifact-aware deletion restores membership-indistinguishability; at powered n≈60 naive's residual signal IS significant
 - **Support:** exp08.
-- **H:** retrieval-score MIA AUC — **intact 0.719** (p = .002, CI [.59, .84],
-  excludes .5) · **naive 0.613** (p = .065, CI [.47, .74], **includes .5** → not
-  significant) · **artifact-aware 0.514** (p = .44, CI [.38, .65], includes .5).
-- **Ctrl:** **n = 33 members + 33 matched near-twins**, bootstrap 95% CI +
+- **H:** retrieval-score MIA AUC (n=48 members, 2 twins/fact = 96 controls) —
+  **intact 0.69** (p=.001, CI [.60,.78], excludes .5) · **naive 0.68** (p=.001,
+  CI [.59,.77], **excludes .5 → NOW SIGNIFICANT**) · **artifact-aware 0.52**
+  (p=.36, CI [.41,.62], includes .5).
+- **Ctrl:** **n = 48 members + 96 matched near-twins (2/fact)**, bootstrap 95% CI +
   label-permutation p, **continuous** retrieval scores (no thresholding). The
-  **intact arm is the power sanity** (p = .002 shows the test can detect a real
-  signal).
+  **intact arm is the power sanity** (p=.001 shows the test can detect a real
+  signal); the **aware-arm CI includes .5** → indistinguishability restored.
 - **Scope:** the earlier n = 6 "consolidation-trace survives artifact-aware" claim
-  was an underpowered artifact and is **retracted**. Naive = "**not demonstrated
-  to leak** at this n," not "no leak"; a planned **n ≈ 60** (2nd matched control
-  per fact) will test whether naive crosses p < .05.
+  was an underpowered artifact and is **retracted**. ⚠ REVERSED at powered n≈60:
+  naive deletion **now leaks a significant membership signal** (p=.001, was p=.065
+  at n=33) — the old "not demonstrated to leak" guardrail no longer applies; only
+  artifact-aware deletion restores indistinguishability.
 
 ### C7 — *(HOOK — sharpest instance, NOT the headline contribution)* Agent-mediated deletion is surface-incomplete
 - **Support:** exp10 (Letta).
@@ -117,8 +132,8 @@ caveat / what it does *not* say.
   scrubs **core**, never clears **archival** → **0% faithful / 100% archival
   residue / 0% core residue**.
 - **Ctrl:** the **explicit-instruction baseline (100% faithful)** isolates the
-  failure to *phrasing/surface coverage*, not to a missing capability; n = 3
-  sensitive-PII targets.
+  failure to *phrasing/surface coverage*, not to a missing capability; **n = 10**
+  sensitive-PII targets (scaled from 3; the 0% / 100% / 0% result holds at n=10).
 - **Novelty (confirmed vs ForgetEval):** ForgetEval **deliberately bypassed
   Letta's agent loop** — "address archival-memory REST endpoints directly, keep the
   LLM out of the recall hot path." **We tested the agent loop they excluded**, so
@@ -147,17 +162,17 @@ caveat / what it does *not* say.
 
 | exp | system | measures | headline | control that backs it |
 |---|---|---|---|---|
-| **01** | Mem0 | naive-delete residual | **75%** residual (= dup incidence) | mechanism-tracked: top-1 delete leaves a copy iff duplicated |
-| **02** | Mem0 | naive vs artifact-aware | **83% → 0%** | same facts, two strategies; +1.17 extra artifacts purged |
+| **01** | Mem0 | naive-delete residual | **97.9%** [89,99.6] residual = dup incidence (n=48) | mechanism-tracked: top-1 delete leaves a copy iff duplicated |
+| **02** | Mem0 | naive vs artifact-aware | **68.75% → 0%** [naive 55,80; aware 0,7.4] (n=48) | same facts, two strategies; +3.29 extra artifacts purged |
 | **05** | Mem0 | duplication factorial | row-inflation **24–42%**, dup **30–39%** | **2×2** embedder×cadence; paraphrase ≥ byte-ID in all cells; GH issues |
 | **06** | Mem0 | infer=True derivation-capture | **0% — REJECTED** | infer=False control: 0 captured ⇒ it was consolidation/merging, not derivation |
-| **04** | Mem0 | re-derivation (operands-only) | bin1 **100%** / bin2 **80%** → **0%**; ρ 0% | target never stored (residual=0 by construction); 2 reasoners, binned |
-| **03** | Mem0 | planner end-to-end | **100% / 0 spurious / k=1.17** | spare-bystander test; robust to gpt-4o entailment judge |
-| **07** | Mem0 | ρ gradient (measured) | low 0/0, **mid .033/.633**, high **.833/1.0**; **6/15 not certifiable** | world-context-only probe (co-delete can't lower ρ); tol sweep; refusal audit |
-| **08** | Mem0 | membership inference | intact **.719** / naive **.613 (ns)** / aware **.514** | n=33+33 twins, bootstrap CI + perm p, continuous scores; intact = power sanity |
+| **04** | Mem0 | re-derivation (operands-only) | bin1 **100%/94%** / bin2 **59%/65%** → **0%**; ρ 0% (n=17/bin) | target never stored (residual=0 by construction); 2 reasoners, binned |
+| **03** | Mem0 | planner end-to-end | **100% / 0 spurious / k=0.912** [.74,1.09] (n=34) | spare-bystander test; robust to gpt-4o entailment judge |
+| **07** | Mem0 | ρ gradient (measured) | ρ_max bins (n=49): **27 cert / 8 mid / 14 hard**; **22/49 not certifiable** (τ=0.1; 14/49 primary-only) | world-context-only probe; **NOT bimodal at n=49 → τ-dependent count** |
+| **08** | Mem0 | membership inference | intact **.69** / naive **.68 (p=.001, SIG)** / aware **.52 (ns)** | n=48 members + 96 twins (2/fact), bootstrap CI + perm p; intact = power sanity |
 | **judge** | — | judge validation | recovery **0% false-accept**; entail gpt-4o **0%** false-fire | gold-labelled set; 12 hard near-miss negatives |
-| **09** | Graphiti | KG residue after `remove_episode` | edge **33%**, **summary 67%** | clean hard-delete verified first → residue is *stale summaries*, not edges |
-| **10** | Letta | agent-mediated deletion faithfulness | explicit **100%** vs vague **0% / 100% archival** | explicit-instruction baseline isolates phrasing/surface, not capability |
+| **09** | Graphiti | KG residue after `remove_episode` | edge **40%**, **KG/summary 80%** (n=10) | clean episode hard-delete verified; residue = stale summaries + shared-entity edges |
+| **10** | Letta | agent-mediated deletion faithfulness | explicit **100%** vs vague **0% / 100% archival** (n=10) | explicit-instruction baseline isolates phrasing/surface, not capability |
 | **11** | Letta | re-derivation + co-delete (ports) | bin1 **100%**, bin2 **80%/100%** → **0%**; ρ 0% | operands-only; **direct verified-faithful `passages.delete`** (faithful=100%, bystanders intact 100%) |
 
 ---
@@ -178,8 +193,8 @@ delete-old" = our duplication). See § G.
 
 | family | system (version) | residual mechanism (by design) | evidence | headline |
 |---|---|---|---|---|
-| **dedup pipeline** | Mem0 (mem0ai 2.0.7, OSS + Chroma) | **duplication** — naive delete leaves copies | exp01/02/05 | 75% residual; 83%→0% aware; dup 30–39% across the full factorial |
-| **bi-temporal KG** | Zep/Graphiti (graphiti-core 0.29.2 + Neo4j 5.26) | **stale entity/community summaries** (not recomputed on delete) | exp09 | clean `remove_episode` still leaves **67%** summary residue |
+| **dedup pipeline** | Mem0 (mem0ai 2.0.7, OSS + Chroma) | **duplication** — naive delete leaves copies | exp01/02/05 | 97.9% residual; 68.75%→0% aware (n=48); dup 30–39% across the full factorial |
+| **bi-temporal KG** | Zep/Graphiti (graphiti-core 0.29.2 + Neo4j 5.26) | **stale entity/community summaries** (not recomputed on delete) | exp09 | clean `remove_episode` still leaves **80%** KG/summary residue (n=10) |
 | **LLM-paging** | Letta/MemGPT (letta 0.16.8 + Postgres + pgvector) | **surface-incomplete agent-mediated deletion** (scrubs core, misses archival) | exp10/11 | vague forget: **0% faithful / 100% archival**; re-derivation **ports & closes** |
 
 Empirical corrections folded in (premises that turned out wrong — keep, don't
@@ -214,8 +229,12 @@ bi-temporal edge-invalidation. Letta is **Postgres-only** despite
 
 1. **No "derivation-capture" by the store.** exp06 rejected it (0%); the earlier
    "born 1991 → 35" was operand-row *consolidation*, not derivation.
-2. **No "naive deletion leaks" (MIA).** Borderline non-significant (p = .065, CI
-   includes .5). Say "not demonstrated at this n," never "leaks."
+2. **Naive deletion DOES leak (MIA), at powered n≈60.** ⚠ UPDATED (was a
+   guardrail): at n=48 members + 96 twins, naive AUC=.68, p=.001, CI excludes .5
+   → significant (was borderline p=.065 at n=33). Naive deletion leaves a
+   detectable membership signal; only artifact-aware deletion restores
+   indistinguishability. *Web-planner: ratify reframing "not demonstrated" →
+   "demonstrated leak."*
 3. **No bi-temporal edge-invalidation in Graphiti.** The premise was empirically
    wrong; the residual is stale summaries.
 4. **The Letta agent finding is not *the* contribution** — though it *is* a novel
@@ -235,8 +254,8 @@ bi-temporal edge-invalidation. Letta is **Postgres-only** despite
 
 ## F. Open / pre-submission items
 
-- **MIA power:** expand members 33 → ≈ 60 (2nd matched control per fact) to test
-  whether naive crosses p < .05. Only quantitative gap.
+- **MIA power: DONE.** Expanded to n=48 members + 96 twins (2/fact); naive now
+  crosses p<.05 (AUC .68, p=.001). The only quantitative gap is closed.
 - **Related-work positioning:** DONE — both read in full (2026-06-24), positioning
   encoded in § G + `REFERENCES.md`. Skeleton structure returning from web session.
 - **Citations verified** (stop listing as open): 2507.00343 = "Meaningful Data
@@ -282,11 +301,12 @@ Three distinguished neighbours + the DB lineage. Full notes in `REFERENCES.md`.
 
 ## Provenance (result files this ledger is computed from)
 
-`exp01_baseline_…082144Z` · `exp02_artifact_purge_…085402Z` ·
-`exp03_planner_…125318Z` · `exp04_parametric_…094612Z` ·
-`exp05_duplication_…093949Z` · `exp06_derivation_capture_…094753Z` ·
-`exp07_rho_gradient_…111343Z` · `exp08_mia_…123822Z` ·
-`judge_validation_…123729Z` · `exp09_zep_kg_residual_…131150Z` ·
-`exp10_letta_…141526Z` · `exp11_letta_rederivation_…025647Z`
+Re-run 2026-06-27 (Wave 2, enlarged data): `exp01_baseline_…055540Z` ·
+`exp02_artifact_purge_…063355Z` · `exp03_planner_threshold_…064049Z` ·
+`exp04_parametric_…064429Z` · `exp07_rho_gradient_…070725Z` · `exp08_mia_…071616Z` ·
+`exp09_zep_kg_residual_…065448Z` · `exp10_letta_…064949Z`.
+Not re-run (unchanged): `exp05_duplication_…093949Z` ·
+`exp06_derivation_capture_…094753Z` · `judge_validation_…123729Z` ·
+`exp11_letta_rederivation_…025647Z`
 (all under `data/results/`; 6 Letta certs `cert-F04{0..5}-*` under
 `data/results/certificates/`).

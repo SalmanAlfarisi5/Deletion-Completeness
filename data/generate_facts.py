@@ -7,7 +7,7 @@ AUTHORING ONLY.  This module is kept strictly separate from MEASUREMENT.
                                     scores recoverability and never asserts a
                                     measured rho; for rho-gradient facts it only
                                     proposes a tier HYPOTHESIS.
-  * MEASUREMENT (validate_facts) -> the LOCKED reasoner/judge models
+  * MEASUREMENT (validate_facts) -> the reasoner/judge models
                                     (config.REASONER_MODEL, config.SECOND_MODEL)
                                     independently measure rho / entailment.
 
@@ -32,8 +32,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config  # noqa: E402
 import llm  # noqa: E402
 
-# The cheap author.  Reuse existing config -- this is gpt-4o-mini under the
-# project's openai provider.
 AUTHOR_MODEL = config.JUDGE_MODEL
 
 # --------------------------------------------------------------------------- #

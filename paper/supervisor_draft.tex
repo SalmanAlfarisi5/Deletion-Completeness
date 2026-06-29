@@ -620,7 +620,10 @@ $n{=}10$ sensitive-PII targets per system. In \textbf{Graphiti}, the explicit
 \code{remove\_episode} is clean for the graph---it hard-deletes the episode, its
 \code{RELATES\_TO} edges, and orphaned entities---yet the deleted fact survives in
 \textbf{stale entity and community summaries that are not recomputed on deletion}:
-edge residue $40\%$ but \textbf{summary residue $80\%$}. In \textbf{Letta},
+edge residue $40\%$ but \textbf{summary residue $80\%$} (residual counts a value
+present in any surviving edge or summary regardless of its bi-temporal
+\texttt{invalid\_at}/\texttt{expired\_at}, consistent with the full-read-access
+threat model). In \textbf{Letta},
 deletion is agent-mediated across two surfaces (core blocks and archival passages).
 An explicit dual-surface instruction is \textbf{$100\%$ faithful}; but a
 \emph{vague, deployment-realistic} right-to-be-forgotten request with the fact also

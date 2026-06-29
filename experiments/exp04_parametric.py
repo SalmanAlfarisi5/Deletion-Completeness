@@ -51,7 +51,7 @@ def bin_of(fact: dict) -> int:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Re-derivation & parametric floor")
-    ap.add_argument("--n", type=int, default=6)
+    ap.add_argument("--n", type=int, default=None, help="targets (default: all in the file)")
     ap.add_argument("--bystanders", type=int, default=3)
     ap.add_argument("--single", action="store_true", help="primary reasoner only (cheaper)")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)

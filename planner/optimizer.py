@@ -17,7 +17,9 @@ class PlanResult:
     heuristic: str
     facts_co_deleted: list[str] = field(default_factory=list)
     artifacts_purged: list[str] = field(default_factory=list)
-    residual_recoverability: float = 0.0
+    residual_recoverability: float = 0.0   # the max over channels (overall recoverability)
+    final_residual: float = 0.0            # residual-survival channel, post-plan
+    final_rederivation: float = 0.0        # re-derivation channel, post-plan
     parametric_risk: float = 0.0
     collateral_k: int = 0
     achieved_completeness: bool = False
@@ -126,6 +128,8 @@ class GreedyPlanner:
     def _finalize(self, pr: PlanResult, user_id: str, target_fact: dict) -> PlanResult:
         residual, rederiv, rho = self._recoverability(user_id, target_fact)
         pr.residual_recoverability = max(residual, rederiv, rho)
+        pr.final_residual = residual
+        pr.final_rederivation = rederiv
         pr.parametric_risk = rho
         pr.collateral_k = len(pr.facts_co_deleted)
         pr.achieved_completeness = pr.residual_recoverability < self.tau

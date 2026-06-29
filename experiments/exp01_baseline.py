@@ -48,7 +48,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Naive deletion baseline")
     ap.add_argument("--system", default="mem0", choices=["mem0"])
     ap.add_argument("--facts", default=str(config.FACTS_DIR / "isolated_facts.json"))
-    ap.add_argument("--n", type=int, default=5)
+    ap.add_argument("--n", type=int, default=None, help="targets (default: all in --facts)")
     ap.add_argument("--no-corpus", action="store_true")
     ap.add_argument("--no-paraphrase", action="store_true")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)

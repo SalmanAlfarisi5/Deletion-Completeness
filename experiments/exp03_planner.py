@@ -38,10 +38,10 @@ from probes.parametric_probe import ParametricProbe  # noqa: E402
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Planner end-to-end (threshold)")
-    ap.add_argument("--n", type=int, default=6)
+    ap.add_argument("--n", type=int, default=None, help="targets (default: all in the file)")
     ap.add_argument("--bystanders", type=int, default=4)
-    ap.add_argument("--entailment-model", default=config.JUDGE_MODEL,
-                    help="entailment judge (use gpt-4o: 0%% partial-operand false-fire)")
+    ap.add_argument("--entailment-model", default=config.SECOND_MODEL,
+                    help="entailment judge — default gpt-4o (0%% partial-operand false-fire); reproduces the paper")
     ap.add_argument("--heuristic", choices=["threshold", "depth_first"], default="threshold",
                     help="threshold = minimal (recommended); depth_first = aggressive comparator")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
@@ -97,10 +97,12 @@ def main() -> None:
                        f"complete={plan.achieved_completeness}")
 
         cert = make_certificate(
-            fact=fact, system="mem0", residual=0.0,
-            rederivation=plan.residual_recoverability, rho=plan.parametric_risk,
-            probe_scores={"final_recoverability": plan.residual_recoverability,
-                          "parametric_risk": plan.parametric_risk},
+            fact=fact, system="mem0", residual=plan.final_residual,
+            rederivation=plan.final_rederivation, rho=plan.parametric_risk,
+            probe_scores={"residual_survival": plan.final_residual,
+                          "re_derivation_score": plan.final_rederivation,
+                          "parametric_risk_rho": plan.parametric_risk,
+                          "final_recoverability": plan.residual_recoverability},
             heuristic=plan.heuristic, facts_co_deleted=plan.facts_co_deleted,
             final_recoverability=plan.residual_recoverability,
             probe_battery=["exact_match", "rederivation", "parametric"])

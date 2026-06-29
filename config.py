@@ -30,7 +30,7 @@ RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 # Backend selection
 # --------------------------------------------------------------------------- #
 MEM0_MODE = os.getenv("MEM0_MODE", "oss").lower()          # "oss" | "hosted"
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "anthropic").lower()  # "anthropic" | "openai"
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()  # "openai" | "anthropic" — openai reproduces the papers
 
 # --------------------------------------------------------------------------- #
 # Keys
@@ -74,7 +74,9 @@ GLOBAL_SEED = int(os.getenv("GLOBAL_SEED", "42"))
 USER_ID_PREFIX = os.getenv("USER_ID_PREFIX", "u_alice")
 
 TAU = 0.10               # recoverability threshold below which deletion is "COMPLETE"
-ENTAILMENT_THRESHOLD = 0.50  # min judge confidence to draw an ENTAILS edge
+ENTAILMENT_THRESHOLD = 0.50  # entailment-EDGE threshold for judge VALIDATION + the
+# dataset near-miss gate (evaluation/judge.py, data/validate_facts.py). NOTE: the
+# planner's co-deletion cutoff is config.TAU (planner/optimizer.py), NOT this knob.
 N_PARAPHRASES = 5        # paraphrase probe variants per fact
 
 # Settle time between injections. Mem0's add() decides ADD-vs-UPDATE by searching

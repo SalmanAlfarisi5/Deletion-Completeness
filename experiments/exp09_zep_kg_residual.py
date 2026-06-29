@@ -7,6 +7,10 @@ and community summaries built pre-deletion are not recomputed. Those are the
 structural KG-residual channels — by design (bi-temporal/derived summaries),
 distinct from Mem0's dedup-failure duplication.
 
+Residual counts a value present in any surviving edge/summary text regardless of
+its bi-temporal invalid_at/expired_at — consistent with the full-read-access
+threat model (the adversary reads the whole surviving store).
+
 Per target: inject a 'keeper' fact about the same subject + the target fact,
 build communities, then remove the target episode and probe the KG for residue.
 

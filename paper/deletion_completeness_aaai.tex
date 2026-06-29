@@ -364,8 +364,8 @@ training-time access). Two pinned reasoners are used wherever recovery is
 model-dependent: \texttt{gpt-4o-mini-2024-07-18} (primary) and
 \texttt{gpt-4o-2024-08-06}; embeddings are local \texttt{all-MiniLM-L6-v2}. The
 completeness threshold is $\tau=0.10$. Datasets are synthetic subjects placed in
-realistic statistical contexts: 12 isolated PII facts, 6 multi-hop facts with
-their stored operands and bystanders, and 15 parametric-gradient facts across
+realistic statistical contexts: 48 isolated PII facts, 34 multi-hop facts with
+their stored operands and bystanders, and 49 parametric-gradient facts across
 three difficulty tiers. Recovery is scored by a validated LLM judge with no
 observed false accepts (\S\ref{sec:res-judge}: $0/8$ gold negatives, $95\%$
 Wilson upper bound $\approx\!0.32$), so under that bound \emph{every reported
@@ -618,7 +618,9 @@ see \S\ref{sec:limitations}). In \textbf{Graphiti}, the explicit
 its \texttt{RELATES\_TO} edges, and orphaned entities (we verify the hard delete
 first)---yet the deleted fact survives in \textbf{stale entity and community
 summaries that are not recomputed on deletion}: edge residue $40\%$ but
-\textbf{KG/summary residue $80\%$}. In \textbf{Letta}, deletion is agent-mediated
+\textbf{KG/summary residue $80\%$} (residual counts a value present in any surviving
+edge or summary regardless of its bi-temporal \texttt{invalid\_at}/\texttt{expired\_at},
+consistent with the full-read-access threat model). In \textbf{Letta}, deletion is agent-mediated
 across two surfaces (core blocks and archival passages). An explicit dual-surface
 instruction is \textbf{$100\%$ faithful}; but a \emph{vague, deployment-realistic}
 right-to-be-forgotten request (``I'm not comfortable with you keeping X'') with

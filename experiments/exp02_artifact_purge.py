@@ -36,7 +36,7 @@ from probes.exact_match import ExactMatchProbe  # noqa: E402
 def main() -> None:
     ap = argparse.ArgumentParser(description="Artifact-aware vs naive deletion")
     ap.add_argument("--facts", default=str(config.FACTS_DIR / "isolated_facts.json"))
-    ap.add_argument("--n", type=int, default=12)
+    ap.add_argument("--n", type=int, default=None, help="targets (default: all in --facts)")
     ap.add_argument("--no-corpus", action="store_true")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--keep", action="store_true")

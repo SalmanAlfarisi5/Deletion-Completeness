@@ -6,8 +6,7 @@ __pycache__/
 .pytest_cache/
 
 # local vector store + caches (regenerable, large)
-data/results/chroma_db/
-data/results/chroma_huggingface/
+data/results/chroma_*/
 data/results/llm_cache.json
 data/results/*.csv
 data/results/certificates/

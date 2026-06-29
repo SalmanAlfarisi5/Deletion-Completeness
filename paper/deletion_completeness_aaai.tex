@@ -495,7 +495,10 @@ can certify erasure. Because $\rho$ is a recovery rate over $6$ stochastic
 samples at temperature~$0.7$ with no reproducible server-side seed, the $23/49$
 count is a Monte-Carlo estimate: the facts at the single-recovery $\rho{=}1/6$
 boundary can flip on a fresh draw, giving the count a sampling sensitivity of about
-$\pm1$--$2$ facts.
+$\pm1$--$2$ facts. An independent from-scratch reproduction (default
+configuration, fresh $\rho$ sampling) returned $22/49$ uncertifiable---a one-fact
+difference within this $\rho{=}1/6$ boundary sensitivity, leaving the limit result
+intact.
 This gradient $\rho>0$ does not contradict the $\rho{=}0$ of the multi-hop facts
 in \S\ref{sec:res-rederiv}: there the world-knowledge component is generic and
 inert without the (fictional) stored operand, so co-deletion collapses $\rho$ to

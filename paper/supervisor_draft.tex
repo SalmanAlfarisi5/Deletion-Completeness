@@ -495,16 +495,16 @@ tier the means are (\code{gpt-4o-mini}\,/\,\code{gpt-4o}) \textbf{low $0.00/0.00
 Certifying erasure under the \emph{worst} modeled adversary, \textbf{23 of 49
 certificates are \emph{not} erasure-certifiable} at $\tau{=}0.1$ ($\rho_{\max}>\tau$)
 \emph{even though residual survival is $0$}; under the weaker reasoner alone only
-$14/49$ would be flagged. That eight-certificate gap is Definition~\ref{def:rec}'s
+$14/49$ would be flagged. That nine-certificate gap is Definition~\ref{def:rec}'s
 \emph{adversary-relative} recoverability made concrete: a weaker-reasoner attacker
-would wrongly certify eight facts the stronger adversary recovers, so certifying
+would wrongly certify nine facts the stronger adversary recovers, so certifying
 under the $\sup$ is the conservative choice a privacy certificate must make.
 
 The worst-adversary $\rho$ forms a \emph{measured gradient} of parametric
-recoverability---from 26 facts at the certifiable floor, through 8 in an
+recoverability---from 26 facts at the certifiable floor, through 9 in an
 intermediate band, to 14 at a hard floor---rather than an all-or-nothing split.
 Because the floor is graded, the uncertifiable count is genuinely
-\emph{threshold-dependent} ($22$ at $\tau{=}0.1$, falling to $14$ as
+\emph{threshold-dependent} ($23$ at $\tau{=}0.1$, falling to $14$ as
 $\tau\!\to\!0.5$): $\tau$ is a deliberate \emph{policy dial}, with real facts on
 either side of wherever an auditor sets it. This is the limit result: when the
 value is recoverable from non-deletable world knowledge, no co-deletion can
@@ -537,7 +537,7 @@ $0.7$), binned by the \emph{measured} worst adversary
 $\rho_{\max}{=}\max(\rho_{\text{mini}},\rho_{4o})$. 26 facts sit at the certifiable
 floor ($\rho_{\max}{\le}\tau$), 14 at a hard floor, and 9 in an intermediate
 band---a graded floor, so the $23/49$ uncertifiable count is threshold-dependent
-($22$ at $\tau{=}0.1$, $14$ as $\tau\!\to\!0.5$). Authored tier disagrees with the
+($23$ at $\tau{=}0.1$, $14$ as $\tau\!\to\!0.5$). Authored tier disagrees with the
 measured band for $16/49$ facts; authored-tier means $0.00/0.00$ (low),
 $0.069/0.265$ (mid), $0.367/0.656$ (high) (\code{mini}/\code{4o}).}
 \label{tab:rho}

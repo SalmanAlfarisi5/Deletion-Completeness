@@ -123,6 +123,14 @@ All verified with `py_compile` + **offline suite 46/46 still green**.
 - **F043 same-facts — CLAUSE ADDED (both drafts, §res-rederiv).** Letta bin2 ties at 59% (10/17) for both reasoners, but the recovered *sets* differ (9 shared; gpt-4o-only **F066**, mini-only **F044**). Added a clause so a reviewer recomputing 10/17 vs 10/17 does not read it as model-invariance; model-dependence kept anchored on **Mem0's 59%/65%**.
 - **exp06 silence — DELIBERATE, no dangling reference.** Probe battery declares exactly **three** probes (exact-match, re-derivation, parametric — the three channels of Def. rec); `exp06`/derivation-capture is not among them, has **0 dangling `\ref`** (AAAI 17 labels/14 refs, supervisor 26/15), and there is no "we also tried…" half-sentence in either draft. The paper is silent on it by intent. Left as-is.
 
+## 10. ρ Monte-Carlo caveat + relock-straggler cleanup
+
+**ρ=1/6 flip-risk set (for the reproduction band).** Of 49 facts, ρ_max distribution: **26 at ρ=0** (certifiable), **7 at ρ=1/6** (R06, R30, R32, R36, R40, R41, R47 — single-recovery knife-edge), 2 at 2/6, then 2/2/10 in the hard floor. Uncertifiable 23 = 9 mid + 14 hard. The 7 facts at ρ=1/6 are the flip-risk: each got exactly one recovery in six and can drop to 0/6 on a fresh draw; the 26 zeros can rise. Net sensitivity ≈ ±1–2 (drops/rises partly offset), with a mild downside skew (a true-p≈1/6 fact has ≈(5/6)⁶≈33% chance to vanish). **R40 is itself a ρ=1/6 fact — the one the relock flipped.**
+
+**Variance caveat added (both drafts) — `13ce4d4`-style commit "note ρ Monte-Carlo sampling variance".** One sentence at each 23/49 headline (abstract + §res-rho prose): ρ is a recovery rate over 6 samples at temp 0.7 with no reproducible server-side seed, so 23/49 is a Monte-Carlo estimate with ±1–2 sampling sensitivity at the ρ=1/6 boundary. "6 samples, temperature 0.7" now appears at both headline sites, not only the tab:rho caption. **23/49 itself unchanged.**
+
+**Relock-straggler cleanup (separate prior commit `421ca2c`).** My §8 "sweep CLEAN" was **wrong** — the H-01 relock (22→23; bands 27/8/14→26/9/14) left derived numbers un-propagated, missed because I grepped `22/49` not bare `$22$`, and the stale `8` was line-wrapped. Fixed + verified against committed exp07 + a free re-judge of R40: four `$22$ at τ=0.1`→**23**; supervisor prose `8 in an intermediate band`→**9** (26+8+14=48 was broken); `eight-certificate gap`/`eight facts`→**nine** ×4 (gap = worst 23 − weaker-alone 14 = 9; **R40 recovered by gpt-4o only**, mini 0/6, so weaker-alone stays 14). `14/49 weaker` verified correct/unchanged.
+
 ---
 
 *Fixes 1–7 applied and test-green. H-01 is the single item awaiting your go-ahead. No reported number changed without your sign-off.*

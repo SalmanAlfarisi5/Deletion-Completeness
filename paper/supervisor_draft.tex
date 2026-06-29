@@ -152,7 +152,9 @@ impossible to certify. Concretely, we contribute:
   \item A \emph{measured} parametric floor and its limit result: under the
     strongest modeled adversary, $23/49$ facts cannot be certified erased even at
     zero residual survival---a measured gradient in which the threshold $\tau$ is a
-    deliberate policy dial (\S\ref{sec:res-rho}).
+    deliberate policy dial; measured as a recovery rate over $6$ samples at
+temperature~$0.7$, $23/49$ is a Monte-Carlo estimate stable to $\pm1$--$2$ facts at
+the $\rho{=}1/6$ boundary (\S\ref{sec:res-rho}).
 
   \item Evidence of generality: the same probe/planner/certificate stack, run on
     three memory architectures, exposes residual survival in all three through
@@ -508,7 +510,11 @@ Because the floor is graded, the uncertifiable count is genuinely
 $\tau\!\to\!0.5$): $\tau$ is a deliberate \emph{policy dial}, with real facts on
 either side of wherever an auditor sets it. This is the limit result: when the
 value is recoverable from non-deletable world knowledge, no co-deletion can
-certify erasure.
+certify erasure. Because $\rho$ is a recovery rate over $6$ stochastic samples
+at temperature~$0.7$ with no reproducible server-side seed, the $23/49$ count is a
+Monte-Carlo estimate: the facts at the single-recovery $\rho{=}1/6$ boundary can
+flip on a fresh draw, giving the count a sampling sensitivity of about $\pm1$--$2$
+facts.
 
 \textbf{Control.} The $\rho$ probe sees \emph{only} the subject's world-knowable
 context, never the stored facts, so co-deletion provably cannot lower it. Three

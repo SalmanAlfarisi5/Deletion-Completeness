@@ -113,7 +113,9 @@ auditable certificate that separates what deletion achieved from what it cannot
 (\S\ref{sec:method},\,\S\ref{sec:res-planner});
 \item a \emph{measured} parametric floor and its limit result: under the strongest
 modeled adversary, $23/49$ facts cannot be certified erased even at zero residual
-survival (\S\ref{sec:res-rho});
+survival---and, measured as a recovery rate over $6$ samples at temperature~$0.7$,
+a Monte-Carlo estimate stable to $\pm1$--$2$ facts at the $\rho{=}1/6$ boundary
+(\S\ref{sec:res-rho});
 \item evidence of generality: the same probe/planner/certificate stack, run on
 three memory architectures, exposes residual survival in all three through
 different by-design mechanisms, including the agent-loop failure above that prior
@@ -489,7 +491,11 @@ $\tau\!\to\!0.5$): $\tau$ is a deliberate \emph{policy dial}, not a technicality
 with real facts on either side of wherever an auditor sets it---choosing $\tau$ is
 choosing how much residual world-inferability to tolerate. This is the limit result:
 when the value is recoverable from non-deletable world knowledge, no co-deletion
-can certify erasure.
+can certify erasure. Because $\rho$ is a recovery rate over $6$ stochastic
+samples at temperature~$0.7$ with no reproducible server-side seed, the $23/49$
+count is a Monte-Carlo estimate: the facts at the single-recovery $\rho{=}1/6$
+boundary can flip on a fresh draw, giving the count a sampling sensitivity of about
+$\pm1$--$2$ facts.
 This gradient $\rho>0$ does not contradict the $\rho{=}0$ of the multi-hop facts
 in \S\ref{sec:res-rederiv}: there the world-knowledge component is generic and
 inert without the (fictional) stored operand, so co-deletion collapses $\rho$ to

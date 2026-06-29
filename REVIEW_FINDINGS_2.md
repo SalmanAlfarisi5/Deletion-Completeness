@@ -117,6 +117,12 @@ All verified with `py_compile` + **offline suite 46/46 still green**.
 - **exp06 disposition.** `exp06_derivation_capture` (the REJECTED "Mem0 bakes in derived values" probe) is **cited nowhere** in either draft (grep hits are the generic "consolidated note" example + "passages.delete (by captured id)", not exp06's number). Exploratory → left as-is.
 - **Consistency sweep — CLEAN.** No stale 22/49 · 27/8/14 · 0.275 · 24–42% · 179–221% · Letta-80/100 · old-F043 in either draft; tab:master rows correctly cite Mem0/exp01-02/exp09-10 (unchanged); both drafts at numeric parity; LaTeX 12/12 & 23/23.
 
+## 9. Audit-close dispositions
+
+- **Chroma artifacts — UNTRACKED (hygiene commit).** Safety-checked first: no source (`reproduce.sh`, `experiments/`, `systems/`, `config.py`) reads `data/results/chroma_openai/` or `index_metadata.pickle` as a precondition — config.py:112-115 configures it as a *regenerated* persist path (`RESULTS_DIR / chroma_{embedder}`, written by Mem0 on run). Only `chroma_openai/` was tracked (5 files; `chroma_huggingface/` already ignored). `git rm -r --cached data/results/chroma_openai/`; consolidated `.gitignore` to `data/results/chroma_*/` (covers all embedders + the in-dir `index_metadata.pickle`). No broad `*.pickle` rule — none tracked, and the pickle lives under the chroma dir already covered.
+- **F043 same-facts — CLAUSE ADDED (both drafts, §res-rederiv).** Letta bin2 ties at 59% (10/17) for both reasoners, but the recovered *sets* differ (9 shared; gpt-4o-only **F066**, mini-only **F044**). Added a clause so a reviewer recomputing 10/17 vs 10/17 does not read it as model-invariance; model-dependence kept anchored on **Mem0's 59%/65%**.
+- **exp06 silence — DELIBERATE, no dangling reference.** Probe battery declares exactly **three** probes (exact-match, re-derivation, parametric — the three channels of Def. rec); `exp06`/derivation-capture is not among them, has **0 dangling `\ref`** (AAAI 17 labels/14 refs, supervisor 26/15), and there is no "we also tried…" half-sentence in either draft. The paper is silent on it by intent. Left as-is.
+
 ---
 
 *Fixes 1–7 applied and test-green. H-01 is the single item awaiting your go-ahead. No reported number changed without your sign-off.*

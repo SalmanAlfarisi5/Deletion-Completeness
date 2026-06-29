@@ -656,9 +656,10 @@ whose stochastic Mem0 dedup draws differ, reported as two independent measuremen
 of the same residual-incompleteness phenomenon.
 
 \textbf{Control.} A $2{\times}2$ factorial over embedder (MiniLM\,/\,OpenAI)
-$\times$ injection cadence ($0\,$s\,/\,$1.5\,$s) shows row-inflation of $179$--$221\%$
-and duplication incidence of $63$--$70\%$ in \emph{all four} cells, with
-paraphrase-variant duplicates outnumbering byte-identical ones in every cell. The
+$\times$ injection cadence ($0\,$s\,/\,$1.5\,$s) shows value duplication
+in \emph{all four} cells, with paraphrase-variant duplicates outnumbering
+byte-identical ones in every cell---and the incidence rises with store size, from
+$30$--$39\%$ at $n{=}33$ to $63$--$70\%$ at $n{=}149$. The
 duplication is therefore a semantic-dedup \emph{design limitation}, not an artifact
 of our embedder or an injection-timing race; it is independently documented in
 Mem0 issues \#4896, \#4573, and \#687. These rates are not in tension with

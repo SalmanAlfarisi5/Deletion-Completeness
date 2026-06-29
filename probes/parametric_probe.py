@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from datetime import date
 
+import config
 import llm
 from evaluation.recovery import value_segment
 from probes.base_probe import BaseProbe, ProbeResult, normalize_values
@@ -81,8 +82,12 @@ class ParametricProbe(BaseProbe):
         return self._judge_recovery(fact["text"], seg)
 
     def _judge_recovery(self, fact_text: str, answer: str) -> bool:
+        # Recovery judge is LOCKED to the validated config.JUDGE_MODEL for ALL
+        # reasoners (the judge sees the ground-truth value -> a fixed matching task).
+        # Previously used self.model, so the gpt-4o reasoner judged its own recoveries
+        # with an unvalidated judge (see REVIEW_FINDINGS_2.md, H-01).
         out = llm.chat_json([{"role": "user", "content": _JUDGE_PROMPT.format(
-            fact=fact_text, answer=answer)}], model=self.model,
+            fact=fact_text, answer=answer)}], model=config.JUDGE_MODEL,
             temperature=0.0, max_tokens=100)
         return bool(out.get("match", False))
 

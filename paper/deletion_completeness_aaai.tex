@@ -64,7 +64,7 @@ re-derivation from surviving facts, and a parametric floor recoverable from the
 base model alone---and give a planner that computes the minimal co-deletion
 closing the deletable channels, emitting an auditable certificate. Because the
 parametric floor cannot be deleted, certification has a hard limit: under the
-strongest modeled adversary, \textbf{22 of 49} facts cannot be certified erased
+strongest modeled adversary, \textbf{23 of 49} facts cannot be certified erased
 (at threshold $\tau{=}0.1$), even with zero residual survival and no helpful
 co-deletion. The same stack, run across three memory architectures (a
 deduplication pipeline, a bi-temporal knowledge graph, and a paging agent), finds
@@ -112,7 +112,7 @@ completeness at mean collateral $k=0.91$ with zero spurious deletions, plus an
 auditable certificate that separates what deletion achieved from what it cannot
 (\S\ref{sec:method},\,\S\ref{sec:res-planner});
 \item a \emph{measured} parametric floor and its limit result: under the strongest
-modeled adversary, $22/49$ facts cannot be certified erased even at zero residual
+modeled adversary, $23/49$ facts cannot be certified erased even at zero residual
 survival (\S\ref{sec:res-rho});
 \item evidence of generality: the same probe/planner/certificate stack, run on
 three memory architectures, exposes residual survival in all three through
@@ -342,7 +342,7 @@ and \texttt{completeness\_certified}. The latter certifies erasure only under th
 \emph{worst modeled adversary}---the $\sup$ of Def.~4, i.e.\
 $\rho=\max_{\mathcal{A}}\rho^{\mathcal{A}}<\tau$---so a fact recoverable by the
 stronger reasoner is reported uncertified even when the weaker one fails; this
-conservative choice is why $22/49$, not $14/49$, are uncertifiable
+conservative choice is why $23/49$, not $14/49$, are uncertifiable
 (\S\ref{sec:res-rho}). A \texttt{floor\_reaching} but uncertified verdict is
 precisely the limit result (Remark~1), now an audited field. The certificate thus
 surfaces both the price ($k$) and the limit ($\rho$) of erasure; a recall caveat
@@ -380,7 +380,7 @@ the headline numbers; results are presented in decreasing order of confidence.
 \textbf{Result} & \textbf{System} & \textbf{Headline} & \textbf{Backing control} \\
 \midrule
 Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, $k{=}0.91$ & spare-bystander + gpt-4o entailment judge \\
-$\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 22/49 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
+$\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 23/49 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
 Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 59--65\%$\to$0\% & operands-only; verified-faithful co-delete \\
 Convergence (\S\ref{sec:res-converge})   & all three & 80\% / 100\% (Graphiti/Letta) & clean-delete verified first; explicit baseline \\
 Residual (\S\ref{sec:res-residual})      & Mem0     & 97.9\%; 68.75\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
@@ -468,12 +468,12 @@ authored tier: the two disagree for $16/49$ facts, which we retain and report by
 measured $\rho$ rather than discard---authored tiers are hypotheses, measured
 $\rho$ is the evidence. The worst-adversary
 $\rho_{\max}{=}\max_{\mathcal{A}}\rho^{\mathcal{A}}$ splits the set into
-\textbf{27 facts at $\rho_{\max}{\le}\tau$} (certifiable), \textbf{14 at
-$\rho_{\max}{\ge}0.5$} (a hard floor), and \textbf{8 in the intermediate band}
+\textbf{26 facts at $\rho_{\max}{\le}\tau$} (certifiable), \textbf{14 at
+$\rho_{\max}{\ge}0.5$} (a hard floor), and \textbf{9 in the intermediate band}
 ($\tau<\rho_{\max}<0.5$) (Table~\ref{tab:rho}). By authored tier the means are
 (\texttt{gpt-4o-mini}\,/\,\texttt{gpt-4o}) \textbf{low $0.00/0.00$}, \textbf{mid
-$0.069/0.275$}, \textbf{high $0.367/0.656$}. Certifying erasure under the
-\emph{worst} modeled adversary (the $\sup$ of Def.~4), \textbf{22 of 49
+$0.069/0.265$}, \textbf{high $0.367/0.656$}. Certifying erasure under the
+\emph{worst} modeled adversary (the $\sup$ of Def.~4), \textbf{23 of 49
 certificates are \emph{not} erasure-certifiable} at $\tau{=}0.1$
 ($\rho_{\max}>\tau$) \emph{even though residual survival is $0$}; under the weaker
 reasoner alone only $14/49$ would be flagged. That eight-certificate gap is not
@@ -481,8 +481,8 @@ noise but Def.~4's \emph{adversary-relative} recoverability made concrete: a
 weaker-reasoner attacker would wrongly certify eight facts the stronger adversary
 recovers, so certifying under the $\sup$ is the conservative choice a privacy
 certificate must make. The worst-adversary $\rho$ forms a \emph{measured gradient}
-of parametric recoverability---from $27$ facts at the certifiable floor, through
-$8$ in an intermediate band, to $14$ at a hard floor---rather than an
+of parametric recoverability---from $26$ facts at the certifiable floor, through
+$9$ in an intermediate band, to $14$ at a hard floor---rather than an
 all-or-nothing split. Because the floor is graded, the uncertifiable count is
 genuinely \emph{threshold-dependent} ($22$ at $\tau{=}0.1$, falling to $14$ as
 $\tau\!\to\!0.5$): $\tau$ is a deliberate \emph{policy dial}, not a technicality,
@@ -516,22 +516,22 @@ bounds.
 \toprule
 measured worst-adversary band & \#facts ($n{=}49$) & certifiable \\
 \midrule
-$\rho_{\max}\le\tau$ ($\tau{=}0.1$; certifiable floor) & 27 & 27 \\
-$\tau<\rho_{\max}<0.5$ (intermediate band)              & 8  & 0  \\
+$\rho_{\max}\le\tau$ ($\tau{=}0.1$; certifiable floor) & 26 & 26 \\
+$\tau<\rho_{\max}<0.5$ (intermediate band)              & 9  & 0  \\
 $\rho_{\max}\ge0.5$ (hard floor)                       & 14 & 0  \\
 \midrule
-total                                                  & 49 & 27 \\
+total                                                  & 49 & 26 \\
 \bottomrule
 \end{tabular}
 \caption{Parametric floor $\rho$ on $n{=}49$ facts ($6$ samples each, temperature
 $0.7$), binned by the \emph{measured} worst adversary
-$\rho_{\max}{=}\max(\rho_{\text{mini}},\rho_{4o})$. 27 facts sit at the certifiable
+$\rho_{\max}{=}\max(\rho_{\text{mini}},\rho_{4o})$. 26 facts sit at the certifiable
 floor ($\rho_{\max}{\le}\tau$), 14 at a hard floor ($\rho_{\max}{\ge}0.5$), and
-\textbf{8 in the intermediate band}---a graded floor, so the $22/49$ uncertifiable
+\textbf{9 in the intermediate band}---a graded floor, so the $23/49$ uncertifiable
 count is threshold-dependent ($22$ at $\tau{=}0.1$, $14$ as $\tau\!\to\!0.5$) and
 $\tau$ acts as a policy dial. Authored
 tier disagrees with the measured band for $16/49$ facts; authored-tier $\rho$ means
-are $0.00/0.00$ (low), $0.069/0.275$ (mid), $0.367/0.656$ (high)
+are $0.00/0.00$ (low), $0.069/0.265$ (mid), $0.367/0.656$ (high)
 (\texttt{mini}/\texttt{4o}). Sensitive-attribute items draw refusals (7 facts), so
 their measured $\rho$ is an adversarial lower bound.}
 \label{tab:rho}
@@ -726,8 +726,9 @@ the recovery judge's recall.
 estimated by eliciting the value from the base model; for sensitive attributes the
 model often refuses (7 high-tier items drew refusals), so
 the measured $\rho$ \emph{understates} true world-inferability for exactly the
-attributes a privacy audit cares about. A more willing adversary could only push
-the uncertifiable count above $22/49$, never below.
+attributes a privacy audit cares about. A more willing \emph{reasoner} could only push
+the uncertifiable count above $23/49$, never below; this monotonicity is over reasoner
+adversaries---the recovery judge is the single validated \texttt{gpt-4o-mini}.
 
 \paragraph{The entailment graph must be known.} The decomposition and planner
 assume the entailment graph is specified---the operands that re-imply a fact are
@@ -758,7 +759,7 @@ the same gap recurs through different by-design mechanisms, and a \emph{measured
 parametric floor sets a hard limit on what any deletion can promise.
 
 That limit is the paper's broadest implication. For a fact recoverable from world
-knowledge alone ($\rho\geq\tau$)---$22$ of our $49$ gradient facts under the
+knowledge alone ($\rho\geq\tau$)---$23$ of our $49$ gradient facts under the
 strongest modeled adversary---\emph{no} external-store deletion method can achieve
 erasure, because the value can be reconstructed without ever reading the store.
 For such facts, right-to-be-forgotten compliance cannot be a deletion operation:

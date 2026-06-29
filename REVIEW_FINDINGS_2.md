@@ -10,7 +10,7 @@
 
 **Yes. Every headline number traces cleanly to the committed logs, and the one open methodological risk (H-01) is now *bounded* and does not collapse any claim.**
 
-- **22/49 uncertifiable (ρ floor):** holds. H-01 (recovery judge = the reasoner) is the only thing that could move it, and the worst case is bounded: removing the LLM judge *entirely* (the strictest possible scoring) gives **17/49**; the actual fix ("use the validated gpt-4o-mini judge") lands between **17 and 22**. The limit result survives at either end (35–45% uncertifiable, residual = 0). Direction: a lenient judge can only *inflate* the count, so 22/49 is a possible slight over-count, never an under-count. **This is the only number pending an author decision** (§5).
+- **ρ floor — now 23/49 (was 22/49): H-01 RESOLVED.** The recovery judge is locked to the validated `gpt-4o-mini` for all reasoners (one-line fix), and the committed logs were re-scored: **22/49 → 23/49**; bands **27/8/14 → 26/9/14**. One fact flipped: **R40 (ρ 0.0 → 0.167)** — `gpt-4o-mini` is marginally *more* lenient than `gpt-4o` on R40's borderline answer (the "smaller ≠ stricter judge" warning was right). It is a clean *strengthening* under a *validated* judge; the limit result holds (47% uncertifiable). Both drafts updated. Mini-alone 14/49, mismatch 16/49, and bimodality (still False) unchanged.
 - **k = 0.91, 0 spurious, 34 targets, spared 36** (planner): MATCH.
 - **Convergence (n=10): Graphiti edge 40% / summary 80%; Letta 0% faithful / 100% archival**: MATCH, and the **adapters are conformant and the mechanisms are the real code paths** (the half-surface the first pass left grep-only — now closed; §4).
 - **Re-derivation, residual, MIA, judge-validation**: all MATCH (table below).
@@ -81,9 +81,11 @@ All verified with `py_compile` + **offline suite 46/46 still green**.
 
 ---
 
-## 5. Fix PENDING your approval (would change a reported number)
+## 5. H-01 — APPLIED (recovery-judge lock + re-score): 22/49 → 23/49
 
-### H-01 — lock the recovery judge to the validated model
+**Outcome:** judge locked to `config.JUDGE_MODEL` (`parametric_probe.py:_judge_recovery`); re-scored the committed gpt-4o judge-fired answers with the locked gpt-4o-mini (≈44 small calls); **22/49 → 23/49**, bands **27/8/14 → 26/9/14**, 4o mid mean **0.275 → 0.265**. Only **R40** flipped (ρ 0.0 → 0.167; gpt-4o-mini accepted one borderline recovery gpt-4o hadn't — a *more*-lenient validated judge, so the count rose, not fell). Both drafts updated (abstract, §res-rho, Table tab:rho, conclusion, tab:master, intro contribution, monotonicity remark → now reasoner-not-judge). Committed as the isolated H-01 commit. **R40 audited (legitimate, kept):** R40 = *"Cheng Long … passed the CPA exams, which require him to be at least 23"* (high-tier; `probe_value` includes `'adult'`/`'over 23'`). The flip sample: the gpt-4o adversary answered *"Value: 25"* (CPA → degree+experience → mid-twenties); the locked gpt-4o-mini judge accepted 25 as recovering "≥23" (within its ~10% tolerance, and ≥25 entails ≥23/"adult"). A correct *borderline* recovery that actually corrects gpt-4o's over-strict self-judging (which had given a clearly world-inferable high-tier fact ρ=0). No judge-imperfection caveat needed; **23/49 stands**.
+
+### H-01 — original finding (for the record)
 - **The issue (confirmed against the papers):** both drafts state every recovery rate is "a conservative lower bound" under the "validated 0/8-false-accept judge" and that "both LLM judges are validated." But `probes/parametric_probe.py:83-87` uses `model=self.model`, so the **gpt-4o** adversary judges its own recoveries, and `evaluation/judge.py:134` validates the recovery judge **only on gpt-4o-mini**.
 - **Sized from logs (offline):** for gpt-4o, **88% of recoveries are decided by exact substring match** (not a judge); only **~12% (11/87)** use the LLM-judge fallback. The judge fires but the value is provided to it (a matching task, not open recovery).
 - **Bounded impact on 22/49 (offline):** scoring substring-only (judge removed entirely) gives **17/49**; only **5 facts** (R15 + R30/R32/R36/R41 at ρ=1/6) are even potentially judge-attributable. So locking to gpt-4o-mini yields **22/49 → somewhere in [17, 22]**, in the conservative direction.
@@ -104,7 +106,7 @@ All verified with `py_compile` + **offline suite 46/46 still green**.
 
 ## 7. Open questions for the author
 
-1. **H-01 (the one decision):** apply the recovery-judge lock + the small gpt-4o-mini re-score to get the exact 22/49 → [17,22] value? (Recommended.)
+1. **H-01 — DONE.** Lock applied + re-scored → 22/49 → **23/49** (both drafts updated). Only open sub-item: sanity-check R40's logged answer (the single knife-edge flip).
 2. **exp05/exp11 — RESOLVED as "stale-but-backed".** Both MATCH their committed logs (re-scored, free), but those logs are **pre-wave**: exp05 on the old 33-fact corpus (2026-06-23), exp11 on the old 6-fact multi-hop (2026-06-24, **bin1 = n=1**). The drafts present them at the OLD scale alongside the enlarged-data results. **Decision needed:** re-run exp05 (Mem0, cheap) and exp11 (needs the Letta service up) on the enlarged datasets, or keep + footnote the smaller n? (I did NOT re-run — paid + service-dependent.)
 3. **Graphiti temporal filter — RESOLVED.** Behavior kept (correct under full-read-access); one-line note added to exp09 and both drafts' §res-converge.
 

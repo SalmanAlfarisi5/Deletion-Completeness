@@ -23,6 +23,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathtools}
 \usepackage{tikz}
+\usepackage{bbm}
 \usetikzlibrary{positioning, arrows.meta}
 \usepackage{xcolor}
 \usepackage[hyphens]{url}
@@ -66,7 +67,7 @@
 
 \author{
   \textbf{Muhammad Salman Al Farisi}\\[2pt]
-  School of Computing, National University of Singapore\\
+  National University of Singapore\\
   Advisor: Tan Tian Huat\\
   \texttt{salman26080@gmail.com}
 }
@@ -78,7 +79,7 @@
   \begin{@twocolumnfalse}
     \maketitle
     \begin{onecolabstract}
-      \noindent Ask a paging LLM agent to forget a fact and it may scrub the
+      \noindent Ask an LLM agent to forget a fact and it may scrub the
       working-memory block it reasons over while silently leaving the fact in
       its archival store: the deletion is acknowledged, looks complete, and is
       not. More generally, deleting a fact from an LLM agent's memory does not
@@ -87,9 +88,9 @@
       sufficient}, because the value can persist in a derived artifact or be
       re-derived from facts that were never deleted. We formalize
       \emph{deletion-completeness} for agent memory, decomposing post-deletion
-      recoverability into three causally distinct channels---residual survival,
+      recoverability into three causally distinct channels, \textbf{residual survival,
       re-derivation from surviving facts, and a parametric floor recoverable
-      from the base model alone---and give a planner that computes the minimal
+      from the base model alone}, and give a planner that computes the minimal
       co-deletion closing the deletable channels, emitting an auditable
       certificate. Because the parametric floor cannot be deleted, certification
       has a hard limit: under the strongest modeled adversary, \textbf{23 of 49}
@@ -108,8 +109,8 @@
 \section{Introduction}\label{sec:intro}
 
 A user invokes their right to be forgotten and asks an LLM agent to delete their
-home address. A modern agent with long-term memory---a paging architecture such
-as MemGPT/Letta \citep{packer2024memgpt}---acknowledges and rewrites the
+home address. A modern agent with long-term memory, a paging architecture such
+as MemGPT/Letta \citep{packer2024memgpt}, acknowledges and rewrites the
 working-memory block it is currently reasoning over. But the address was also
 written to the agent's archival vector store in an earlier session; reasoning
 only over its working context, the agent never touches it, and weeks later an
@@ -118,7 +119,7 @@ complete, and was not.
 
 This is not a one-off bug. Even a \emph{faithful} delete of a record need not
 erase the fact it carried: the fact can survive in a derived artifact the system
-built from it---a duplicate, a summary, a consolidated note---or be re-derived
+built from it, a duplicate, a summary, a consolidated note, or be re-derived
 from facts that remain, such as a salary from a job title plus a public pay band,
 or a diagnosis from stored symptoms. The most thorough current audits of agent
 forgetting \citep{forgeteval} check whether a forget command removes a value from
@@ -135,7 +136,7 @@ entail it), and a parametric floor (the base model recovers it from world
 knowledge alone). The first two are closable by deleting more; the third is not.
 A greedy planner computes the minimal additional co-deletion that closes the
 closable channels, and a certificate records what deletion achieved, at what
-collateral cost, and---crucially---when the parametric floor makes erasure
+collateral cost, and when the parametric floor makes erasure
 impossible to certify. Concretely, we contribute:
 
 \begin{itemize}\itemsep2pt
@@ -181,7 +182,13 @@ sufficient} gap of \S\ref{sec:intro}. Our contribution is therefore the stronger
 channel-decomposed criterion, not the system coverage ForgetEval already
 establishes; correspondingly, our Mem0 figures (recoverability by \emph{any}
 channel) are complementary to its top-$k$ forget-command rates, not in tension
-with them. Two of our results extend it directly. ForgetEval deliberately bypasses
+with them. A second axis of difference is scoring: \sys{ForgetEval}'s evaluation loop is
+deliberately judge-free, using pure deterministic substring matching to avoid
+judge circularity, at the cost of being unable to credit approximate or
+paraphrased recovery---a blind spot its own scorer audit confirms. We instead
+validate an LLM recovery judge against gold labels (\S\ref{sec:res-judge})
+precisely to catch such near-miss recoveries (e.g.\ ``\$3,142'' for a \$3,200
+target); the two scoring choices are complementary, not competing. Two of our results extend it directly. ForgetEval deliberately bypasses
 Letta's agent loop---addressing archival endpoints to keep the model out of the
 recall path---which is exactly the loop we exercise and find surface-incomplete
 (\S\ref{sec:res-converge}); and its own per-system observations (Graphiti shedding
@@ -239,7 +246,7 @@ below depend on $\Adv$'s reasoning model, so recoverability is
 \emph{adversary-relative} (Definition~\ref{def:rec}).
 
 \begin{definition}[Residual survival]\label{def:res}
-$\;\sres(f,S')=\mathbb{1}\!\left[\exists\, r\in S':\;\Sigma(v)\cap\mathrm{txt}(r)\neq\emptyset\right].$
+$\;\sres(f,S')=\mathbbm{1}\!\left[\exists\, r\in S':\;\Sigma(v)\cap\mathrm{txt}(r)\neq\emptyset\right].$
 A surviving record physically contains the value.
 \end{definition}
 
@@ -250,11 +257,27 @@ world knowledge.
 \end{definition}
 
 \begin{definition}[Parametric floor]\label{def:rho}
-$\;\rho^{\Adv}(f)=\mathrm{rec}\!\left(\Adv(q_f \mid \emptyset, M, C)\right),$
-where $C\subseteq W$ is the subject's world-knowable context and the store is
-\emph{empty}. $\rho^{\Adv}$ has no dependence on $S$ and is therefore
-\emph{system-independent}; we estimate it as a recovery rate over stochastic
-samples.
+Let $C\subseteq W$ be the subject's world-knowable context, with the store
+\emph{empty}. At temperature $T>0$, $\Adv$'s answer to $q_f$ given only
+$(\emptyset,M,C)$ is a random variable $a\sim\Adv(q_f\mid\emptyset,M,C)$; the
+\textbf{parametric floor} is its true recovery probability,
+\[
+  \rho^{\Adv}(f)\;=\;\mathbb{E}_{a\sim\Adv(q_f\mid\emptyset,M,C)}\!\left[\mathrm{rec}(a)\right]
+  \;=\;\Pr\!\left[\mathrm{rec}(a)=1\right].
+\]
+$\rho^{\Adv}$ has no dependence on $S$ and is therefore \emph{system-independent}.
+It is not directly observable; we report its Monte-Carlo estimator
+\[
+  \hat\rho^{\Adv}_n(f)\;=\;\frac{1}{n}\sum_{i=1}^{n}\mathrm{rec}(a_i),
+  \qquad a_1,\dots,a_n\overset{\mathrm{i.i.d.}}{\sim}\Adv(q_f\mid\emptyset,M,C),
+\]
+over $n{=}6$ draws at $T{=}0.7$ for the $\rho$-gradient result (\S\ref{sec:res-rho});
+the planner and re-derivation certificates (exp03/04/11) instead carry the cheaper
+single-draw point estimate at $T{=}0$. We substitute $\hat\rho^{\Adv}_n$ for
+$\rho^{\Adv}$ wherever the floor enters Definitions~\ref{def:rec}--\ref{def:cert}.
+Unlike $\sres,\sred^{\Adv}\in\{0,1\}$---each a single deterministic
+query---$\hat\rho^{\Adv}_n$ takes values in $\{0,\tfrac1n,\dots,1\}$, so
+$\Rec_{\Adv}$ is fractional whenever the floor is the deciding term.
 \end{definition}
 
 \begin{definition}[Recoverability, adversary-relative]\label{def:rec}
@@ -418,7 +441,7 @@ Planner (\S\ref{sec:res-planner})     & Mem0          & 100\% complete, 0 spurio
 $\rho$ floor (\S\ref{sec:res-rho})    & base model    & 23/49 \emph{uncertifiable} at residual~0 & worst-adversary $\rho$; refusal audit \\
 Re-derivation (\S\ref{sec:res-rederiv}) & Mem0, Letta & bin1 100\%, bin2 59--65\%$\to$0\%       & operands-only; faithful co-delete \\
 Convergence (\S\ref{sec:res-converge}) & all three    & 80\% / 100\% (Graphiti/Letta)          & clean-delete verified first \\
-Residual (\S\ref{sec:res-residual})   & Mem0          & 97.9\%; 68.75\%$\to$0\%                 & $2{\times}2$ embedder$\times$cadence factorial \\
+Residual (\S\ref{sec:res-residual})   & Mem0          & 95.8\%; 91.7\%$\to$0\%                 & $2{\times}2$ embedder$\times$cadence factorial \\
 Judge (\S\ref{sec:res-judge})         & ---           & $0/8$ false-accept                     & gold set + 12 hard near-miss negatives \\
 \bottomrule
 \end{tabular}
@@ -437,17 +460,22 @@ a \textbf{mean collateral of $k=0.91$} (bootstrap $[0.74,1.09]$); minimality spa
 36 operands whose deletion was unnecessary once a sufficient subset was removed.
 
 \textbf{Control.} The 0-spurious figure is the selectivity test: the candidate pool
-mixes true operands with bystanders the planner must not touch. The result is
-robust to the entailment judge: re-running with the stronger \code{gpt-4o} judge
-leaves completeness, spurious count, and $k$ unchanged. This robustness is not
-incidental---our entailment-judge validation (\S\ref{sec:res-judge}) shows
-\code{gpt-4o-mini} false-fires on $41.7\%$ of \emph{insufficient} partial operands
-while \code{gpt-4o} false-fires on $0\%$, so using \code{gpt-4o} is precisely what
-prevents $k$ from inflating.
+per target is the fact's ground-truth operands plus four fixed bystanders the
+planner must not touch (a small, controlled distractor set; a full-pool stress
+test is future work). The result
+depends on the entailment judge, and we use the stronger one deliberately: swapping
+in \code{gpt-4o-mini} inflates collateral (mean $k$ $0.91{\to}1.0$ and $0{\to}2$
+spurious bystander deletions on the same $34$ targets), because our entailment-judge
+validation (\S\ref{sec:res-judge}) shows \code{gpt-4o-mini} false-fires on $41.7\%$
+of \emph{insufficient} partial operands while \code{gpt-4o} false-fires on $0\%$.
+Using \code{gpt-4o} is precisely what prevents $k$ from inflating.
 
-\textbf{Comparator.} Depth-first guarantees floor-reaching without iterative
-probing---one pass co-deleting every entailer above $\tau$---and reaches $100\%$
-completeness at $k=5.65$ (with $126$ spurious bystander deletions). Threshold attains
+\textbf{Comparator.} Depth-first is a deliberately naive upper bound: one
+probe-free pass co-deleting every candidate above $\tau$. A correctly-judged
+``NO'' is floored at $0.2>\tau$ (a load-bearing clamp that keeps single multi-hop
+operands in the pool), so the $\tau$ filter is effectively inert and depth-first
+co-deletes essentially the whole pool---reaching $100\%$ completeness but at
+$k=5.65$ (with $126$ spurious bystander deletions). Threshold attains
 the \emph{same} completeness at $k=0.91$: iterative re-probing converts that
 guarantee into a $\sim6\times$ reduction in collateral ($5.65\to0.91$) and full
 selectivity ($126\to 0$ spurious).
@@ -660,24 +688,30 @@ coverage, not to a missing capability.
 
 Naive single-record deletion on Mem0 is residually incomplete because the store
 \emph{silently duplicates} facts. Deleting the single surfaced record leaves the
-value present in \textbf{$97.9\%$} of isolated PII targets ($47/48$); an
-artifact-aware deletion drives residual survival from \textbf{$68.75\%$ to $0\%$}.
-The two naive-arm rates ($97.9\%$ vs.\ $68.75\%$) come from separate injection runs
-whose stochastic Mem0 dedup draws differ, reported as two independent measurements
-of the same residual-incompleteness phenomenon.
+value present in \textbf{$95.8\%$} of isolated PII targets ($46/48$); an
+artifact-aware deletion drives residual survival from \textbf{$91.7\%$ to $0\%$}.
+Isolated facts now carry globally distinct probe values (enforced by a cross-fact
+uniqueness gate), so each fact's naive measurement is independent; exp01's $95.8\%$
+and exp02's $91.7\%$ naive rates are two independent stochastic-dedup draws of the
+same residual-incompleteness phenomenon, agreeing to within one or two facts.
 
 \textbf{Control.} A $2{\times}2$ factorial over embedder (MiniLM\,/\,OpenAI)
 $\times$ injection cadence ($0\,$s\,/\,$1.5\,$s) shows value duplication
 in \emph{all four} cells, with paraphrase-variant duplicates outnumbering
-byte-identical ones in every cell---and the incidence rises with store size, from
-$30$--$39\%$ at $n{=}33$ to $63$--$70\%$ at $n{=}149$. The
+byte-identical ones in every cell; over the facts whose value is unique in the
+corpus, the duplication incidence is $76$--$78\%$. The
 duplication is therefore a semantic-dedup \emph{design limitation}, not an artifact
-of our embedder or an injection-timing race; it is independently documented in
-Mem0 issues \#4896, \#4573, and \#687. These rates are not in tension with
+of our embedder or an injection-timing race. These rates are not in tension with
 ForgetEval's Mem0 numbers: their figure is forget-command success in top-$k$
 retrieval, whereas ours is post-deletion recoverability by \emph{any}
 channel---complementary measurements of necessary vs.\ sufficient conditions for
-completeness.
+completeness. Independent corroboration comes from ForgetEval's own \code{infer=True}
+ablation: switching on Mem0's LLM-driven extraction router collapses its overall
+pass rate from $68.3\%$ to $43.6\%$ (a $24.7$-point drop), with deletion-precision
+categories cratering specifically (\code{temporal\_qualifier} $100\%\to8\%$,
+\code{recursive\_supersession} $92\%\to10\%$) even as canonicalization improves---an
+independent benchmark, scorer, and LLM backend converging on the same
+link-and-keep mechanism we isolate.
 
 % ---------------------------------------------------------------------------
 \subsection{Judge Validation}\label{sec:res-judge}
@@ -704,10 +738,10 @@ An early result suggested a membership signal survived artifact-aware deletion; 
 $n{=}6$ it was underpowered and we retracted it. Powered to $48$ members with two
 matched near-twins each ($96$ controls), bootstrap $95\%$ CIs, and a
 label-permutation test, the picture is sharp: artifact-aware deletion restores
-membership-indistinguishability (AUC $0.52$, CI $[0.41,0.62]$ includes $0.5$,
-$p{=}.36$), the intact store is detectable (AUC $0.69$, $p{=}.001$, so the test
+membership-indistinguishability (AUC $0.51$, CI $[0.42,0.62]$ includes $0.5$,
+$p{=}.39$), the intact store is detectable (AUC $0.68$, $p{=}.001$, so the test
 \emph{has} power), and the \textbf{naive-deletion signal is now significant} (AUC
-$0.68$, CI $[0.59,0.77]$ excludes $0.5$, $p{=}.001$). At this power, naive
+$0.65$, CI $[0.56,0.74]$ excludes $0.5$, $p{=}.002$). At this power, naive
 single-record deletion \emph{does} leave a detectable membership signal; only
 artifact-aware deletion removes it.
 

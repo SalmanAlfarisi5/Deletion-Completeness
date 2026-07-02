@@ -40,17 +40,18 @@ caveat / what it does *not* say.
 
 ### C2 — Naive deletion is residually incomplete because the store silently duplicates *(Mem0)*
 - **Support:** exp01, exp02.
-- **H:** naive single-record delete leaves the value in **97.9%** [Wilson 89.1,
-  99.6] of isolated PII targets (n=48, exp01 = duplication incidence); residual
-  **68.75%** [54.7, 80.1] (naive) **→ 0%** [0, 7.4] (artifact-aware), n=48 (exp02).
-  ⚠ FRAMING MOVED: at n=48 the exp01 (97.9%) and exp02-naive (68.75%) rates
-  **diverge and invert** vs the old 75% < 83% — separate Mem0 dedup draws, so the
-  old "nested 9/12 ⊂ 10/12 same-targets" gloss no longer holds.
+- **H:** naive single-record delete leaves the value in **95.8%** [Wilson 86.0,
+  98.9] of isolated PII targets (46/48, n=48, exp01); residual **91.7%**
+  [80.5, 96.7] (naive) **→ 0%** [0, 7.4] (artifact-aware), n=48 (exp02).
+  RF4 C-01 fix: isolated facts now carry globally-distinct probe values (a
+  cross-fact uniqueness gate), so exp02's naive arm is no longer self-contaminated;
+  its 91.7% now converges with exp01's 95.8% (two independent stochastic-dedup
+  draws), replacing the old contaminated 68.75%.
 - **Ctrl:** exp05 **2×2 factorial** (embedder MiniLM/OpenAI × cadence 0 s/1.5 s):
-  row-inflation **24–42%**, duplication incidence **30–39%** in **all four**
-  cells, and **paraphrase-variant duplicates ≥ byte-identical in every cell** →
-  the duplication is a **semantic-dedup design limitation**, not our embedder and
-  not an injection-timing race. Corroborated by Mem0 issues (#4896 hash-only
+  value duplication in **all four** cells, **paraphrase-variant duplicates ≥
+  byte-identical in every cell**, and **76–78%** duplication incidence over
+  corpus-unique facts → a **semantic-dedup design limitation**, not our embedder
+  and not an injection-timing race. Corroborated by Mem0 issues (#4896 hash-only
   dedup, #4573, #687).
 - **Scope:** mechanism is Mem0-specific. Generalization is carried by the *other
   two families* (§ C); we do **not** claim all systems duplicate.
@@ -162,9 +163,9 @@ caveat / what it does *not* say.
 
 | exp | system | measures | headline | control that backs it |
 |---|---|---|---|---|
-| **01** | Mem0 | naive-delete residual | **97.9%** [89,99.6] residual = dup incidence (n=48) | mechanism-tracked: top-1 delete leaves a copy iff duplicated |
-| **02** | Mem0 | naive vs artifact-aware | **68.75% → 0%** [naive 55,80; aware 0,7.4] (n=48) | same facts, two strategies; +3.29 extra artifacts purged |
-| **05** | Mem0 | duplication factorial | row-inflation **24–42%**, dup **30–39%** | **2×2** embedder×cadence; paraphrase ≥ byte-ID in all cells; GH issues |
+| **01** | Mem0 | naive-delete residual | **95.8%** [86,98.9] residual (46/48, n=48) | mechanism-tracked: top-1 delete leaves a copy iff duplicated |
+| **02** | Mem0 | naive vs artifact-aware | **91.7% → 0%** [naive 80.5,96.7; aware 0,7.4] (n=48) | same facts, two strategies; +3.04 extra; naive arm de-contaminated (RF4 C-01) |
+| **05** | Mem0 | duplication factorial | dup **76–78%** over corpus-unique facts | **2×2** embedder×cadence; paraphrase ≥ byte-ID in all cells; GH issues |
 | **06** | Mem0 | infer=True derivation-capture | **0% — REJECTED** | infer=False control: 0 captured ⇒ it was consolidation/merging, not derivation |
 | **04** | Mem0 | re-derivation (operands-only) | bin1 **100%/94%** / bin2 **59%/65%** → **0%**; ρ 0% (n=17/bin) | target never stored (residual=0 by construction); 2 reasoners, binned |
 | **03** | Mem0 | planner end-to-end | **100% / 0 spurious / k=0.912** [.74,1.09] (n=34) | spare-bystander test; robust to gpt-4o entailment judge |
@@ -193,7 +194,7 @@ delete-old" = our duplication). See § G.
 
 | family | system (version) | residual mechanism (by design) | evidence | headline |
 |---|---|---|---|---|
-| **dedup pipeline** | Mem0 (mem0ai 2.0.7, OSS + Chroma) | **duplication** — naive delete leaves copies | exp01/02/05 | 97.9% residual; 68.75%→0% aware (n=48); dup 30–39% across the full factorial |
+| **dedup pipeline** | Mem0 (mem0ai 2.0.7, OSS + Chroma) | **duplication** — naive delete leaves copies | exp01/02/05 | 95.8% residual; 91.7%→0% aware (n=48); dup 76–78% over corpus-unique facts |
 | **bi-temporal KG** | Zep/Graphiti (graphiti-core 0.29.2 + Neo4j 5.26) | **stale entity/community summaries** (not recomputed on delete) | exp09 | clean `remove_episode` still leaves **80%** KG/summary residue (n=10) |
 | **LLM-paging** | Letta/MemGPT (letta 0.16.8 + Postgres + pgvector) | **surface-incomplete agent-mediated deletion** (scrubs core, misses archival) | exp10/11 | vague forget: **0% faithful / 100% archival**; re-derivation **ports & closes** |
 

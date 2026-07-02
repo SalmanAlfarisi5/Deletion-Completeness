@@ -379,7 +379,7 @@ Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious
 $\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 23/49 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
 Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 59--65\%$\to$0\% & operands-only; verified-faithful co-delete \\
 Convergence (\S\ref{sec:res-converge})   & all three & 80\% / 100\% (Graphiti/Letta) & clean-delete verified first; explicit baseline \\
-Residual (\S\ref{sec:res-residual})      & Mem0     & 97.9\%; 68.75\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
+Residual (\S\ref{sec:res-residual})      & Mem0     & 95.8\%; 91.7\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
 Judge (\S\ref{sec:res-judge})            & ---      & $0/8$ false-accept (CI $\le\!.32$) & gold set + 12 hard near-miss negatives \\
 \bottomrule
 \end{tabular}
@@ -402,21 +402,26 @@ minimality spares 36 operands whose deletion was unnecessary once a sufficient
 subset was removed.
 
 \textbf{Control.} The 0-spurious figure \emph{is} the selectivity test: the
-candidate pool mixes true operands with bystanders the planner must not touch. The
-result is also robust to the entailment judge: re-running with the stronger
-\texttt{gpt-4o} judge leaves completeness, spurious count, and $k$ unchanged. This
-robustness is not incidental---our entailment-judge validation
-(\S\ref{sec:res-judge}) shows \texttt{gpt-4o-mini} false-fires on $41.7\%$ of
-\emph{insufficient} partial operands while \texttt{gpt-4o} false-fires on $0\%$,
-so using \texttt{gpt-4o} is precisely what prevents $k$ from inflating. The
+candidate pool per target is the fact's ground-truth operands plus four fixed
+bystanders the planner must not touch (a small, controlled distractor set; a
+full-pool stress test is future work). The
+result depends on the entailment judge, and we use the stronger one deliberately:
+swapping in \texttt{gpt-4o-mini} inflates collateral (mean $k$ $0.91{\to}1.0$ and
+$0{\to}2$ spurious bystander deletions on the same $34$ targets), because our
+entailment-judge validation (\S\ref{sec:res-judge}) shows \texttt{gpt-4o-mini}
+false-fires on $41.7\%$ of \emph{insufficient} partial operands while
+\texttt{gpt-4o} false-fires on $0\%$. Using \texttt{gpt-4o} is precisely what
+prevents $k$ from inflating. The
 planner targets the NP-hard Opt-P2E2 problem; ``minimal'' here denotes a
 sufficient co-deletion subset, not a certified optimum.
 
-\textbf{Comparator.} Depth-first guarantees floor-reaching \emph{without}
-iterative probing---one pass co-deleting every entailer above $\tau$---and reaches
-$100\%$ completeness at \textbf{$k=5.65$} (with $126$ spurious bystander deletions,
-since a probe-free pass cannot detect when to stop and removes every cap-bounded
-candidate above $\tau$). Threshold attains the \emph{same} completeness at
+\textbf{Comparator.} Depth-first is a deliberately naive upper bound: one
+probe-free pass that co-deletes every candidate scoring above $\tau$. Because a
+correctly-judged ``NO'' is floored at $0.2>\tau$ (a load-bearing clamp that keeps
+single multi-hop operands---which do not entail alone---in the pool), this $\tau$
+filter is effectively inert, so depth-first co-deletes essentially the whole
+candidate pool: it reaches $100\%$ completeness but at \textbf{$k=5.65$} with $126$
+spurious bystander deletions (a probe-free pass cannot detect when to stop). Threshold attains the \emph{same} completeness at
 \textbf{$k=0.91$}: iterative re-probing converts that guarantee into a
 $\sim\!6\times$ reduction in collateral ($5.65\!\to\!0.91$) and full selectivity
 ($126\!\to\!0$ spurious). Naive single-record deletion (\S\ref{sec:res-residual})
@@ -651,21 +656,21 @@ phrasing/surface coverage, not to a missing capability.
 
 Naive single-record deletion on Mem0 is residually
 incomplete because the store \emph{silently duplicates} facts. Deleting the single
-surfaced record leaves the value present in \textbf{$97.9\%$} of isolated PII
-targets ($47/48$, Wilson $[89.1,99.6]$; exp01, where residual survival tracks
-duplication incidence); an artifact-aware deletion drives residual survival from
-\textbf{$68.75\%$ to $0\%$} (naive $[54.7,80.1]$, aware $[0,7.4]$; exp02). Both
-arms run on the same $n{=}48$ isolated PII set; the two naive-arm rates ($97.9\%$
-in exp01 vs.\ $68.75\%$ in exp02) come from separate injection runs whose
-stochastic Mem0 dedup draws differ, so we report them as two independent
-measurements of the same residual-incompleteness phenomenon rather than a single
-nested pair.
+surfaced record leaves the value present in \textbf{$95.8\%$} of isolated PII
+targets ($46/48$, Wilson $[86.0,98.9]$; exp01); an artifact-aware deletion drives
+residual survival from \textbf{$91.7\%$ to $0\%$} (naive $[80.5,96.7]$, aware
+$[0,7.4]$; exp02). Both arms run on the same $n{=}48$ isolated PII set whose probe
+values are \emph{globally distinct} (a cross-fact uniqueness gate now enforces it),
+so each fact's naive measurement is independent of the others'; exp01's $95.8\%$
+and exp02's $91.7\%$ naive rates are two independent stochastic-dedup draws of the
+same residual-incompleteness phenomenon, agreeing to within one or two facts.
 
 \textbf{Control.} A $2{\times}2$ factorial over embedder
 (MiniLM\,/\,OpenAI) $\times$ injection cadence ($0\,$s\,/\,$1.5\,$s) shows
 value duplication in \emph{all four} cells, with paraphrase-variant duplicates
-outnumbering byte-identical ones in every cell---and the incidence rises with store
-size, from $30$--$39\%$ at $n{=}33$ to $63$--$70\%$ at $n{=}149$. The duplication is therefore a semantic-dedup
+outnumbering byte-identical ones in every cell; over the facts whose value is
+unique in the corpus (so vocabulary overlap cannot be miscounted as duplication),
+the incidence is $76$--$78\%$. The duplication is therefore a semantic-dedup
 \emph{design limitation}, not an artifact of our embedder or an injection-timing
 race; it is independently documented in Mem0 issues \#4896 (hash-only dedup),
 \#4573 ($\sim\!37.6\%$ near-duplicates in a production audit), and \#687 (the
@@ -706,11 +711,11 @@ suggested a membership signal survived artifact-aware deletion; at $n{=}6$ it wa
 underpowered and we retracted it. Powered to $n{=}48$ members with \emph{two}
 matched near-twins each ($96$ controls), bootstrap $95\%$ CIs, and a
 label-permutation test, the picture is sharp: artifact-aware deletion restores
-membership-indistinguishability (AUC $0.52$, CI $[0.41,0.62]$ includes $0.5$,
-$p{=}.36$), the intact store is detectable (AUC $0.69$, $p{=}.001$, so the test
+membership-indistinguishability (AUC $0.51$, CI $[0.42,0.62]$ includes $0.5$,
+$p{=}.39$), the intact store is detectable (AUC $0.68$, $p{=}.001$, so the test
 \emph{has} power), and---unlike the earlier underpowered $n{=}33$ run where it was
 borderline ($p{=}.065$)---the \textbf{naive-deletion signal is now significant}
-(AUC $0.68$, CI $[0.59,0.77]$ excludes $0.5$, $p{=}.001$). At this power, naive
+(AUC $0.65$, CI $[0.56,0.74]$ excludes $0.5$, $p{=}.002$). At this power, naive
 single-record deletion \emph{does} leave a detectable membership signal; only
 artifact-aware deletion removes it.
 

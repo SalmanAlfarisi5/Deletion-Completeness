@@ -7,7 +7,8 @@ nodes/edges, profile attributes, embeddings) or be *re-derivable* from other
 surviving facts. This project detects, decomposes, plans, and certifies
 deletion completeness.
 
-Recoverability is decomposed into exactly two causes:
+Recoverability is decomposed into three channels — residual survival,
+re-derivation from surviving facts, and an irreducible parametric floor:
 
 1. **Residual survival** — a derived artifact still physically contains the fact.
    *Fix:* propagate deletion to derived artifacts.
@@ -76,7 +77,7 @@ python experiments/exp06_derivation_capture.py -v
 # exp07 — parametric floor rho on a gradient (measured, 2 reasoners)
 python experiments/exp07_rho_gradient.py --n-samples 6 -v
 # exp08 — membership inference (retrieval-score, naive vs artifact-aware)
-python experiments/exp08_mia.py --n 6 --corpus 27 -v
+python experiments/exp08_mia.py
 # judge validation (recovery false-accept rate + entailment kappa)
 python evaluation/judge.py
 # exp09 — Zep/Graphiti KG-node residual (needs local Neo4j running; see Setup)
@@ -87,7 +88,13 @@ python experiments/exp10_letta.py -v
 python experiments/exp11_letta_rederivation.py --n 6 -v
 ```
 
-### Results (mem0 oss + gpt-4o-mini-2024-07-18 + local MiniLM, 2026-06-23)
+### Results (pre-wave snapshot, 2026-06-23 — SUPERSEDED)
+
+> The table below is the small-scale pre-wave snapshot. The current numbers
+> (the 48/34/101/49-fact wave) live in the paper drafts (`paper/`) and
+> `docs/PROJECT_STATUS_REPORT.md` — e.g. residual **95.8% / 91.7%→0%** (exp01/02),
+> **23/49** uncertifiable at τ=0.1 (exp07), MIA naive AUC **0.65** (p=.002) / aware
+> **0.51** (exp08), planner **k≈0.91 / 0 spurious** (exp03). Do not cite the table.
 
 | experiment | metric | result |
 |---|---|---|
@@ -129,13 +136,11 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
   completeness cannot be certified (ρ>τ) even with residual=0 — the limit result.
 - Both re-derivation and ρ are **reasoner-model-dependent**, so they are run on
   ≥2 reasoners (gpt-4o-mini, gpt-4o).
-- **Membership inference (exp08)** is powered (n=33, bootstrap 95% CI +
-  label-permutation p, continuous scores): artifact-aware deletion **restores
-  membership-indistinguishability** (AUC 0.51, CI includes 0.5). Naive shows a
-  residual signal that does **not reach significance at this n** (AUC 0.61,
-  p=0.07, CI includes 0.5) — *not* a demonstrated leak; a planned n≈60 run (a 2nd
-  matched control per fact) will test whether it becomes significant. The intact
-  sanity (AUC 0.72, p=0.002) shows the test has power.
+- **Membership inference (exp08)** is powered (n=48 members + 2 matched twins
+  each, bootstrap 95% CI + label-permutation p): artifact-aware deletion **restores
+  membership-indistinguishability** (AUC 0.51, CI includes 0.5, p=.39). Naive
+  single-record deletion **does** leave a detectable signal (AUC 0.65, p=.002); the
+  intact sanity (AUC 0.68, p=.001) confirms the test has power.
 - The **entailment judge** is validated against hard near-miss negatives (partial
   operands): use **gpt-4o** for the planner — gpt-4o-mini false-fires on 42% of
   insufficient operands, which would inflate collateral *k*.

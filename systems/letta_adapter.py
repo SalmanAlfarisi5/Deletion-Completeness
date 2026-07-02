@@ -35,14 +35,28 @@ class LettaAdapter(MemorySystemAdapter):
 
     def _agent(self, user_id: str) -> str:
         if user_id not in self._agents:
-            a = self.client.agents.create(
-                name=f"dc-{user_id}",
-                memory_blocks=[
-                    {"label": "human", "value": "(no information about the user yet)"},
-                    {"label": "persona", "value": "You are a helpful assistant that "
-                     "faithfully stores and manages the user's information."}],
-                model=self.model, embedding=self.embedding)
-            self._agents[user_id] = a.id
+            name = f"dc-{user_id}"
+            # Reuse a same-named server-side agent stranded by a prior run instead of
+            # leaking a fresh one every time (RF4 L-16).
+            existing = None
+            try:
+                for a in (self.client.agents.list(name=name) or []):
+                    if getattr(a, "name", None) == name:
+                        existing = a.id
+                        break
+            except Exception:  # noqa: BLE001 -- list filter unsupported / transient
+                existing = None
+            if existing:
+                self._agents[user_id] = existing
+            else:
+                a = self.client.agents.create(
+                    name=name,
+                    memory_blocks=[
+                        {"label": "human", "value": "(no information about the user yet)"},
+                        {"label": "persona", "value": "You are a helpful assistant that "
+                         "faithfully stores and manages the user's information."}],
+                    model=self.model, embedding=self.embedding)
+                self._agents[user_id] = a.id
         return self._agents[user_id]
 
     def _tool_calls(self, resp) -> list[str]:
@@ -83,11 +97,24 @@ class LettaAdapter(MemorySystemAdapter):
         return True
 
     def delete_all_memories(self, user_id: str) -> bool:
-        aid = self._agents.pop(user_id, None)
-        if aid:
+        # Delete the tracked agent AND any same-named agent stranded server-side by a
+        # crashed/--keep run, so agents (and their Postgres rows) don't accumulate
+        # across processes (RF4 L-16).
+        name = f"dc-{user_id}"
+        ids = set()
+        popped = self._agents.pop(user_id, None)
+        if popped:
+            ids.add(popped)
+        try:
+            for a in (self.client.agents.list(name=name) or []):
+                if getattr(a, "name", None) == name:
+                    ids.add(a.id)
+        except Exception:  # noqa: BLE001
+            pass
+        for aid in ids:
             try:
                 self.client.agents.delete(aid)
-            except Exception:
+            except Exception:  # noqa: BLE001
                 pass
         return True
 

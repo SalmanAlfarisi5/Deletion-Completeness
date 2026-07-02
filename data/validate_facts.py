@@ -228,16 +228,23 @@ def gate_isolated(cands: list[dict], workers: int):
                 detail[m] = r.recoverable
                 rec = rec or r.recoverable
             return {"recoverable": rec, "detail": detail}
-        except Exception as e:  # noqa: BLE001 -- keep-on-error, never silently drop
-            return {"recoverable": False, "error": str(e)}
+        except Exception as e:  # noqa: BLE001
+            # discard-on-error (conservative): an unverified candidate must NOT be
+            # admitted to the ISOLATED set without the rho~0 check that defines it.
+            # Surfaced via the WARN after the gate (was: silently KEPT on error).
+            return {"error": str(e)}
 
     out = _parallel(task, cands, workers, desc="isolated-rho")
-    kept, discarded = [], []
+    kept, discarded, errored = [], [], []
     for c, r in zip(cands, out):
-        if r.get("recoverable"):
+        if "error" in r:
+            errored.append((c, r["error"]))          # rho-check errored -> DISCARD (conservative)
+        elif r.get("recoverable"):
             discarded.append((c, r.get("detail")))
         else:
             kept.append(c)
+    if errored:
+        print(f"    WARN: {len(errored)} isolated candidates discarded on rho-check error")
     return kept, discarded
 
 

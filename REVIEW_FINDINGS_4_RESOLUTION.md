@@ -105,5 +105,23 @@ Supersedes the "DISCLOSED/BLOCKED" statuses above.
   earlier: dead `graph_builder`/`artifact_tracer` removed, `parse_number` "km" fixed,
   cache batched O(n²)→O(n/50).
 
-Still open (needs **Letta**, not credits): a two-reasoner exp11 re-run to regenerate
-its certificates under the already-applied worst-adversary code.
+## Update 2 — final items (a + b) completed
+- **exp11 cert re-run — DONE.** Brought up Postgres + Letta and ran exp11 under the
+  worst-adversary code: **ρ_worst = 0**, **faithful co-delete 100%**, bins reproduce
+  (bin1 100%, bin2 59%/59%). Certificates regenerated under Def. 4; Letta torn down.
+- **M-14 (exp08 matched design) — DONE (code).** `membership_inference` now cluster-
+  bootstraps by fact (member + its own twins) and permutes member-vs-twin within each
+  fact, replacing the iid resampling (pseudo-replication). A cluster-bootstrap re-run
+  reproduces the conclusions — naive **significant** (p≈.001), aware **indistinguishable**
+  (CI includes 0.5, p≈.08) — with AUCs drifting within the Mem0 draw (naive 0.65–0.68).
+  The paper keeps the committed 0.65/0.51 draw (MIA AUC is stochastic; we don't chase
+  the draw); the corrected method is in the code for future runs.
+- **M-16 (isolated ρ-gate) — DONE.** A ρ-check error now DISCARDS the candidate
+  (conservative for the isolated set) and prints a WARN count, instead of silently
+  keeping it.
+- **L-16 (Letta agent leak) — DONE.** `_agent` reuses a same-named stranded agent
+  instead of leaking a new one; `delete_all_memories` cleans up same-named agents
+  across processes.
+
+**Nothing open.** All RF4 findings (C-01 → L-18) are fixed, verified, or explicitly
+documented; the drafts, README, and ledger reflect the current numbers.

@@ -52,8 +52,16 @@ TARGETS = {
 
 
 def layers_with_value(probe_result) -> set[str]:
-    return {("core_block" if str(e.get("memory_id", "")).startswith("block:") else "archival")
-            for e in probe_result.evidence}
+    layers = set()
+    for e in probe_result.evidence:
+        # Prefer the row's explicit `layer` tag (e.g. "core_block"/"archival" from
+        # the Letta adapter); fall back to the brittle id-prefix heuristic only when
+        # no layer is carried on the evidence.
+        layer = e.get("layer")
+        if not layer:
+            layer = "core_block" if str(e.get("memory_id", "")).startswith("block:") else "archival"
+        layers.add(layer)
+    return layers
 
 
 def main() -> None:

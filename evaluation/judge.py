@@ -108,6 +108,13 @@ def build_entailment_pairs() -> list[tuple[str, str, int, str]]:
         pairs.append((bystanders[i % len(bystanders)]["text"], f["text"], 0, "trivial_neg"))
         for nm in NEAR_MISS.get(f["id"], []):
             pairs.append((nm, f["text"], 0, "near_miss"))
+        # RF4 M-11: broaden near-miss coverage beyond the hand-written F040-F045
+        # set -- each SINGLE operand is insufficient alone (the fact needs all of
+        # them), so a fire on one is over-collateral risk. Tagged separately so the
+        # curated-topical false-fire headline stays comparable.
+        if len(operands) >= 2:
+            for op in operands:
+                pairs.append((op, f["text"], 0, "near_miss_operand"))
     return pairs
 
 
@@ -123,12 +130,14 @@ def validate_entailment(model_a: str, model_b: str) -> dict:
     acc = lambda x: round(sum(p == q for p, q in zip(x, gold)) / len(gold), 3)  # noqa: E731
     # false-fire = fires (predicts entail) on a near-miss negative
     nm_idx = [i for i, t in enumerate(types) if t == "near_miss"]
-    ff = lambda x: (round(sum(x[i] for i in nm_idx) / len(nm_idx), 3) if nm_idx else None)  # noqa: E731
+    op_idx = [i for i, t in enumerate(types) if t == "near_miss_operand"]
+    ff = lambda idx, x: (round(sum(x[i] for i in idx) / len(idx), 3) if idx else None)  # noqa: E731
     return {"model_a": model_a, "model_b": model_b, "n_pairs": len(gold),
-            "n_near_miss": len(nm_idx),
+            "n_near_miss": len(nm_idx), "n_near_miss_operand": len(op_idx),
             "kappa_a_vs_b": round(cohens_kappa(a, b), 3),
             "acc_a_vs_expected": acc(a), "acc_b_vs_expected": acc(b),
-            "false_fire_near_miss_a": ff(a), "false_fire_near_miss_b": ff(b)}
+            "false_fire_near_miss_a": ff(nm_idx, a), "false_fire_near_miss_b": ff(nm_idx, b),
+            "false_fire_operand_a": ff(op_idx, a), "false_fire_operand_b": ff(op_idx, b)}
 
 
 def main() -> None:
@@ -158,6 +167,8 @@ def main() -> None:
     print(f"    acc vs expected: a={ent['acc_a_vs_expected']:.0%}  b={ent['acc_b_vs_expected']:.0%}")
     print(f"    FALSE-FIRE on near-miss (insufficient operands): "
           f"a={ent['false_fire_near_miss_a']}  b={ent['false_fire_near_miss_b']}  <- planner over-collateral risk")
+    print(f"    FALSE-FIRE on single operands (n={ent['n_near_miss_operand']}, RF4 M-11): "
+          f"a={ent['false_fire_operand_a']}  b={ent['false_fire_operand_b']}")
     print(f"\n  Saved: {out}")
 
 

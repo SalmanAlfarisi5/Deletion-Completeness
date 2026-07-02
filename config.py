@@ -80,7 +80,7 @@ TAU = 0.10               # recoverability threshold below which deletion is "COM
 # year) and the LLM cache key stable across calendar days -- otherwise a re-run on a
 # later day silently re-buys every rederivation/rho answer and can flip age ground
 # truth at New Year (RF4 M-13).
-EXPERIMENT_DATE = os.getenv("EXPERIMENT_DATE", "2026-07-02")
+EXPERIMENT_DATE = os.getenv("EXPERIMENT_DATE", "2026-06-27")  # the canonical wave date
 ENTAILMENT_THRESHOLD = 0.50  # entailment-EDGE threshold for judge VALIDATION + the
 # dataset near-miss gate (evaluation/judge.py, data/validate_facts.py). NOTE: the
 # planner's co-deletion cutoff is config.TAU (planner/optimizer.py), NOT this knob.

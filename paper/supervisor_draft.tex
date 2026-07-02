@@ -442,7 +442,7 @@ $\rho$ floor (\S\ref{sec:res-rho})    & base model    & 23/49 \emph{uncertifiabl
 Re-derivation (\S\ref{sec:res-rederiv}) & Mem0, Letta & bin1 100\%, bin2 59--65\%$\to$0\%       & operands-only; faithful co-delete \\
 Convergence (\S\ref{sec:res-converge}) & all three    & 80\% / 100\% (Graphiti/Letta)          & clean-delete verified first \\
 Residual (\S\ref{sec:res-residual})   & Mem0          & 95.8\%; 91.7\%$\to$0\%                 & $2{\times}2$ embedder$\times$cadence factorial \\
-Judge (\S\ref{sec:res-judge})         & ---           & $0/8$ false-accept                     & gold set + 12 hard near-miss negatives \\
+Judge (\S\ref{sec:res-judge})         & ---           & $0/8$ false-accept                     & gold set + 78 near-miss negatives \\
 \bottomrule
 \end{tabular}
 \caption{Headline results, ordered by confidence. Each row's claim is admitted
@@ -461,8 +461,8 @@ a \textbf{mean collateral of $k=0.91$} (bootstrap $[0.74,1.09]$); minimality spa
 
 \textbf{Control.} The 0-spurious figure is the selectivity test: the candidate pool
 per target is the fact's ground-truth operands plus four fixed bystanders the
-planner must not touch (a small, controlled distractor set; a full-pool stress
-test is future work). The result
+planner must not touch (a small, controlled distractor set; a full $34$-bystander
+pool also holds selectivity, $0$ spurious at $k{=}1.0$). The result
 depends on the entailment judge, and we use the stronger one deliberately: swapping
 in \code{gpt-4o-mini} inflates collateral (mean $k$ $0.91{\to}1.0$ and $0{\to}2$
 spurious bystander deletions on the same $34$ targets), because our entailment-judge
@@ -722,11 +722,14 @@ Two LLM judges are load-bearing, so both are validated against gold labels. The
 negatives; $\kappa=0.767$ vs.\ gold). Because this rests on only $8$ negatives, the
 $0$ false-accept count carries a $95\%$ Wilson upper bound of $\approx0.32$; the
 lower-bound framing holds up to that bound, and its two errors are both
-\emph{conservative} rejections. The \textbf{entailment judge} is validated on 24
-pairs including 12 hard near-miss negatives (partial operands that should
+\emph{conservative} rejections. The \textbf{entailment judge} is validated on $146$
+pairs including $78$ near-miss negatives (partial operands that should
 \emph{not} entail): inter-judge agreement falls from $\kappa=0.83$ on trivial pairs
-to $0.455$ on the hard near-misses, and \code{gpt-4o-mini} false-fires on $41.7\%$
-of insufficient operands versus $0\%$ for \code{gpt-4o}. This is the direct
+to $0.455$ on the $12$ curated near-misses, where \code{gpt-4o-mini} false-fires on
+$41.7\%$ of insufficient operands versus $0\%$ for \code{gpt-4o}. Broadening to all
+$66$ single operands across the multi-hop corpus---a fuzzier boundary, since a lone
+operand can be near-sufficient---raises both rates ($72.7\%$ vs.\ $50\%$), with
+\code{gpt-4o} still the more conservative. This is the direct
 justification for using \code{gpt-4o} as the planner's entailment judge
 (\S\ref{sec:res-planner}).
 

@@ -1,0 +1,45 @@
+{
+  "recovery_judge": {
+    "model": "gpt-4o-mini-2024-07-18",
+    "n": 17,
+    "accuracy": 0.882,
+    "false_accept_rate": 0.0,
+    "false_reject_rate": 0.222,
+    "kappa_vs_gold": 0.767,
+    "confusion": {
+      "tp": 7,
+      "fp": 0,
+      "tn": 8,
+      "fn": 2
+    },
+    "errors": [
+      {
+        "fact": "Bob Tan's monthly home-loan repayment is about SGD 3,200.",
+        "answer": "approximately SGD 3,142",
+        "gold": 1,
+        "pred": 0
+      },
+      {
+        "fact": "Carol Lim is most likely vegetarian.",
+        "answer": "She is vegetarian.",
+        "gold": 1,
+        "pred": 0
+      }
+    ]
+  },
+  "entailment_judge": {
+    "model_a": "gpt-4o-mini-2024-07-18",
+    "model_b": "gpt-4o-2024-08-06",
+    "n_pairs": 146,
+    "n_near_miss": 12,
+    "n_near_miss_operand": 66,
+    "kappa_a_vs_b": 0.571,
+    "acc_a_vs_expected": 0.63,
+    "acc_b_vs_expected": 0.753,
+    "false_fire_near_miss_a": 0.417,
+    "false_fire_near_miss_b": 0.0,
+    "false_fire_operand_a": 0.727,
+    "false_fire_operand_b": 0.5
+  },
+  "timestamp_utc": "20260702T112747Z"
+}

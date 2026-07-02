@@ -85,13 +85,15 @@ def main() -> None:
     print(f"system = letta-0.16.8 | reasoners = {reasoners} | user identity = {owner!r}")
 
     rows, certs = [], []
+    params = {m: ParametricProbe(model=m) for m in reasoners}  # one probe per reasoner
     for reasoner in reasoners:
-        param = ParametricProbe(model=reasoner)
+        param = params[reasoner]
+        reasoner_slug = "".join(c for c in reasoner if c.isalnum())  # stable uid tag (L-13)
         for fact in tqdm(targets, desc=reasoner):
             entailing = [ctx_by_id[c] for c in fact.get("co_delete_required", []) if c in ctx_by_id]
             del_vals = normalize_values(fact.get("delete_value", fact["probe_value"]))
             target_exact = {**fact, "probe_value": del_vals}
-            uid = f"{config.USER_ID_PREFIX}_lettamh_{fact['id']}_{abs(hash(reasoner)) % 9999}"
+            uid = f"{config.USER_ID_PREFIX}_lettamh_{fact['id']}_{reasoner_slug}"
             adapter.delete_all_memories(uid)
 
             # The agent knows who its user is (identity, NOT the deleted value).
@@ -135,13 +137,18 @@ def main() -> None:
                            f"faithful={faithful_codelete} bys_intact={bystanders_intact}")
 
             if reasoner == config.REASONER_MODEL:    # one cert per fact (primary reasoner)
+                # Worst-adversary parametric floor (Def. 4): rho = MAX over ALL reasoners,
+                # not just the primary. run_parametric is store-independent and llm-cached,
+                # so the non-primary probe here is reused (free) by that reasoner's own row.
+                rho_worst = max(params[m].run_parametric(fact).score for m in reasoners)
+                final_worst = max(residual, red_after, rho_worst)
                 cert = make_certificate(
-                    fact=fact, system="letta", residual=residual, rederivation=red_after, rho=rho,
+                    fact=fact, system="letta", residual=residual, rederivation=red_after, rho=rho_worst,
                     probe_scores={"residual_survival": residual,
-                                  "rederiv_with_operands": red_operands, "rho": rho,
+                                  "rederiv_with_operands": red_operands, "rho": rho_worst,
                                   "rederiv_after_codelete": red_after},
                     heuristic="operands-only control + faithful (direct) co-delete of operands",
-                    facts_co_deleted=co_deleted, final_recoverability=final,
+                    facts_co_deleted=co_deleted, final_recoverability=final_worst,
                     probe_battery=["exact_match", "rederivation", "parametric"],
                     system_version="letta-0.16.8")
                 save_certificate(cert)

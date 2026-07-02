@@ -116,6 +116,12 @@ class GreedyPlanner:
         """Most aggressive: delete the target's records and every candidate that
         entails it above tau, in one shot (max collateral, min probing cost)."""
         pr = PlanResult(heuristic="depth_first")
+        # LIMITATION (deliberately-naive comparator, do not "fix"): this deletes
+        # ONLY the inj_map memory_ids for the target and each co-deleted candidate.
+        # Unlike heuristic_threshold it runs NO Stage-2 own-artifact/value purge, so
+        # any surviving row carrying the target's value but not tracked in inj_map is
+        # left behind. It is therefore NOT coverage-equivalent to heuristic_threshold
+        # under infer=True; kept as-is on purpose as the aggressive baseline.
         self.deleter.delete_records(
             user_id, inj_map.get(target_fact["id"], {}).get("memory_ids", []))
         for c in candidates:
@@ -132,5 +138,6 @@ class GreedyPlanner:
         pr.final_rederivation = rederiv
         pr.parametric_risk = rho
         pr.collateral_k = len(pr.facts_co_deleted)
-        pr.achieved_completeness = pr.residual_recoverability < self.tau
+        # Floor-reaching (plan success) = deletable channels only (residual + re-derivation) < tau; the non-deletable parametric floor rho is a certification concern, kept separately as parametric_risk (mirrors certificate emitter's floor_reaching).
+        pr.achieved_completeness = max(pr.final_residual, pr.final_rederivation) < self.tau
         return pr

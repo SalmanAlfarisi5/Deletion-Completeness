@@ -80,7 +80,30 @@ removed; reproduce.sh now runs exp05/exp11. Remaining Lows (dead code
 graph_builder/artifact_tracer, `parse_number` "km", cache O(n²), bib placeholders)
 are catalogued for a cleanup pass.
 
-## BLOCKED on OpenAI credits
-1. M-09 full 34-bystander planner run. 2. M-11 judge re-validation on the enlarged
-set. 3. exp04/exp11 two-reasoner certificate re-run. All three are re-runs, not
-open questions; the disclosures above stand until credits are added.
+## Update — completed (credits restored + parallel subagent cleanup)
+Supersedes the "DISCLOSED/BLOCKED" statuses above.
+- **M-09 — DONE.** Full 34-bystander planner run: **100% complete, k=1.0, 0 spurious** —
+  selectivity holds against a realistic pool, not just the 4 fixed distractors. Both
+  drafts now report it (was "future work").
+- **M-11 — DONE.** Entailment near-miss bench broadened from 12 curated to **78**
+  negatives (12 curated + 66 single-operand, generated from the multi-hop corpus).
+  Curated result reproduces exactly (mini **41.7%** / gpt-4o **0%**); on the fuzzier
+  single-operand set both fire more (mini **72.7%** / gpt-4o **50%**), gpt-4o still
+  the more conservative. Recovery-judge 0% false-accept holds. Drafts + tab:master
+  updated.
+- **exp04/exp11 worst-adversary certs — DONE (code).** Both emit ρ = max over
+  reasoners into the cert (Def. 4); per-reasoner row logging unchanged; stable
+  model-slug uids (L-13). exp04 re-run confirms ρ_worst = 0 for multi-hop, so cert
+  numbers are unchanged. exp11 is code-fixed but not re-run (needs Letta); committed
+  06-27 exp04 stays canonical.
+- **Date pin corrected.** `EXPERIMENT_DATE` → **2026-06-27** (the canonical wave
+  date) so date-sensitive re-derivation reproduces the paper; a 07-02 exp04
+  transient (bin2 drift 59→65 from the wrong date) was discarded.
+- **Lows via parallel subagents — DONE.** L-10 planner completeness → floor-reaching
+  (excludes ρ; mirrors the cert's `floor_reaching`); L-11 depth-first missing-purge
+  documented; L-14 exp10 prefers the row's `layer` field (forward-compatible). Plus
+  earlier: dead `graph_builder`/`artifact_tracer` removed, `parse_number` "km" fixed,
+  cache batched O(n²)→O(n/50).
+
+Still open (needs **Letta**, not credits): a two-reasoner exp11 re-run to regenerate
+its certificates under the already-applied worst-adversary code.

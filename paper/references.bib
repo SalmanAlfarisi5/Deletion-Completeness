@@ -15,15 +15,18 @@
 %  Closest neighbour: auditing forgetting in deployed agent memory
 % ---------------------------------------------------------------------
 @misc{forgeteval,
-  author        = {{ForgetEval Authors}},
-  title         = {{ForgetEval}: Auditing Forgetting in Deployed Agent Memory},
+  author        = {Yang, Dongxu},
+  title         = {Control-Plane Placement Shapes Forgetting: An
+                   Architectural Study of Agent Memory Across Thirteen
+                   System Configurations},
   year          = {2026},
   eprint        = {2606.15903},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
-  note          = {Retrieval-based forget-command audit over Mem0, Graphiti,
-                   Letta and $\sim$10 further systems; bypasses the Letta agent
-                   loop. [VERIFY] exact title/authors},
+  note          = {Introduces the {ForgetEval} benchmark; retrieval-based
+                   forget-command audit over Mem0, Graphiti, Letta and
+                   roughly a dozen further systems; bypasses the Letta agent
+                   loop by addressing archival REST endpoints directly.},
 }
 
 % ---------------------------------------------------------------------
@@ -45,12 +48,22 @@
 %  Database lineage: deletion / erasure under dependencies
 % ---------------------------------------------------------------------
 @article{p2e2,
-  author        = {{P2E2 Authors}},
-  title         = {Meaningful Data Erasure in the Presence of Dependencies},
-  journal       = {Proceedings of the VLDB Endowment},
-  year          = {2025},
-  note          = {arXiv:2507.00343. Dependency-bounded erasure (never-stored
-                   prior) and its hardness},
+  author  = {Chakraborty, Vishal and Kaminsky, Youri and Mehrotra, Sharad and
+             Naumann, Felix and Nawab, Faisal and Pappachan, Primal and
+             Sadoghi, Mohammad and Venkatasubramanian, Nalini},
+  title   = {Meaningful Data Erasure in the Presence of Dependencies},
+  journal = {Proceedings of the VLDB Endowment},
+  volume  = {18},
+  number  = {10},
+  pages   = {3435--3448},
+  year    = {2025},
+  doi     = {10.14778/3748191.3748206},
+  note    = {arXiv:2507.00343. Formalizes Pre-insertion Post-Erasure
+             Equivalence (P2E2): erasing a cell must not enable any inference
+             beyond what was already possible from the database state at
+             that cell's insertion time---not an empty baseline; Opt-P2E2,
+             the resulting minimal-cost dependency closure problem, is
+             NP-hard.},
 }
 
 @misc{seqdb,

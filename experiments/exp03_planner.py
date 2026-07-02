@@ -127,6 +127,8 @@ def main() -> None:
     }
     base.with_suffix(".json").write_text(json.dumps(
         {"experiment": "exp03_planner", "timestamp_utc": stamp, "tau": config.TAU,
+         "heuristic": args.heuristic, "entailment_model": args.entailment_model,
+         "n_bystanders": len(bystanders), "n_targets": len(targets),
          "metrics": metrics, "rows": rows, "certificates": certs}, indent=2, default=str))
 
     print("\n" + "=" * 60)

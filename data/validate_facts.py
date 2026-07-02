@@ -58,7 +58,7 @@ FLOOR_RHO_PER_TIER = 15
 
 # tier classification from a measured rho (midpoints split the _meta gaps
 # 0.2-0.3 and 0.6-0.7).
-TIER_LO_HI = (0.25, 0.65)
+TIER_LO_HI = (config.TAU, 0.5)  # RF4 H-03: align tier-flag boundary with exp07
 
 # Deterministic guard for obvious real Singapore public figures (the LLM check is
 # the main screen; this is a fast belt-and-braces).

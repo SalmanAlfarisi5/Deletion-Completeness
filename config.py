@@ -74,6 +74,13 @@ GLOBAL_SEED = int(os.getenv("GLOBAL_SEED", "42"))
 USER_ID_PREFIX = os.getenv("USER_ID_PREFIX", "u_alice")
 
 TAU = 0.10               # recoverability threshold below which deletion is "COMPLETE"
+
+# Pinned "today" for all elicitation prompts (probes/parametric_probe.py). A fixed
+# date instead of date.today() keeps age-anchored facts (e.g. "35" from a 1991 birth
+# year) and the LLM cache key stable across calendar days -- otherwise a re-run on a
+# later day silently re-buys every rederivation/rho answer and can flip age ground
+# truth at New Year (RF4 M-13).
+EXPERIMENT_DATE = os.getenv("EXPERIMENT_DATE", "2026-07-02")
 ENTAILMENT_THRESHOLD = 0.50  # entailment-EDGE threshold for judge VALIDATION + the
 # dataset near-miss gate (evaluation/judge.py, data/validate_facts.py). NOTE: the
 # planner's co-deletion cutoff is config.TAU (planner/optimizer.py), NOT this knob.

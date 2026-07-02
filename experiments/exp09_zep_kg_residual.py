@@ -46,7 +46,8 @@ PAIRS = [
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Zep/Graphiti KG-residual")
-    ap.add_argument("--communities", action="store_true", default=True)
+    ap.add_argument("--no-communities", action="store_false", dest="communities",
+                    default=True, help="skip community build (default: build them)")
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()
@@ -62,7 +63,7 @@ def main() -> None:
     exact, kg = ExactMatchProbe(), KGNodeResidueProbe()
 
     rows = []
-    for target_id, keeper_id in PAIRS[: None]:
+    for target_id, keeper_id in PAIRS:
         target, keeper = iso[target_id], ctx[keeper_id]
         uid = f"{config.USER_ID_PREFIX}_zep_{target_id}"
         adapter.delete_all_memories(uid)

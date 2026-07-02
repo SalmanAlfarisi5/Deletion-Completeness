@@ -62,7 +62,7 @@ def bin_of(fact: dict) -> int:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Letta re-derivation & parametric floor")
-    ap.add_argument("--n", type=int, default=6)
+    ap.add_argument("--n", type=int, default=None, help="targets/bin (default: all)")
     ap.add_argument("--bystanders", type=int, default=3)
     ap.add_argument("--single", action="store_true", help="primary reasoner only (cheaper)")
     ap.add_argument("--keep", action="store_true")

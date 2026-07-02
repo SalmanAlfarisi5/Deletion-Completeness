@@ -48,8 +48,11 @@ RECOVERY_BENCH = [
 ]
 
 
-def validate_recovery_judge(model: str) -> dict:
-    probe = ParametricProbe(model=model)
+def validate_recovery_judge() -> dict:
+    # The recovery judge is LOCKED to config.JUDGE_MODEL (H-01): _judge_recovery
+    # ignores probe.model, so there is no per-model variant to pass in and the
+    # result must be labelled with the model that actually judges.
+    probe = ParametricProbe(model=config.JUDGE_MODEL)
     preds, gold = [], []
     errors = []
     for fact_text, answer, g in RECOVERY_BENCH:
@@ -62,7 +65,7 @@ def validate_recovery_judge(model: str) -> dict:
     tn = sum((not p) and (not g) for p, g in zip(preds, gold))
     fn = sum((not p) and g for p, g in zip(preds, gold))
     return {
-        "model": model, "n": len(gold),
+        "model": config.JUDGE_MODEL, "n": len(gold),
         "accuracy": round((tp + tn) / len(gold), 3),
         "false_accept_rate": round(fp / (fp + tn), 3) if (fp + tn) else 0.0,
         "false_reject_rate": round(fn / (fn + tp), 3) if (fn + tp) else 0.0,
@@ -131,7 +134,7 @@ def validate_entailment(model_a: str, model_b: str) -> dict:
 def main() -> None:
     if config.validate():
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
-    rec = validate_recovery_judge(config.JUDGE_MODEL)
+    rec = validate_recovery_judge()
     ent = validate_entailment(config.JUDGE_MODEL, config.SECOND_MODEL)
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")

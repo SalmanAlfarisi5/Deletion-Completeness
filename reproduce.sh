@@ -18,8 +18,9 @@ PY="${PYTHON:-/home/salman/Desktop/venv/myenv/bin/python}"
 "$PY" evaluation/judge.py
 
 # 1-2. Residual survival on Mem0 (all 48 isolated PII facts)
-"$PY" experiments/exp01_baseline.py          # naive deletion residual (97.9%)
-"$PY" experiments/exp02_artifact_purge.py    # artifact-aware purge (68.75% -> 0%)
+"$PY" experiments/exp01_baseline.py          # naive deletion residual
+"$PY" experiments/exp02_artifact_purge.py    # naive vs artifact-aware (-> 0%)
+"$PY" experiments/exp05_duplication.py       # duplication factorial (embedder x cadence)
 
 # 3. Planner (all 34 multi-hop; gpt-4o entailment by default) + depth-first comparator
 "$PY" experiments/exp03_planner.py                       # threshold: k=0.91, 0 spurious
@@ -41,5 +42,6 @@ PY="${PYTHON:-/home/salman/Desktop/venv/myenv/bin/python}"
 # 9-10. Cross-system convergence (REQUIRE the local services above to be up)
 # "$PY" experiments/exp09_zep_kg_residual.py    # Graphiti: edge 40% / summary 80%
 # "$PY" experiments/exp10_letta.py              # Letta: 0% faithful / 100% archival
+# "$PY" experiments/exp11_letta_rederivation.py # Letta re-derivation bins + rho floor
 
 echo "Done. Results in data/results/ ; certificates in data/results/certificates/"

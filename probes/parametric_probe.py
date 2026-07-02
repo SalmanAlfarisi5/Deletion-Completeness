@@ -13,8 +13,6 @@ only within the stated value (avoids false hits from reasoning text).
 """
 from __future__ import annotations
 
-from datetime import date
-
 import config
 import llm
 from evaluation.recovery import value_segment
@@ -94,7 +92,7 @@ class ParametricProbe(BaseProbe):
     def run_parametric(self, fact: dict) -> ProbeResult:
         q = self.question_for(fact)
         ans = llm.chat([{"role": "user", "content": _ELICIT_PARAM.format(
-                            question=q, today=date.today().isoformat())}],
+                            question=q, today=config.EXPERIMENT_DATE)}],
                        model=self.model, temperature=0.0, max_tokens=400)
         hit = self._recovered(fact, ans)
         return ProbeResult(probe="parametric", fact_id=fact["id"], recoverable=hit,
@@ -111,7 +109,7 @@ class ParametricProbe(BaseProbe):
         answers, recovered = [], 0
         for _ in range(n):
             ans = llm.chat([{"role": "user", "content": _ELICIT_CTX.format(
-                                context=context, question=q, today=date.today().isoformat())}],
+                                context=context, question=q, today=config.EXPERIMENT_DATE)}],
                            model=self.model, temperature=temperature, max_tokens=400,
                            use_cache=False)
             answers.append(ans)
@@ -126,7 +124,7 @@ class ParametricProbe(BaseProbe):
         notes = "\n".join(f"- {adapter.memory_text(m)}" for m in mems) or "(no notes)"
         ans = llm.chat([{"role": "user",
                          "content": _ELICIT_NOTES.format(notes=notes, question=q,
-                                                         today=date.today().isoformat())}],
+                                                         today=config.EXPERIMENT_DATE)}],
                        model=self.model, temperature=0.0, max_tokens=700)
         hit = self._recovered(fact, ans)
         return ProbeResult(probe="rederivation", fact_id=fact["id"], recoverable=hit,

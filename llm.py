@@ -6,6 +6,7 @@ re-run and keeps experiments reproducible.
 """
 from __future__ import annotations
 
+import atexit
 import hashlib
 import json
 import threading
@@ -27,9 +28,31 @@ def _key(model: str, messages: list[dict], **params) -> str:
     return hashlib.sha256(blob.encode()).hexdigest()
 
 
+_dirty = 0
+
+
 def _save() -> None:
     with _lock:
+        try:  # fold in any concurrent writer's new entries before overwriting
+            if _CACHE_PATH.exists():
+                for k, v in json.loads(_CACHE_PATH.read_text() or "{}").items():
+                    _cache.setdefault(k, v)
+        except (OSError, json.JSONDecodeError):
+            pass
         _CACHE_PATH.write_text(json.dumps(_cache, indent=0))
+
+
+def _touch() -> None:
+    """Persist in batches (every 50 writes, plus on exit) rather than on every
+    call, turning O(n^2) whole-file rewrites into O(n/50)."""
+    global _dirty
+    _dirty += 1
+    if _dirty >= 50:
+        _dirty = 0
+        _save()
+
+
+atexit.register(_save)
 
 
 def chat(messages: list[dict], model: str | None = None, temperature: float = 0.0,
@@ -64,7 +87,7 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
 
     if use_cache:
         _cache[k] = out
-        _save()
+        _touch()
     return out
 
 

@@ -36,7 +36,8 @@ def parse_number(s: str) -> float | None:
         num = float(m.group(0).replace(",", ""))
     except ValueError:
         return None
-    if s2[m.end():m.end() + 2].strip().lower().startswith("k"):
+    after = s2[m.end():].lstrip().lower()
+    if after[:1] == "k" and not after[1:2].isalpha():   # 150k -> 150000, but not km/kg
         num *= 1000
     return num
 

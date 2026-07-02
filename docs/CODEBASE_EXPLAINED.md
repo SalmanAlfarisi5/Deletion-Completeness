@@ -53,9 +53,7 @@ systems/
 
 pipeline/
   injector.py        ← Feed facts into a memory system as conversation turns
-  artifact_tracer.py ← Snapshot before/after injection; diff to find new artifacts
   deleter.py         ← Delete by ID, delete all rows with a value, naive top-1 delete
-  graph_builder.py   ← Build a NetworkX DiGraph: DERIVED_FROM + ENTAILS edges
 
 probes/
   exact_match.py       ← Scan all rows for the value's surface form (residual probe)
@@ -163,20 +161,11 @@ Assistant: "Got it — I've noted that for you."
 - `infer=False`: store verbatim (controlled experiments with reliable fact→row maps)
 - A 1.5s settle pause prevents Mem0's dedup race from creating measurement artifacts
 
-### Artifact Tracing (`pipeline/artifact_tracer.py`)
-Takes snapshots before/after injection, diffs to find new rows, classifies by layer (memory row, KG edge, KG node).
-
 ### Deletion (`pipeline/deleter.py`)
 Three deletion modes:
 1. **Naive** (`delete_top_match`): delete the single record the system surfaces for the query — simulates a naive RTBF implementation
 2. **Artifact-aware** (`delete_value_rows`): delete *every* row containing any surface form of the target value — fixes residual survival
 3. **Direct** (`delete_records`): delete specific IDs — used by the planner for co-deletion
-
-### Dependency Graph (`pipeline/graph_builder.py`)
-Builds a NetworkX DiGraph with:
-- `DERIVED_FROM` edges: source_fact → artifact
-- `ENTAILS` edges: surviving_fact → target_fact (from entailment detector)
-- Used to find all recovery paths from surviving nodes to the target
 
 ---
 
@@ -329,7 +318,7 @@ Facts (JSON)
     ▼ Injector
 Memory System (Mem0 / Zep / Letta)
     │                          │
-    ▼ ArtifactTracer           ▼ list_graph()
+    ▼ list_memories            ▼ list_graph()
 Derived rows                KG nodes/edges
     │
     ▼ Probes

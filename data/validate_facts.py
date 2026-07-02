@@ -182,6 +182,34 @@ def referential_integrity(mh_facts: list[dict], ctx_facts: list[dict]) -> list[s
     return problems
 
 
+def check_value_uniqueness(iso_facts: list[dict], ctx_facts: list[dict]) -> list[str]:
+    """Cross-fact value-uniqueness gate (RF4 C-01).
+
+    No isolated fact's probe value may also appear in another stored fact's
+    searchable text (isolated OR context). A shared value makes exp02's per-fact
+    naive->purge loop contaminate later facts (an earlier fact's artifact purge
+    deletes a later fact's value rows, so it scores a spurious naive-success) and
+    inflates exp05's dup-incidence with mere vocabulary overlap. Uses the same
+    digit-normalizing _contains as the probes.
+    """
+    store = iso_facts + ctx_facts
+
+    def hay(g):
+        return " || ".join([g.get("text", ""), g.get("utterance", ""),
+                            " ".join(normalize_values(g.get("probe_value", [])))])
+
+    H = {g["id"]: hay(g) for g in store}
+    problems = []
+    for f in iso_facts:
+        for pv in normalize_values(f.get("probe_value")):
+            if len(pv) < 3:
+                continue
+            for g in store:
+                if g["id"] != f["id"] and _contains(H[g["id"]], pv):
+                    problems.append(f"{f['id']} value {pv!r} also appears in {g['id']}")
+    return problems
+
+
 # --------------------------------------------------------------------------- #
 # Per-set measurement tasks (locked models)
 # --------------------------------------------------------------------------- #
@@ -312,7 +340,11 @@ def measure_rho(facts: list[dict], n: int, workers: int, remeasure: bool):
 # --------------------------------------------------------------------------- #
 def build_isolated(existing, kept_cands, cap=None):
     facts = list(existing)
-    nid = 100  # new isolated ids live in the F1xx block (disjoint from F04x multihop)
+    # Continue the F1xx block after the highest existing id -- never restart at 100
+    # (a re-run with existing F1xx facts would otherwise mint duplicate ids).
+    used = [int(f["id"][1:]) for f in existing
+            if f.get("id", "").startswith("F") and f["id"][1:].isdigit()]
+    nid = max([n for n in used if n >= 100], default=99) + 1
     for c in (kept_cands[:cap] if cap else kept_cands):
         facts.append({
             "id": f"F{nid}", "subject": c["subject"], "category": c["category"],
@@ -475,6 +507,13 @@ def main() -> int:
     print("      OK" if not ref_problems else "      PROBLEMS:\n        - "
           + "\n        - ".join(ref_problems))
 
+    print("\n[6b/6] Cross-fact value uniqueness (RF4 C-01) ...", flush=True)
+    uniq_problems = check_value_uniqueness(iso_facts, ctx_facts)
+    print("      OK -- no isolated value collides with another stored fact"
+          if not uniq_problems else
+          f"      {len(uniq_problems)} VALUE COLLISIONS:\n        - "
+          + "\n        - ".join(uniq_problems))
+
     # ---- counts -------------------------------------------------------------
     iso_personas = sorted({f["subject"] for f in iso_facts})
     iso_cats = sorted({f["category"] for f in iso_facts})
@@ -557,6 +596,8 @@ def main() -> int:
             fails.append(f"rho tier {t} {len(rho_by_tier[t])} < {FLOOR_RHO_PER_TIER}")
     if ref_problems:
         fails.append(f"{len(ref_problems)} referential-integrity problems")
+    if uniq_problems:
+        fails.append(f"{len(uniq_problems)} value-collision problems (RF4 C-01)")
     if any(f.get("flag") == "ERROR" for f in flags):
         fails.append("rho measurement errors present")
 

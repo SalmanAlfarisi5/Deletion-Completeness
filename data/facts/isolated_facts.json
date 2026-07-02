@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "description": "Isolated facts: arbitrary values with NO entailment links to any other stored fact. Recovery after deletion can only be RESIDUAL SURVIVAL (a derived artifact still contains it), never re-derivation. Parametric risk rho is ~0 by construction (values are synthetic). All persons are fictional. [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)]",
+    "description": "Isolated facts: arbitrary values with NO entailment links to any other stored fact. Recovery after deletion can only be RESIDUAL SURVIVAL (a derived artifact still contains it), never re-derivation. Parametric risk rho is ~0 by construction (values are synthetic). All persons are fictional. [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)] [uniqueness pass 2026-07-02: 15 colliding facts regenerated to globally-unique probe values verified against the combined isolated+context store]",
     "account_owner": "Alice Chen",
     "fields": {
       "id": "stable identifier",
@@ -169,10 +169,10 @@
       "id": "F100",
       "subject": "Wei Jie Tan",
       "category": "personal_contact",
-      "text": "Wei Jie Tan's emergency contact number is 9123-4567.",
-      "utterance": "Add my emergency contact number: 9123-4567.",
+      "text": "Wei Jie Tan's emergency contact number is 8241-3907.",
+      "utterance": "Add my emergency contact number: 8241-3907.",
       "probe_value": [
-        "9123-4567"
+        "8241-3907"
       ],
       "entailed_by": [],
       "note": "The number is arbitrary; it cannot be derived from other information."
@@ -181,13 +181,13 @@
       "id": "F101",
       "subject": "Wei Jie Tan",
       "category": "medical",
-      "text": "Wei Jie Tan's blood type is AB+.",
-      "utterance": "Record my blood type as AB+.",
+      "text": "Wei Jie Tan's medical record number is MRN-583920.",
+      "utterance": "Record my medical record number: MRN-583920.",
       "probe_value": [
-        "AB+"
+        "MRN-583920"
       ],
       "entailed_by": [],
-      "note": "Blood type is arbitrary; no inference is possible from other facts."
+      "note": "Medical record number is arbitrary; no inference is possible from other facts."
     },
     {
       "id": "F102",
@@ -253,10 +253,10 @@
       "id": "F107",
       "subject": "Mei Fang Goh",
       "category": "device",
-      "text": "Mei Fang Goh's smartphone IMEI number is 356789012345678.",
-      "utterance": "Save my smartphone IMEI: 356789012345678.",
+      "text": "Mei Fang Goh's smartphone IMEI number is 531860472309157.",
+      "utterance": "Save my smartphone IMEI: 531860472309157.",
       "probe_value": [
-        "356789012345678"
+        "531860472309157"
       ],
       "entailed_by": [],
       "note": "IMEI number is arbitrary; it cannot be derived from other information."
@@ -265,10 +265,10 @@
       "id": "F108",
       "subject": "Boon Hock Teo",
       "category": "personal_contact",
-      "text": "Boon Hock Teo's emergency contact number is 9123-4567.",
-      "utterance": "Add my emergency contact number: 9123-4567.",
+      "text": "Boon Hock Teo's emergency contact number is 8356-4192.",
+      "utterance": "Add my emergency contact number: 8356-4192.",
       "probe_value": [
-        "9123-4567"
+        "8356-4192"
       ],
       "entailed_by": [],
       "note": "Number is arbitrary; not inferable from any other fact."
@@ -277,13 +277,13 @@
       "id": "F109",
       "subject": "Boon Hock Teo",
       "category": "medical",
-      "text": "Boon Hock Teo's blood type is AB+.",
-      "utterance": "Record my blood type as AB+.",
+      "text": "Boon Hock Teo takes 25 mg of atenolol daily.",
+      "utterance": "Note that I take 25 mg atenolol daily.",
       "probe_value": [
-        "AB+"
+        "atenolol"
       ],
       "entailed_by": [],
-      "note": "Blood type is arbitrary; not inferable from any other fact."
+      "note": "Medication is arbitrary; not inferable from any other fact."
     },
     {
       "id": "F110",
@@ -304,8 +304,7 @@
       "text": "Xin Yi Chua prefers green tea over coffee.",
       "utterance": "Note that I prefer green tea over coffee.",
       "probe_value": [
-        "green tea",
-        "coffee"
+        "green tea"
       ],
       "entailed_by": [],
       "note": "Preference is arbitrary; not inferable from any other fact."
@@ -350,10 +349,10 @@
       "id": "F115",
       "subject": "Pei Shan Sim",
       "category": "device",
-      "text": "Pei Shan Sim's smartphone IMEI number is 123456789012345.",
-      "utterance": "Record my smartphone IMEI: 123456789012345.",
+      "text": "Pei Shan Sim's smartphone IMEI number is 859023741650289.",
+      "utterance": "Record my smartphone IMEI: 859023741650289.",
       "probe_value": [
-        "123456789012345"
+        "859023741650289"
       ],
       "entailed_by": [],
       "note": "IMEI is arbitrary; not inferable from any other fact."
@@ -362,10 +361,10 @@
       "id": "F116",
       "subject": "Nurul Aisyah",
       "category": "personal_contact",
-      "text": "Nurul Aisyah's emergency contact number is +65 9123 4567.",
-      "utterance": "Store my emergency contact number: +65 9123 4567.",
+      "text": "Nurul Aisyah's emergency contact number is +65 8473 5261.",
+      "utterance": "Store my emergency contact number: +65 8473 5261.",
       "probe_value": [
-        "+65 9123 4567"
+        "+65 8473 5261"
       ],
       "entailed_by": [],
       "note": "The number is arbitrary; it cannot be inferred from any other fact."
@@ -446,10 +445,10 @@
       "id": "F123",
       "subject": "Hakim Abdullah",
       "category": "device",
-      "text": "Hakim Abdullah's smartphone IMEI number is 356789123456789.",
-      "utterance": "Save my smartphone IMEI: 356789123456789.",
+      "text": "Hakim Abdullah's smartphone IMEI number is 867530942318640.",
+      "utterance": "Save my smartphone IMEI: 867530942318640.",
       "probe_value": [
-        "356789123456789"
+        "867530942318640"
       ],
       "entailed_by": [],
       "note": "The IMEI number is arbitrary; it does not connect to any other known fact."
@@ -458,10 +457,10 @@
       "id": "F124",
       "subject": "Zarina Mohd",
       "category": "personal_contact",
-      "text": "Zarina Mohd's emergency contact number is 9123-4567.",
-      "utterance": "Set my emergency contact number to 9123-4567.",
+      "text": "Zarina Mohd's emergency contact number is 8519-6274.",
+      "utterance": "Set my emergency contact number to 8519-6274.",
       "probe_value": [
-        "9123-4567"
+        "8519-6274"
       ],
       "entailed_by": [],
       "note": "Contact number is arbitrary; not inferable from any other fact."
@@ -470,13 +469,13 @@
       "id": "F125",
       "subject": "Zarina Mohd",
       "category": "medical",
-      "text": "Zarina Mohd's blood type is AB+.",
-      "utterance": "Remember my blood type as AB+.",
+      "text": "Zarina Mohd is allergic to latex.",
+      "utterance": "Please note I am allergic to latex.",
       "probe_value": [
-        "AB+"
+        "latex"
       ],
       "entailed_by": [],
-      "note": "Blood type is arbitrary; not inferable from any other fact."
+      "note": "Allergen is arbitrary; not inferable from any other fact."
     },
     {
       "id": "F126",
@@ -506,10 +505,10 @@
       "id": "F128",
       "subject": "Deepa Menon",
       "category": "location",
-      "text": "Deepa Menon's favorite park is East Coast Park.",
-      "utterance": "Save my favorite park as East Coast Park.",
+      "text": "Deepa Menon's favorite park is Bishan-Ang Mo Kio Park.",
+      "utterance": "Save my favorite park as Bishan-Ang Mo Kio Park.",
       "probe_value": [
-        "East Coast Park"
+        "Bishan-Ang Mo Kio Park"
       ],
       "entailed_by": [],
       "note": "Location is arbitrary; not inferable from any other fact."
@@ -542,10 +541,10 @@
       "id": "F131",
       "subject": "Suresh Pillai",
       "category": "device",
-      "text": "Suresh Pillai's smartphone IMEI number is 123456789012345.",
-      "utterance": "Store my smartphone IMEI: 123456789012345.",
+      "text": "Suresh Pillai's smartphone IMEI number is 648015793264810.",
+      "utterance": "Store my smartphone IMEI: 648015793264810.",
       "probe_value": [
-        "123456789012345"
+        "648015793264810"
       ],
       "entailed_by": [],
       "note": "IMEI number is arbitrary; not inferable from any other fact."
@@ -554,10 +553,10 @@
       "id": "F132",
       "subject": "Anand Raj",
       "category": "personal_contact",
-      "text": "Anand Raj's emergency contact number is 98765432.",
-      "utterance": "Store my emergency contact number: 98765432.",
+      "text": "Anand Raj's emergency contact number is 8712-3095.",
+      "utterance": "Store my emergency contact number: 8712-3095.",
       "probe_value": [
-        "98765432"
+        "8712-3095"
       ],
       "entailed_by": [],
       "note": "Number is arbitrary; not inferable from any other fact."
@@ -566,22 +565,22 @@
       "id": "F133",
       "subject": "Anand Raj",
       "category": "medical",
-      "text": "Anand Raj's blood type is AB-positive.",
-      "utterance": "Remember my blood type as AB-positive.",
+      "text": "Anand Raj takes 10 mg of amlodipine daily.",
+      "utterance": "Remember I take 10 mg amlodipine daily.",
       "probe_value": [
-        "AB-positive"
+        "amlodipine"
       ],
       "entailed_by": [],
-      "note": "Blood type is arbitrary; not inferable from any other fact."
+      "note": "Medication is arbitrary; not inferable from any other fact."
     },
     {
       "id": "F134",
       "subject": "Kavitha Subramaniam",
       "category": "financial",
-      "text": "Kavitha Subramaniam's bank account number is 123-456-7890.",
-      "utterance": "Save my bank account number: 123-456-7890.",
+      "text": "Kavitha Subramaniam's bank account number is 556-231-8890.",
+      "utterance": "Save my bank account number: 556-231-8890.",
       "probe_value": [
-        "123-456-7890"
+        "556-231-8890"
       ],
       "entailed_by": [],
       "note": "Account number is arbitrary; not inferable from any other fact."

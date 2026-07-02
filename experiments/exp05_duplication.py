@@ -8,7 +8,9 @@ our local embedder or injection cadence, and we type the duplicates:
 
 Metrics per cell (corpus = context + isolated, injected infer=True):
   row_inflation   = (rows - facts) / facts          (overall extra-row rate)
-  dup_incidence   = fraction of facts with >1 row carrying their primary value
+  dup_incidence   = fraction of corpus-unique facts with >1 row carrying their value
+                    (RF4: denominator excludes facts whose value collides with
+                    another fact's text, so overlap can't masquerade as duplication)
   byte/paraphrase = breakdown of duplicated facts
 
 Usage:  python experiments/exp05_duplication.py
@@ -30,6 +32,24 @@ def main() -> None:
     facts = (load_facts(config.FACTS_DIR / "context_facts.json")
              + load_facts(config.FACTS_DIR / "isolated_facts.json"))
     n_facts = len(facts)
+
+    # RF4 exp05 fix: dup-incidence must reflect Mem0 duplication, not corpus
+    # vocabulary overlap. A fact's value appearing in >1 row is only unambiguous
+    # duplication when that value is globally UNIQUE in the corpus; otherwise the
+    # extra row may be another fact's text. Restrict the denominator to facts with
+    # a corpus-unique primary value.
+    def _prim(f):
+        v = f["probe_value"]
+        return (v[0] if isinstance(v, list) else v).lower()
+
+    _hay = {g["id"]: (g.get("text", "") + " " + g.get("utterance", "")).lower()
+            for g in facts}
+    measurable = [f for f in facts
+                  if not any(g["id"] != f["id"] and _prim(f) in _hay[g["id"]]
+                             for g in facts)]
+    n_measurable = len(measurable)
+    print(f"corpus={n_facts} facts; {n_measurable} have a corpus-unique value "
+          f"(dup-incidence denominator); {n_facts - n_measurable} excluded as ambiguous")
     cells = []
     for embedder in ("huggingface", "openai"):
         from systems.mem0_adapter import Mem0Adapter
@@ -44,9 +64,8 @@ def main() -> None:
             texts = [adapter.memory_text(m) for m in mems]
 
             dup_facts, byte_ident, paraphrase = 0, 0, 0
-            for f in facts:
-                prim = (f["probe_value"][0] if isinstance(f["probe_value"], list)
-                        else f["probe_value"]).lower()
+            for f in measurable:
+                prim = _prim(f)
                 hits = [t for t in texts if prim in t.lower()]
                 if len(hits) > 1:
                     dup_facts += 1
@@ -57,9 +76,9 @@ def main() -> None:
                         paraphrase += 1
             cell = {
                 "embedder": embedder, "cadence_s": cadence,
-                "facts": n_facts, "rows": n_rows,
+                "facts": n_facts, "measurable": n_measurable, "rows": n_rows,
                 "row_inflation": round((n_rows - n_facts) / n_facts, 3),
-                "dup_incidence": round(dup_facts / n_facts, 3),
+                "dup_incidence": round(dup_facts / n_measurable, 3),
                 "dup_facts": dup_facts, "byte_identical": byte_ident,
                 "paraphrase": paraphrase,
             }

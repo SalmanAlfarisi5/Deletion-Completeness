@@ -61,23 +61,35 @@ def main() -> None:
     injector.inject_many(user_id, corpus + targets, progress=tqdm)
 
     rows = []
-    for fact in tqdm(targets, desc="targets"):
+    # Two separated passes on one store (RF4 C-01): measure EVERY fact's naive
+    # residual first, with no value-purges, so no fact's artifact-aware purge can
+    # pre-delete a later fact's rows and forge a spurious naive "success". Naive
+    # deletion is top-1 record removal, which does not touch other facts' rows.
+    naive_info = {}
+    for fact in tqdm(targets, desc="naive-arm"):
         vals = normalize_values(fact.get("probe_value"))
         n_value_rows = len(deleter.rows_with_value(user_id, vals))
         before = exact.run(adapter, user_id, fact).score
-        # naive: delete the single record the system surfaces for the fact
         deleter.delete_top_match(user_id, fact["text"], vals)
-        naive = exact.run(adapter, user_id, fact).score
-        # artifact-aware: purge every remaining row carrying the value
-        extra = deleter.delete_value_rows(user_id, vals)
+        naive_info[fact["id"]] = {
+            "vals": vals, "value_rows_before": n_value_rows, "residual_before": before,
+            "residual_naive": exact.run(adapter, user_id, fact).score}
+    # Artifact-aware pass: only after all naive measurements are recorded, purge
+    # every remaining row carrying each fact's value and re-measure.
+    for fact in tqdm(targets, desc="aware-arm"):
+        ni = naive_info[fact["id"]]
+        extra = deleter.delete_value_rows(user_id, ni["vals"])
         aware = exact.run(adapter, user_id, fact).score
         rows.append({"fact_id": fact["id"], "category": fact.get("category"),
-                     "value_rows_before": n_value_rows, "residual_before": before,
-                     "residual_naive": naive, "residual_artifact_aware": aware,
+                     "value_rows_before": ni["value_rows_before"],
+                     "residual_before": ni["residual_before"],
+                     "residual_naive": ni["residual_naive"],
+                     "residual_artifact_aware": aware,
                      "extra_artifacts_purged": len(extra["deleted"])})
         if args.verbose:
-            tqdm.write(f"  [{fact['id']}] value_rows={n_value_rows} "
-                       f"residual before={before:.0f} naive={naive:.0f} "
+            tqdm.write(f"  [{fact['id']}] value_rows={ni['value_rows_before']} "
+                       f"residual before={ni['residual_before']:.0f} "
+                       f"naive={ni['residual_naive']:.0f} "
                        f"aware={aware:.0f} extra_purged={len(extra['deleted'])}")
 
     df = pd.DataFrame(rows)

@@ -26,6 +26,8 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{amssymb}   % \varnothing, AMS symbols
+\usepackage{dsfont}    % \mathds{1} indicator (amssymb's \mathbb has no digit; AAAI forbids bbm)
 \usepackage{tikz}
 \usetikzlibrary{positioning, arrows.meta}
 \urlstyle{rm}
@@ -189,7 +191,7 @@ the stated value), as scored by the validated recovery judge
 reasoning model, so recoverability is \emph{adversary-relative} (Def.~4).
 
 \paragraph{Definition 1 (Residual survival).}
-$\sigma_{\mathrm{res}}(f,S')=\mathbb{1}\!\left[\exists\, r\in S':\;
+$\sigma_{\mathrm{res}}(f,S')=\mathds{1}\!\left[\exists\, r\in S':\;
 \Sigma(v)\cap\mathrm{txt}(r)\neq\emptyset\right]$: a surviving record physically
 contains the value.
 
@@ -825,7 +827,9 @@ modeled bracket: the floor we measure is a lower bound, so the true limit of
 forgetting in agent memory may be higher still.
 
 %========================================================================
-\bibliographystyle{aaai2027}  % AAAI-27 kit ships aaai2027.bst (there is no aaai.bst); aaai2027.sty also sets this internally. See AAAI_SETUP.md.
+% NOTE: do NOT add \bibliographystyle here. aaai2027.sty already issues
+% \bibliographystyle{aaai2027} internally; a second one triggers the bibtex error
+% "Illegal, another \bibstyle command". Just \bibliography{...} below. See AAAI_SETUP.md.
 \bibliography{references}
 
 \end{document}

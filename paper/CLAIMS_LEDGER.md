@@ -107,10 +107,11 @@ caveat / what it does *not* say.
   measured ρ there is a refusal-based **lower bound**, so the worst-adversary
   high-tier ρ is set by gpt-4o (which refuses less).
 - **Ctrl:** ρ probe sees **world-context only** (never stored facts) → co-deletion
-  *cannot* lower it; **2 reasoners**; **mid-tier numeric-tolerance sweep** (floor
-  persists at all tolerances, magnitude is tolerance-dependent); **base-rate vs
-  context-lift** split; **high-tier refusal audit** (7 high-tier facts drew refusals
-  → ρ for sensitive attrs is an adversarial *lower* bound).
+  *cannot* lower it; **4-reasoner panel** (open + frontier); **mid-tier
+  numeric-tolerance sweep** (floor persists at all tolerances, magnitude is
+  tolerance-dependent); **base-rate vs context-lift** split; **high-tier refusal
+  audit** (20 refusal flags; GPT-5.5/Sonnet 5 refuse sensitive attrs → ρ there is an
+  adversarial *lower* bound).
 - **Scope:** ρ is reasoner-dependent (mid is the contested tier — why ≥ 2
   reasoners are mandatory). A COMPLETE certificate is "complete **modulo
   recovery-judge recall ≈ 78%**"; INCOMPLETE and aggregate numbers are safe lower
@@ -309,12 +310,15 @@ Three distinguished neighbours + the DB lineage. Full notes in `REFERENCES.md`.
 
 ## Provenance (result files this ledger is computed from)
 
-Re-run 2026-06-27 (Wave 2, enlarged data): `exp01_baseline_…055540Z` ·
-`exp02_artifact_purge_…063355Z` · `exp03_planner_threshold_…064049Z` ·
-`exp04_parametric_…064429Z` · `exp07_rho_gradient_…070725Z` · `exp08_mia_…071616Z` ·
-`exp09_zep_kg_residual_…065448Z` · `exp10_letta_…064949Z`.
-Not re-run (unchanged): `exp05_duplication_…093949Z` ·
-`exp06_derivation_capture_…094753Z` · `judge_validation_…123729Z` ·
-`exp11_letta_rederivation_…025647Z`
-(all under `data/results/`; 6 Letta certs `cert-F04{0..5}-*` under
-`data/results/certificates/`).
+Frontier re-run 2026-07-04 (4-reasoner adversary panel: gpt-4o-mini, gpt-4o,
+Claude Sonnet 5, GPT-5.5; enlarged datasets iso84 / mh92 / ctx299 / rho81).
+Files under `data/results/` (all `...20260704T...`): `exp01_baseline_...101314Z`,
+`exp02_artifact_purge_...104137Z`, `exp03_planner_threshold_...122021Z` +
+`..._depth_first_...122209Z`, `exp04_parametric_...124800Z`,
+`exp05_duplication_...121335Z`, `exp07_rho_gradient_...175621Z`,
+`exp08_mia_...145340Z`, `exp09_zep_kg_residual_...180151Z`,
+`exp10_letta_...180332Z`, `exp11_letta_rederivation_...185726Z`,
+`judge_validation_...094056Z`. Not re-run (rejected negative, unchanged):
+`exp06_derivation_capture_...094753Z` (2026-06-23). Certificates under
+`data/results/certificates/`. Superseded pre-2026-07-04 result files were pruned
+(recoverable from git history).

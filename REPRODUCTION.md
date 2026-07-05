@@ -52,4 +52,4 @@ Plus **R38** (committed 2/6) dropped to 0; two committed-zeros **rose** — R31 
 
 ---
 
-*Evidence (local): reproduced `data/results/exp01_baseline_mem0_20260629T080707Z.json`, `data/results/exp07_rho_gradient_20260629T083317Z.json`; committed baselines `exp01_baseline_mem0_20260627T055540Z.json`, `exp07_rho_H01_relock.json`. Nothing pushed.*
+*Evidence (local): current frontier re-run under `data/results/exp*_20260704T*.json` (4-reasoner adversary panel; see the ledger Provenance section for the full list). Committed via git.*

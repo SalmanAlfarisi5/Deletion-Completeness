@@ -83,7 +83,7 @@ class ParametricProbe(BaseProbe):
         # Recovery judge is LOCKED to the validated config.JUDGE_MODEL for ALL
         # reasoners (the judge sees the ground-truth value -> a fixed matching task).
         # Previously used self.model, so the gpt-4o reasoner judged its own recoveries
-        # with an unvalidated judge (see REVIEW_FINDINGS_2.md, H-01).
+        # with an unvalidated judge (see docs/reviews/REVIEW_FINDINGS_2.md, H-01).
         out = llm.chat_json([{"role": "user", "content": _JUDGE_PROMPT.format(
             fact=fact_text, answer=answer)}], model=config.JUDGE_MODEL,
             temperature=0.0, max_tokens=100)

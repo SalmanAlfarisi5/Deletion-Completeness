@@ -1,7 +1,0 @@
-fact_id,basis,co_deleted,collateral_k,operands_required_set,spurious_bystanders,operands_not_needed,final_recoverability,parametric_risk,achieved_completeness
-F040,stored,['C002'],1,"['C001', 'C002']",[],['C001'],0.0,0.0,True
-F041,stored+world,['C003'],1,['C003'],[],[],0.0,0.0,True
-F042,stored+world,"['C006', 'C005']",2,"['C005', 'C006']",[],[],0.0,0.0,True
-F043,stored+world,[],0,"['C007', 'C008']",[],"['C007', 'C008']",0.0,0.0,True
-F044,stored+world,['C009'],1,"['C009', 'C010']",[],['C010'],0.0,0.0,True
-F045,stored+world,"['C011', 'C012']",2,"['C011', 'C012']",[],[],0.0,0.0,True

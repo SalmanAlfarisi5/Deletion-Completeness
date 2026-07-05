@@ -1,4 +1,0 @@
-fact_id,inject_tools,forget_tools,value_before,value_after,core_residue,archival_residue,faithful_delete,paraphrase_residue
-F001,['memory_insert'],['memory_replace'],1.0,0.0,False,False,True,False
-F008,['memory_insert'],['memory_replace'],1.0,0.0,False,False,True,False
-F003,"['memory_insert', 'memory_insert']",['memory_replace'],1.0,0.0,False,False,True,False

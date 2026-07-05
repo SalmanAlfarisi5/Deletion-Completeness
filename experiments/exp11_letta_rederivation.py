@@ -77,7 +77,7 @@ def main() -> None:
     context = load_facts(config.FACTS_DIR / "context_facts.json")
     ctx_by_id = {c["id"]: c for c in context}
     bystanders = [c for c in context if c.get("role") == "bystander"][: args.bystanders]
-    reasoners = [config.REASONER_MODEL] if args.single else [config.REASONER_MODEL, config.SECOND_MODEL]
+    reasoners = [config.REASONER_MODEL] if args.single else config.reasoner_models()
 
     from systems.letta_adapter import LettaAdapter
     adapter = LettaAdapter()

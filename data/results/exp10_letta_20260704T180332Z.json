@@ -1,0 +1,161 @@
+{
+  "experiment": "exp10_letta",
+  "timestamp_utc": "20260704T180332Z",
+  "system": "letta-0.16.8",
+  "metrics": {
+    "n": 10,
+    "faithful_delete_rate": 0.0,
+    "core_residue_rate": 0.0,
+    "archival_residue_rate": 1.0,
+    "paraphrase_residue_rate": 0.0
+  },
+  "rows": [
+    {
+      "fact_id": "F001",
+      "inject_tools": [
+        "memory_insert"
+      ],
+      "forget_tools": [
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F008",
+      "inject_tools": [
+        "memory_insert"
+      ],
+      "forget_tools": [
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F003",
+      "inject_tools": [
+        "memory_insert"
+      ],
+      "forget_tools": [
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F002",
+      "inject_tools": [
+        "memory_insert"
+      ],
+      "forget_tools": [
+        "memory_replace",
+        "memory_replace",
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F004",
+      "inject_tools": [],
+      "forget_tools": [],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F005",
+      "inject_tools": [
+        "memory_insert"
+      ],
+      "forget_tools": [
+        "memory_replace",
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F009",
+      "inject_tools": [
+        "memory_insert"
+      ],
+      "forget_tools": [
+        "memory_replace",
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F010",
+      "inject_tools": [],
+      "forget_tools": [
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F012",
+      "inject_tools": [
+        "memory_insert",
+        "memory_insert"
+      ],
+      "forget_tools": [
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    },
+    {
+      "fact_id": "F102",
+      "inject_tools": [],
+      "forget_tools": [
+        "memory_replace"
+      ],
+      "value_before": 1.0,
+      "value_after": 1.0,
+      "core_residue": false,
+      "archival_residue": true,
+      "faithful_delete": false,
+      "paraphrase_residue": false
+    }
+  ]
+}

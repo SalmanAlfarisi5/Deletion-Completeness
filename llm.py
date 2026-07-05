@@ -57,19 +57,34 @@ atexit.register(_save)
 
 def chat(messages: list[dict], model: str | None = None, temperature: float = 0.0,
          max_tokens: int = 1024, json_mode: bool = False, use_cache: bool = True) -> str:
-    """Single chat completion -> text. Routed by config.LLM_PROVIDER."""
+    """Single chat completion -> text. Provider is routed by the MODEL name
+    (config.provider_for) so ONE run can mix OpenAI + Anthropic reasoners. Models
+    that reject an explicit temperature (Sonnet 5 / Opus 4.7-4.8 / GPT-5 / o-series)
+    get it omitted (config.model_rejects_temperature)."""
     model = model or config.JUDGE_MODEL
-    k = _key(model, messages, temperature=temperature, max_tokens=max_tokens,
-             json_mode=json_mode, provider=config.LLM_PROVIDER)
+    provider = config.provider_for(model)
+    no_temp = config.model_rejects_temperature(model)
+    # eff_temp keeps the cache key IDENTICAL for the pinned backbone (temp applied),
+    # while temp-free models key on None (they're non-deterministic; estimate_rho
+    # sets use_cache=False for its sampling draws anyway).
+    eff_temp = None if no_temp else temperature
+    k = _key(model, messages, temperature=eff_temp, max_tokens=max_tokens,
+             json_mode=json_mode, provider=provider)
     if use_cache and k in _cache:
         return _cache[k]
 
-    if config.LLM_PROVIDER == "openai":
+    if provider == "openai":
         from openai import OpenAI
 
-        client = OpenAI(api_key=config.OPENAI_API_KEY)
-        kwargs: dict = dict(model=model, messages=messages,
-                            temperature=temperature, max_tokens=max_tokens)
+        client = OpenAI(api_key=config.OPENAI_API_KEY,
+                        base_url=config.OPENAI_BASE_URL or None)
+        kwargs: dict = dict(model=model, messages=messages)
+        if config.uses_max_completion_tokens(model):
+            kwargs["max_completion_tokens"] = max_tokens
+        else:
+            kwargs["max_tokens"] = max_tokens
+        if not no_temp:
+            kwargs["temperature"] = temperature
         if json_mode:
             kwargs["response_format"] = {"type": "json_object"}
         resp = client.chat.completions.create(**kwargs)
@@ -80,10 +95,17 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
         client = Anthropic(api_key=config.ANTHROPIC_API_KEY)
         system = "\n".join(m["content"] for m in messages if m["role"] == "system")
         convo = [m for m in messages if m["role"] != "system"]
-        resp = client.messages.create(model=model, system=system or None,
-                                       messages=convo, temperature=temperature,
-                                       max_tokens=max_tokens)
-        out = resp.content[0].text if resp.content else ""
+        kwargs = dict(model=model, messages=convo, max_tokens=max_tokens)
+        if system:  # omit when empty (newer models 400 on system=null) + array-block form
+            kwargs["system"] = [{"type": "text", "text": system}]
+        if not no_temp:
+            kwargs["temperature"] = temperature
+        thinking = config.anthropic_thinking_for(model)
+        if thinking:
+            kwargs["thinking"] = thinking
+        resp = client.messages.create(**kwargs)
+        # Robust to thinking-on responses (first block may be a thinking block).
+        out = next((b.text for b in resp.content if getattr(b, "type", None) == "text"), "")
 
     if use_cache:
         _cache[k] = out

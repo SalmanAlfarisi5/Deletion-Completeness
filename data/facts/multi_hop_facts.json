@@ -961,6 +961,2670 @@
       ],
       "rederivation_basis": "stored+world",
       "entailment_note": "total = quantity x days = 2 x 5 = 10 calls; daily contact alone or busy week alone cannot give the total calls."
+    },
+    {
+      "id": "F074",
+      "subject": "Wei Jie Tan",
+      "category": "financial",
+      "text": "Wei Jie Tan spent SGD 620 on organic coffee beans.",
+      "utterance": "Wei Jie Tan's organic coffee bean order came to SGD 620.",
+      "question": "How much did Wei Jie Tan spend on organic coffee beans?",
+      "delete_value": [
+        "620",
+        "SGD 620"
+      ],
+      "probe_value": [
+        "600",
+        "620",
+        "640",
+        "SGD 620"
+      ],
+      "entailed_by": [
+        "C103",
+        "C104"
+      ],
+      "co_delete_required": [
+        "C103",
+        "C104"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "20 bags x SGD 31 = SGD 620; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F075",
+      "subject": "Hui Min Lim",
+      "category": "medical",
+      "text": "Hui Min Lim paid SGD 450 for physiotherapy sessions.",
+      "utterance": "Hui Min Lim's physiotherapy sessions cost SGD 450.",
+      "question": "How much did Hui Min Lim pay for physiotherapy sessions?",
+      "delete_value": [
+        "450",
+        "SGD 450"
+      ],
+      "probe_value": [
+        "430",
+        "450",
+        "470",
+        "SGD 450"
+      ],
+      "entailed_by": [
+        "C105",
+        "C106"
+      ],
+      "co_delete_required": [
+        "C105",
+        "C106"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "15 sessions x SGD 30 = SGD 450; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F076",
+      "subject": "Jun Wei Ong",
+      "category": "location",
+      "text": "Jun Wei Ong spent SGD 780 on hotel accommodations.",
+      "utterance": "Jun Wei Ong's hotel accommodations totaled SGD 780.",
+      "question": "How much did Jun Wei Ong spend on hotel accommodations?",
+      "delete_value": [
+        "780",
+        "SGD 780"
+      ],
+      "probe_value": [
+        "760",
+        "780",
+        "800",
+        "SGD 780"
+      ],
+      "entailed_by": [
+        "C107",
+        "C108"
+      ],
+      "co_delete_required": [
+        "C107",
+        "C108"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "12 nights x SGD 65 = SGD 780; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F077",
+      "subject": "Mei Fang Goh",
+      "category": "personal_contact",
+      "text": "Mei Fang Goh spent SGD 540 on a mobile phone plan.",
+      "utterance": "Mei Fang Goh's mobile phone plan cost SGD 540.",
+      "question": "How much did Mei Fang Goh spend on her mobile phone plan?",
+      "delete_value": [
+        "540",
+        "SGD 540"
+      ],
+      "probe_value": [
+        "520",
+        "540",
+        "560",
+        "SGD 540"
+      ],
+      "entailed_by": [
+        "C109",
+        "C110"
+      ],
+      "co_delete_required": [
+        "C109",
+        "C110"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "18 months x SGD 30 = SGD 540; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F078",
+      "subject": "Boon Hock Teo",
+      "category": "financial",
+      "text": "Boon Hock Teo paid SGD 900 for a new laptop.",
+      "utterance": "Boon Hock Teo's new laptop cost SGD 900.",
+      "question": "How much did Boon Hock Teo pay for the new laptop?",
+      "delete_value": [
+        "900",
+        "SGD 900"
+      ],
+      "probe_value": [
+        "880",
+        "900",
+        "920",
+        "SGD 900"
+      ],
+      "entailed_by": [
+        "C111",
+        "C112"
+      ],
+      "co_delete_required": [
+        "C111",
+        "C112"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "3 laptops x SGD 300 = SGD 900; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F079",
+      "subject": "Xin Yi Chua",
+      "category": "preference",
+      "text": "Xin Yi Chua spent SGD 350 on her art supplies.",
+      "utterance": "Xin Yi Chua's art supplies totaled SGD 350.",
+      "question": "How much did Xin Yi Chua spend on art supplies?",
+      "delete_value": [
+        "350",
+        "SGD 350"
+      ],
+      "probe_value": [
+        "330",
+        "350",
+        "370",
+        "SGD 350"
+      ],
+      "entailed_by": [
+        "C113",
+        "C114"
+      ],
+      "co_delete_required": [
+        "C113",
+        "C114"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "25 supplies x SGD 14 = SGD 350; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F080",
+      "subject": "Kai Xin Ng",
+      "category": "financial",
+      "text": "Kai Xin Ng spent SGD 750 on home renovation materials.",
+      "utterance": "Kai Xin Ng's home renovation materials totalled SGD 750.",
+      "question": "How much did Kai Xin Ng spend on home renovation materials?",
+      "delete_value": [
+        "750",
+        "SGD 750"
+      ],
+      "probe_value": [
+        "740",
+        "750",
+        "760",
+        "SGD 750"
+      ],
+      "entailed_by": [
+        "C115",
+        "C116"
+      ],
+      "co_delete_required": [
+        "C115",
+        "C116"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "30 bags x SGD 25 = SGD 750; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F081",
+      "subject": "Pei Shan Sim",
+      "category": "medical",
+      "text": "Pei Shan Sim paid SGD 420 for her dental treatment.",
+      "utterance": "Pei Shan Sim's dental treatment cost SGD 420.",
+      "question": "How much did Pei Shan Sim pay for her dental treatment?",
+      "delete_value": [
+        "420",
+        "SGD 420"
+      ],
+      "probe_value": [
+        "400",
+        "420",
+        "440",
+        "SGD 420"
+      ],
+      "entailed_by": [
+        "C117",
+        "C118"
+      ],
+      "co_delete_required": [
+        "C117",
+        "C118"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "12 cleanings x SGD 35 = SGD 420; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F082",
+      "subject": "Nurul Aisyah",
+      "category": "location",
+      "text": "Nurul Aisyah paid SGD 600 for her apartment rental.",
+      "utterance": "Nurul Aisyah's apartment rental came to SGD 600.",
+      "question": "How much did Nurul Aisyah pay for her apartment rental?",
+      "delete_value": [
+        "600",
+        "SGD 600"
+      ],
+      "probe_value": [
+        "580",
+        "600",
+        "620",
+        "SGD 600"
+      ],
+      "entailed_by": [
+        "C119",
+        "C120"
+      ],
+      "co_delete_required": [
+        "C119",
+        "C120"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "12 months x SGD 50 = SGD 600; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F083",
+      "subject": "Faizal Osman",
+      "category": "personal_contact",
+      "text": "Faizal Osman spent SGD 300 on his mobile phone plan.",
+      "utterance": "Faizal Osman's mobile phone plan cost SGD 300.",
+      "question": "How much did Faizal Osman spend on his mobile phone plan?",
+      "delete_value": [
+        "300",
+        "SGD 300"
+      ],
+      "probe_value": [
+        "290",
+        "300",
+        "310",
+        "SGD 300"
+      ],
+      "entailed_by": [
+        "C121",
+        "C122"
+      ],
+      "co_delete_required": [
+        "C121",
+        "C122"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "6 months x SGD 50 = SGD 300; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F084",
+      "subject": "Aishah Ibrahim",
+      "category": "preference",
+      "text": "Aishah Ibrahim spent SGD 550 on exclusive skincare products.",
+      "utterance": "Aishah Ibrahim's exclusive skincare products totalled SGD 550.",
+      "question": "How much did Aishah Ibrahim spend on exclusive skincare products?",
+      "delete_value": [
+        "550",
+        "SGD 550"
+      ],
+      "probe_value": [
+        "530",
+        "550",
+        "570",
+        "SGD 550"
+      ],
+      "entailed_by": [
+        "C123",
+        "C124"
+      ],
+      "co_delete_required": [
+        "C123",
+        "C124"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "11 sets x SGD 50 = SGD 550; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F085",
+      "subject": "Hakim Abdullah",
+      "category": "employment",
+      "text": "Hakim Abdullah earned SGD 900 for his freelance project.",
+      "utterance": "Hakim Abdullah's freelance project earned him SGD 900.",
+      "question": "How much did Hakim Abdullah earn for his freelance project?",
+      "delete_value": [
+        "900",
+        "SGD 900"
+      ],
+      "probe_value": [
+        "880",
+        "900",
+        "920",
+        "SGD 900"
+      ],
+      "entailed_by": [
+        "C125",
+        "C126"
+      ],
+      "co_delete_required": [
+        "C125",
+        "C126"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "18 tasks x SGD 50 = SGD 900; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F086",
+      "subject": "Zarina Mohd",
+      "category": "financial",
+      "text": "Zarina Mohd spent SGD 720 on herbal supplements.",
+      "utterance": "Zarina Mohd's herbal supplement purchase amounted to SGD 720.",
+      "question": "How much did Zarina Mohd spend on herbal supplements?",
+      "delete_value": [
+        "720",
+        "SGD 720"
+      ],
+      "probe_value": [
+        "700",
+        "720",
+        "750",
+        "SGD 720"
+      ],
+      "entailed_by": [
+        "C127",
+        "C128"
+      ],
+      "co_delete_required": [
+        "C127",
+        "C128"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "18 bottles x SGD 40 = SGD 720; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F087",
+      "subject": "Iskandar Yusof",
+      "category": "medical",
+      "text": "Iskandar Yusof incurred SGD 1,200 in medical expenses.",
+      "utterance": "Iskandar Yusof's medical expenses totaled SGD 1,200.",
+      "question": "What were Iskandar Yusof's medical expenses?",
+      "delete_value": [
+        "1200",
+        "SGD 1,200"
+      ],
+      "probe_value": [
+        "1150",
+        "1200",
+        "1250",
+        "SGD 1,200"
+      ],
+      "entailed_by": [
+        "C129",
+        "C130"
+      ],
+      "co_delete_required": [
+        "C129",
+        "C130"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "15 consultations x SGD 80 = SGD 1,200; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F088",
+      "subject": "Deepa Menon",
+      "category": "financial",
+      "text": "Deepa Menon spent SGD 540 on kitchen appliances.",
+      "utterance": "Deepa Menon's kitchen appliance purchase came to SGD 540.",
+      "question": "How much did Deepa Menon spend on kitchen appliances?",
+      "delete_value": [
+        "540",
+        "SGD 540"
+      ],
+      "probe_value": [
+        "530",
+        "540",
+        "550",
+        "SGD 540"
+      ],
+      "entailed_by": [
+        "C131",
+        "C132"
+      ],
+      "co_delete_required": [
+        "C131",
+        "C132"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "9 appliances x SGD 60 = SGD 540; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F089",
+      "subject": "Suresh Pillai",
+      "category": "financial",
+      "text": "Suresh Pillai spent SGD 1,050 on fitness equipment.",
+      "utterance": "Suresh Pillai's fitness equipment expenditure was SGD 1,050.",
+      "question": "What amount did Suresh Pillai spend on fitness equipment?",
+      "delete_value": [
+        "1050",
+        "SGD 1,050"
+      ],
+      "probe_value": [
+        "1000",
+        "1050",
+        "1100",
+        "SGD 1,050"
+      ],
+      "entailed_by": [
+        "C133",
+        "C134"
+      ],
+      "co_delete_required": [
+        "C133",
+        "C134"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "21 pieces x SGD 50 = SGD 1,050; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F090",
+      "subject": "Anand Raj",
+      "category": "financial",
+      "text": "Anand Raj spent SGD 390 on gardening supplies.",
+      "utterance": "Anand Raj's gardening supplies cost SGD 390.",
+      "question": "What was the total amount Anand Raj spent on gardening supplies?",
+      "delete_value": [
+        "390",
+        "SGD 390"
+      ],
+      "probe_value": [
+        "380",
+        "390",
+        "400",
+        "SGD 390"
+      ],
+      "entailed_by": [
+        "C135",
+        "C136"
+      ],
+      "co_delete_required": [
+        "C135",
+        "C136"
+      ],
+      "rederivation_basis": "stored",
+      "entailment_note": "13 supplies x SGD 30 = SGD 390; quantity alone or fictional-store price alone cannot give the total."
+    },
+    {
+      "id": "F091",
+      "subject": "Jun Wei Ong",
+      "category": "location",
+      "text": "Jun Wei Ong traveled approximately 500 km to visit his family.",
+      "utterance": "Jun Wei Ong's trip to see his family was about 500 km.",
+      "question": "How far did Jun Wei Ong travel to visit his family?",
+      "delete_value": [
+        "500 km",
+        "500"
+      ],
+      "probe_value": [
+        "490",
+        "490 km",
+        "500",
+        "500 km",
+        "510",
+        "510 km"
+      ],
+      "entailed_by": [
+        "C137",
+        "C138"
+      ],
+      "co_delete_required": [
+        "C137",
+        "C138"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "distance = speed x time = 100 x 5 = 500 km; speed alone or time alone cannot give the distance."
+    },
+    {
+      "id": "F092",
+      "subject": "Mei Fang Goh",
+      "category": "personal_contact",
+      "text": "Mei Fang Goh made about 150 contacts in her network.",
+      "utterance": "Mei Fang Goh's network consists of around 150 contacts.",
+      "question": "How many contacts does Mei Fang Goh have in her network?",
+      "delete_value": [
+        "150 contacts",
+        "150"
+      ],
+      "probe_value": [
+        "145",
+        "145 contacts",
+        "150",
+        "150 contacts",
+        "155",
+        "155 contacts"
+      ],
+      "entailed_by": [
+        "C139",
+        "C140"
+      ],
+      "co_delete_required": [
+        "C139",
+        "C140"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x (a real, world-known unit value) = 12 x 12.5 = 150; events alone or average contacts alone cannot determine total contacts."
+    },
+    {
+      "id": "F093",
+      "subject": "Boon Hock Teo",
+      "category": "employment",
+      "text": "Boon Hock Teo has approximately 8 years of work experience.",
+      "utterance": "Boon Hock Teo's work experience totals around 8 years.",
+      "question": "How many years of work experience does Boon Hock Teo have?",
+      "delete_value": [
+        "8 years",
+        "8"
+      ],
+      "probe_value": [
+        "7",
+        "7 years",
+        "8",
+        "8 years",
+        "9",
+        "9 years"
+      ],
+      "entailed_by": [
+        "C141",
+        "C142"
+      ],
+      "co_delete_required": [
+        "C141",
+        "C142"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x (a real, world-known unit value) = 4 x 2 = 8 years; companies alone or average duration alone cannot give the total experience."
+    },
+    {
+      "id": "F094",
+      "subject": "Xin Yi Chua",
+      "category": "preference",
+      "text": "Xin Yi Chua prefers about 75% of her meals to be vegetarian.",
+      "utterance": "Xin Yi Chua's meal preference is approximately 75% vegetarian.",
+      "question": "What percentage of meals does Xin Yi Chua prefer to be vegetarian?",
+      "delete_value": [
+        "75%",
+        "75"
+      ],
+      "probe_value": [
+        "70",
+        "70%",
+        "75",
+        "75%",
+        "80",
+        "80%"
+      ],
+      "entailed_by": [
+        "C143",
+        "C144"
+      ],
+      "co_delete_required": [
+        "C143",
+        "C144"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "percentage = (part/whole) x 100 = (21/28) x 100 = 75%; meals alone or total meals alone cannot determine the percentage preference."
+    },
+    {
+      "id": "F095",
+      "subject": "Kai Xin Ng",
+      "category": "location",
+      "text": "Kai Xin Ng walked approximately 15 km during her hike at Bukit Timah Nature Reserve.",
+      "utterance": "Kai Xin Ng's hiking distance at Bukit Timah was about 15 km.",
+      "question": "How far did Kai Xin Ng hike at Bukit Timah Nature Reserve?",
+      "delete_value": [
+        "15 km",
+        "15"
+      ],
+      "probe_value": [
+        "14",
+        "15",
+        "15 km",
+        "16"
+      ],
+      "entailed_by": [
+        "C145",
+        "C146"
+      ],
+      "co_delete_required": [
+        "C145",
+        "C146"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "distance = speed x time = 5 x 3 = 15 km; speed alone or time alone cannot give the distance."
+    },
+    {
+      "id": "F096",
+      "subject": "Pei Shan Sim",
+      "category": "financial",
+      "text": "Pei Shan Sim earned approximately 900 SGD from her freelance work last month.",
+      "utterance": "Pei Shan Sim's freelance earnings last month were about 900 SGD.",
+      "question": "What was Pei Shan Sim's freelance income last month?",
+      "delete_value": [
+        "900 SGD",
+        "900"
+      ],
+      "probe_value": [
+        "850",
+        "900",
+        "900 SGD",
+        "950"
+      ],
+      "entailed_by": [
+        "C147",
+        "C148"
+      ],
+      "co_delete_required": [
+        "C147",
+        "C148"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x unit value = 30 x 30 = 900 SGD; quantity alone or unit value alone cannot give the total."
+    },
+    {
+      "id": "F097",
+      "subject": "Faizal Osman",
+      "category": "employment",
+      "text": "Faizal Osman worked 40 hours in his part-time job last week.",
+      "utterance": "Faizal Osman logged about 40 hours at his part-time job last week.",
+      "question": "How many hours did Faizal Osman work last week?",
+      "delete_value": [
+        "40 hours",
+        "40"
+      ],
+      "probe_value": [
+        "39",
+        "40",
+        "40 hours",
+        "41"
+      ],
+      "entailed_by": [
+        "C149",
+        "C150"
+      ],
+      "co_delete_required": [
+        "C149",
+        "C150"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x unit value = 40 x 15 = 600 SGD; hours alone or wage alone cannot give the total."
+    },
+    {
+      "id": "F098",
+      "subject": "Hakim Abdullah",
+      "category": "personal_contact",
+      "text": "Hakim Abdullah has around 150 contacts saved in his phone.",
+      "utterance": "Hakim Abdullah's phonebook contains about 150 contacts.",
+      "question": "How many contacts does Hakim Abdullah have in his phone?",
+      "delete_value": [
+        "150 contacts",
+        "150"
+      ],
+      "probe_value": [
+        "145",
+        "150",
+        "150 contacts",
+        "155"
+      ],
+      "entailed_by": [
+        "C151",
+        "C152"
+      ],
+      "co_delete_required": [
+        "C151",
+        "C152"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "contacts = networking experience x events attended; experience alone or events alone cannot give the total contacts."
+    },
+    {
+      "id": "F099",
+      "subject": "Zarina Mohd",
+      "category": "financial",
+      "text": "Zarina Mohd invested approximately 15,000 SGD in a mutual fund.",
+      "utterance": "Zarina Mohd's investment in the mutual fund was about 15,000 SGD.",
+      "question": "How much did Zarina Mohd invest in the mutual fund?",
+      "delete_value": [
+        "15,000 SGD",
+        "15,000"
+      ],
+      "probe_value": [
+        "14,500",
+        "15,000",
+        "15,000 SGD",
+        "15,500"
+      ],
+      "entailed_by": [
+        "C153",
+        "C154"
+      ],
+      "co_delete_required": [
+        "C153",
+        "C154"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x unit value = 300,000 x 0.05 = 15,000 SGD; income alone or percentage alone cannot give the investment."
+    },
+    {
+      "id": "F100",
+      "subject": "Iskandar Yusof",
+      "category": "medical",
+      "text": "Iskandar Yusof underwent a 2-hour surgical procedure.",
+      "utterance": "Iskandar Yusof's surgery lasted for about 2 hours.",
+      "question": "How long did Iskandar Yusof's surgical procedure take?",
+      "delete_value": [
+        "2 hours",
+        "2"
+      ],
+      "probe_value": [
+        "1.5 hours",
+        "2",
+        "2 hours",
+        "2.5 hours"
+      ],
+      "entailed_by": [
+        "C155",
+        "C156"
+      ],
+      "co_delete_required": [
+        "C155",
+        "C156"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "time = initial estimate + additional time = 1.5 + 0.5 = 2 hours; condition alone or estimate alone cannot determine the total time."
+    },
+    {
+      "id": "F101",
+      "subject": "Deepa Menon",
+      "category": "location",
+      "text": "Deepa Menon traveled approximately 120 km to reach her destination.",
+      "utterance": "Deepa Menon's journey covered about 120 km.",
+      "question": "What distance did Deepa Menon travel to her destination?",
+      "delete_value": [
+        "120 km",
+        "120"
+      ],
+      "probe_value": [
+        "115 km",
+        "120",
+        "120 km",
+        "125 km"
+      ],
+      "entailed_by": [
+        "C157",
+        "C158"
+      ],
+      "co_delete_required": [
+        "C157",
+        "C158"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "distance = speed x time = 60 x 2 = 120 km; speed alone or time alone cannot give the distance."
+    },
+    {
+      "id": "F102",
+      "subject": "Suresh Pillai",
+      "category": "personal_contact",
+      "text": "Suresh Pillai made 10 phone calls last week.",
+      "utterance": "Suresh Pillai's phone call count last week was around 10.",
+      "question": "How many phone calls did Suresh Pillai make last week?",
+      "delete_value": [
+        "10",
+        "10 calls"
+      ],
+      "probe_value": [
+        "10",
+        "10 calls",
+        "11 calls",
+        "9 calls"
+      ],
+      "entailed_by": [
+        "C159",
+        "C160"
+      ],
+      "co_delete_required": [
+        "C159",
+        "C160"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x days = 2 x 5 = 10 calls; daily contact alone or busy week alone cannot give the total calls."
+    },
+    {
+      "id": "F103",
+      "subject": "Anand Raj",
+      "category": "employment",
+      "text": "Anand Raj has been employed for about 4 years.",
+      "utterance": "Anand Raj's duration of employment is around 4 years.",
+      "question": "How long has Anand Raj been employed?",
+      "delete_value": [
+        "4 years",
+        "4"
+      ],
+      "probe_value": [
+        "3.5 years",
+        "4",
+        "4 years",
+        "4.5 years"
+      ],
+      "entailed_by": [
+        "C161",
+        "C162"
+      ],
+      "co_delete_required": [
+        "C161",
+        "C162"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "years = career start + time at company = 0 + 4 = 4 years; start alone or company tenure alone cannot give the total employment duration."
+    },
+    {
+      "id": "F104",
+      "subject": "Kavitha Subramaniam",
+      "category": "preference",
+      "text": "Kavitha Subramaniam prefers to drink 3 cups of coffee daily.",
+      "utterance": "Kavitha Subramaniam's coffee consumption is about 3 cups each day.",
+      "question": "How many cups of coffee does Kavitha Subramaniam prefer to drink daily?",
+      "delete_value": [
+        "3 cups",
+        "3"
+      ],
+      "probe_value": [
+        "2.5 cups",
+        "3",
+        "3 cups",
+        "3.5 cups"
+      ],
+      "entailed_by": [
+        "C163",
+        "C164"
+      ],
+      "co_delete_required": [
+        "C163",
+        "C164"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x frequency = 1.5 x 2 = 3 cups; taste alone or frequency alone cannot determine total preference."
+    },
+    {
+      "id": "F105",
+      "subject": "Vimal Nair",
+      "category": "financial",
+      "text": "Vimal Nair saved approximately $5,000 over the year.",
+      "utterance": "Vimal Nair's yearly savings were around $5,000.",
+      "question": "How much did Vimal Nair save in a year?",
+      "delete_value": [
+        "$5,000",
+        "5000"
+      ],
+      "probe_value": [
+        "$4,900",
+        "$5,000",
+        "$5,100",
+        "5000"
+      ],
+      "entailed_by": [
+        "C165",
+        "C166"
+      ],
+      "co_delete_required": [
+        "C165",
+        "C166"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x (a real, world-known unit value) = 400 x 12 = $5,000; monthly contribution alone or time period alone cannot determine the total savings."
+    },
+    {
+      "id": "F106",
+      "subject": "Marcus Pereira",
+      "category": "location",
+      "text": "Marcus Pereira traveled approximately 450 km to reach his destination.",
+      "utterance": "Marcus Pereira's journey covered about 450 km.",
+      "question": "How far did Marcus Pereira travel to his destination?",
+      "delete_value": [
+        "450 km",
+        "450"
+      ],
+      "probe_value": [
+        "440 km",
+        "450",
+        "450 km",
+        "460 km"
+      ],
+      "entailed_by": [
+        "C167",
+        "C168"
+      ],
+      "co_delete_required": [
+        "C167",
+        "C168"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "distance = speed x time = 90 x 5 = 450 km; speed alone or time alone cannot determine the distance."
+    },
+    {
+      "id": "F107",
+      "subject": "Natalie de Souza",
+      "category": "personal_contact",
+      "text": "Natalie de Souza received 20 calls last week.",
+      "utterance": "Natalie de Souza's call count for the week was 20.",
+      "question": "How many calls did Natalie de Souza receive last week?",
+      "delete_value": [
+        "20 calls",
+        "20"
+      ],
+      "probe_value": [
+        "19 calls",
+        "20",
+        "20 calls",
+        "21 calls"
+      ],
+      "entailed_by": [
+        "C169",
+        "C170"
+      ],
+      "co_delete_required": [
+        "C169",
+        "C170"
+      ],
+      "rederivation_basis": "stored+world",
+      "entailment_note": "total = quantity x (a real, world-known unit value) = 2 x 10 = 20 calls; time alone or call rate alone cannot determine the total calls."
+    },
+    {
+      "id": "F108",
+      "subject": "Wei Jie Tan",
+      "category": "financial",
+      "text": "Wei Jie Tan's gourmet tea order from Mandai Trading Co. came to SGD 192.",
+      "utterance": "Wei Jie Tan's gourmet tea order came to SGD 192.",
+      "question": "How much did Wei Jie Tan's gourmet tea order from Mandai Trading Co. come to?",
+      "delete_value": [
+        "192",
+        "SGD 192"
+      ],
+      "probe_value": [
+        "182",
+        "192",
+        "202",
+        "SGD 192"
+      ],
+      "entailed_by": [
+        "C205",
+        "C206",
+        "C207",
+        "C208"
+      ],
+      "co_delete_required": [
+        "C205",
+        "C206",
+        "C207",
+        "C208"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 12 x 8 = 96 tins; D = SGD 2/tin (Emerald tier); T = 96 x 2 = SGD 192. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C205",
+          "Ar": "C206",
+          "C": "C207",
+          "Cr": "C208"
+        },
+        "edges": [
+          [
+            "C205",
+            "B"
+          ],
+          [
+            "C206",
+            "B"
+          ],
+          [
+            "C207",
+            "D"
+          ],
+          [
+            "C208",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F109",
+      "subject": "Hui Min Lim",
+      "category": "financial",
+      "text": "Hui Min Lim's arabica coffee order from Orchard Provisions came to SGD 390.",
+      "utterance": "Hui Min Lim's arabica coffee order came to SGD 390.",
+      "question": "How much did Hui Min Lim's arabica coffee order from Orchard Provisions come to?",
+      "delete_value": [
+        "390",
+        "SGD 390"
+      ],
+      "probe_value": [
+        "380",
+        "390",
+        "400",
+        "SGD 390"
+      ],
+      "entailed_by": [
+        "C209",
+        "C210",
+        "C211",
+        "C212"
+      ],
+      "co_delete_required": [
+        "C209",
+        "C210",
+        "C211",
+        "C212"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 13 x 10 = 130 bags; D = SGD 3/bag (Gold tier); T = 130 x 3 = SGD 390. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C209",
+          "Ar": "C210",
+          "C": "C211",
+          "Cr": "C212"
+        },
+        "edges": [
+          [
+            "C209",
+            "B"
+          ],
+          [
+            "C210",
+            "B"
+          ],
+          [
+            "C211",
+            "D"
+          ],
+          [
+            "C212",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F110",
+      "subject": "Jun Wei Ong",
+      "category": "financial",
+      "text": "Jun Wei Ong's dried abalone order from Tanglin Sundry Co. came to SGD 672.",
+      "utterance": "Jun Wei Ong's dried abalone order came to SGD 672.",
+      "question": "How much did Jun Wei Ong's dried abalone order from Tanglin Sundry Co. come to?",
+      "delete_value": [
+        "672",
+        "SGD 672"
+      ],
+      "probe_value": [
+        "662",
+        "672",
+        "682",
+        "SGD 672"
+      ],
+      "entailed_by": [
+        "C213",
+        "C214",
+        "C215",
+        "C216"
+      ],
+      "co_delete_required": [
+        "C213",
+        "C214",
+        "C215",
+        "C216"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 14 x 12 = 168 cans; D = SGD 4/can (Platinum tier); T = 168 x 4 = SGD 672. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C213",
+          "Ar": "C214",
+          "C": "C215",
+          "Cr": "C216"
+        },
+        "edges": [
+          [
+            "C213",
+            "B"
+          ],
+          [
+            "C214",
+            "B"
+          ],
+          [
+            "C215",
+            "D"
+          ],
+          [
+            "C216",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F111",
+      "subject": "Mei Fang Goh",
+      "category": "financial",
+      "text": "Mei Fang Goh's bird's nest order from Bedok Wholesale Hub came to SGD 675.",
+      "utterance": "Mei Fang Goh's bird's nest order came to SGD 675.",
+      "question": "How much did Mei Fang Goh's bird's nest order from Bedok Wholesale Hub come to?",
+      "delete_value": [
+        "675",
+        "SGD 675"
+      ],
+      "probe_value": [
+        "665",
+        "675",
+        "685",
+        "SGD 675"
+      ],
+      "entailed_by": [
+        "C217",
+        "C218",
+        "C219",
+        "C220"
+      ],
+      "co_delete_required": [
+        "C217",
+        "C218",
+        "C219",
+        "C220"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 15 x 9 = 135 jars; D = SGD 5/jar (Sapphire tier); T = 135 x 5 = SGD 675. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C217",
+          "Ar": "C218",
+          "C": "C219",
+          "Cr": "C220"
+        },
+        "edges": [
+          [
+            "C217",
+            "B"
+          ],
+          [
+            "C218",
+            "B"
+          ],
+          [
+            "C219",
+            "D"
+          ],
+          [
+            "C220",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F112",
+      "subject": "Boon Hock Teo",
+      "category": "financial",
+      "text": "Boon Hock Teo's manuka honey order from Serangoon Depot came to SGD 1056.",
+      "utterance": "Boon Hock Teo's manuka honey order came to SGD 1056.",
+      "question": "How much did Boon Hock Teo's manuka honey order from Serangoon Depot come to?",
+      "delete_value": [
+        "1056",
+        "SGD 1056"
+      ],
+      "probe_value": [
+        "1046",
+        "1056",
+        "1066",
+        "SGD 1056"
+      ],
+      "entailed_by": [
+        "C221",
+        "C222",
+        "C223",
+        "C224"
+      ],
+      "co_delete_required": [
+        "C221",
+        "C222",
+        "C223",
+        "C224"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 16 x 11 = 176 jars; D = SGD 6/jar (Ruby tier); T = 176 x 6 = SGD 1056. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C221",
+          "Ar": "C222",
+          "C": "C223",
+          "Cr": "C224"
+        },
+        "edges": [
+          [
+            "C221",
+            "B"
+          ],
+          [
+            "C222",
+            "B"
+          ],
+          [
+            "C223",
+            "D"
+          ],
+          [
+            "C224",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F113",
+      "subject": "Xin Yi Chua",
+      "category": "financial",
+      "text": "Xin Yi Chua's saffron order from Jurong Bulk Traders came to SGD 1088.",
+      "utterance": "Xin Yi Chua's saffron order came to SGD 1088.",
+      "question": "How much did Xin Yi Chua's saffron order from Jurong Bulk Traders come to?",
+      "delete_value": [
+        "1088",
+        "SGD 1088"
+      ],
+      "probe_value": [
+        "1078",
+        "1088",
+        "1098",
+        "SGD 1088"
+      ],
+      "entailed_by": [
+        "C225",
+        "C226",
+        "C227",
+        "C228"
+      ],
+      "co_delete_required": [
+        "C225",
+        "C226",
+        "C227",
+        "C228"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 17 x 8 = 136 packs; D = SGD 8/pack (Onyx tier); T = 136 x 8 = SGD 1088. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C225",
+          "Ar": "C226",
+          "C": "C227",
+          "Cr": "C228"
+        },
+        "edges": [
+          [
+            "C225",
+            "B"
+          ],
+          [
+            "C226",
+            "B"
+          ],
+          [
+            "C227",
+            "D"
+          ],
+          [
+            "C228",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F114",
+      "subject": "Kai Xin Ng",
+      "category": "financial",
+      "text": "Kai Xin Ng's truffle paste order from Katong Supply Co. came to SGD 360.",
+      "utterance": "Kai Xin Ng's truffle paste order came to SGD 360.",
+      "question": "How much did Kai Xin Ng's truffle paste order from Katong Supply Co. come to?",
+      "delete_value": [
+        "360",
+        "SGD 360"
+      ],
+      "probe_value": [
+        "350",
+        "360",
+        "370",
+        "SGD 360"
+      ],
+      "entailed_by": [
+        "C229",
+        "C230",
+        "C231",
+        "C232"
+      ],
+      "co_delete_required": [
+        "C229",
+        "C230",
+        "C231",
+        "C232"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 18 x 10 = 180 bottles; D = SGD 2/bottle (Emerald tier); T = 180 x 2 = SGD 360. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C229",
+          "Ar": "C230",
+          "C": "C231",
+          "Cr": "C232"
+        },
+        "edges": [
+          [
+            "C229",
+            "B"
+          ],
+          [
+            "C230",
+            "B"
+          ],
+          [
+            "C231",
+            "D"
+          ],
+          [
+            "C232",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F115",
+      "subject": "Pei Shan Sim",
+      "category": "financial",
+      "text": "Pei Shan Sim's wild ginseng order from Punggol Provisions came to SGD 432.",
+      "utterance": "Pei Shan Sim's wild ginseng order came to SGD 432.",
+      "question": "How much did Pei Shan Sim's wild ginseng order from Punggol Provisions come to?",
+      "delete_value": [
+        "432",
+        "SGD 432"
+      ],
+      "probe_value": [
+        "422",
+        "432",
+        "442",
+        "SGD 432"
+      ],
+      "entailed_by": [
+        "C233",
+        "C234",
+        "C235",
+        "C236"
+      ],
+      "co_delete_required": [
+        "C233",
+        "C234",
+        "C235",
+        "C236"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 12 x 12 = 144 packets; D = SGD 3/packet (Gold tier); T = 144 x 3 = SGD 432. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C233",
+          "Ar": "C234",
+          "C": "C235",
+          "Cr": "C236"
+        },
+        "edges": [
+          [
+            "C233",
+            "B"
+          ],
+          [
+            "C234",
+            "B"
+          ],
+          [
+            "C235",
+            "D"
+          ],
+          [
+            "C236",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F116",
+      "subject": "Nurul Aisyah",
+      "category": "financial",
+      "text": "Nurul Aisyah's gourmet tea order from Sembawang Cooperative came to SGD 468.",
+      "utterance": "Nurul Aisyah's gourmet tea order came to SGD 468.",
+      "question": "How much did Nurul Aisyah's gourmet tea order from Sembawang Cooperative come to?",
+      "delete_value": [
+        "468",
+        "SGD 468"
+      ],
+      "probe_value": [
+        "458",
+        "468",
+        "478",
+        "SGD 468"
+      ],
+      "entailed_by": [
+        "C237",
+        "C238",
+        "C239",
+        "C240"
+      ],
+      "co_delete_required": [
+        "C237",
+        "C238",
+        "C239",
+        "C240"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 13 x 9 = 117 tins; D = SGD 4/tin (Platinum tier); T = 117 x 4 = SGD 468. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C237",
+          "Ar": "C238",
+          "C": "C239",
+          "Cr": "C240"
+        },
+        "edges": [
+          [
+            "C237",
+            "B"
+          ],
+          [
+            "C238",
+            "B"
+          ],
+          [
+            "C239",
+            "D"
+          ],
+          [
+            "C240",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F117",
+      "subject": "Faizal Osman",
+      "category": "financial",
+      "text": "Faizal Osman's arabica coffee order from Clementi Traders came to SGD 770.",
+      "utterance": "Faizal Osman's arabica coffee order came to SGD 770.",
+      "question": "How much did Faizal Osman's arabica coffee order from Clementi Traders come to?",
+      "delete_value": [
+        "770",
+        "SGD 770"
+      ],
+      "probe_value": [
+        "760",
+        "770",
+        "780",
+        "SGD 770"
+      ],
+      "entailed_by": [
+        "C241",
+        "C242",
+        "C243",
+        "C244"
+      ],
+      "co_delete_required": [
+        "C241",
+        "C242",
+        "C243",
+        "C244"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 14 x 11 = 154 bags; D = SGD 5/bag (Sapphire tier); T = 154 x 5 = SGD 770. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C241",
+          "Ar": "C242",
+          "C": "C243",
+          "Cr": "C244"
+        },
+        "edges": [
+          [
+            "C241",
+            "B"
+          ],
+          [
+            "C242",
+            "B"
+          ],
+          [
+            "C243",
+            "D"
+          ],
+          [
+            "C244",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F118",
+      "subject": "Aishah Ibrahim",
+      "category": "financial",
+      "text": "Aishah Ibrahim's dried abalone order from Tampines Merchants came to SGD 720.",
+      "utterance": "Aishah Ibrahim's dried abalone order came to SGD 720.",
+      "question": "How much did Aishah Ibrahim's dried abalone order from Tampines Merchants come to?",
+      "delete_value": [
+        "720",
+        "SGD 720"
+      ],
+      "probe_value": [
+        "710",
+        "720",
+        "730",
+        "SGD 720"
+      ],
+      "entailed_by": [
+        "C245",
+        "C246",
+        "C247",
+        "C248"
+      ],
+      "co_delete_required": [
+        "C245",
+        "C246",
+        "C247",
+        "C248"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 15 x 8 = 120 cans; D = SGD 6/can (Ruby tier); T = 120 x 6 = SGD 720. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C245",
+          "Ar": "C246",
+          "C": "C247",
+          "Cr": "C248"
+        },
+        "edges": [
+          [
+            "C245",
+            "B"
+          ],
+          [
+            "C246",
+            "B"
+          ],
+          [
+            "C247",
+            "D"
+          ],
+          [
+            "C248",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F119",
+      "subject": "Hakim Abdullah",
+      "category": "financial",
+      "text": "Hakim Abdullah's bird's nest order from Yishun Supply Co. came to SGD 1280.",
+      "utterance": "Hakim Abdullah's bird's nest order came to SGD 1280.",
+      "question": "How much did Hakim Abdullah's bird's nest order from Yishun Supply Co. come to?",
+      "delete_value": [
+        "1280",
+        "SGD 1280"
+      ],
+      "probe_value": [
+        "1270",
+        "1280",
+        "1290",
+        "SGD 1280"
+      ],
+      "entailed_by": [
+        "C249",
+        "C250",
+        "C251",
+        "C252"
+      ],
+      "co_delete_required": [
+        "C249",
+        "C250",
+        "C251",
+        "C252"
+      ],
+      "rederivation_basis": "stored_multilevel",
+      "entailment_note": "B = 16 x 10 = 160 jars; D = SGD 8/jar (Onyx tier); T = 160 x 8 = SGD 1280. No single stored fact gives T; the fictional org means deleting all four operands makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C249",
+          "Ar": "C250",
+          "C": "C251",
+          "Cr": "C252"
+        },
+        "edges": [
+          [
+            "C249",
+            "B"
+          ],
+          [
+            "C250",
+            "B"
+          ],
+          [
+            "C251",
+            "D"
+          ],
+          [
+            "C252",
+            "D"
+          ],
+          [
+            "B",
+            "T"
+          ],
+          [
+            "D",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "D",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F120",
+      "subject": "Zarina Mohd",
+      "category": "financial",
+      "text": "Zarina Mohd's FitHub reward redemption came to SGD 60.",
+      "utterance": "Zarina Mohd redeemed SGD 60 of FitHub rewards.",
+      "question": "How much was Zarina Mohd's FitHub reward redemption worth?",
+      "delete_value": [
+        "60",
+        "SGD 60"
+      ],
+      "probe_value": [
+        "57",
+        "60",
+        "63",
+        "SGD 60"
+      ],
+      "entailed_by": [
+        "C253",
+        "C254",
+        "C255",
+        "C256"
+      ],
+      "co_delete_required": [
+        "C253",
+        "C254",
+        "C255",
+        "C256"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 6 x 5 = 30; C = 30 x 2 = 60; T = 60 x 1 = SGD 60. Fictional FitHub scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C253",
+          "r1": "C254",
+          "r2": "C255",
+          "r3": "C256"
+        },
+        "edges": [
+          [
+            "C253",
+            "B"
+          ],
+          [
+            "C254",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C255",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C256",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F121",
+      "subject": "Iskandar Yusof",
+      "category": "financial",
+      "text": "Iskandar Yusof's PaddlePro reward redemption came to SGD 252.",
+      "utterance": "Iskandar Yusof redeemed SGD 252 of PaddlePro rewards.",
+      "question": "How much was Iskandar Yusof's PaddlePro reward redemption worth?",
+      "delete_value": [
+        "252",
+        "SGD 252"
+      ],
+      "probe_value": [
+        "249",
+        "252",
+        "255",
+        "SGD 252"
+      ],
+      "entailed_by": [
+        "C257",
+        "C258",
+        "C259",
+        "C260"
+      ],
+      "co_delete_required": [
+        "C257",
+        "C258",
+        "C259",
+        "C260"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 7 x 6 = 42; C = 42 x 3 = 126; T = 126 x 2 = SGD 252. Fictional PaddlePro scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C257",
+          "r1": "C258",
+          "r2": "C259",
+          "r3": "C260"
+        },
+        "edges": [
+          [
+            "C257",
+            "B"
+          ],
+          [
+            "C258",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C259",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C260",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F122",
+      "subject": "Deepa Menon",
+      "category": "financial",
+      "text": "Deepa Menon's SpinCycle reward redemption came to SGD 672.",
+      "utterance": "Deepa Menon redeemed SGD 672 of SpinCycle rewards.",
+      "question": "How much was Deepa Menon's SpinCycle reward redemption worth?",
+      "delete_value": [
+        "672",
+        "SGD 672"
+      ],
+      "probe_value": [
+        "669",
+        "672",
+        "675",
+        "SGD 672"
+      ],
+      "entailed_by": [
+        "C261",
+        "C262",
+        "C263",
+        "C264"
+      ],
+      "co_delete_required": [
+        "C261",
+        "C262",
+        "C263",
+        "C264"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 8 x 7 = 56; C = 56 x 4 = 224; T = 224 x 3 = SGD 672. Fictional SpinCycle scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C261",
+          "r1": "C262",
+          "r2": "C263",
+          "r3": "C264"
+        },
+        "edges": [
+          [
+            "C261",
+            "B"
+          ],
+          [
+            "C262",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C263",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C264",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F123",
+      "subject": "Suresh Pillai",
+      "category": "financial",
+      "text": "Suresh Pillai's TrailMix reward redemption came to SGD 144.",
+      "utterance": "Suresh Pillai redeemed SGD 144 of TrailMix rewards.",
+      "question": "How much was Suresh Pillai's TrailMix reward redemption worth?",
+      "delete_value": [
+        "144",
+        "SGD 144"
+      ],
+      "probe_value": [
+        "141",
+        "144",
+        "147",
+        "SGD 144"
+      ],
+      "entailed_by": [
+        "C265",
+        "C266",
+        "C267",
+        "C268"
+      ],
+      "co_delete_required": [
+        "C265",
+        "C266",
+        "C267",
+        "C268"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 9 x 8 = 72; C = 72 x 2 = 144; T = 144 x 1 = SGD 144. Fictional TrailMix scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C265",
+          "r1": "C266",
+          "r2": "C267",
+          "r3": "C268"
+        },
+        "edges": [
+          [
+            "C265",
+            "B"
+          ],
+          [
+            "C266",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C267",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C268",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F124",
+      "subject": "Anand Raj",
+      "category": "financial",
+      "text": "Anand Raj's AquaLoop reward redemption came to SGD 540.",
+      "utterance": "Anand Raj redeemed SGD 540 of AquaLoop rewards.",
+      "question": "How much was Anand Raj's AquaLoop reward redemption worth?",
+      "delete_value": [
+        "540",
+        "SGD 540"
+      ],
+      "probe_value": [
+        "537",
+        "540",
+        "543",
+        "SGD 540"
+      ],
+      "entailed_by": [
+        "C269",
+        "C270",
+        "C271",
+        "C272"
+      ],
+      "co_delete_required": [
+        "C269",
+        "C270",
+        "C271",
+        "C272"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 10 x 9 = 90; C = 90 x 3 = 270; T = 270 x 2 = SGD 540. Fictional AquaLoop scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C269",
+          "r1": "C270",
+          "r2": "C271",
+          "r3": "C272"
+        },
+        "edges": [
+          [
+            "C269",
+            "B"
+          ],
+          [
+            "C270",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C271",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C272",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F125",
+      "subject": "Kavitha Subramaniam",
+      "category": "financial",
+      "text": "Kavitha Subramaniam's PeakFit reward redemption came to SGD 660.",
+      "utterance": "Kavitha Subramaniam redeemed SGD 660 of PeakFit rewards.",
+      "question": "How much was Kavitha Subramaniam's PeakFit reward redemption worth?",
+      "delete_value": [
+        "660",
+        "SGD 660"
+      ],
+      "probe_value": [
+        "657",
+        "660",
+        "663",
+        "SGD 660"
+      ],
+      "entailed_by": [
+        "C273",
+        "C274",
+        "C275",
+        "C276"
+      ],
+      "co_delete_required": [
+        "C273",
+        "C274",
+        "C275",
+        "C276"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 11 x 5 = 55; C = 55 x 4 = 220; T = 220 x 3 = SGD 660. Fictional PeakFit scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C273",
+          "r1": "C274",
+          "r2": "C275",
+          "r3": "C276"
+        },
+        "edges": [
+          [
+            "C273",
+            "B"
+          ],
+          [
+            "C274",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C275",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C276",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F126",
+      "subject": "Vimal Nair",
+      "category": "financial",
+      "text": "Vimal Nair's FitHub reward redemption came to SGD 72.",
+      "utterance": "Vimal Nair redeemed SGD 72 of FitHub rewards.",
+      "question": "How much was Vimal Nair's FitHub reward redemption worth?",
+      "delete_value": [
+        "72",
+        "SGD 72"
+      ],
+      "probe_value": [
+        "69",
+        "72",
+        "75",
+        "SGD 72"
+      ],
+      "entailed_by": [
+        "C277",
+        "C278",
+        "C279",
+        "C280"
+      ],
+      "co_delete_required": [
+        "C277",
+        "C278",
+        "C279",
+        "C280"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 6 x 6 = 36; C = 36 x 2 = 72; T = 72 x 1 = SGD 72. Fictional FitHub scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C277",
+          "r1": "C278",
+          "r2": "C279",
+          "r3": "C280"
+        },
+        "edges": [
+          [
+            "C277",
+            "B"
+          ],
+          [
+            "C278",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C279",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C280",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F127",
+      "subject": "Latha Krishnan",
+      "category": "financial",
+      "text": "Latha Krishnan's PaddlePro reward redemption came to SGD 294.",
+      "utterance": "Latha Krishnan redeemed SGD 294 of PaddlePro rewards.",
+      "question": "How much was Latha Krishnan's PaddlePro reward redemption worth?",
+      "delete_value": [
+        "294",
+        "SGD 294"
+      ],
+      "probe_value": [
+        "291",
+        "294",
+        "297",
+        "SGD 294"
+      ],
+      "entailed_by": [
+        "C281",
+        "C282",
+        "C283",
+        "C284"
+      ],
+      "co_delete_required": [
+        "C281",
+        "C282",
+        "C283",
+        "C284"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 7 x 7 = 49; C = 49 x 3 = 147; T = 147 x 2 = SGD 294. Fictional PaddlePro scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C281",
+          "r1": "C282",
+          "r2": "C283",
+          "r3": "C284"
+        },
+        "edges": [
+          [
+            "C281",
+            "B"
+          ],
+          [
+            "C282",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C283",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C284",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F128",
+      "subject": "Marcus Pereira",
+      "category": "financial",
+      "text": "Marcus Pereira's SpinCycle reward redemption came to SGD 768.",
+      "utterance": "Marcus Pereira redeemed SGD 768 of SpinCycle rewards.",
+      "question": "How much was Marcus Pereira's SpinCycle reward redemption worth?",
+      "delete_value": [
+        "768",
+        "SGD 768"
+      ],
+      "probe_value": [
+        "765",
+        "768",
+        "771",
+        "SGD 768"
+      ],
+      "entailed_by": [
+        "C285",
+        "C286",
+        "C287",
+        "C288"
+      ],
+      "co_delete_required": [
+        "C285",
+        "C286",
+        "C287",
+        "C288"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 8 x 8 = 64; C = 64 x 4 = 256; T = 256 x 3 = SGD 768. Fictional SpinCycle scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C285",
+          "r1": "C286",
+          "r2": "C287",
+          "r3": "C288"
+        },
+        "edges": [
+          [
+            "C285",
+            "B"
+          ],
+          [
+            "C286",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C287",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C288",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F129",
+      "subject": "Natalie de Souza",
+      "category": "financial",
+      "text": "Natalie de Souza's TrailMix reward redemption came to SGD 162.",
+      "utterance": "Natalie de Souza redeemed SGD 162 of TrailMix rewards.",
+      "question": "How much was Natalie de Souza's TrailMix reward redemption worth?",
+      "delete_value": [
+        "162",
+        "SGD 162"
+      ],
+      "probe_value": [
+        "159",
+        "162",
+        "165",
+        "SGD 162"
+      ],
+      "entailed_by": [
+        "C289",
+        "C290",
+        "C291",
+        "C292"
+      ],
+      "co_delete_required": [
+        "C289",
+        "C290",
+        "C291",
+        "C292"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 9 x 9 = 81; C = 81 x 2 = 162; T = 162 x 1 = SGD 162. Fictional TrailMix scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C289",
+          "r1": "C290",
+          "r2": "C291",
+          "r3": "C292"
+        },
+        "edges": [
+          [
+            "C289",
+            "B"
+          ],
+          [
+            "C290",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C291",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C292",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F130",
+      "subject": "Gabriel Sequeira",
+      "category": "financial",
+      "text": "Gabriel Sequeira's AquaLoop reward redemption came to SGD 300.",
+      "utterance": "Gabriel Sequeira redeemed SGD 300 of AquaLoop rewards.",
+      "question": "How much was Gabriel Sequeira's AquaLoop reward redemption worth?",
+      "delete_value": [
+        "300",
+        "SGD 300"
+      ],
+      "probe_value": [
+        "297",
+        "300",
+        "303",
+        "SGD 300"
+      ],
+      "entailed_by": [
+        "C293",
+        "C294",
+        "C295",
+        "C296"
+      ],
+      "co_delete_required": [
+        "C293",
+        "C294",
+        "C295",
+        "C296"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 10 x 5 = 50; C = 50 x 3 = 150; T = 150 x 2 = SGD 300. Fictional AquaLoop scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C293",
+          "r1": "C294",
+          "r2": "C295",
+          "r3": "C296"
+        },
+        "edges": [
+          [
+            "C293",
+            "B"
+          ],
+          [
+            "C294",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C295",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C296",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "F131",
+      "subject": "Cheryl Theseira",
+      "category": "financial",
+      "text": "Cheryl Theseira's PeakFit reward redemption came to SGD 792.",
+      "utterance": "Cheryl Theseira redeemed SGD 792 of PeakFit rewards.",
+      "question": "How much was Cheryl Theseira's PeakFit reward redemption worth?",
+      "delete_value": [
+        "792",
+        "SGD 792"
+      ],
+      "probe_value": [
+        "789",
+        "792",
+        "795",
+        "SGD 792"
+      ],
+      "entailed_by": [
+        "C297",
+        "C298",
+        "C299",
+        "C300"
+      ],
+      "co_delete_required": [
+        "C297",
+        "C298",
+        "C299",
+        "C300"
+      ],
+      "rederivation_basis": "stored_chain",
+      "entailment_note": "B = 11 x 6 = 66; C = 66 x 4 = 264; T = 264 x 3 = SGD 792. Fictional PeakFit scheme, multiplication only; deleting the chain makes T unrecoverable (rho ~ 0).",
+      "entailment_dag": {
+        "nodes": {
+          "A": "C297",
+          "r1": "C298",
+          "r2": "C299",
+          "r3": "C300"
+        },
+        "edges": [
+          [
+            "C297",
+            "B"
+          ],
+          [
+            "C298",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C299",
+            "C"
+          ],
+          [
+            "C",
+            "T"
+          ],
+          [
+            "C300",
+            "T"
+          ]
+        ],
+        "derived": [
+          "B",
+          "C",
+          "T"
+        ]
+      }
     }
   ]
 }

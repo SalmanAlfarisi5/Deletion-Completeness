@@ -53,7 +53,7 @@ SWEEP_TOLS = [0.0, 0.05, 0.10, 0.20]
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="rho-gradient measurement + pipeline")
-    ap.add_argument("--n-samples", type=int, default=6)
+    ap.add_argument("--n-samples", type=int, default=8)
     ap.add_argument("--single", action="store_true")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--keep", action="store_true")
@@ -65,10 +65,25 @@ def main() -> None:
     np.random.seed(args.seed)
 
     facts = load_facts(config.FACTS_DIR / "rho_gradient_facts.json")
-    reasoners = [config.REASONER_MODEL] if args.single else [config.REASONER_MODEL, config.SECOND_MODEL]
+    reasoners = [config.REASONER_MODEL] if args.single else config.reasoner_models()
 
-    rows, rho_by_fact = [], defaultdict(dict)
+    ckpt_p = config.RESULTS_DIR / "exp07_ckpt.json"
+    rows, rho_by_fact, done = [], defaultdict(dict), set()
+    if ckpt_p.exists():   # resume a crashed run WITHOUT re-spending on finished reasoners
+        try:
+            ck = json.loads(ckpt_p.read_text())
+            if (ck.get("n") == args.n_samples and ck.get("reasoners") == reasoners
+                    and ck.get("n_facts") == len(facts)):
+                rows = ck["rows"]
+                for _fid, _d in ck["rho_by_fact"].items():
+                    rho_by_fact[_fid] = _d
+                done = set(ck["done_reasoners"])
+                print(f"  [resume] {len(done)} reasoner(s) from checkpoint: {sorted(done)}")
+        except Exception:  # noqa: BLE001 -- a bad checkpoint just means start fresh
+            rows, rho_by_fact, done = [], defaultdict(dict), set()
     for reasoner in reasoners:
+        if reasoner in done:
+            continue
         param = ParametricProbe(model=reasoner)
         for f in tqdm(facts, desc=f"rho/{reasoner.split('-')[0]}"):
             base_ctx = f"{f['subject']} is a person in Singapore."   # strips the informative attribute
@@ -85,6 +100,11 @@ def main() -> None:
                 tqdm.write(f"  [{f['id']} {f['tier']:4s}] {reasoner.split('-')[0]:11s} "
                            f"rho={ctx['rho']:.2f} base={base['rho']:.2f} "
                            f"lift={ctx['rho']-base['rho']:+.2f} refusals={refusals}/{args.n_samples}")
+        done.add(reasoner)   # checkpoint after each reasoner (protects the multi-hour run)
+        ckpt_p.write_text(json.dumps(
+            {"n": args.n_samples, "reasoners": reasoners, "n_facts": len(facts),
+             "done_reasoners": sorted(done), "rows": rows,
+             "rho_by_fact": dict(rho_by_fact)}, default=str))
 
     df = pd.DataFrame(rows)
     # Per-tier rho is a pooled recovery RATE over all samples in the tier
@@ -221,6 +241,8 @@ def main() -> None:
           f"mid:{bimodality['rho_in_mid_band']}  rho>=0.5:{bimodality['rho_ge_0.5']}  "
           f"is_bimodal={bimodality['is_bimodal']}")
     print(f"  Results: {base_p.with_suffix('.csv')}  (answers logged in .json for free re-scoring)")
+    if ckpt_p.exists():
+        ckpt_p.unlink()   # completed successfully -> drop the resume checkpoint
 
 
 if __name__ == "__main__":

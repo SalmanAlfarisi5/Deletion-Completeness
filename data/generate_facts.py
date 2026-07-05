@@ -75,6 +75,40 @@ PERSONAS: list[dict] = [
 # may carry honorifics like the existing R-series; kept distinct from PERSONAS
 # and from the existing R01-R15 subjects for clarity).
 RHO_SUBJECTS: list[dict] = [
+    # --- expansion batch (2026-07-04) for the ~2x rho enlargement; prepended so
+    #     these NEW (never-used) subjects are authored first and survive build_rho ---
+    {"name": "Wen Bin Foo", "ethnicity": "Chinese"},
+    {"name": "Shu Hui Toh", "ethnicity": "Chinese"},
+    {"name": "Jia Hao Yeo", "ethnicity": "Chinese"},
+    {"name": "Li Ping Chia", "ethnicity": "Chinese"},
+    {"name": "Kok Wai Ho", "ethnicity": "Chinese"},
+    {"name": "Xiu Ling Poh", "ethnicity": "Chinese"},
+    {"name": "Zhi Hao Tay", "ethnicity": "Chinese"},
+    {"name": "Mei Ling Kwan", "ethnicity": "Chinese"},
+    {"name": "Boon Keng Chin", "ethnicity": "Chinese"},
+    {"name": "Hwee Yee Ang", "ethnicity": "Chinese"},
+    {"name": "Suhaimi Rashid", "ethnicity": "Malay"},
+    {"name": "Noraini Jalil", "ethnicity": "Malay"},
+    {"name": "Fadzli Karim", "ethnicity": "Malay"},
+    {"name": "Amirah Zulkifli", "ethnicity": "Malay"},
+    {"name": "Danial Roslan", "ethnicity": "Malay"},
+    {"name": "Hidayah Samsudin", "ethnicity": "Malay"},
+    {"name": "Rizwan Halim", "ethnicity": "Malay"},
+    {"name": "Suriani Bakar", "ethnicity": "Malay"},
+    {"name": "Ravi Chandran", "ethnicity": "Indian"},
+    {"name": "Meena Gopal", "ethnicity": "Indian"},
+    {"name": "Prakash Nathan", "ethnicity": "Indian"},
+    {"name": "Divya Ramesh", "ethnicity": "Indian"},
+    {"name": "Ganesh Kumaran", "ethnicity": "Indian"},
+    {"name": "Lakshmi Iyer", "ethnicity": "Indian"},
+    {"name": "Sanjay Balan", "ethnicity": "Indian"},
+    {"name": "Uma Maheswari", "ethnicity": "Indian"},
+    {"name": "Clarence Rozells", "ethnicity": "Eurasian"},
+    {"name": "Denise Minjoot", "ethnicity": "Eurasian"},
+    {"name": "Roland Scully", "ethnicity": "Eurasian"},
+    {"name": "Bernadette Aeria", "ethnicity": "Eurasian"},
+    {"name": "Trevor Danker", "ethnicity": "Eurasian"},
+    {"name": "Michelle Klass", "ethnicity": "Eurasian"},
     {"name": "Encik Salleh", "ethnicity": "Malay"},
     {"name": "Madam Goh", "ethnicity": "Chinese"},
     {"name": "Mr Balakrishnan", "ethnicity": "Indian"},
@@ -352,6 +386,136 @@ def author_rho(tier: str, subjects: list[str]) -> list[dict]:
 
 
 # --------------------------------------------------------------------------- #
+# MULTI-LEVEL entailment (the prof's "harder" set): the target is reached by a
+# 2-LEVEL derivation, so a planner must recurse PAST the target's direct entailers
+# (which are themselves DERIVED, not stored) to the stored roots+rules. Two
+# topologies:
+#   * join  (depth-2): A+Ar => B ; C+Cr => D ; B and D => T   (stored: A,Ar,C,Cr)
+#   * chain (depth-3): A -> B -> C -> T via rules r1,r2,r3     (stored: A,r1,r2,r3)
+# All rules are FICTIONAL, so co-deleting the stored support drives rho ~ 0 (a
+# clean co-deletion-completeness test); the derivation depth is what stresses the
+# planner's transitive closure and the strong adversary's multi-hop chaining.
+# The DAG edges are FIXED per topology and added deterministically in the
+# validator; the author only supplies the (checkable, round-number) fact texts.
+# --------------------------------------------------------------------------- #
+# Curated FICTIONAL orgs / items / tiers so co-deleting the support truly drives
+# rho ~ 0 (no world prior supplies the rates) and the arithmetic is exact BY
+# CONSTRUCTION. Templated (not LLM-authored) because gpt-4o-mini reliably drifts to
+# real-world billing (base fee + tax) with wrong arithmetic on multi-step chains;
+# the validator still gates these independently (joint entails T, singles don't).
+_FICT_ORGS = ["Mandai Trading Co.", "Orchard Provisions", "Tanglin Sundry Co.",
+              "Bedok Wholesale Hub", "Serangoon Depot", "Jurong Bulk Traders",
+              "Katong Supply Co.", "Punggol Provisions", "Sembawang Cooperative",
+              "Clementi Traders", "Tampines Merchants", "Yishun Supply Co."]
+_FICT_ITEMS = [("gourmet tea", "crate", "tin"), ("arabica coffee", "case", "bag"),
+               ("dried abalone", "carton", "can"), ("bird's nest", "box", "jar"),
+               ("manuka honey", "crate", "jar"), ("saffron", "case", "pack"),
+               ("truffle paste", "carton", "bottle"), ("wild ginseng", "box", "packet")]
+_FICT_TIERS = [("Emerald", 2), ("Gold", 3), ("Platinum", 4), ("Sapphire", 5),
+               ("Ruby", 6), ("Onyx", 8)]      # (tier name, SGD per unit -- integer)
+_CHAIN_SCHEMES = [
+    ("FitHub", "rowing session", "stroke-unit", "reward-point"),
+    ("PaddlePro", "kayak lap", "metre-credit", "loyalty-token"),
+    ("SpinCycle", "spin class", "cadence-point", "bonus-credit"),
+    ("TrailMix", "hike segment", "step-unit", "trail-token"),
+    ("AquaLoop", "swim set", "lane-unit", "aqua-point"),
+    ("PeakFit", "climb route", "grip-unit", "summit-credit")]
+
+
+def author_multilevel(subjects: list[str]) -> list[dict]:
+    """TEMPLATED 2-level JOIN facts: A+Ar=>B, C+Cr=>D, B x D => T (fictional, exact).
+    Stored support = A,Ar,C,Cr; B and D are DERIVED (never stored) -- the planner
+    must recurse past T's direct entailers to the stored roots+rules."""
+    out: list[dict] = []
+    for i, subj in enumerate(subjects):
+        org = _FICT_ORGS[i % len(_FICT_ORGS)]
+        item, crate, unit = _FICT_ITEMS[i % len(_FICT_ITEMS)]
+        tier, price = _FICT_TIERS[i % len(_FICT_TIERS)]
+        qty = 12 + (i % 7)                     # 12..18 crates
+        pack = 8 + ((i * 2) % 5)               # 8..12 units per crate
+        B = qty * pack                         # intermediate count (NOT stored)
+        T = B * price                          # SGD total (integer, NOT stored)
+        out.append({
+            "variant": "join", "subject": subj, "category": "financial",
+            "target_text": f"{subj}'s {item} order from {org} came to SGD {T}.",
+            "target_utterance": f"{subj}'s {item} order came to SGD {T}.",
+            "target_question": f"How much did {subj}'s {item} order from {org} come to?",
+            "delete_value": [str(T), f"SGD {T}"],
+            "probe_value": [str(T), f"SGD {T}", str(T - 10), str(T + 10)],
+            "a_text": (f"{subj} ordered {qty} {crate}s of {item} from {org}"
+                       + ("" if org.endswith(".") else ".")),
+            "a_utterance": (f"{subj} ordered {qty} {crate}s of {item} from {org}"
+                            + ("" if org.endswith(".") else ".")),
+            "a_probe": [f"{qty} {crate}s", str(qty)],
+            "ar_text": f"{org} packs {pack} {unit}s into every {crate} of {item}.",
+            "ar_utterance": f"{org} packs {pack} {unit}s per {crate} of {item}.",
+            "ar_probe": [f"{pack} {unit}s", str(pack)],
+            "c_text": f"{subj}'s membership tier at {org} is {tier}.",
+            "c_utterance": f"{subj} is a {tier}-tier member at {org}.",
+            "c_probe": [tier],
+            "cr_text": f"{org} charges {tier}-tier members SGD {price} per {unit} of {item}.",
+            "cr_utterance": f"{tier}-tier members pay SGD {price} per {unit} at {org}.",
+            "cr_probe": [f"SGD {price} per {unit}", str(price)],
+            "b_desc": f"B = {qty} {crate}s x {pack} {unit}s = {B} {unit}s.",
+            "d_desc": f"D = {tier} price = SGD {price} per {unit}.",
+            "entailment_note": (f"B = {qty} x {pack} = {B} {unit}s; D = SGD {price}/{unit} "
+                                f"({tier} tier); T = {B} x {price} = SGD {T}. No single "
+                                f"stored fact gives T; the fictional org means deleting "
+                                f"all four operands makes T unrecoverable (rho ~ 0)."),
+        })
+    return out
+
+
+def author_chain(subjects: list[str]) -> list[dict]:
+    """TEMPLATED 3-level MULTIPLICATIVE chain A->B->C->T (fictional scheme, exact).
+    Integer factors only, so A x f1 x f2 x f3 = T holds exactly. Stored support =
+    A,r1,r2,r3; B and C are DERIVED (never stored)."""
+    out: list[dict] = []
+    for i, subj in enumerate(subjects):
+        org, act, u1, u2 = _CHAIN_SCHEMES[i % len(_CHAIN_SCHEMES)]
+        A = 6 + (i % 6)                        # 6..11 sessions
+        f1 = 5 + (i % 5)                       # 5..9 u1 per session
+        f2 = 2 + (i % 3)                       # 2..4 u2 per u1
+        rate = 1 + (i % 3)                     # SGD 1..3 per u2
+        B = A * f1                             # NOT stored
+        C = B * f2                             # NOT stored
+        T = C * rate                           # SGD total (integer, NOT stored)
+        out.append({
+            "variant": "chain", "subject": subj, "category": "financial",
+            "target_text": f"{subj}'s {org} reward redemption came to SGD {T}.",
+            "target_utterance": f"{subj} redeemed SGD {T} of {org} rewards.",
+            "target_question": f"How much was {subj}'s {org} reward redemption worth?",
+            "delete_value": [str(T), f"SGD {T}"],
+            "probe_value": [str(T), f"SGD {T}", str(T - 3), str(T + 3)],
+            "a_text": f"{subj} logged {A} {act}s at {org}.",
+            "a_utterance": f"{subj} did {A} {org} {act}s.",
+            "a_probe": [f"{A} {act}s", str(A)],
+            "r1_text": f"Each {org} {act} records {f1} {u1}s.",
+            "r1_utterance": f"One {org} {act} is {f1} {u1}s.",
+            "r1_probe": [f"{f1} {u1}s", str(f1)],
+            "r2_text": f"{org} converts every {u1} into {f2} {u2}s.",
+            "r2_utterance": f"{org} gives {f2} {u2}s per {u1}.",
+            "r2_probe": [f"{f2} {u2}s", str(f2)],
+            "r3_text": f"{org} redeems {u2}s at SGD {rate} each.",
+            "r3_utterance": f"{org} redeems each {u2} for SGD {rate}.",
+            "r3_probe": [f"SGD {rate}", str(rate)],
+            "b_desc": f"B = {A} x {f1} = {B} {u1}s.",
+            "c_desc": f"C = {B} x {f2} = {C} {u2}s.",
+            "entailment_note": (f"B = {A} x {f1} = {B}; C = {B} x {f2} = {C}; "
+                                f"T = {C} x {rate} = SGD {T}. Fictional {org} scheme, "
+                                f"multiplication only; deleting the chain makes T "
+                                f"unrecoverable (rho ~ 0)."),
+        })
+    return out
+
+
+def multilevel_subjects(n: int, offset: int = 0) -> list[str]:
+    """Distinct persona names (offset so join and chain sets use different people)."""
+    names = [p["name"] for p in PERSONAS]
+    return [names[(offset + i) % len(names)] for i in range(n)]
+
+
+# --------------------------------------------------------------------------- #
 # Assignment plans (deterministic) used by both standalone run and validator.
 # --------------------------------------------------------------------------- #
 def isolated_assignments(n_per_persona: int = 2) -> list[tuple[str, str]]:
@@ -387,20 +551,26 @@ def rho_subjects(tier: str, n: int, used: set[str]) -> list[str]:
     return out
 
 
-def author_all(*, n_isolated_per_persona: int = 2, n_mh_bin1: int = 28,
-               n_mh_bin2: int = 24, n_rho_per_tier: int = 12,
-               n_bystanders: int = 28) -> dict:
-    """Author every set's candidates.  Returns a dict of candidate lists."""
+def author_all(*, n_isolated_per_persona: int = 4, n_mh_bin1: int = 34,
+               n_mh_bin2: int = 30, n_rho_per_tier: int = 22,
+               n_bystanders: int = 44, n_ml_join: int = 12,
+               n_ml_chain: int = 12) -> dict:
+    """Author every set's candidates.  Returns a dict of candidate lists.
+    Counts bumped for the ~2x expansion. multilevel_join / multilevel_chain are
+    TEMPLATED (exact by construction), so their counts are produced verbatim."""
     used: set[str] = set()
     iso = author_isolated(isolated_assignments(n_isolated_per_persona))
     mh1 = author_multihop("stored", multihop_subjects(n_mh_bin1))
     mh2 = author_multihop("stored+world", multihop_subjects(n_mh_bin2))
     byst = author_bystanders(bystander_subjects(n_bystanders))
+    ml_join = author_multilevel(multilevel_subjects(n_ml_join))
+    ml_chain = author_chain(multilevel_subjects(n_ml_chain, offset=n_ml_join))
     rho = []
     for tier in ("low", "mid", "high"):
         rho += author_rho(tier, rho_subjects(tier, n_rho_per_tier, used))
     return {"isolated": iso, "multihop_bin1": mh1, "multihop_bin2": mh2,
-            "bystanders": byst, "rho": rho}
+            "bystanders": byst, "rho": rho,
+            "multilevel_join": ml_join, "multilevel_chain": ml_chain}
 
 
 if __name__ == "__main__":

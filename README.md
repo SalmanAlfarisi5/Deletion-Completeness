@@ -92,9 +92,9 @@ python experiments/exp11_letta_rederivation.py --n 6 -v
 
 > The table below is the small-scale pre-wave snapshot. The current numbers
 > (the 48/34/101/49-fact wave) live in the paper drafts (`paper/`) and
-> `docs/PROJECT_STATUS_REPORT.md` — e.g. residual **95.8% / 91.7%→0%** (exp01/02),
-> **23/49** uncertifiable at τ=0.1 (exp07), MIA naive AUC **0.65** (p=.002) / aware
-> **0.51** (exp08), planner **k≈0.91 / 0 spurious** (exp03). Do not cite the table.
+> `docs/PROJECT_STATUS_REPORT.md` — e.g. residual **96.4% / 96.4%→0%** (exp01/02),
+> **30/81** uncertifiable at τ=0.1 (exp07), MIA naive AUC **0.67** (p=.001) / aware
+> **0.52** (exp08), planner **k≈0.90 / 0 spurious** (exp03). Do not cite the table.
 
 | experiment | metric | result |
 |---|---|---|
@@ -104,22 +104,22 @@ python experiments/exp11_letta_rederivation.py --n 6 -v
 | exp05 | duplicate type | **paraphrase-dominant** (7–9) vs byte-identical (4–5) |
 | exp06 | infer=True derivation-capture | **0%** (it's consolidation, not derivation) |
 | exp04 | re-derivable, **bin1 stored-alone** | **100%** → 0% after co-delete |
-| exp04 | re-derivable, **bin2 stored+world** | **80% (4/5)** → 0% after co-delete |
+| exp04 | re-derivable, **bin2 stored+world** | **.56–.74 (4 reasoners)** → 0% after co-delete |
 | exp04 | parametric floor ρ | **0%** (synthetic subjects) |
-| exp03 | planner: completeness / spurious / mean k | **100% / 0 / 1.17** |
+| exp03 | planner: completeness / spurious / mean k | **100% / 0 / 0.90** |
 | exp07 | parametric floor ρ by tier (gpt-4o-mini / gpt-4o) | low **0.00**, mid **0.03 / 0.63**, high **0.83 / 1.00** |
-| exp07 | certs NOT certified-complete (ρ>τ, residual=0) | **6/15** (the limit result) |
+| exp07 | certs NOT certified-complete (ρ>τ, residual=0) | **30/81** (the limit result) |
 | exp08 | MIA AUC (n=33, bootstrap CI): intact / naive / aware | **0.72** (p=.002) / 0.61 (p=.07, ns) / **0.51** (CI incl. 0.5) → artifact-aware restores indistinguishability |
 | judge | recovery false-accept / entailment κ (trivial→hard neg) | **0%** / 0.83 → **0.46**; gpt-4o-mini false-fires **42%** on partial operands (gpt-4o 0%) |
 | exp09 | Zep/Graphiti KG residue after `remove_episode` (n=3) | edge **33%**, **summary 67%** (entity+community) — residual via stale summaries, not edge-invalidation |
 | exp10 | Letta/MemGPT agent-mediated deletion faithfulness (n=3) | **explicit dual-surface → 100% faithful**; **vague RTBF → 0% faithful / 100% archival residue** (agent scrubs core, misses archival) |
-| exp11 | Letta re-derivation (operands-only control, 2 reasoners) | bin1 **100%**, bin2 **80%/100%** (mini/4o) → **0% after co-delete**; ρ **0%**; faithful direct co-delete **100%**, bystanders intact **100%** |
+| exp11 | Letta re-derivation (operands-only control, 4 reasoners) | bin1 **100%**, bin2 **.74–.78** → **0% after co-delete**; ρ **0%**; faithful direct co-delete **100%**, bystanders intact **100%** |
 
 **Story:** naive single-record deletion is incomplete because Mem0 silently
 **duplicates** facts (exp01/05, a documented Mem0 limitation, not our embedder);
 artifact-aware deletion fixes residual survival (exp02); but even with residual=0
 a **re-derivation** channel remains — multi-hop facts are reconstructable from
-surviving entailing facts (exp04, binned, two reasoners) — which the planner
+surviving entailing facts (exp04, binned, four reasoners) — which the planner
 closes with minimal collateral (exp03), down to the parametric floor ρ.
 
 ### Key methodology notes
@@ -136,7 +136,7 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
   completeness cannot be certified (ρ>τ) even with residual=0 — the limit result.
 - Both re-derivation and ρ are **reasoner-model-dependent**, so they are run on
   ≥2 reasoners (gpt-4o-mini, gpt-4o).
-- **Membership inference (exp08)** is powered (n=48 members + 2 matched twins
+- **Membership inference (exp08)** is powered (n=84 members + 2 matched twins
   each, bootstrap 95% CI + label-permutation p): artifact-aware deletion **restores
   membership-indistinguishability** (AUC 0.51, CI includes 0.5, p=.39). Naive
   single-record deletion **does** leave a detectable signal (AUC 0.65, p=.002); the

@@ -1,0 +1,2765 @@
+{
+  "experiment": "exp01_baseline",
+  "timestamp_utc": "20260704T101314Z",
+  "system": "mem0",
+  "mem0_mode": "oss",
+  "llm_provider": "openai",
+  "judge_model": "gpt-4o-mini-2024-07-18",
+  "seed": 42,
+  "user_id": "u_alice_d900fdbd",
+  "facts_file": "/home/salman/Desktop/Deletion-Completeness/data/facts/isolated_facts.json",
+  "n_targets": 84,
+  "n_corpus": 299,
+  "store_rows_after_inject": 1120,
+  "metrics": {
+    "extraction_fidelity_before": 0.9880952380952381,
+    "naive_deletion_residual_rate": 0.9642857142857143,
+    "naive_deletion_residual_rate_ci95": [
+      0.9002,
+      0.9878
+    ],
+    "naive_deletion_retrieval_rate": 0.8261904761904763,
+    "duplicated_fact_rate": 0.9642857142857143
+  },
+  "rows": [
+    {
+      "fact_id": "F001",
+      "category": "personal_contact",
+      "value_rows_before": 4,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "7ef5cca2-4125-4439-92c0-7b3ccecf29b7",
+          "text": "User's emergency contact number is +65-9123-4567.",
+          "matched": "+65-9123-4567"
+        },
+        {
+          "memory_id": "e7babbe8-7c22-40c7-b429-fee9671dd2b8",
+          "text": "User's emergency contact number is +65-9123-4567.",
+          "matched": "+65-9123-4567"
+        },
+        {
+          "memory_id": "29b4fa23-4857-437f-a311-b79857c0cce8",
+          "text": "User's emergency contact number is +65-9123-4567.",
+          "matched": "+65-9123-4567"
+        }
+      ]
+    },
+    {
+      "fact_id": "F002",
+      "category": "medical",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "fb2b4a1e-82cb-43f7-91d2-7e47b6208882",
+          "text": "User's colleague Bob Tan is allergic to penicillin.",
+          "matched": "penicillin"
+        },
+        {
+          "memory_id": "188f8117-a651-4b81-b9b2-05e241e22aef",
+          "text": "User's colleague Bob Tan is allergic to penicillin.",
+          "matched": "penicillin"
+        }
+      ]
+    },
+    {
+      "fact_id": "F003",
+      "category": "medical",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "88755020-d6ac-41e1-b9e8-6ca120baba83",
+          "text": "User's friend Carol Lim has a blood type of AB negative.",
+          "matched": "AB negative"
+        },
+        {
+          "memory_id": "3440bc8e-d435-4a0a-baa2-4f0bebcff1e7",
+          "text": "User's friend Carol Lim has a blood type of AB negative.",
+          "matched": "AB negative"
+        }
+      ]
+    },
+    {
+      "fact_id": "F004",
+      "category": "financial",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "cb33f3a3-995a-4b24-a4e9-07cf223c5811",
+          "text": "User's DBS savings account number is 012-34567-8.",
+          "matched": "012-34567-8"
+        },
+        {
+          "memory_id": "4a814df9-2c56-45fe-9bfa-4d17f1d41f82",
+          "text": "User's DBS savings account number is 012-34567-8.",
+          "matched": "012-34567-8"
+        }
+      ]
+    },
+    {
+      "fact_id": "F005",
+      "category": "personal_contact",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "bf7cd13c-ef33-4749-a388-0bd1e9f92f88",
+          "text": "User's colleague Bob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456.",
+          "matched": "#08-456"
+        },
+        {
+          "memory_id": "dd138f70-0d21-4d17-b772-dda8011fa65c",
+          "text": "User's colleague Bob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456.",
+          "matched": "#08-456"
+        }
+      ]
+    },
+    {
+      "fact_id": "F006",
+      "category": "preference",
+      "value_rows_before": 2,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "e3bdfac2-f07d-438d-bc4c-9efcb5e50a6b",
+          "text": "User's friend Carol Lim loves Peranakan food, which is her favorite cuisine.",
+          "matched": "Peranakan"
+        }
+      ]
+    },
+    {
+      "fact_id": "F007",
+      "category": "location",
+      "value_rows_before": 2,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "70009643-321b-45cc-8ba6-479651dcde2a",
+          "text": "User's condo parking lot is B2-17.",
+          "matched": "B2-17"
+        }
+      ]
+    },
+    {
+      "fact_id": "F008",
+      "category": "personal_contact",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "9e33cdfe-db22-459a-a7f5-a0def617d85d",
+          "text": "User's colleague Bob Tan drives a car with the plate SGY 4821 X.",
+          "matched": "SGY 4821 X"
+        },
+        {
+          "memory_id": "75fccf15-9c60-4812-80de-78cf39841ce7",
+          "text": "Bob Tan drives a car with the plate SGY 4821 X.",
+          "matched": "SGY 4821 X"
+        }
+      ]
+    },
+    {
+      "fact_id": "F009",
+      "category": "medical",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "b5fa4502-cb5b-4591-9090-784c4ac461cd",
+          "text": "User noted that Carol Lim takes 50 mg of sertraline every day.",
+          "matched": "sertraline"
+        },
+        {
+          "memory_id": "01c6d2de-186e-457d-b65d-ced46b36ab61",
+          "text": "Carol Lim takes 50 mg of sertraline every day.",
+          "matched": "sertraline"
+        }
+      ]
+    },
+    {
+      "fact_id": "F010",
+      "category": "financial",
+      "value_rows_before": 1,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 0.0,
+      "retr_before": 1.0,
+      "retr_after": 0.0,
+      "residual_layer_after": null,
+      "residual_evidence": []
+    },
+    {
+      "fact_id": "F011",
+      "category": "preference",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "7e014370-4f0e-4b15-ab95-310fd0899de6",
+          "text": "User's colleague Bob Tan has a pet cat named Mochi.",
+          "matched": "Mochi"
+        },
+        {
+          "memory_id": "76c1565e-a561-4be8-87a5-430e72684eed",
+          "text": "Bob Tan has a pet cat named Mochi.",
+          "matched": "Mochi"
+        },
+        {
+          "memory_id": "56cfac2f-cf14-4996-a4a8-7bf3ac2a9b10",
+          "text": "Bob Tan has a pet cat named Mochi.",
+          "matched": "Mochi"
+        },
+        {
+          "memory_id": "d8f5cc41-cd76-4cfe-b541-717e07dff090",
+          "text": "User has a pet cat named Mochi.",
+          "matched": "Mochi"
+        }
+      ]
+    },
+    {
+      "fact_id": "F012",
+      "category": "location",
+      "value_rows_before": 4,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "7cb9b652-54f8-427b-ad9a-4dfa6f5bbe3e",
+          "text": "Carol Lim's home wifi password is RainbowTiger88.",
+          "matched": "RainbowTiger88"
+        },
+        {
+          "memory_id": "500db8ea-6fa5-4639-8abe-66285e4ad7a7",
+          "text": "Carol Lim's home wifi password is RainbowTiger88.",
+          "matched": "RainbowTiger88"
+        },
+        {
+          "memory_id": "fb9cfd42-a8d2-45d6-8f53-ffbd4e4ee6fe",
+          "text": "User recorded Carol Lim's home wifi password as RainbowTiger88.",
+          "matched": "RainbowTiger88"
+        }
+      ]
+    },
+    {
+      "fact_id": "F100",
+      "category": "personal_contact",
+      "value_rows_before": 2,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "c4e1c3ad-e41d-46ee-af4c-d4dc2096b531",
+          "text": "User's emergency contact number is 8241-3907.",
+          "matched": "8241-3907"
+        }
+      ]
+    },
+    {
+      "fact_id": "F101",
+      "category": "medical",
+      "value_rows_before": 2,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.2,
+      "retr_after": 0.2,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "2241b22b-3544-4948-91b2-60dc9248cd4a",
+          "text": "User's medical record number is MRN-583920.",
+          "matched": "MRN-583920"
+        },
+        {
+          "memory_id": "8c068ea1-1ff7-46b9-a6d8-524ba34a44b5",
+          "text": "User's medical record number is MRN-583920.",
+          "matched": "MRN-583920"
+        }
+      ]
+    },
+    {
+      "fact_id": "F102",
+      "category": "financial",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.2,
+      "retr_after": 0.2,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "6e07c1e5-8df8-4e8b-99fb-6cd124f9b006",
+          "text": "User's bank account number is 7654-3210-9876.",
+          "matched": "7654-3210-9876"
+        },
+        {
+          "memory_id": "89b81b52-4e7b-4865-821b-8247ff6af3e1",
+          "text": "User's bank account number is 7654-3210-9876.",
+          "matched": "7654-3210-9876"
+        }
+      ]
+    },
+    {
+      "fact_id": "F103",
+      "category": "preference",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "440a1e37-2066-41b5-8900-c543e3412067",
+          "text": "User's preferred vacation destination is the Maldives.",
+          "matched": "the Maldives"
+        },
+        {
+          "memory_id": "9d82d021-d7ed-4999-b988-25663317913c",
+          "text": "User's preferred vacation destination is the Maldives.",
+          "matched": "the Maldives"
+        }
+      ]
+    },
+    {
+      "fact_id": "F104",
+      "category": "location",
+      "value_rows_before": 4,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.6,
+      "retr_after": 0.6,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "c24d6adb-3590-4517-8270-d3ae1f770d9d",
+          "text": "User's current address is 45 Orchard Road, #05-12.",
+          "matched": "45 Orchard Road, #05-12"
+        },
+        {
+          "memory_id": "8f562830-d942-468d-851c-99e2ea47cc4c",
+          "text": "User's current address is 45 Orchard Road, #05-12.",
+          "matched": "45 Orchard Road, #05-12"
+        },
+        {
+          "memory_id": "379f7025-69be-4bf9-879d-9ac299fe5f39",
+          "text": "User's current address is 45 Orchard Road, #05-12.",
+          "matched": "45 Orchard Road, #05-12"
+        }
+      ]
+    },
+    {
+      "fact_id": "F105",
+      "category": "education",
+      "value_rows_before": 4,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "9c675a48-9054-428b-a66a-3a46c841aa27",
+          "text": "User's student ID is 2023-ENG-4567.",
+          "matched": "2023-ENG-4567"
+        },
+        {
+          "memory_id": "766d98cc-6985-41d5-8339-50abd910133a",
+          "text": "User's student ID is 2023-ENG-4567.",
+          "matched": "2023-ENG-4567"
+        },
+        {
+          "memory_id": "1f7180ff-c696-4064-9662-49e270244849",
+          "text": "User's student ID is 2023-ENG-4567.",
+          "matched": "2023-ENG-4567"
+        }
+      ]
+    },
+    {
+      "fact_id": "F106",
+      "category": "employment",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "69f7c291-c378-4e9f-a76e-e64f5bd07896",
+          "text": "User's employee ID is MF123456.",
+          "matched": "MF123456"
+        },
+        {
+          "memory_id": "58274ca9-e34a-47d5-a7b6-9aa403492982",
+          "text": "User's employee ID is MF123456.",
+          "matched": "MF123456"
+        },
+        {
+          "memory_id": "c903f124-335b-405e-a5ae-058bad000a35",
+          "text": "User's employee ID is MF123456.",
+          "matched": "MF123456"
+        },
+        {
+          "memory_id": "61e37c6a-1c71-4936-bb06-2ca963c376f3",
+          "text": "User's employee ID is MF123456.",
+          "matched": "MF123456"
+        }
+      ]
+    },
+    {
+      "fact_id": "F107",
+      "category": "device",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "06272a20-43f4-4d08-928b-15d0c0530c71",
+          "text": "User's smartphone IMEI is 531860472309157.",
+          "matched": "531860472309157"
+        },
+        {
+          "memory_id": "a2126b57-e9e9-4b38-9a8d-a1bfa469077a",
+          "text": "User's smartphone IMEI is 531860472309157.",
+          "matched": "531860472309157"
+        },
+        {
+          "memory_id": "4916b335-4821-47a1-b157-bafe7c959dd8",
+          "text": "User's smartphone IMEI is 531860472309157.",
+          "matched": "531860472309157"
+        },
+        {
+          "memory_id": "413bdc60-2225-4f3b-978d-f02ee25d33bf",
+          "text": "User's smartphone IMEI is 531860472309157.",
+          "matched": "531860472309157"
+        },
+        {
+          "memory_id": "87430dc7-bba6-494f-bf9a-5b0817792ca3",
+          "text": "User's smartphone IMEI is 531860472309157.",
+          "matched": "531860472309157"
+        }
+      ]
+    },
+    {
+      "fact_id": "F108",
+      "category": "personal_contact",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "63f643ee-f1cd-4f10-973a-38c6f75ad005",
+          "text": "User's emergency contact number is 8356-4192.",
+          "matched": "8356-4192"
+        },
+        {
+          "memory_id": "6b5e7eb2-26c7-48c3-b4a6-6e312d6ea9b4",
+          "text": "User's emergency contact number is 8356-4192.",
+          "matched": "8356-4192"
+        },
+        {
+          "memory_id": "352cf16d-bc17-4431-81e9-17584326be3c",
+          "text": "User's emergency contact number is 8356-4192.",
+          "matched": "8356-4192"
+        },
+        {
+          "memory_id": "90af6ce9-367a-4b2b-a738-7ba1e514ab99",
+          "text": "User's emergency contact number is 8356-4192.",
+          "matched": "8356-4192"
+        }
+      ]
+    },
+    {
+      "fact_id": "F109",
+      "category": "medical",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "706fad1b-142a-4a68-bdf7-e182e5cdf387",
+          "text": "User takes 25 mg atenolol daily.",
+          "matched": "atenolol"
+        },
+        {
+          "memory_id": "80aa0f13-1cc3-4f80-bfc2-be271d00a3cc",
+          "text": "User takes 25 mg atenolol daily.",
+          "matched": "atenolol"
+        },
+        {
+          "memory_id": "ac8fe44e-c9db-4d66-b8dd-4a7c3b9b3ebd",
+          "text": "User takes 25 mg atenolol daily.",
+          "matched": "atenolol"
+        },
+        {
+          "memory_id": "07db6bea-0baa-499f-a892-97c761c3531e",
+          "text": "User takes 25 mg atenolol daily.",
+          "matched": "atenolol"
+        },
+        {
+          "memory_id": "f4c1a3c4-3624-4528-b915-d3bceb52e2d9",
+          "text": "User takes 25 mg of atenolol daily.",
+          "matched": "atenolol"
+        }
+      ]
+    },
+    {
+      "fact_id": "F110",
+      "category": "financial",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.0,
+      "retr_after": 0.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "4d452d02-94e0-4a1a-924a-36ed85ec5816",
+          "text": "User's bank account number is 7654321-09876.",
+          "matched": "7654321-09876"
+        },
+        {
+          "memory_id": "11c5b286-3956-4e17-ae4a-72b59dd3be6a",
+          "text": "User's bank account number is 7654321-09876.",
+          "matched": "7654321-09876"
+        },
+        {
+          "memory_id": "03caa56b-a20b-465d-9fcf-d39f85a5bb52",
+          "text": "User's bank account number is 7654321-09876.",
+          "matched": "7654321-09876"
+        },
+        {
+          "memory_id": "5a49bcf5-9c5e-48ea-b4da-ee90743579d5",
+          "text": "User's bank account number is 7654321-09876.",
+          "matched": "7654321-09876"
+        },
+        {
+          "memory_id": "a7b34c76-fd57-495b-9adf-2e9ca5d451f8",
+          "text": "User's bank account number is 7654321-09876.",
+          "matched": "7654321-09876"
+        },
+        {
+          "memory_id": "992d9a14-a988-4bea-b753-1c2f0d656aeb",
+          "text": "User's bank account number is 7654321-09876.",
+          "matched": "7654321-09876"
+        }
+      ]
+    },
+    {
+      "fact_id": "F111",
+      "category": "preference",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "b523efce-468f-4f6a-8c84-70cd7389babb",
+          "text": "User prefers green tea over coffee.",
+          "matched": "green tea"
+        },
+        {
+          "memory_id": "7af98066-e1f4-4089-ae69-2636c137a0e4",
+          "text": "User prefers green tea over coffee.",
+          "matched": "green tea"
+        },
+        {
+          "memory_id": "01859d75-9235-48c5-a773-b5f6fb6e144c",
+          "text": "User prefers green tea over coffee.",
+          "matched": "green tea"
+        },
+        {
+          "memory_id": "e1552274-e422-4c3e-a4da-479fb5295b62",
+          "text": "User prefers green tea over coffee.",
+          "matched": "green tea"
+        },
+        {
+          "memory_id": "1f19f01c-4c78-43aa-8185-da63c912e21b",
+          "text": "User prefers green tea over coffee.",
+          "matched": "green tea"
+        }
+      ]
+    },
+    {
+      "fact_id": "F112",
+      "category": "location",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "f765add3-557e-4956-ad13-45a86e719634",
+          "text": "User's home address is 14 Orchid Road, Singapore 123456.",
+          "matched": "14 Orchid Road, Singapore 123456"
+        },
+        {
+          "memory_id": "d62fabcb-1b17-478f-9683-5174adbf0270",
+          "text": "User's home address is 14 Orchid Road, Singapore 123456.",
+          "matched": "14 Orchid Road, Singapore 123456"
+        },
+        {
+          "memory_id": "416c610b-36d3-415b-9524-39a4b65621a6",
+          "text": "User's home address is 14 Orchid Road, Singapore 123456.",
+          "matched": "14 Orchid Road, Singapore 123456"
+        },
+        {
+          "memory_id": "366f4e71-1112-4325-aa64-f6774a8b6070",
+          "text": "User's home address is 14 Orchid Road, Singapore 123456.",
+          "matched": "14 Orchid Road, Singapore 123456"
+        },
+        {
+          "memory_id": "f0f643ec-c2a3-4d8e-9c01-e8e5e60ba24e",
+          "text": "User's home address is 14 Orchid Road, Singapore 123456.",
+          "matched": "14 Orchid Road, Singapore 123456"
+        }
+      ]
+    },
+    {
+      "fact_id": "F113",
+      "category": "education",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "4e865ba1-4b01-4e76-829f-c010ef673600",
+          "text": "User's student ID is S12345678.",
+          "matched": "S12345678"
+        },
+        {
+          "memory_id": "6546cc9b-32db-428b-b9ec-669a3e275c5c",
+          "text": "User's student ID is S12345678.",
+          "matched": "S12345678"
+        },
+        {
+          "memory_id": "4babb5e3-ab66-4218-9fd4-fd1669592b19",
+          "text": "User's student ID is S12345678.",
+          "matched": "S12345678"
+        },
+        {
+          "memory_id": "759c1ec8-9715-450d-a95c-d3747b959190",
+          "text": "User's student ID is S12345678.",
+          "matched": "S12345678"
+        }
+      ]
+    },
+    {
+      "fact_id": "F114",
+      "category": "employment",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.6,
+      "retr_after": 0.6,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "39f56d99-4ded-45d0-994f-c37d5c38055f",
+          "text": "User's employee ID is E987654321.",
+          "matched": "E987654321"
+        },
+        {
+          "memory_id": "e226ecc9-918c-4274-86c2-82652ef5386f",
+          "text": "User's employee ID is E987654321.",
+          "matched": "E987654321"
+        },
+        {
+          "memory_id": "5aeafc00-a8ad-41c0-9310-3b3199a346d6",
+          "text": "User's employee ID is E987654321.",
+          "matched": "E987654321"
+        },
+        {
+          "memory_id": "224ebe89-487d-4902-9565-13f706a65401",
+          "text": "User's employee ID is E987654321.",
+          "matched": "E987654321"
+        },
+        {
+          "memory_id": "f67dd606-59a7-4ed6-b798-816d69c69b15",
+          "text": "User's employee ID is E987654321.",
+          "matched": "E987654321"
+        }
+      ]
+    },
+    {
+      "fact_id": "F115",
+      "category": "device",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "85e75f61-24db-4f86-9464-812f997dcb30",
+          "text": "User's smartphone IMEI is 859023741650289.",
+          "matched": "859023741650289"
+        },
+        {
+          "memory_id": "14c0cf8b-a7d1-4483-ba6b-e842a22fb14a",
+          "text": "User's smartphone IMEI is 859023741650289.",
+          "matched": "859023741650289"
+        },
+        {
+          "memory_id": "77146cbf-1cd7-401e-87bc-06f6683a5051",
+          "text": "User's smartphone IMEI is 859023741650289.",
+          "matched": "859023741650289"
+        },
+        {
+          "memory_id": "87630871-3b8c-47e3-acc7-9baa004046a3",
+          "text": "User's smartphone IMEI is 859023741650289.",
+          "matched": "859023741650289"
+        },
+        {
+          "memory_id": "b09957db-d62a-4bea-b279-cf6640465e6f",
+          "text": "User's smartphone IMEI is 859023741650289.",
+          "matched": "859023741650289"
+        }
+      ]
+    },
+    {
+      "fact_id": "F116",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "b598c861-a398-43e3-9e7d-35f8b058b79a",
+          "text": "User's emergency contact number is +65 8473 5261.",
+          "matched": "+65 8473 5261"
+        },
+        {
+          "memory_id": "197f2ff5-4073-44b4-94a8-5df24dcfe9bc",
+          "text": "User's emergency contact number is +65 8473 5261.",
+          "matched": "+65 8473 5261"
+        },
+        {
+          "memory_id": "fa0ac51b-01af-467b-94a6-85145cabee44",
+          "text": "User's emergency contact number is +65 8473 5261.",
+          "matched": "+65 8473 5261"
+        },
+        {
+          "memory_id": "ea8c1665-1385-4f19-82dd-47f7bc1a785b",
+          "text": "User's emergency contact number is +65 8473 5261.",
+          "matched": "+65 8473 5261"
+        },
+        {
+          "memory_id": "0f640497-5851-4aeb-859f-29088ffaf735",
+          "text": "User's emergency contact number is +65 8473 5261.",
+          "matched": "+65 8473 5261"
+        }
+      ]
+    },
+    {
+      "fact_id": "F117",
+      "category": "medical",
+      "value_rows_before": 7,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "0cbc6308-6569-4c0d-9a8a-243d60fd1dac",
+          "text": "User's blood type is B positive.",
+          "matched": "B positive"
+        },
+        {
+          "memory_id": "2b7a1542-d9e7-427c-b843-1068a6e137c3",
+          "text": "User's blood type is B positive.",
+          "matched": "B positive"
+        },
+        {
+          "memory_id": "b1b0660b-c354-41cc-a940-8676ce8f6edb",
+          "text": "User's blood type is B positive.",
+          "matched": "B positive"
+        },
+        {
+          "memory_id": "d1914714-2494-4c79-89d8-6cfba410f5f3",
+          "text": "User's blood type is B positive.",
+          "matched": "B positive"
+        },
+        {
+          "memory_id": "5e2bc3ff-88cd-45c7-9453-0cea7733e010",
+          "text": "User's blood type is B positive.",
+          "matched": "B positive"
+        },
+        {
+          "memory_id": "144fd382-7cde-4374-ab4a-3c94e5561b83",
+          "text": "User's blood type is AB positive.",
+          "matched": "B positive"
+        }
+      ]
+    },
+    {
+      "fact_id": "F118",
+      "category": "financial",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "8af3c822-ef81-4188-871b-714275e43f00",
+          "text": "User's bank account number is 7654321-1234.",
+          "matched": "7654321-1234"
+        },
+        {
+          "memory_id": "ff7b443c-1be3-4e41-9f03-a14f1bfcc987",
+          "text": "User's bank account number is 7654321-1234.",
+          "matched": "7654321-1234"
+        },
+        {
+          "memory_id": "019872aa-3175-440b-a853-7e148d0de31a",
+          "text": "User's bank account number is 7654321-1234.",
+          "matched": "7654321-1234"
+        },
+        {
+          "memory_id": "8a64dac7-d061-4e22-8de3-3fba4273b66e",
+          "text": "User's bank account number is 7654321-1234.",
+          "matched": "7654321-1234"
+        },
+        {
+          "memory_id": "576948c9-be88-4ccc-b0f2-a29b19bcaeaf",
+          "text": "User's bank account number is 7654321-1234.",
+          "matched": "7654321-1234"
+        }
+      ]
+    },
+    {
+      "fact_id": "F119",
+      "category": "preference",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "dd21e8ac-619b-4c75-a6c0-990bbb9e90f8",
+          "text": "User's coffee order is a double espresso.",
+          "matched": "double espresso"
+        },
+        {
+          "memory_id": "6c02cf89-bba7-421b-b628-bcbd2e798b88",
+          "text": "User's coffee order is a double espresso.",
+          "matched": "double espresso"
+        },
+        {
+          "memory_id": "6b73fa30-acf1-4a88-af3a-2878bd722508",
+          "text": "User's coffee order is a double espresso.",
+          "matched": "double espresso"
+        },
+        {
+          "memory_id": "68c835c6-080b-4def-976f-7a29c2429ac0",
+          "text": "User's coffee order is a double espresso.",
+          "matched": "double espresso"
+        }
+      ]
+    },
+    {
+      "fact_id": "F120",
+      "category": "location",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "0a2e7c98-a1da-425f-8518-96a4c08ecab5",
+          "text": "User's favorite park is East Coast Park.",
+          "matched": "East Coast Park"
+        },
+        {
+          "memory_id": "cf09493a-2f97-4d79-a90c-08888b657da5",
+          "text": "User's favorite park is East Coast Park.",
+          "matched": "East Coast Park"
+        },
+        {
+          "memory_id": "74db9266-b867-4ab6-bf1d-9de2dc857a92",
+          "text": "User's favorite park is East Coast Park.",
+          "matched": "East Coast Park"
+        },
+        {
+          "memory_id": "f35a2fa0-5220-4be4-a0e8-85f086419c55",
+          "text": "User's favorite park is East Coast Park.",
+          "matched": "East Coast Park"
+        }
+      ]
+    },
+    {
+      "fact_id": "F121",
+      "category": "education",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "408ea7e3-9dbe-40be-a32a-43f38236f551",
+          "text": "User's student ID is S1234567A.",
+          "matched": "S1234567A"
+        },
+        {
+          "memory_id": "477881c6-ffc9-4a91-ac3f-a6cba30d0fc0",
+          "text": "User's student ID is S1234567A.",
+          "matched": "S1234567A"
+        },
+        {
+          "memory_id": "e3578906-9b21-46a7-9363-ae0608bb733e",
+          "text": "User's student ID is S1234567A.",
+          "matched": "S1234567A"
+        },
+        {
+          "memory_id": "25d9ae18-701a-4b4c-bfe7-e00f097e77b3",
+          "text": "User's student ID is S1234567A.",
+          "matched": "S1234567A"
+        }
+      ]
+    },
+    {
+      "fact_id": "F122",
+      "category": "employment",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "fb2136b4-7871-4256-a25c-f55b740c1992",
+          "text": "User's employee ID is HAK-2023-0045.",
+          "matched": "HAK-2023-0045"
+        },
+        {
+          "memory_id": "66e6001b-1397-4307-b792-5142b6c9c349",
+          "text": "User's employee ID is HAK-2023-0045.",
+          "matched": "HAK-2023-0045"
+        },
+        {
+          "memory_id": "8414fc94-c90e-4965-b4d3-759d0b029f88",
+          "text": "User's employee ID is HAK-2023-0045.",
+          "matched": "HAK-2023-0045"
+        },
+        {
+          "memory_id": "fc756167-4d7e-4503-97d6-61b0aae74eec",
+          "text": "User's employee ID is HAK-2023-0045.",
+          "matched": "HAK-2023-0045"
+        }
+      ]
+    },
+    {
+      "fact_id": "F123",
+      "category": "device",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "13492485-77e1-4020-87bd-a6a18c48e842",
+          "text": "User's smartphone IMEI is 867530942318640.",
+          "matched": "867530942318640"
+        },
+        {
+          "memory_id": "fd5c7ddb-72d2-4864-bb3c-d2911945513e",
+          "text": "User's smartphone IMEI is 867530942318640.",
+          "matched": "867530942318640"
+        },
+        {
+          "memory_id": "5636a882-e00d-4e9c-98ce-accd412c6d51",
+          "text": "User's smartphone IMEI is 867530942318640.",
+          "matched": "867530942318640"
+        },
+        {
+          "memory_id": "f4de71e7-72b6-4bcb-be91-0852442b2404",
+          "text": "User's smartphone IMEI is 867530942318640.",
+          "matched": "867530942318640"
+        }
+      ]
+    },
+    {
+      "fact_id": "F124",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "2c76bffd-d809-495c-bcbc-5a58b3a8ecc6",
+          "text": "User set their emergency contact number to 8519-6274 on July 4, 2026.",
+          "matched": "8519-6274"
+        },
+        {
+          "memory_id": "25d1f5d2-c495-472a-9146-d3b5ab7c9c24",
+          "text": "User's emergency contact number is 8519-6274.",
+          "matched": "8519-6274"
+        },
+        {
+          "memory_id": "a6ebc68b-5d9b-4775-8125-64a1ec0735de",
+          "text": "User's emergency contact number is 8519-6274.",
+          "matched": "8519-6274"
+        },
+        {
+          "memory_id": "3c725d24-1269-4791-83aa-4341b232cf95",
+          "text": "User's emergency contact number is set to 8519-6274.",
+          "matched": "8519-6274"
+        },
+        {
+          "memory_id": "5f8ead82-b36c-4382-94a7-184e242d6eb2",
+          "text": "User's emergency contact number is 8519-6274.",
+          "matched": "8519-6274"
+        }
+      ]
+    },
+    {
+      "fact_id": "F125",
+      "category": "medical",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "142e23b0-ef55-4689-8c38-e30a5d8b796a",
+          "text": "User is allergic to latex.",
+          "matched": "latex"
+        },
+        {
+          "memory_id": "1ab7b9ae-637a-45d0-9ef6-a911716da7f8",
+          "text": "User is allergic to latex.",
+          "matched": "latex"
+        },
+        {
+          "memory_id": "ef7b5691-edc7-42a9-a705-e166d14faa4a",
+          "text": "User is allergic to latex.",
+          "matched": "latex"
+        },
+        {
+          "memory_id": "cab3044d-4f9e-4a75-847c-0e8b88b8ccc1",
+          "text": "User is allergic to latex.",
+          "matched": "latex"
+        },
+        {
+          "memory_id": "3112943d-6203-475c-a1b7-4b43cf5cbc9b",
+          "text": "User is allergic to latex.",
+          "matched": "latex"
+        }
+      ]
+    },
+    {
+      "fact_id": "F126",
+      "category": "financial",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.0,
+      "retr_after": 0.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "fa44210b-28ed-4124-9fc6-a16fcb6d422d",
+          "text": "User's bank account number is 123-456-789.",
+          "matched": "123-456-789"
+        },
+        {
+          "memory_id": "8ab6015d-c6a6-4f4b-971b-a85d0e43f32e",
+          "text": "User's bank account number is 123-456-789.",
+          "matched": "123-456-789"
+        },
+        {
+          "memory_id": "33b672ca-c7d9-4f22-a286-af4ea82527fd",
+          "text": "User's bank account number is 123-456-789.",
+          "matched": "123-456-789"
+        },
+        {
+          "memory_id": "5db2f000-984f-46d8-9cd5-894950f33a00",
+          "text": "User's bank account number is 123-456-789.",
+          "matched": "123-456-789"
+        },
+        {
+          "memory_id": "ca3321c5-611b-4d8f-b1da-05ec7d62d570",
+          "text": "User's bank account number is 123-456-789.",
+          "matched": "123-456-789"
+        },
+        {
+          "memory_id": "c166058c-5309-4166-b32d-2ce081b00b90",
+          "text": "User's bank account number is 123-456-789.",
+          "matched": "123-456-789"
+        }
+      ]
+    },
+    {
+      "fact_id": "F127",
+      "category": "preference",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "78eddb5d-3cdb-4dae-9d13-bf46ad159c71",
+          "text": "User prefers their coffee with almond milk.",
+          "matched": "coffee with almond milk"
+        },
+        {
+          "memory_id": "02c8b740-eea0-4e50-9483-b80e6a986a63",
+          "text": "User prefers their coffee with almond milk.",
+          "matched": "coffee with almond milk"
+        },
+        {
+          "memory_id": "2cebb72c-8cb8-4bea-acdd-691c2a8d25e8",
+          "text": "User prefers their coffee with almond milk.",
+          "matched": "coffee with almond milk"
+        },
+        {
+          "memory_id": "54a967ed-7972-4b3f-ba25-1900c128e576",
+          "text": "User prefers their coffee with almond milk.",
+          "matched": "coffee with almond milk"
+        },
+        {
+          "memory_id": "f99b12dc-de4c-45ac-a519-d1988e95b59a",
+          "text": "User prefers their coffee with almond milk.",
+          "matched": "coffee with almond milk"
+        }
+      ]
+    },
+    {
+      "fact_id": "F128",
+      "category": "location",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "07081f11-ae1e-4781-a2fc-f7a87188392c",
+          "text": "User's favorite park is Bishan-Ang Mo Kio Park.",
+          "matched": "Bishan-Ang Mo Kio Park"
+        },
+        {
+          "memory_id": "93e6df30-2d92-4348-aa0c-3cca6aa61a15",
+          "text": "User's favorite park is Bishan-Ang Mo Kio Park.",
+          "matched": "Bishan-Ang Mo Kio Park"
+        },
+        {
+          "memory_id": "45ee5b39-0e26-4871-899c-9c8e83b58906",
+          "text": "User's favorite park is Bishan-Ang Mo Kio Park.",
+          "matched": "Bishan-Ang Mo Kio Park"
+        },
+        {
+          "memory_id": "c10d4ed0-c9a1-4dec-888e-a89d14f24731",
+          "text": "User's favorite park is Bishan-Ang Mo Kio Park.",
+          "matched": "Bishan-Ang Mo Kio Park"
+        }
+      ]
+    },
+    {
+      "fact_id": "F129",
+      "category": "education",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "38e107df-693d-41cc-a471-2f141b17c926",
+          "text": "User's university ID is U123456.",
+          "matched": "U123456"
+        },
+        {
+          "memory_id": "d3f9eb26-29c1-4023-9746-13c1f5e76caf",
+          "text": "User's university ID is U123456.",
+          "matched": "U123456"
+        },
+        {
+          "memory_id": "4a59fd50-d079-4fb0-849c-4e02ad6b9081",
+          "text": "User's university ID is U123456.",
+          "matched": "U123456"
+        },
+        {
+          "memory_id": "583312da-dab6-4a56-b5c5-1747a2c09289",
+          "text": "User's university ID is U123456.",
+          "matched": "U123456"
+        }
+      ]
+    },
+    {
+      "fact_id": "F130",
+      "category": "employment",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "c2ea9a47-442e-4ec2-a796-5399614c06ea",
+          "text": "User's employee ID is EMP-7890.",
+          "matched": "EMP-7890"
+        },
+        {
+          "memory_id": "67d73f51-b951-404f-b0ce-53fd19c5edd9",
+          "text": "User's employee ID is EMP-7890.",
+          "matched": "EMP-7890"
+        },
+        {
+          "memory_id": "739bb1dc-ccc2-45e6-8e69-3d67213e0b9c",
+          "text": "User's employee ID is EMP-7890.",
+          "matched": "EMP-7890"
+        },
+        {
+          "memory_id": "72c173bc-6e37-41a3-b690-03d0b678b936",
+          "text": "User's employee ID is EMP-7890.",
+          "matched": "EMP-7890"
+        }
+      ]
+    },
+    {
+      "fact_id": "F131",
+      "category": "device",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "eb3a0c21-2251-4db4-9f0e-51bca65f91f5",
+          "text": "User's smartphone IMEI is 648015793264810.",
+          "matched": "648015793264810"
+        },
+        {
+          "memory_id": "aeb18295-70ec-4e18-aba5-e148672516d2",
+          "text": "User's smartphone IMEI is 648015793264810.",
+          "matched": "648015793264810"
+        },
+        {
+          "memory_id": "1aabccc7-e7f7-417d-8fc9-be118fd0d506",
+          "text": "User's smartphone IMEI is 648015793264810.",
+          "matched": "648015793264810"
+        },
+        {
+          "memory_id": "b78cd287-00ec-4bf0-8774-b0e4f7517b49",
+          "text": "User's smartphone IMEI is 648015793264810.",
+          "matched": "648015793264810"
+        },
+        {
+          "memory_id": "810ebb30-d551-4659-a94b-b26281b6674a",
+          "text": "User's smartphone IMEI is 648015793264810.",
+          "matched": "648015793264810"
+        }
+      ]
+    },
+    {
+      "fact_id": "F132",
+      "category": "personal_contact",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "5d26a9f2-3427-4069-bd23-98e08a29e60a",
+          "text": "User's emergency contact number is 8712-3095.",
+          "matched": "8712-3095"
+        },
+        {
+          "memory_id": "dc382166-146b-453d-8127-b2e95df67632",
+          "text": "User's emergency contact number is 8712-3095.",
+          "matched": "8712-3095"
+        },
+        {
+          "memory_id": "8565e883-bd09-452b-b735-8bbdeef0c0a2",
+          "text": "User's emergency contact number is 8712-3095.",
+          "matched": "8712-3095"
+        },
+        {
+          "memory_id": "b1680fd7-930b-440a-8ba3-2bcf5f485ea7",
+          "text": "User's emergency contact number is 8712-3095.",
+          "matched": "8712-3095"
+        }
+      ]
+    },
+    {
+      "fact_id": "F133",
+      "category": "medical",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "6f1fe805-df07-426b-8f3a-0dedd956b74d",
+          "text": "User takes 10 mg of amlodipine daily.",
+          "matched": "amlodipine"
+        },
+        {
+          "memory_id": "4320a3a4-2bc4-4e2e-90c2-c8f2c971db2f",
+          "text": "User takes 10 mg of amlodipine daily.",
+          "matched": "amlodipine"
+        },
+        {
+          "memory_id": "e63bb7cd-9e83-4f1d-a6e1-ef08e01b6a6b",
+          "text": "User takes 10 mg of amlodipine daily.",
+          "matched": "amlodipine"
+        },
+        {
+          "memory_id": "b413af47-821e-465b-a902-2083062c2ec3",
+          "text": "User takes 10 mg of amlodipine daily.",
+          "matched": "amlodipine"
+        },
+        {
+          "memory_id": "acc29be0-7355-44bb-ae11-132de7523b48",
+          "text": "User takes 10 mg of amlodipine daily.",
+          "matched": "amlodipine"
+        }
+      ]
+    },
+    {
+      "fact_id": "F134",
+      "category": "financial",
+      "value_rows_before": 4,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.4,
+      "retr_after": 0.4,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "e18dac54-b389-487a-8be3-92fa678c7636",
+          "text": "User's bank account number is 556-231-8890.",
+          "matched": "556-231-8890"
+        },
+        {
+          "memory_id": "7fc11b33-2031-4779-89e4-6e855dd9605c",
+          "text": "User's bank account number is 556-231-8890.",
+          "matched": "556-231-8890"
+        },
+        {
+          "memory_id": "34cdd646-2331-4bc8-9291-78196f75491b",
+          "text": "User's bank account number is 556-231-8890.",
+          "matched": "556-231-8890"
+        }
+      ]
+    },
+    {
+      "fact_id": "F135",
+      "category": "preference",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "45000cc1-997f-463c-afba-c1f25b4cc452",
+          "text": "User prefers dark chocolate over milk chocolate.",
+          "matched": "dark chocolate"
+        },
+        {
+          "memory_id": "4718040f-a1a2-46d9-b801-990b77986198",
+          "text": "User prefers dark chocolate over milk chocolate.",
+          "matched": "dark chocolate"
+        },
+        {
+          "memory_id": "7ea3726d-12d1-4178-bfff-c8f34f7ffb48",
+          "text": "User prefers dark chocolate over milk chocolate.",
+          "matched": "dark chocolate"
+        },
+        {
+          "memory_id": "3ba55cb2-83da-4f49-912a-9820d60b6fd0",
+          "text": "User prefers dark chocolate over milk chocolate.",
+          "matched": "dark chocolate"
+        },
+        {
+          "memory_id": "79a960bd-b385-4cc6-bcaa-67b96e4aaf5b",
+          "text": "User prefers dark chocolate over milk chocolate.",
+          "matched": "dark chocolate"
+        }
+      ]
+    },
+    {
+      "fact_id": "F137",
+      "category": "medical",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "e897f535-4b58-4dc8-8dfb-e12e7ce19015",
+          "text": "User's blood type is AB+.",
+          "matched": "AB+"
+        },
+        {
+          "memory_id": "b7e42438-d587-4252-abbf-4b97d0545c45",
+          "text": "User's blood type is AB+.",
+          "matched": "AB+"
+        },
+        {
+          "memory_id": "5d2adaee-b66e-4a0f-97a4-93d277aaca67",
+          "text": "User's blood type is AB+.",
+          "matched": "AB+"
+        },
+        {
+          "memory_id": "b0cb1694-f1be-4616-ab38-fc0f3ddfb35f",
+          "text": "User's blood type is AB+.",
+          "matched": "AB+"
+        }
+      ]
+    },
+    {
+      "fact_id": "F140",
+      "category": "location",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "0ef4f249-f92e-4ed8-86e3-6ae9b5f3c720",
+          "text": "User's favorite vacation spot is Sentosa Island.",
+          "matched": "Sentosa Island"
+        },
+        {
+          "memory_id": "3528ce12-e486-46af-a8cb-34cefa6db563",
+          "text": "User's favorite vacation spot is Sentosa Island.",
+          "matched": "Sentosa Island"
+        },
+        {
+          "memory_id": "43b1aa4c-2012-43fc-8922-feb4d1daa0f5",
+          "text": "User's favorite vacation spot is Sentosa Island.",
+          "matched": "Sentosa Island"
+        },
+        {
+          "memory_id": "581610b2-2b67-4419-af96-6f7232a29972",
+          "text": "User's favorite vacation spot is Sentosa Island.",
+          "matched": "Sentosa Island"
+        },
+        {
+          "memory_id": "a0f081eb-7695-4cc4-96c6-16321da22a08",
+          "text": "User's favorite vacation spot is Sentosa Island.",
+          "matched": "Sentosa Island"
+        }
+      ]
+    },
+    {
+      "fact_id": "F141",
+      "category": "education",
+      "value_rows_before": 0,
+      "deleted_count": 1,
+      "exact_before": 0.0,
+      "exact_after": 0.0,
+      "retr_before": 0.0,
+      "retr_after": 0.0,
+      "residual_layer_after": null,
+      "residual_evidence": []
+    },
+    {
+      "fact_id": "F143",
+      "category": "device",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "a83678fb-d44d-4b35-bcb7-c47151ac83b1",
+          "text": "User's smartphone model is XPhone Pro 12.",
+          "matched": "XPhone Pro 12"
+        },
+        {
+          "memory_id": "b21e4414-e077-4bfa-a36d-7d37ec9ed307",
+          "text": "User's smartphone model is XPhone Pro 12.",
+          "matched": "XPhone Pro 12"
+        },
+        {
+          "memory_id": "c2a97322-1689-4289-aa85-dff69d6d5779",
+          "text": "User's smartphone model is XPhone Pro 12.",
+          "matched": "XPhone Pro 12"
+        },
+        {
+          "memory_id": "32255e13-d9c4-43fd-84fb-4073a9a36d33",
+          "text": "User's smartphone model is XPhone Pro 12.",
+          "matched": "XPhone Pro 12"
+        },
+        {
+          "memory_id": "675016df-cdd1-4b42-a8e2-be68dc34a0d9",
+          "text": "User's smartphone model is XPhone Pro 12.",
+          "matched": "XPhone Pro 12"
+        }
+      ]
+    },
+    {
+      "fact_id": "F144",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "abc8e5f4-fe6d-4518-a1b2-8de5eb405491",
+          "text": "User's personal contact ID is JWO-7B8K-3R2M.",
+          "matched": "JWO-7B8K-3R2M"
+        },
+        {
+          "memory_id": "8aa86f7e-92e8-44de-a420-f2e76531be17",
+          "text": "User's personal contact ID is JWO-7B8K-3R2M.",
+          "matched": "JWO-7B8K-3R2M"
+        },
+        {
+          "memory_id": "da26f68b-b384-49f9-89b6-d5052cbcbc29",
+          "text": "User's personal contact ID is JWO-7B8K-3R2M.",
+          "matched": "JWO-7B8K-3R2M"
+        },
+        {
+          "memory_id": "14cc28d0-5e01-437e-9690-ef7a3218c9ca",
+          "text": "User's personal contact ID is JWO-7B8K-3R2M.",
+          "matched": "JWO-7B8K-3R2M"
+        },
+        {
+          "memory_id": "baac7c2d-1d27-4a10-a003-aeed1e05455a",
+          "text": "User's personal contact ID is JWO-7B8K-3R2M.",
+          "matched": "JWO-7B8K-3R2M"
+        }
+      ]
+    },
+    {
+      "fact_id": "F145",
+      "category": "medical",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "9bcf5b91-3366-46fd-bb37-e2a26c7f306b",
+          "text": "User's medical record number is 4R8T-M5Z9-1X2P.",
+          "matched": "4R8T-M5Z9-1X2P"
+        },
+        {
+          "memory_id": "5585b880-b076-46e4-98e2-b46856194897",
+          "text": "User's medical record number is 4R8T-M5Z9-1X2P.",
+          "matched": "4R8T-M5Z9-1X2P"
+        },
+        {
+          "memory_id": "c1354f15-ff3e-4ad2-9f9e-cdbb563382c6",
+          "text": "User's medical record number is 4R8T-M5Z9-1X2P.",
+          "matched": "4R8T-M5Z9-1X2P"
+        },
+        {
+          "memory_id": "1a5f2e64-ac72-46ea-8faf-ca8f8f8727a9",
+          "text": "User's medical record number is 4R8T-M5Z9-1X2P.",
+          "matched": "4R8T-M5Z9-1X2P"
+        },
+        {
+          "memory_id": "e301035f-77ef-49ba-ace4-a21f4dcf70d9",
+          "text": "User's medical record number is 4R8T-M5Z9-1X2P.",
+          "matched": "4R8T-M5Z9-1X2P"
+        }
+      ]
+    },
+    {
+      "fact_id": "F146",
+      "category": "financial",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.4,
+      "retr_after": 0.4,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "3ed1ba19-244b-4529-aff7-2ee914821b87",
+          "text": "User's bank account number is 678-9012-3456.",
+          "matched": "678-9012-3456"
+        },
+        {
+          "memory_id": "58480938-685d-4706-8a60-9be6ab4b9aa8",
+          "text": "User's bank account number is 678-9012-3456.",
+          "matched": "678-9012-3456"
+        },
+        {
+          "memory_id": "185d6e90-c6f3-408c-9400-e0848ee14610",
+          "text": "User's bank account number is 678-9012-3456.",
+          "matched": "678-9012-3456"
+        },
+        {
+          "memory_id": "037cc236-266b-4cd6-95ea-fa33fe130fc3",
+          "text": "User's bank account number is 678-9012-3456.",
+          "matched": "678-9012-3456"
+        },
+        {
+          "memory_id": "cfe458ce-7929-4418-babf-021b2486090c",
+          "text": "User's bank account number is 678-9012-3456.",
+          "matched": "678-9012-3456"
+        }
+      ]
+    },
+    {
+      "fact_id": "F147",
+      "category": "preference",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "31cf38bd-d275-43f6-b629-641d46bb70a7",
+          "text": "User's favorite color code is #A1C6E7.",
+          "matched": "#A1C6E7"
+        },
+        {
+          "memory_id": "dfa81276-17cf-43e5-bd27-9f0764a6e493",
+          "text": "User's favorite color code is #A1C6E7.",
+          "matched": "#A1C6E7"
+        },
+        {
+          "memory_id": "fc0f05b9-867e-430c-b404-22ab1cacfd91",
+          "text": "User's favorite color code is #A1C6E7.",
+          "matched": "#A1C6E7"
+        },
+        {
+          "memory_id": "50b76b16-b5c4-4840-857b-87512c0b6d9c",
+          "text": "User's favorite color code is #A1C6E7.",
+          "matched": "#A1C6E7"
+        },
+        {
+          "memory_id": "59104453-2db6-485a-9f08-5e2484c724b0",
+          "text": "User's favorite color code is #A1C6E7.",
+          "matched": "#A1C6E7"
+        }
+      ]
+    },
+    {
+      "fact_id": "F148",
+      "category": "location",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.6,
+      "retr_after": 0.6,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "a86712ec-54c5-4eb6-bbed-ba67255f1355",
+          "text": "User's home address code is 5WQ-9K1L-3D4N.",
+          "matched": "5WQ-9K1L-3D4N"
+        },
+        {
+          "memory_id": "f8d7d710-6368-4b53-9cfb-2c2ad70f4b79",
+          "text": "User's home address code is 5WQ-9K1L-3D4N.",
+          "matched": "5WQ-9K1L-3D4N"
+        },
+        {
+          "memory_id": "1fc35339-4702-443f-b56a-180b4bd32d80",
+          "text": "User's home address code is 5WQ-9K1L-3D4N.",
+          "matched": "5WQ-9K1L-3D4N"
+        },
+        {
+          "memory_id": "b886b4ab-d9ee-4589-93a2-3e0dd53358ab",
+          "text": "User's home address code is 5WQ-9K1L-3D4N.",
+          "matched": "5WQ-9K1L-3D4N"
+        },
+        {
+          "memory_id": "b180b96e-4fbb-4c16-9248-7a4f2f658b5b",
+          "text": "User's home address code is 5WQ-9K1L-3D4N.",
+          "matched": "5WQ-9K1L-3D4N"
+        }
+      ]
+    },
+    {
+      "fact_id": "F149",
+      "category": "education",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.6,
+      "retr_after": 0.6,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "3b93f41f-7aae-4c1c-988f-256c32f9789b",
+          "text": "User's student ID is MF-2023-EDU-785.",
+          "matched": "MF-2023-EDU-785"
+        },
+        {
+          "memory_id": "682ceedc-f0a1-4077-ae43-d4a51a0f1ba3",
+          "text": "User's student ID is MF-2023-EDU-785.",
+          "matched": "MF-2023-EDU-785"
+        },
+        {
+          "memory_id": "a057870d-9486-41f7-8029-f4ee298a5709",
+          "text": "User's student ID is MF-2023-EDU-785.",
+          "matched": "MF-2023-EDU-785"
+        },
+        {
+          "memory_id": "1e6bdf25-61b3-4770-b64e-799a847ebfc3",
+          "text": "User's student ID is MF-2023-EDU-785.",
+          "matched": "MF-2023-EDU-785"
+        },
+        {
+          "memory_id": "c1f883a9-e216-4c26-9c40-474908d7c97c",
+          "text": "User's student ID is MF-2023-EDU-785.",
+          "matched": "MF-2023-EDU-785"
+        }
+      ]
+    },
+    {
+      "fact_id": "F150",
+      "category": "employment",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "c5660deb-c3c6-4c3c-9e5d-0249d9640984",
+          "text": "User's employee number is 9823-LEF-4567.",
+          "matched": "9823-LEF-4567"
+        },
+        {
+          "memory_id": "87c13174-d1b5-48f1-a463-f6d2cd24e19f",
+          "text": "User's employee number is 9823-LEF-4567.",
+          "matched": "9823-LEF-4567"
+        },
+        {
+          "memory_id": "be4e28ec-39c3-4fa8-b4e2-c50030e8eab2",
+          "text": "User's employee number is 9823-LEF-4567.",
+          "matched": "9823-LEF-4567"
+        },
+        {
+          "memory_id": "b33ed596-b901-494e-bb1b-ab6a147d4075",
+          "text": "User's employee number is 9823-LEF-4567.",
+          "matched": "9823-LEF-4567"
+        },
+        {
+          "memory_id": "0531246e-f54b-48b6-9ff5-93d1125094e1",
+          "text": "User's employee number is 9823-LEF-4567.",
+          "matched": "9823-LEF-4567"
+        }
+      ]
+    },
+    {
+      "fact_id": "F152",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "c7f87ce1-6e2e-42bf-8da4-9ede369dbfcc",
+          "text": "User's emergency contact number is 9876-5432.",
+          "matched": "9876-5432"
+        },
+        {
+          "memory_id": "559c3c3b-41f7-44d9-9da6-707be7b28c79",
+          "text": "User's emergency contact number is 9876-5432.",
+          "matched": "9876-5432"
+        },
+        {
+          "memory_id": "3f11ea78-f331-4a1e-9cb5-7a638fefb3f2",
+          "text": "User's emergency contact number is 9876-5432.",
+          "matched": "9876-5432"
+        },
+        {
+          "memory_id": "f02969ba-f057-4e51-9e1e-1b663bc940b2",
+          "text": "User's emergency contact number is 9876-5432.",
+          "matched": "9876-5432"
+        },
+        {
+          "memory_id": "6b97399d-5077-4abd-8905-00afb9994506",
+          "text": "User's emergency contact number is 9876-5432.",
+          "matched": "9876-5432"
+        }
+      ]
+    },
+    {
+      "fact_id": "F153",
+      "category": "medical",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "46cca00d-26a0-404a-af71-4bed4ad7e91f",
+          "text": "User's medical record number is MRE-2023-4589.",
+          "matched": "MRE-2023-4589"
+        },
+        {
+          "memory_id": "7ceca01c-4ced-4707-800e-fb566adb5a35",
+          "text": "User's medical record number is MRE-2023-4589.",
+          "matched": "MRE-2023-4589"
+        },
+        {
+          "memory_id": "d7b6b515-5dba-472a-ae70-792f251f74e3",
+          "text": "User's medical record number is MRE-2023-4589.",
+          "matched": "MRE-2023-4589"
+        },
+        {
+          "memory_id": "6b3130d1-59d7-4496-96f7-c5bcde393104",
+          "text": "User's medical record number is MRE-2023-4589.",
+          "matched": "MRE-2023-4589"
+        },
+        {
+          "memory_id": "1b99399f-89be-4eb0-a344-0513beeab6f5",
+          "text": "User's medical record number is MRE-2023-4589.",
+          "matched": "MRE-2023-4589"
+        }
+      ]
+    },
+    {
+      "fact_id": "F155",
+      "category": "preference",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "d21b4632-5efa-4606-bc7f-f676c7095c00",
+          "text": "User's favorite coffee shop is Brewed Awakening located at 45 Coffee Lane.",
+          "matched": "Brewed Awakening"
+        },
+        {
+          "memory_id": "592021fe-e8f5-47cf-a26a-aa76c3ae2875",
+          "text": "User's favorite coffee shop is Brewed Awakening located at 45 Coffee Lane.",
+          "matched": "Brewed Awakening"
+        },
+        {
+          "memory_id": "e9e2b8fa-289e-4fd6-aeb6-4bde64ad0a5f",
+          "text": "User's favorite coffee shop is Brewed Awakening located at 45 Coffee Lane.",
+          "matched": "Brewed Awakening"
+        },
+        {
+          "memory_id": "94030cef-5028-4da7-90a9-801b05975565",
+          "text": "User's favorite coffee shop is Brewed Awakening located at 45 Coffee Lane.",
+          "matched": "Brewed Awakening"
+        },
+        {
+          "memory_id": "9daeef3d-5657-44ba-9053-7147a47104c6",
+          "text": "User's favorite coffee shop is Brewed Awakening located at 45 Coffee Lane.",
+          "matched": "Brewed Awakening"
+        }
+      ]
+    },
+    {
+      "fact_id": "F156",
+      "category": "location",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.4,
+      "retr_after": 0.4,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "09636b91-2c82-4d23-a261-a8b7011eb16f",
+          "text": "User's current residence postal code is 639589.",
+          "matched": "639589"
+        },
+        {
+          "memory_id": "a04fd2aa-bd97-4981-b53c-b9566a63e4ec",
+          "text": "User's current residence postal code is 639589.",
+          "matched": "639589"
+        },
+        {
+          "memory_id": "4196da38-c9e2-4139-8ac3-1a8807e6c511",
+          "text": "User's current residence postal code is 639589.",
+          "matched": "639589"
+        },
+        {
+          "memory_id": "7cd50d77-4a82-47b0-829e-cc7938a0b9d7",
+          "text": "User's current residence postal code is 639589.",
+          "matched": "639589"
+        },
+        {
+          "memory_id": "3816ab27-4d5a-4765-9014-6a41ae07011f",
+          "text": "User's current residence postal code is 639589.",
+          "matched": "639589"
+        }
+      ]
+    },
+    {
+      "fact_id": "F157",
+      "category": "education",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "9a584958-cdb2-41cf-b5d3-b0c31fef299a",
+          "text": "User's student ID number is S20230123.",
+          "matched": "S20230123"
+        },
+        {
+          "memory_id": "97391e6a-c7ea-45ea-b814-f6e4b2a01537",
+          "text": "User's student ID number is S20230123.",
+          "matched": "S20230123"
+        },
+        {
+          "memory_id": "11eda3f5-8c04-4cc5-93a2-9f7b64245515",
+          "text": "User's student ID number is S20230123.",
+          "matched": "S20230123"
+        },
+        {
+          "memory_id": "18a0f8e0-8e0b-4f61-9939-e06b36c2a0b2",
+          "text": "User's student ID number is S20230123.",
+          "matched": "S20230123"
+        }
+      ]
+    },
+    {
+      "fact_id": "F158",
+      "category": "employment",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "3157053d-2a49-4e23-9250-3d60a659e4d5",
+          "text": "User's employee ID is EMP-789654.",
+          "matched": "EMP-789654"
+        },
+        {
+          "memory_id": "a164987e-9277-4dc3-819a-fa3611861465",
+          "text": "User's employee ID is EMP-789654.",
+          "matched": "EMP-789654"
+        },
+        {
+          "memory_id": "1a51ca51-90dd-4a80-8d2c-e17096193188",
+          "text": "User's employee ID is EMP-789654.",
+          "matched": "EMP-789654"
+        },
+        {
+          "memory_id": "2ce167eb-bd8f-466c-a73f-fcf81a8837c5",
+          "text": "User's employee ID is EMP-789654.",
+          "matched": "EMP-789654"
+        }
+      ]
+    },
+    {
+      "fact_id": "F160",
+      "category": "personal_contact",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "641e06be-653f-4ebe-981b-77afd28c34ef",
+          "text": "User's secondary email is kxng_mail@randommail.com.",
+          "matched": "kxng_mail@randommail.com"
+        },
+        {
+          "memory_id": "dc0e5e94-2d28-44c2-b478-0941b6b98f52",
+          "text": "User's secondary email is kxng_mail@randommail.com.",
+          "matched": "kxng_mail@randommail.com"
+        },
+        {
+          "memory_id": "f4b7a82a-b8a2-48ae-abb0-7a25f69cb930",
+          "text": "User's secondary email is kxng_mail@randommail.com.",
+          "matched": "kxng_mail@randommail.com"
+        },
+        {
+          "memory_id": "ec5ae229-14e5-4cce-be13-048ee3f8299b",
+          "text": "User's secondary email is kxng_mail@randommail.com.",
+          "matched": "kxng_mail@randommail.com"
+        }
+      ]
+    },
+    {
+      "fact_id": "F162",
+      "category": "financial",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "d15fe657-4468-4ee6-9b27-ecbfb73b6c54",
+          "text": "User's investment account number is INV-4839201.",
+          "matched": "INV-4839201"
+        },
+        {
+          "memory_id": "ebd0dc84-8107-486c-be61-6600ba4049de",
+          "text": "User's investment account number is INV-4839201.",
+          "matched": "INV-4839201"
+        },
+        {
+          "memory_id": "806d8d34-0de8-4cde-8ae8-4e18b0bf89a0",
+          "text": "User's investment account number is INV-4839201.",
+          "matched": "INV-4839201"
+        },
+        {
+          "memory_id": "ccf1d440-2460-4e3f-926f-1d527fb20791",
+          "text": "User's investment account number is INV-4839201.",
+          "matched": "INV-4839201"
+        }
+      ]
+    },
+    {
+      "fact_id": "F164",
+      "category": "location",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "1eb9cc24-b152-44b1-8df0-aaf8fb0ad999",
+          "text": "User's home address is 12 Orchard Road, #25-01, Singapore.",
+          "matched": "12 Orchard Road, #25-01, Singapore"
+        },
+        {
+          "memory_id": "967f920d-d8df-4610-9a63-bd78509a6198",
+          "text": "User's home address is 12 Orchard Road, #25-01, Singapore.",
+          "matched": "12 Orchard Road, #25-01, Singapore"
+        },
+        {
+          "memory_id": "97b227dc-302f-4ade-bfe6-3895fa00cc4e",
+          "text": "User's home address is 12 Orchard Road, #25-01, Singapore.",
+          "matched": "12 Orchard Road, #25-01, Singapore"
+        },
+        {
+          "memory_id": "059713f9-3a0f-413c-89f3-a09a4ec64a6d",
+          "text": "User's home address is 12 Orchard Road, #25-01, Singapore.",
+          "matched": "12 Orchard Road, #25-01, Singapore"
+        }
+      ]
+    },
+    {
+      "fact_id": "F166",
+      "category": "employment",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "9dca2dd6-14d8-4554-bace-318bfb363b13",
+          "text": "User's employee ID is EMP-20230456.",
+          "matched": "EMP-20230456"
+        },
+        {
+          "memory_id": "606d8427-c9bb-4e98-ab3f-5b750828e95c",
+          "text": "User's employee ID is EMP-20230456.",
+          "matched": "EMP-20230456"
+        },
+        {
+          "memory_id": "cf9da346-f585-494b-816c-967dddbd2d11",
+          "text": "User's employee ID is EMP-20230456.",
+          "matched": "EMP-20230456"
+        },
+        {
+          "memory_id": "eee1def1-3ab8-4cbe-8981-cec61636f8cd",
+          "text": "User's employee ID is EMP-20230456.",
+          "matched": "EMP-20230456"
+        },
+        {
+          "memory_id": "c4deb9ab-eed8-4077-b7e6-78f942fa370e",
+          "text": "User's employee ID is EMP-20230456.",
+          "matched": "EMP-20230456"
+        }
+      ]
+    },
+    {
+      "fact_id": "F168",
+      "category": "personal_contact",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "bd34b78d-b6b2-4615-8fb2-f8df46c5dfbd",
+          "text": "User's personal contact ID is NUA-7F2X-4B9R.",
+          "matched": "NUA-7F2X-4B9R"
+        },
+        {
+          "memory_id": "089cb4e9-9de2-4308-a6af-06ad1691020d",
+          "text": "User's personal contact ID is NUA-7F2X-4B9R.",
+          "matched": "NUA-7F2X-4B9R"
+        },
+        {
+          "memory_id": "9282c3c9-918f-4967-9621-398e4c90f482",
+          "text": "User's personal contact ID is NUA-7F2X-4B9R.",
+          "matched": "NUA-7F2X-4B9R"
+        },
+        {
+          "memory_id": "49eac1ed-fd85-4343-b025-2b6e4ebc28fd",
+          "text": "User's personal contact ID is NUA-7F2X-4B9R.",
+          "matched": "NUA-7F2X-4B9R"
+        }
+      ]
+    },
+    {
+      "fact_id": "F169",
+      "category": "medical",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "066cb050-ff63-4313-812c-679ca444ea2a",
+          "text": "User's medical record number is 8R9F-3T7Q-2K5M.",
+          "matched": "8R9F-3T7Q-2K5M"
+        },
+        {
+          "memory_id": "51c7253d-8247-4dff-a13e-470067b37d22",
+          "text": "User's medical record number is 8R9F-3T7Q-2K5M.",
+          "matched": "8R9F-3T7Q-2K5M"
+        },
+        {
+          "memory_id": "8de1bd9b-b259-41f6-8f25-67cbad7f8dce",
+          "text": "User's medical record number is 8R9F-3T7Q-2K5M.",
+          "matched": "8R9F-3T7Q-2K5M"
+        },
+        {
+          "memory_id": "c2c5c5a7-c7c0-4f9c-8c07-804fa78a8234",
+          "text": "User's medical record number is 8R9F-3T7Q-2K5M.",
+          "matched": "8R9F-3T7Q-2K5M"
+        },
+        {
+          "memory_id": "fc3d3193-c0dc-4cd3-a958-a77d9a33db6d",
+          "text": "User's medical record number is 8R9F-3T7Q-2K5M.",
+          "matched": "8R9F-3T7Q-2K5M"
+        }
+      ]
+    },
+    {
+      "fact_id": "F170",
+      "category": "financial",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.4,
+      "retr_after": 0.4,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "5d022a57-5b9f-40ed-bae8-f9e4c78e7645",
+          "text": "User's bank account number is 3456-7890-1234.",
+          "matched": "3456-7890-1234"
+        },
+        {
+          "memory_id": "6da04147-7ad6-44c0-a14b-eabccc72412d",
+          "text": "User's bank account number is 3456-7890-1234.",
+          "matched": "3456-7890-1234"
+        },
+        {
+          "memory_id": "3d9e424d-b1c1-442f-9eeb-98b813007e98",
+          "text": "User's bank account number is 3456-7890-1234.",
+          "matched": "3456-7890-1234"
+        },
+        {
+          "memory_id": "c87de69e-77cf-48cc-9430-055bba797bda",
+          "text": "User's bank account number is 3456-7890-1234.",
+          "matched": "3456-7890-1234"
+        },
+        {
+          "memory_id": "974eef46-2b05-4e90-a33a-01ee4490c9bf",
+          "text": "User's bank account number is 3456-7890-1234.",
+          "matched": "3456-7890-1234"
+        }
+      ]
+    },
+    {
+      "fact_id": "F171",
+      "category": "preference",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.0,
+      "retr_after": 0.2,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "3e37c50b-4a5b-4901-818a-646db5d6093e",
+          "text": "User's favorite color code is 5B3C-1F2D-8A9E.",
+          "matched": "5B3C-1F2D-8A9E"
+        },
+        {
+          "memory_id": "6044d399-a30a-45ef-a994-b5e046165533",
+          "text": "User's favorite color code is 5B3C-1F2D-8A9E.",
+          "matched": "5B3C-1F2D-8A9E"
+        },
+        {
+          "memory_id": "d7f6086f-8129-4153-935c-85df514c0ffe",
+          "text": "User's favorite color code is 5B3C-1F2D-8A9E.",
+          "matched": "5B3C-1F2D-8A9E"
+        },
+        {
+          "memory_id": "32541bf5-9b98-4d4d-a35f-a75f17f8b438",
+          "text": "User's favorite color code is 5B3C-1F2D-8A9E.",
+          "matched": "5B3C-1F2D-8A9E"
+        },
+        {
+          "memory_id": "d5e425c8-647c-405a-87e1-3d39556dd666",
+          "text": "User's favorite color code is 5B3C-1F2D-8A9E.",
+          "matched": "5B3C-1F2D-8A9E"
+        },
+        {
+          "memory_id": "0086228a-b0cd-424b-9cd2-2e0d112002b4",
+          "text": "User's favorite color code is 5B3C-1F2D-8A9E.",
+          "matched": "5B3C-1F2D-8A9E"
+        }
+      ]
+    },
+    {
+      "fact_id": "F172",
+      "category": "location",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "e1071176-83b4-425d-a441-3063a0835d6a",
+          "text": "User's home postal code is 457812.",
+          "matched": "457812"
+        },
+        {
+          "memory_id": "9809eb1d-b3c4-410e-af57-a624eead66a2",
+          "text": "User's home postal code is 457812.",
+          "matched": "457812"
+        },
+        {
+          "memory_id": "2f2e35bb-0b64-4525-b8d6-027dad5defc5",
+          "text": "User's home postal code is 457812.",
+          "matched": "457812"
+        },
+        {
+          "memory_id": "fc1181e1-aaa2-477a-8ed3-384a7595229e",
+          "text": "User's home postal code is 457812.",
+          "matched": "457812"
+        },
+        {
+          "memory_id": "ec1543f5-fa61-4375-9a7a-55152c57d4c5",
+          "text": "User's home postal code is 457812.",
+          "matched": "457812"
+        }
+      ]
+    },
+    {
+      "fact_id": "F173",
+      "category": "education",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "ba2a5a29-595b-40ce-b17f-c2a71571c8da",
+          "text": "User's student ID is FO-2023-EDU-198.",
+          "matched": "FO-2023-EDU-198"
+        },
+        {
+          "memory_id": "7df0f1b8-ffc8-4736-b531-05aa72b6f15c",
+          "text": "User's student ID is FO-2023-EDU-198.",
+          "matched": "FO-2023-EDU-198"
+        },
+        {
+          "memory_id": "4decc50a-7194-4b7b-982b-39d82692db16",
+          "text": "User's student ID is FO-2023-EDU-198.",
+          "matched": "FO-2023-EDU-198"
+        },
+        {
+          "memory_id": "e44eb0bc-9370-4650-8287-f21550f9c637",
+          "text": "User's student ID is FO-2023-EDU-198.",
+          "matched": "FO-2023-EDU-198"
+        },
+        {
+          "memory_id": "ca7f121e-750f-4069-ad1b-80e8dcbd6d17",
+          "text": "User's student ID is FO-2023-EDU-198.",
+          "matched": "FO-2023-EDU-198"
+        }
+      ]
+    },
+    {
+      "fact_id": "F174",
+      "category": "employment",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.6,
+      "retr_after": 0.6,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "2866c32e-8a20-4c9d-9d92-bdcea95304a1",
+          "text": "User's employee ID is EMP-9001-34B.",
+          "matched": "EMP-9001-34B"
+        },
+        {
+          "memory_id": "d8cb534d-8ce0-4175-93ee-f8ea50973274",
+          "text": "User's employee ID is EMP-9001-34B.",
+          "matched": "EMP-9001-34B"
+        },
+        {
+          "memory_id": "5f91f3ba-15e6-43ca-a5c2-4f6071236dad",
+          "text": "User's employee ID is EMP-9001-34B.",
+          "matched": "EMP-9001-34B"
+        },
+        {
+          "memory_id": "0726f0ae-5283-4976-a3cd-0e896161b798",
+          "text": "User's employee ID is EMP-9001-34B.",
+          "matched": "EMP-9001-34B"
+        },
+        {
+          "memory_id": "dcfdaf3f-ad9b-4bcd-9f94-e26ea1412a91",
+          "text": "User's employee ID is EMP-9001-34B.",
+          "matched": "EMP-9001-34B"
+        }
+      ]
+    },
+    {
+      "fact_id": "F176",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "47991b60-40ab-4c67-b47f-f4dbdd67a0f9",
+          "text": "User's personal contact code is ZB4Y7M2Q94.",
+          "matched": "ZB4Y7M2Q94"
+        },
+        {
+          "memory_id": "85a34178-02bb-43a3-b26a-0c468fff901d",
+          "text": "User's personal contact code is ZB4Y7M2Q94.",
+          "matched": "ZB4Y7M2Q94"
+        },
+        {
+          "memory_id": "ad819a9a-0aa5-42c3-a041-e2a956f4c217",
+          "text": "User's personal contact code is ZB4Y7M2Q94.",
+          "matched": "ZB4Y7M2Q94"
+        },
+        {
+          "memory_id": "4387167a-308d-4c30-a9c9-99fb05cd61da",
+          "text": "User's personal contact code is ZB4Y7M2Q94.",
+          "matched": "ZB4Y7M2Q94"
+        },
+        {
+          "memory_id": "062c923c-2acf-494c-9f06-7b24ce99655c",
+          "text": "User's personal contact code is ZB4Y7M2Q94.",
+          "matched": "ZB4Y7M2Q94"
+        }
+      ]
+    },
+    {
+      "fact_id": "F177",
+      "category": "medical",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "fbc53735-a9b6-4579-997b-418010ae6bf1",
+          "text": "User's medical record number is 5A9D2E1B7F.",
+          "matched": "5A9D2E1B7F"
+        },
+        {
+          "memory_id": "976b88df-1d85-4df2-b495-889a4e6b093f",
+          "text": "User's medical record number is 5A9D2E1B7F.",
+          "matched": "5A9D2E1B7F"
+        },
+        {
+          "memory_id": "61c38359-a464-4b68-a863-c67162ca8b25",
+          "text": "User's medical record number is 5A9D2E1B7F.",
+          "matched": "5A9D2E1B7F"
+        },
+        {
+          "memory_id": "5c70c2b6-c7f2-495e-b9c4-097bfbbc5a0a",
+          "text": "User's medical record number is 5A9D2E1B7F.",
+          "matched": "5A9D2E1B7F"
+        },
+        {
+          "memory_id": "ec402119-08c8-4e39-a1a3-63585cf63ab6",
+          "text": "User's medical record number is 5A9D2E1B7F.",
+          "matched": "5A9D2E1B7F"
+        }
+      ]
+    },
+    {
+      "fact_id": "F178",
+      "category": "financial",
+      "value_rows_before": 6,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.8,
+      "retr_after": 0.8,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "be5963a5-bede-49e2-9343-bb09058f5106",
+          "text": "User's bank account identifier is 9K8J2L5Q3R.",
+          "matched": "9K8J2L5Q3R"
+        },
+        {
+          "memory_id": "adf9e7be-f7cf-441b-b26c-20a1dce33077",
+          "text": "User's bank account identifier is 9K8J2L5Q3R.",
+          "matched": "9K8J2L5Q3R"
+        },
+        {
+          "memory_id": "cfa4cadf-5ab2-4468-a2d8-5c1970c08d4c",
+          "text": "User's bank account identifier is 9K8J2L5Q3R.",
+          "matched": "9K8J2L5Q3R"
+        },
+        {
+          "memory_id": "967764dd-3ed8-4de7-9490-bc6e74611202",
+          "text": "User's bank account identifier is 9K8J2L5Q3R.",
+          "matched": "9K8J2L5Q3R"
+        },
+        {
+          "memory_id": "2b745b48-9ac1-4b3f-b8cb-362b70a2c3d8",
+          "text": "User's bank account identifier is 9K8J2L5Q3R.",
+          "matched": "9K8J2L5Q3R"
+        }
+      ]
+    },
+    {
+      "fact_id": "F179",
+      "category": "preference",
+      "value_rows_before": 5,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "5a24468b-8e07-48be-a874-8d80e676bb7c",
+          "text": "User's preferred coffee order code is X1C7V4N8M.",
+          "matched": "X1C7V4N8M"
+        },
+        {
+          "memory_id": "56fb12b8-558d-4bf2-8bf7-07c3d90f5030",
+          "text": "User's preferred coffee order code is X1C7V4N8M.",
+          "matched": "X1C7V4N8M"
+        },
+        {
+          "memory_id": "4b33ed4e-0e79-4e45-8508-f2cf5c8d5b0a",
+          "text": "User's preferred coffee order code is X1C7V4N8M.",
+          "matched": "X1C7V4N8M"
+        },
+        {
+          "memory_id": "85486ef5-d734-4c75-9e6d-790890510bdc",
+          "text": "User's preferred coffee order code is X1C7V4N8M.",
+          "matched": "X1C7V4N8M"
+        }
+      ]
+    },
+    {
+      "fact_id": "F180",
+      "category": "location",
+      "value_rows_before": 4,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.6,
+      "retr_after": 0.6,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "7162fa6e-b081-4f7d-921b-2078ae988cd7",
+          "text": "User's home address identifier is 3B8Q6H9R5T.",
+          "matched": "3B8Q6H9R5T"
+        },
+        {
+          "memory_id": "fa6f06b9-13bf-487a-b060-66a79386b108",
+          "text": "User's home address identifier is 3B8Q6H9R5T.",
+          "matched": "3B8Q6H9R5T"
+        },
+        {
+          "memory_id": "4ab8c5b8-79f4-4b36-abd0-86550bd92085",
+          "text": "User's home address identifier is 3B8Q6H9R5T.",
+          "matched": "3B8Q6H9R5T"
+        }
+      ]
+    },
+    {
+      "fact_id": "F181",
+      "category": "education",
+      "value_rows_before": 3,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 1.0,
+      "retr_after": 1.0,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "945bd8f5-e980-428e-ae89-6b66ad618eb0",
+          "text": "User's student ID number is S2D7F8K1L.",
+          "matched": "S2D7F8K1L"
+        },
+        {
+          "memory_id": "06733a62-e2ae-4533-b708-3ce485b745f4",
+          "text": "User's student ID number is S2D7F8K1L.",
+          "matched": "S2D7F8K1L"
+        }
+      ]
+    },
+    {
+      "fact_id": "F182",
+      "category": "employment",
+      "value_rows_before": 2,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 1.0,
+      "retr_before": 0.4,
+      "retr_after": 0.4,
+      "residual_layer_after": "memory_text",
+      "residual_evidence": [
+        {
+          "memory_id": "602398a2-d015-46a8-a9c9-931b41c2ce94",
+          "text": "User's employee reference number is E4F1T8G7Z.",
+          "matched": "E4F1T8G7Z"
+        }
+      ]
+    },
+    {
+      "fact_id": "F183",
+      "category": "device",
+      "value_rows_before": 1,
+      "deleted_count": 1,
+      "exact_before": 1.0,
+      "exact_after": 0.0,
+      "retr_before": 1.0,
+      "retr_after": 0.0,
+      "residual_layer_after": null,
+      "residual_evidence": []
+    }
+  ]
+}

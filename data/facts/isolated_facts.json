@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "description": "Isolated facts: arbitrary values with NO entailment links to any other stored fact. Recovery after deletion can only be RESIDUAL SURVIVAL (a derived artifact still contains it), never re-derivation. Parametric risk rho is ~0 by construction (values are synthetic). All persons are fictional. [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)] [uniqueness pass 2026-07-02: 15 colliding facts regenerated to globally-unique probe values verified against the combined isolated+context store]",
+    "description": "Isolated facts: arbitrary values with NO entailment links to any other stored fact. Recovery after deletion can only be RESIDUAL SURVIVAL (a derived artifact still contains it), never re-derivation. Parametric risk rho is ~0 by construction (values are synthetic). All persons are fictional. [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)] [uniqueness pass 2026-07-02: 15 colliding facts regenerated to globally-unique probe values verified against the combined isolated+context store] [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)]",
     "account_owner": "Alice Chen",
     "fields": {
       "id": "stable identifier",
@@ -597,6 +597,439 @@
       ],
       "entailed_by": [],
       "note": "Preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F137",
+      "subject": "Wei Jie Tan",
+      "category": "medical",
+      "text": "Wei Jie Tan's blood type is AB+.",
+      "utterance": "Record my blood type as AB+.",
+      "probe_value": [
+        "AB+"
+      ],
+      "entailed_by": [],
+      "note": "Blood type is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F140",
+      "subject": "Hui Min Lim",
+      "category": "location",
+      "text": "Hui Min Lim's favorite vacation spot is Sentosa Island.",
+      "utterance": "Remember my favorite vacation spot is Sentosa Island.",
+      "probe_value": [
+        "Sentosa Island"
+      ],
+      "entailed_by": [],
+      "note": "Location is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F141",
+      "subject": "Hui Min Lim",
+      "category": "education",
+      "text": "Hui Min Lim graduated from the University of Singapore in 2022.",
+      "utterance": "Save that I graduated from the University of Singapore in 2022.",
+      "probe_value": [
+        "University of Singapore 2022"
+      ],
+      "entailed_by": [],
+      "note": "Graduation info is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F143",
+      "subject": "Hui Min Lim",
+      "category": "device",
+      "text": "Hui Min Lim's smartphone model is XPhone Pro 12.",
+      "utterance": "Save my smartphone model as XPhone Pro 12.",
+      "probe_value": [
+        "XPhone Pro 12"
+      ],
+      "entailed_by": [],
+      "note": "Device model is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F144",
+      "subject": "Jun Wei Ong",
+      "category": "personal_contact",
+      "text": "Jun Wei Ong's personal contact ID is JWO-7B8K-3R2M.",
+      "utterance": "Store my personal contact ID: JWO-7B8K-3R2M.",
+      "probe_value": [
+        "JWO-7B8K-3R2M"
+      ],
+      "entailed_by": [],
+      "note": "Contact ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F145",
+      "subject": "Jun Wei Ong",
+      "category": "medical",
+      "text": "Jun Wei Ong's medical record number is 4R8T-M5Z9-1X2P.",
+      "utterance": "Keep my medical record number: 4R8T-M5Z9-1X2P.",
+      "probe_value": [
+        "4R8T-M5Z9-1X2P"
+      ],
+      "entailed_by": [],
+      "note": "Record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F146",
+      "subject": "Jun Wei Ong",
+      "category": "financial",
+      "text": "Jun Wei Ong's bank account number is 678-9012-3456.",
+      "utterance": "Remember my bank account number: 678-9012-3456.",
+      "probe_value": [
+        "678-9012-3456"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F147",
+      "subject": "Jun Wei Ong",
+      "category": "preference",
+      "text": "Jun Wei Ong's favorite color code is #A1C6E7.",
+      "utterance": "Save my favorite color code: #A1C6E7.",
+      "probe_value": [
+        "#A1C6E7"
+      ],
+      "entailed_by": [],
+      "note": "Color code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F148",
+      "subject": "Mei Fang Goh",
+      "category": "location",
+      "text": "Mei Fang Goh's home address code is 5WQ-9K1L-3D4N.",
+      "utterance": "Store my home address code: 5WQ-9K1L-3D4N.",
+      "probe_value": [
+        "5WQ-9K1L-3D4N"
+      ],
+      "entailed_by": [],
+      "note": "Address code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F149",
+      "subject": "Mei Fang Goh",
+      "category": "education",
+      "text": "Mei Fang Goh's student ID is MF-2023-EDU-785.",
+      "utterance": "Keep my student ID: MF-2023-EDU-785.",
+      "probe_value": [
+        "MF-2023-EDU-785"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F150",
+      "subject": "Mei Fang Goh",
+      "category": "employment",
+      "text": "Mei Fang Goh's employee number is 9823-LEF-4567.",
+      "utterance": "Remember my employee number: 9823-LEF-4567.",
+      "probe_value": [
+        "9823-LEF-4567"
+      ],
+      "entailed_by": [],
+      "note": "Employee number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F152",
+      "subject": "Boon Hock Teo",
+      "category": "personal_contact",
+      "text": "Boon Hock Teo's emergency contact number is 9876-5432.",
+      "utterance": "Add my emergency contact number: 9876-5432.",
+      "probe_value": [
+        "9876-5432"
+      ],
+      "entailed_by": [],
+      "note": "The number is arbitrary; it cannot be inferred from any other information."
+    },
+    {
+      "id": "F153",
+      "subject": "Boon Hock Teo",
+      "category": "medical",
+      "text": "Boon Hock Teo's medical record number is MRE-2023-4589.",
+      "utterance": "Store my medical record number: MRE-2023-4589.",
+      "probe_value": [
+        "MRE-2023-4589"
+      ],
+      "entailed_by": [],
+      "note": "The record number is arbitrary; its format does not reveal any personal details."
+    },
+    {
+      "id": "F155",
+      "subject": "Boon Hock Teo",
+      "category": "preference",
+      "text": "Boon Hock Teo's favorite coffee shop is 'Brewed Awakening' located at 45 Coffee Lane.",
+      "utterance": "Remember my favorite coffee shop: Brewed Awakening at 45 Coffee Lane.",
+      "probe_value": [
+        "Brewed Awakening",
+        "45 Coffee Lane"
+      ],
+      "entailed_by": [],
+      "note": "The coffee shop name and location are arbitrary; they do not correlate with other personal data."
+    },
+    {
+      "id": "F156",
+      "subject": "Xin Yi Chua",
+      "category": "location",
+      "text": "Xin Yi Chua's current residence postal code is 639589.",
+      "utterance": "Note my current residence postal code: 639589.",
+      "probe_value": [
+        "639589"
+      ],
+      "entailed_by": [],
+      "note": "The postal code is arbitrary; it does not indicate any personal characteristics."
+    },
+    {
+      "id": "F157",
+      "subject": "Xin Yi Chua",
+      "category": "education",
+      "text": "Xin Yi Chua's student ID number is S20230123.",
+      "utterance": "Save my student ID number: S20230123.",
+      "probe_value": [
+        "S20230123"
+      ],
+      "entailed_by": [],
+      "note": "The student ID is arbitrary; its structure does not relate to Xin Yi's personal history."
+    },
+    {
+      "id": "F158",
+      "subject": "Xin Yi Chua",
+      "category": "employment",
+      "text": "Xin Yi Chua's employee ID is EMP-789654.",
+      "utterance": "Store my employee ID: EMP-789654.",
+      "probe_value": [
+        "EMP-789654"
+      ],
+      "entailed_by": [],
+      "note": "The employee ID is arbitrary; it cannot be traced back to any identifiable information."
+    },
+    {
+      "id": "F160",
+      "subject": "Kai Xin Ng",
+      "category": "personal_contact",
+      "text": "Kai Xin Ng's secondary email address is kxng_mail@randommail.com.",
+      "utterance": "Save my secondary email: kxng_mail@randommail.com.",
+      "probe_value": [
+        "kxng_mail@randommail.com"
+      ],
+      "entailed_by": [],
+      "note": "Email is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F162",
+      "subject": "Kai Xin Ng",
+      "category": "financial",
+      "text": "Kai Xin Ng's investment account number is INV-4839201.",
+      "utterance": "Save my investment account number: INV-4839201.",
+      "probe_value": [
+        "INV-4839201"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F164",
+      "subject": "Pei Shan Sim",
+      "category": "location",
+      "text": "Pei Shan Sim's home address is 12 Orchard Road, #25-01, Singapore.",
+      "utterance": "Save my home address: 12 Orchard Road, #25-01, Singapore.",
+      "probe_value": [
+        "12 Orchard Road, #25-01, Singapore"
+      ],
+      "entailed_by": [],
+      "note": "Address is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F166",
+      "subject": "Pei Shan Sim",
+      "category": "employment",
+      "text": "Pei Shan Sim's employee ID is EMP-20230456.",
+      "utterance": "Save my employee ID: EMP-20230456.",
+      "probe_value": [
+        "EMP-20230456"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F168",
+      "subject": "Nurul Aisyah",
+      "category": "personal_contact",
+      "text": "Nurul Aisyah's personal contact ID is NUA-7F2X-4B9R.",
+      "utterance": "Store my personal contact ID: NUA-7F2X-4B9R.",
+      "probe_value": [
+        "NUA-7F2X-4B9R"
+      ],
+      "entailed_by": [],
+      "note": "Contact ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F169",
+      "subject": "Nurul Aisyah",
+      "category": "medical",
+      "text": "Nurul Aisyah's medical record number is 8R9F-3T7Q-2K5M.",
+      "utterance": "Remember my medical record number: 8R9F-3T7Q-2K5M.",
+      "probe_value": [
+        "8R9F-3T7Q-2K5M"
+      ],
+      "entailed_by": [],
+      "note": "Record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F170",
+      "subject": "Nurul Aisyah",
+      "category": "financial",
+      "text": "Nurul Aisyah's bank account number is 3456-7890-1234.",
+      "utterance": "Save my bank account number: 3456-7890-1234.",
+      "probe_value": [
+        "3456-7890-1234"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F171",
+      "subject": "Nurul Aisyah",
+      "category": "preference",
+      "text": "Nurul Aisyah's favorite color code is 5B3C-1F2D-8A9E.",
+      "utterance": "Store my favorite color code: 5B3C-1F2D-8A9E.",
+      "probe_value": [
+        "5B3C-1F2D-8A9E"
+      ],
+      "entailed_by": [],
+      "note": "Color code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F172",
+      "subject": "Faizal Osman",
+      "category": "location",
+      "text": "Faizal Osman's home postal code is 457812.",
+      "utterance": "Save my home postal code: 457812.",
+      "probe_value": [
+        "457812"
+      ],
+      "entailed_by": [],
+      "note": "Postal code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F173",
+      "subject": "Faizal Osman",
+      "category": "education",
+      "text": "Faizal Osman's student ID is FO-2023-EDU-198.",
+      "utterance": "Remember my student ID: FO-2023-EDU-198.",
+      "probe_value": [
+        "FO-2023-EDU-198"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F174",
+      "subject": "Faizal Osman",
+      "category": "employment",
+      "text": "Faizal Osman's employee ID is EMP-9001-34B.",
+      "utterance": "Store my employee ID: EMP-9001-34B.",
+      "probe_value": [
+        "EMP-9001-34B"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F176",
+      "subject": "Aishah Ibrahim",
+      "category": "personal_contact",
+      "text": "Aishah Ibrahim's personal contact code is ZB4Y7M2Q94.",
+      "utterance": "Store my personal contact code: ZB4Y7M2Q94.",
+      "probe_value": [
+        "ZB4Y7M2Q94"
+      ],
+      "entailed_by": [],
+      "note": "Contact code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F177",
+      "subject": "Aishah Ibrahim",
+      "category": "medical",
+      "text": "Aishah Ibrahim's medical record number is 5A9D2E1B7F.",
+      "utterance": "Remember my medical record number: 5A9D2E1B7F.",
+      "probe_value": [
+        "5A9D2E1B7F"
+      ],
+      "entailed_by": [],
+      "note": "Record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F178",
+      "subject": "Aishah Ibrahim",
+      "category": "financial",
+      "text": "Aishah Ibrahim's bank account identifier is 9K8J2L5Q3R.",
+      "utterance": "Save my bank account identifier: 9K8J2L5Q3R.",
+      "probe_value": [
+        "9K8J2L5Q3R"
+      ],
+      "entailed_by": [],
+      "note": "Account identifier is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F179",
+      "subject": "Aishah Ibrahim",
+      "category": "preference",
+      "text": "Aishah Ibrahim's preferred coffee order code is X1C7V4N8M.",
+      "utterance": "Store my preferred coffee order code: X1C7V4N8M.",
+      "probe_value": [
+        "X1C7V4N8M"
+      ],
+      "entailed_by": [],
+      "note": "Order code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F180",
+      "subject": "Hakim Abdullah",
+      "category": "location",
+      "text": "Hakim Abdullah's home address identifier is 3B8Q6H9R5T.",
+      "utterance": "Remember my home address identifier: 3B8Q6H9R5T.",
+      "probe_value": [
+        "3B8Q6H9R5T"
+      ],
+      "entailed_by": [],
+      "note": "Address identifier is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F181",
+      "subject": "Hakim Abdullah",
+      "category": "education",
+      "text": "Hakim Abdullah's student ID number is S2D7F8K1L.",
+      "utterance": "Save my student ID number: S2D7F8K1L.",
+      "probe_value": [
+        "S2D7F8K1L"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F182",
+      "subject": "Hakim Abdullah",
+      "category": "employment",
+      "text": "Hakim Abdullah's employee reference number is E4F1T8G7Z.",
+      "utterance": "Store my employee reference number: E4F1T8G7Z.",
+      "probe_value": [
+        "E4F1T8G7Z"
+      ],
+      "entailed_by": [],
+      "note": "Reference number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F183",
+      "subject": "Hakim Abdullah",
+      "category": "device",
+      "text": "Hakim Abdullah's smartphone serial number is F7C2D9V4X.",
+      "utterance": "Remember my smartphone serial number: F7C2D9V4X.",
+      "probe_value": [
+        "F7C2D9V4X"
+      ],
+      "entailed_by": [],
+      "note": "Serial number is arbitrary; not inferable from any other fact."
     }
   ]
 }

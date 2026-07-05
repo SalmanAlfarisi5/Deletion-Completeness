@@ -45,7 +45,8 @@ from probes.parametric_probe import ParametricProbe  # noqa: E402
 
 
 def bin_of(fact: dict) -> int:
-    return {"stored": 1, "stored+world": 2, "world": 3}.get(
+    return {"stored": 1, "stored+world": 2, "world": 3,
+            "stored_multilevel": 4, "stored_chain": 5}.get(
         fact.get("rederivation_basis", "stored+world"), 2)
 
 
@@ -67,7 +68,7 @@ def main() -> None:
     context = load_facts(config.FACTS_DIR / "context_facts.json")
     ctx_by_id = {c["id"]: c for c in context}
     bystanders = [c for c in context if c.get("role") == "bystander"][: args.bystanders]
-    reasoners = [config.REASONER_MODEL] if args.single else [config.REASONER_MODEL, config.SECOND_MODEL]
+    reasoners = [config.REASONER_MODEL] if args.single else config.reasoner_models()
 
     from systems.mem0_adapter import Mem0Adapter
     adapter = Mem0Adapter()

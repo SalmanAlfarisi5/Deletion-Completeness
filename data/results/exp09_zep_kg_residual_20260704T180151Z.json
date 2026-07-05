@@ -1,0 +1,228 @@
+{
+  "experiment": "exp09_zep_kg_residual",
+  "timestamp_utc": "20260704T180151Z",
+  "system": "zep/graphiti",
+  "metrics": {
+    "edge_residual_after_rate": 0.3,
+    "kg_residue_after_rate": 0.7,
+    "n": 10
+  },
+  "rows": [
+    {
+      "target": "F001",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "+65-9123-4567",
+          "text": "Emergency contact number is +65-9123-4567."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides an emergency contact number.",
+          "text": "Emergency contact number is +65-9123-4567."
+        }
+      ]
+    },
+    {
+      "target": "F004",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "DBS savings account number 012-34567-8",
+          "text": "DBS savings account number 012-34567-8 was saved on July 4, 2026."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the details of a DBS savings account including its number and the date it was saved.",
+          "text": "DBS savings account number 012-34567-8 was saved on July 4, 2026."
+        }
+      ]
+    },
+    {
+      "target": "F007",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "B2-17",
+          "text": "B2-17 is the parking lot location of the condo."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides information about the specific parking lot location designated as B2-17 for a condo.",
+          "text": "B2-17 is the parking lot location of the condo."
+        }
+      ]
+    },
+    {
+      "target": "F010",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "7392",
+          "text": "The debit card PIN is 7392 and needs to be kept safe."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides sensitive information about a debit card PIN that requires secure handling.",
+          "text": "The debit card PIN is 7392 and needs to be kept safe."
+        }
+      ]
+    },
+    {
+      "target": "F008",
+      "keeper": "C014",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Bob Tan",
+          "text": "Bob Tan is a die-hard Liverpool fan.\nBob Tan drives the car with plate SGY 4821 X."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "SGY 4821 X",
+          "text": "Bob Tan drives the car with plate SGY 4821 X."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides information about Bob Tan's strong support for Liverpool and details his car's license plate number.",
+          "text": "Bob Tan is a die-hard Liverpool fan and drives a car with plate SGY 4821 X."
+        }
+      ]
+    },
+    {
+      "target": "F002",
+      "keeper": "C014",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F005",
+      "keeper": "C014",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Bob Tan",
+          "text": "Bob Tan is a die-hard fan of Liverpool.\nBob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "Blk 123 Ang Mo Kio Ave 6, #08-456",
+          "text": "Bob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides personal information about a devoted Liverpool fan named Bob Tan, including his address.",
+          "text": "Bob Tan is a die-hard fan of Liverpool and resides at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        }
+      ]
+    },
+    {
+      "target": "F003",
+      "keeper": "C015",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F009",
+      "keeper": "C015",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F012",
+      "keeper": "C015",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "RainbowTiger88",
+          "text": "Carol Lim's home wifi password is RainbowTiger88."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "Carol Lim",
+          "text": "Carol Lim recently started learning guitar.\nCarol Lim's home wifi password is RainbowTiger88."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides personal information about Carol Lim, including her home wifi password and her recent interest in learning guitar.",
+          "text": "Carol Lim's home wifi password is RainbowTiger88. Carol Lim recently started learning guitar."
+        }
+      ]
+    }
+  ]
+}

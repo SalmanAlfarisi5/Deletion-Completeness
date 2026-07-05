@@ -55,6 +55,7 @@ RHO_PATH = config.FACTS_DIR / "rho_gradient_facts.json"
 FLOOR_ISO_PERSONAS = 15
 FLOOR_MH_PER_BIN = 15
 FLOOR_RHO_PER_TIER = 15
+FLOOR_ML_PER_VARIANT = 8   # >= 8 join (depth-2) + >= 8 chain (depth-3) multilevel targets
 
 # tier classification from a measured rho (midpoints split the _meta gaps
 # 0.2-0.3 and 0.6-0.7).
@@ -213,6 +214,29 @@ def check_value_uniqueness(iso_facts: list[dict], ctx_facts: list[dict]) -> list
 # --------------------------------------------------------------------------- #
 # Per-set measurement tasks (locked models)
 # --------------------------------------------------------------------------- #
+def dedup_isolated(iso_facts: list[dict], ctx_facts: list[dict]) -> list[dict]:
+    """Drop the NEWER fact of each isolated value-collision until the set has
+    globally-unique high-entropy values (RF4 C-01). gpt-4o-mini occasionally
+    authors duplicate/low-entropy values (e.g. two facts sharing an IMEI, or a
+    generic 'dark chocolate'); a shared value corrupts exp02's per-fact naive->purge
+    loop, so we enforce uniqueness here rather than trust the author."""
+    import re as _re
+    iso = list(iso_facts)
+    while True:
+        probs = check_value_uniqueness(iso, ctx_facts)
+        if not probs:
+            break
+        drop = set()
+        for p in probs:
+            ids = _re.findall(r"F\d+", p)
+            if len(ids) >= 2:
+                drop.add(max(ids, key=lambda x: int(x[1:])))  # keep the older id
+        if not drop:
+            break
+        iso = [f for f in iso if f["id"] not in drop]
+    return iso
+
+
 def gate_isolated(cands: list[dict], workers: int):
     """Reject any candidate recoverable by the base model alone (parametric)."""
     reasoners = [config.REASONER_MODEL, config.SECOND_MODEL]
@@ -413,6 +437,101 @@ def build_multihop_and_context(existing_mh, existing_ctx, kept_mh, byst_cands,
     return mh, ctx
 
 
+def _ml_support(c: dict) -> list[tuple[str, str, str, list]]:
+    """Stored support operands of a multilevel candidate: (node_label, text,
+    utterance, probe). join -> A,Ar,C,Cr ; chain -> A,r1,r2,r3."""
+    keys = ([("A", "a"), ("r1", "r1"), ("r2", "r2"), ("r3", "r3")]
+            if c.get("variant") == "chain"
+            else [("A", "a"), ("Ar", "ar"), ("C", "c"), ("Cr", "cr")])
+    out = []
+    for label, k in keys:
+        out.append((label, c[f"{k}_text"], c.get(f"{k}_utterance", c[f"{k}_text"]),
+                    normalize_values(c.get(f"{k}_probe") or [c[f"{k}_text"]])))
+    return out
+
+
+def gate_multilevel(cands: list[dict], workers: int):
+    """Gate for the TEMPLATED multi-level set. The facts are correct by
+    construction (exact multiplicative arithmetic, fictional rules), so this gate
+    is a safety net that PASSES when (a) NO single stored support fully recovers T
+    (near-miss) and (b) delete_value is not a substring of any support
+    (contamination). The JOINT multi-step entailment is reported (via SECOND_MODEL,
+    which can do the arithmetic) but NOT used to discard -- the gpt-4o-mini judge
+    under-fires on multi-step derivations, so gating on it would wrongly drop valid
+    facts (mirrors the rho-gradient flag-don't-discard policy)."""
+    def task(c):
+        try:
+            sup = _ml_support(c)
+            texts = [t for _, t, _, _ in sup]
+            det = EntailmentDetector(model=config.JUDGE_MODEL)
+            det_strong = EntailmentDetector(model=config.SECOND_MODEL)
+            tgt = c["target_text"]
+            joint = _retry(lambda: det_strong.check_detailed(texts, tgt))
+            singles_full = [_retry(lambda t=t: det.check_detailed(t, tgt))["answer"].upper() == "YES"
+                            for t in texts]
+            any_single = any(singles_full)
+            contam = any(_contains(t, v) for t in texts
+                         for v in normalize_values(c["delete_value"]))
+            passed = (not any_single) and (not contam)
+            return {"passed": passed, "variant": c.get("variant"),
+                    "joint": f"{joint['answer']}@{joint['confidence']:.2f}",
+                    "any_single_recovers": any_single, "contam": contam,
+                    "reason": ("ok" if passed else
+                               "single-recovers" if any_single else "contamination")}
+        except Exception as e:  # noqa: BLE001 -- discard-on-error (conservative)
+            return {"passed": False, "reason": f"error:{e}"}
+
+    out = _parallel(task, cands, workers, desc="multilevel-gate")
+    kept, disc = [], []
+    for c, r in zip(cands, out):
+        (kept if r["passed"] else disc).append((c, r))
+    return kept, disc
+
+
+def build_multilevel(mh: list[dict], ctx: list[dict], kept: list):
+    """Append multilevel targets (into mh, with the new basis tag + entailment_dag)
+    and their stored support operands (into ctx, role='entailing'). Ids continue
+    the F/C blocks after whatever build_multihop_and_context already appended."""
+    f_next = max([int(f["id"][1:]) for f in mh if f["id"][1:].isdigit()] + [45]) + 1
+    c_next = max([int(c["id"][1:]) for c in ctx if c["id"][1:].isdigit()] + [22]) + 1
+    for c, _r in kept:
+        variant = c.get("variant", "join")
+        basis = "stored_chain" if variant == "chain" else "stored_multilevel"
+        fid = f"F{f_next:03d}"; f_next += 1
+        dag_nodes: dict[str, str] = {}
+        support_ids: list[str] = []
+        for label, text, utt, probe in _ml_support(c):
+            cid = f"C{c_next:03d}"; c_next += 1
+            support_ids.append(cid)
+            dag_nodes[label] = cid
+            ctx.append({"id": cid, "subject": c["subject"], "category": "reference",
+                        "role": "entailing", "supports": [fid],
+                        "text": text, "utterance": utt, "probe_value": probe})
+        if variant == "chain":       # A->B->C->T (B,C derived)
+            edges = [[dag_nodes["A"], "B"], [dag_nodes["r1"], "B"], ["B", "C"],
+                     [dag_nodes["r2"], "C"], ["C", "T"], [dag_nodes["r3"], "T"]]
+            derived = ["B", "C", "T"]
+        else:                        # (A,Ar)->B ; (C,Cr)->D ; (B,D)->T (B,D derived)
+            edges = [[dag_nodes["A"], "B"], [dag_nodes["Ar"], "B"],
+                     [dag_nodes["C"], "D"], [dag_nodes["Cr"], "D"],
+                     ["B", "T"], ["D", "T"]]
+            derived = ["B", "D", "T"]
+        mh.append({
+            "id": fid, "subject": c["subject"], "category": c.get("category", "financial"),
+            "text": c["target_text"], "utterance": c["target_utterance"],
+            "question": c.get("target_question", f"What is the value for {c['subject']}?"),
+            "delete_value": normalize_values(c["delete_value"]),
+            "probe_value": sorted(set(normalize_values(c.get("probe_value", []))
+                                      + normalize_values(c["delete_value"])), key=str),
+            "entailed_by": list(support_ids),
+            "co_delete_required": list(support_ids),
+            "rederivation_basis": basis,
+            "entailment_note": c.get("entailment_note", ""),
+            "entailment_dag": {"nodes": dag_nodes, "edges": edges, "derived": derived},
+        })
+    return mh, ctx
+
+
 def build_rho(existing_rho, kept_cands):
     facts = list(existing_rho)
     used = {f.get("subject") for f in existing_rho}
@@ -438,7 +557,7 @@ def build_rho(existing_rho, kept_cands):
 # --------------------------------------------------------------------------- #
 def main() -> int:
     ap = argparse.ArgumentParser(description="Validate + enlarge the fact datasets (DATA GATE)")
-    ap.add_argument("--n-samples", type=int, default=6, help="rho samples/reasoner (exp07 default)")
+    ap.add_argument("--n-samples", type=int, default=8, help="rho samples/reasoner (exp07 default)")
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--remeasure", action="store_true", help="re-measure rho even if stored")
     ap.add_argument("--dry-run", action="store_true", help="validate but do not write data/facts/*")
@@ -495,13 +614,24 @@ def main() -> int:
     print(f"      bin1(stored)       kept {len(mh1_kept)} / {len(cand['multihop_bin1'])}")
     print(f"      bin2(stored+world) kept {len(mh2_kept)} / {len(cand['multihop_bin2'])}")
 
+    # ---- multi-level (join depth-2 + chain depth-3): near-miss + contamination ---
+    print("\n[4b/6] Multi-level: near-miss + contamination (templated, exact) ...", flush=True)
+    mlj_kept, _mlj_disc = gate_multilevel(cand.get("multilevel_join", []), args.workers)
+    mlc_kept, _mlc_disc = gate_multilevel(cand.get("multilevel_chain", []), args.workers)
+    print(f"      join(depth-2)  kept {len(mlj_kept)} / {len(cand.get('multilevel_join', []))}")
+    print(f"      chain(depth-3) kept {len(mlc_kept)} / {len(cand.get('multilevel_chain', []))}")
+
     # ---- assemble final sets (gentle caps so sizes track the spec) ----------
-    iso_facts = build_isolated(iso_existing, iso_kept, cap=36)         # ~48 total
-    mh1_use = [k for k in mh1_kept][:16]                              # ->17 with existing
-    mh2_use = [k for k in mh2_kept][:12]                              # ->17 with existing
+    iso_facts = build_isolated(iso_existing, iso_kept, cap=48)         # ~2x -> ~96 total
+    mh1_use = [k for k in mh1_kept][:17]                             # +17 flat bin1
+    mh2_use = [k for k in mh2_kept][:17]                             # +17 flat bin2
     n_floor_total = len(mh_existing) + len(mh1_use) + len(mh2_use)
     mh_facts, ctx_facts = build_multihop_and_context(
         mh_existing, ctx_existing, mh1_use + mh2_use, cand["bystanders"], n_floor_total)
+    # multi-level targets + their stored support operands (appended after the flat set)
+    ml_use = [k for k in mlj_kept][:12] + [k for k in mlc_kept][:12]
+    mh_facts, ctx_facts = build_multilevel(mh_facts, ctx_facts, ml_use)
+    iso_facts = dedup_isolated(iso_facts, ctx_facts)   # RF4 C-01: enforce unique isolated values
 
     # ---- rho-gradient: MEASURE both reasoners, FLAG mismatches (no discard) --
     print("\n[5/6] rho-gradient: measuring rho for ALL facts (both reasoners) ...", flush=True)
@@ -526,6 +656,8 @@ def main() -> int:
     iso_cats = sorted({f["category"] for f in iso_facts})
     bin1 = [f for f in mh_facts if f.get("rederivation_basis") == "stored"]
     bin2 = [f for f in mh_facts if f.get("rederivation_basis") == "stored+world"]
+    bin4 = [f for f in mh_facts if f.get("rederivation_basis") == "stored_multilevel"]
+    bin5 = [f for f in mh_facts if f.get("rederivation_basis") == "stored_chain"]
     ent = [c for c in ctx_facts if c.get("role") == "entailing"]
     byst = [c for c in ctx_facts if c.get("role") == "bystander"]
     rho_by_tier = {t: [f for f in rho_facts if f.get("tier") == t]
@@ -565,7 +697,8 @@ def main() -> int:
           f"; {len(iso_kept)} passed the rho~0 gate)  "
           f"| {len(iso_personas)} distinct personas | {len(iso_cats)} categories")
     print(f"  multi_hop_facts.json  : {len(mh_facts):3d} facts  "
-          f"| bin1(stored)={len(bin1)}  bin2(stored+world)={len(bin2)}")
+          f"| bin1(stored)={len(bin1)}  bin2(stored+world)={len(bin2)}  "
+          f"| multilevel join(d2)={len(bin4)}  chain(d3)={len(bin5)}")
     print(f"  context_facts.json    : {len(ctx_facts):3d} facts  "
           f"| entailing={len(ent)}  bystander={len(byst)}")
     print(f"  rho_gradient_facts.json: {len(rho_facts):3d} facts | "
@@ -598,6 +731,10 @@ def main() -> int:
         fails.append(f"multi-hop bin1 {len(bin1)} < {FLOOR_MH_PER_BIN}")
     if len(bin2) < FLOOR_MH_PER_BIN:
         fails.append(f"multi-hop bin2 {len(bin2)} < {FLOOR_MH_PER_BIN}")
+    if len(bin4) < FLOOR_ML_PER_VARIANT:
+        fails.append(f"multilevel join {len(bin4)} < {FLOOR_ML_PER_VARIANT}")
+    if len(bin5) < FLOOR_ML_PER_VARIANT:
+        fails.append(f"multilevel chain {len(bin5)} < {FLOOR_ML_PER_VARIANT}")
     for t in ("low", "mid", "high"):
         if len(rho_by_tier[t]) < FLOOR_RHO_PER_TIER:
             fails.append(f"rho tier {t} {len(rho_by_tier[t])} < {FLOOR_RHO_PER_TIER}")

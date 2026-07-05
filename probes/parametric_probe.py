@@ -91,10 +91,13 @@ class ParametricProbe(BaseProbe):
 
     def run_parametric(self, fact: dict) -> ProbeResult:
         q = self.question_for(fact)
-        ans = llm.chat([{"role": "user", "content": _ELICIT_PARAM.format(
-                            question=q, today=config.EXPERIMENT_DATE)}],
-                       model=self.model, temperature=0.0, max_tokens=400)
-        hit = self._recovered(fact, ans)
+        try:
+            ans = llm.chat([{"role": "user", "content": _ELICIT_PARAM.format(
+                                question=q, today=config.EXPERIMENT_DATE)}],
+                           model=self.model, temperature=0.0, max_tokens=400)
+            hit = self._recovered(fact, ans)
+        except Exception as e:  # refusal (cyber-policy 400) / API error -> non-recovery
+            ans, hit = f"__REFUSED__ {type(e).__name__}", False
         return ProbeResult(probe="parametric", fact_id=fact["id"], recoverable=hit,
                            score=1.0 if hit else 0.0, layer="parametric" if hit else None,
                            evidence=[{"question": q, "answer": ans}] if hit else [],
@@ -106,27 +109,39 @@ class ParametricProbe(BaseProbe):
         given ONLY the subject's world-knowable `context` (no memory store).
         Sampling needs temperature>0 and uncached calls; the judge stays locked."""
         q = self.question_for(fact)
-        answers, recovered = [], 0
+        answers, recovered, refused = [], 0, 0
         for _ in range(n):
-            ans = llm.chat([{"role": "user", "content": _ELICIT_CTX.format(
-                                context=context, question=q, today=config.EXPERIMENT_DATE)}],
-                           model=self.model, temperature=temperature, max_tokens=400,
-                           use_cache=False)
+            try:
+                ans = llm.chat([{"role": "user", "content": _ELICIT_CTX.format(
+                                    context=context, question=q, today=config.EXPERIMENT_DATE)}],
+                               model=self.model, temperature=temperature, max_tokens=400,
+                               use_cache=False)
+            except Exception as e:  # noqa: BLE001
+                # A refusal (e.g. GPT-5.5 / Claude cyber-policy 400 on a credential-like
+                # secret) or transient API error is NOT a recovery -> count it as a
+                # non-recovery (the adversarial lower bound the paper already states for
+                # refusals). This keeps one flagged fact from crashing a multi-hour run.
+                refused += 1
+                answers.append(f"__REFUSED__ {type(e).__name__}: {str(e)[:120]}")
+                continue
             answers.append(ans)
             recovered += int(self._recovered(fact, ans))
         return {"rho": recovered / n if n else 0.0, "n": n, "recovered": recovered,
-                "question": q, "answers": answers}
+                "refused": refused, "question": q, "answers": answers}
 
     def run_rederivation(self, adapter, user_id: str, fact: dict) -> ProbeResult:
         q = self.question_for(fact)
         # Threat model: the adversary has full read access to the surviving store.
         mems = adapter.list_memories(user_id)
         notes = "\n".join(f"- {adapter.memory_text(m)}" for m in mems) or "(no notes)"
-        ans = llm.chat([{"role": "user",
-                         "content": _ELICIT_NOTES.format(notes=notes, question=q,
-                                                         today=config.EXPERIMENT_DATE)}],
-                       model=self.model, temperature=0.0, max_tokens=700)
-        hit = self._recovered(fact, ans)
+        try:
+            ans = llm.chat([{"role": "user",
+                             "content": _ELICIT_NOTES.format(notes=notes, question=q,
+                                                             today=config.EXPERIMENT_DATE)}],
+                           model=self.model, temperature=0.0, max_tokens=700)
+            hit = self._recovered(fact, ans)
+        except Exception as e:  # refusal (cyber-policy 400) / API error -> non-recovery
+            ans, hit = f"__REFUSED__ {type(e).__name__}", False
         return ProbeResult(probe="rederivation", fact_id=fact["id"], recoverable=hit,
                            score=1.0 if hit else 0.0, layer="rederivation" if hit else None,
                            evidence=[{"question": q, "answer": ans, "n_notes": len(mems)}]

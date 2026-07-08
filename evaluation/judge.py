@@ -7,11 +7,18 @@
 (b) Entailment judge: agreement (Cohen's kappa) between two models, plus
     accuracy vs the expected label, since the oracle is not ground truth for
     entailment.
+(c) Frontier cross-check (--frontier): GPT-5.5 (config.GPT5_MODEL) run as a
+    THIRD, corroborating judge on the SAME gold. It never replaces the pinned
+    production judges (it is a rolling alias and an adversary in the panel);
+    high agreement just shows the pinned judges are not an underpowered-model
+    artifact. Refusals/empties are counted as abstentions.
 
-Run:  python evaluation/judge.py
+Run:  python evaluation/judge.py            # pinned judges only
+      python evaluation/judge.py --frontier # + GPT-5.5 corroboration
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -20,10 +27,11 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import config  # noqa: E402
+import llm  # noqa: E402
 from evaluation.metrics import cohens_kappa  # noqa: E402
 from pipeline.injector import load_facts  # noqa: E402
-from planner.entailment_detector import EntailmentDetector  # noqa: E402
-from probes.parametric_probe import ParametricProbe  # noqa: E402
+from planner.entailment_detector import EntailmentDetector, ENTAILMENT_PROMPT  # noqa: E402
+from probes.parametric_probe import ParametricProbe, _JUDGE_PROMPT  # noqa: E402
 
 # (target fact text, candidate answer, gold: 1=recovered, 0=not) — stresses
 # numeric tolerance, wrong values, opposites, paraphrase, and UNKNOWN.
@@ -118,38 +126,157 @@ def build_entailment_pairs() -> list[tuple[str, str, int, str]]:
     return pairs
 
 
-def validate_entailment(model_a: str, model_b: str) -> dict:
+def validate_entailment(model_a: str, model_b: str, model_c: str | None = None) -> dict:
+    """Entailment agreement. model_a/model_b are the pinned production judges
+    (gpt-4o-mini / gpt-4o). model_c, if given, is a frontier CORROBORATOR (GPT-5.5)
+    run as a third judge on the SAME pairs; it never replaces the production judge.
+    Its refusals/empties are counted as abstentions and excluded from its metrics."""
     pairs = build_entailment_pairs()
     da, db = EntailmentDetector(model_a), EntailmentDetector(model_b)
-    a, b, gold, types = [], [], [], []
+    thr = config.ENTAILMENT_THRESHOLD
+    a, b, c, cstat, gold, types = [], [], [], [], [], []
     for surviving, target, g, typ in pairs:
-        a.append(int(da.check(surviving, target) > config.ENTAILMENT_THRESHOLD))
-        b.append(int(db.check(surviving, target) > config.ENTAILMENT_THRESHOLD))
+        a.append(int(da.check(surviving, target) > thr))
+        b.append(int(db.check(surviving, target) > thr))
         gold.append(g)
         types.append(typ)
+        if model_c:
+            pred, st = _frontier_entail_pred(model_c, surviving, target, thr)
+            c.append(pred)
+            cstat.append(st)
     acc = lambda x: round(sum(p == q for p, q in zip(x, gold)) / len(gold), 3)  # noqa: E731
     # false-fire = fires (predicts entail) on a near-miss negative
     nm_idx = [i for i, t in enumerate(types) if t == "near_miss"]
     op_idx = [i for i, t in enumerate(types) if t == "near_miss_operand"]
     ff = lambda idx, x: (round(sum(x[i] for i in idx) / len(idx), 3) if idx else None)  # noqa: E731
-    return {"model_a": model_a, "model_b": model_b, "n_pairs": len(gold),
-            "n_near_miss": len(nm_idx), "n_near_miss_operand": len(op_idx),
-            "kappa_a_vs_b": round(cohens_kappa(a, b), 3),
-            "acc_a_vs_expected": acc(a), "acc_b_vs_expected": acc(b),
-            "false_fire_near_miss_a": ff(nm_idx, a), "false_fire_near_miss_b": ff(nm_idx, b),
-            "false_fire_operand_a": ff(op_idx, a), "false_fire_operand_b": ff(op_idx, b)}
+    res = {"model_a": model_a, "model_b": model_b, "n_pairs": len(gold),
+           "n_near_miss": len(nm_idx), "n_near_miss_operand": len(op_idx),
+           "kappa_a_vs_b": round(cohens_kappa(a, b), 3),
+           "acc_a_vs_expected": acc(a), "acc_b_vs_expected": acc(b),
+           "false_fire_near_miss_a": ff(nm_idx, a), "false_fire_near_miss_b": ff(nm_idx, b),
+           "false_fire_operand_a": ff(op_idx, a), "false_fire_operand_b": ff(op_idx, b)}
+    if model_c:
+        ans = [i for i, p in enumerate(c) if p is not None]  # answered (non-abstained) indices
+        c_ans = [c[i] for i in ans]
+        g_ans = [gold[i] for i in ans]
+        a_ans = [a[i] for i in ans]
+        b_ans = [b[i] for i in ans]
+        nm_c = [i for i in nm_idx if c[i] is not None]
+        op_c = [i for i in op_idx if c[i] is not None]
+        res.update({
+            "model_c": model_c, "n_answered_c": len(ans),
+            "c_refused": cstat.count("refused"), "c_empty": cstat.count("empty"),
+            "acc_c_vs_expected": (round(sum(p == q for p, q in zip(c_ans, g_ans)) / len(c_ans), 3)
+                                  if c_ans else None),
+            "kappa_c_vs_a": round(cohens_kappa(c_ans, a_ans), 3) if c_ans else None,
+            "kappa_c_vs_b": round(cohens_kappa(c_ans, b_ans), 3) if c_ans else None,
+            "false_fire_near_miss_c": (round(sum(c[i] for i in nm_c) / len(nm_c), 3) if nm_c else None),
+            "false_fire_operand_c": (round(sum(c[i] for i in op_c) / len(op_c), 3) if op_c else None)})
+    return res
+
+
+# --------------------------------------------------------------------------- #
+# Frontier-judge cross-check (CORROBORATION ONLY -- the production judges stay
+# the pinned gpt-4o-mini / gpt-4o above). We run a newer model (GPT-5.5) as a
+# THIRD judge on the SAME gold and report its agreement (Cohen's kappa) with the
+# pinned judges. A frontier model cannot BE the production judge: "gpt-5.5" is a
+# rolling alias (unpinned -> irreproducible), and it is also an ADVERSARY in the
+# worst-adversary panel (Def. 4), so judging with it would let a reasoner grade
+# its own recoveries (the H-01 circularity we already fixed). High agreement here
+# shows the pinned judges are not an artifact of an underpowered model. GPT-5.5's
+# content filter can refuse a sensitive item; refusals/empties are ABSTENTIONS,
+# never counted as a verdict.
+# --------------------------------------------------------------------------- #
+_FRONTIER_MAXTOK = 1536  # headroom so reasoning-model overhead can't truncate the JSON verdict
+
+
+def _frontier_recovery_pred(model: str, fact_text: str, answer: str):
+    """Recovery verdict from `model`, SAME prompt as the production recovery judge.
+    Returns (pred 0/1 or None, status) with status in {'ok', 'refused', 'empty'}."""
+    try:
+        d = llm.chat_json([{"role": "user", "content": _JUDGE_PROMPT.format(
+            fact=fact_text, answer=answer)}], model=model, max_tokens=_FRONTIER_MAXTOK)
+    except Exception:  # content-policy 400 / transient API error -> abstain  # noqa: BLE001
+        return None, "refused"
+    if not d:  # empty or unparseable -> no valid verdict
+        return None, "empty"
+    return int(bool(d.get("match", False))), "ok"
+
+
+def _frontier_entail_pred(model: str, surviving: str, target: str, thr: float):
+    """Entailment verdict from `model`, SAME prompt/threshold as EntailmentDetector
+    (surviving wrapped identically). Returns (pred 0/1 or None, status)."""
+    try:
+        d = llm.chat_json([{"role": "user", "content": ENTAILMENT_PROMPT.format(
+            surviving=f"- {surviving}", target=target)}], model=model, max_tokens=_FRONTIER_MAXTOK)
+    except Exception:  # noqa: BLE001
+        return None, "refused"
+    if not d:
+        return None, "empty"
+    ans = str(d.get("answer", "NO")).upper()
+    try:
+        conf = float(d.get("confidence", 0.0) or 0.0)
+    except (TypeError, ValueError):
+        conf = 0.0
+    if ans == "NO":  # PARTIAL/NO must not read as a full recovery (mirrors the detector)
+        conf = min(conf, 0.2)
+    return int(conf > thr), "ok"
+
+
+def crosscheck_recovery(model: str) -> dict:
+    """Run `model` as a recovery judge on RECOVERY_BENCH; report vs gold and
+    agreement (kappa) with the pinned production judge on the answered subset."""
+    prod = ParametricProbe(model=config.JUDGE_MODEL)  # pinned recovery judge (cached -> free)
+    preds, gold, prod_ans, refused, empty = [], [], [], 0, 0
+    for fact_text, answer, g in RECOVERY_BENCH:
+        p, st = _frontier_recovery_pred(model, fact_text, answer)
+        if st != "ok":
+            if st == "refused":
+                refused += 1
+            else:
+                empty += 1
+            continue
+        preds.append(p)
+        gold.append(g)
+        prod_ans.append(int(prod._judge_recovery(fact_text, answer)))  # noqa: SLF001
+    n = len(gold)
+    tp = sum(p and g for p, g in zip(preds, gold))
+    fp = sum(p and not g for p, g in zip(preds, gold))
+    tn = sum((not p) and (not g) for p, g in zip(preds, gold))
+    fn = sum((not p) and g for p, g in zip(preds, gold))
+    return {"model": model, "n_answered": n, "refused": refused, "empty": empty,
+            "accuracy": round((tp + tn) / n, 3) if n else None,
+            "false_accept_rate": round(fp / (fp + tn), 3) if (fp + tn) else 0.0,
+            "false_reject_rate": round(fn / (fn + tp), 3) if (fn + tp) else 0.0,
+            "kappa_vs_gold": round(cohens_kappa(preds, gold), 3) if n else None,
+            "kappa_vs_production": round(cohens_kappa(preds, prod_ans), 3) if n else None,
+            "confusion": {"tp": tp, "fp": fp, "tn": tn, "fn": fn}}
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--frontier", action="store_true",
+                    help="also run GPT-5.5 (config.GPT5_MODEL) as a corroborating THIRD judge "
+                         "on the same gold; production judges stay pinned gpt-4o-mini/gpt-4o")
+    args = ap.parse_args()
     if config.validate():
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
+    mc = config.GPT5_MODEL if args.frontier else None
     rec = validate_recovery_judge()
-    ent = validate_entailment(config.JUDGE_MODEL, config.SECOND_MODEL)
+    ent = validate_entailment(config.JUDGE_MODEL, config.SECOND_MODEL, mc)
+    payload = {"recovery_judge": rec, "entailment_judge": ent}
+    if args.frontier:
+        payload["frontier_crosscheck"] = {
+            "recovery": crosscheck_recovery(config.GPT5_MODEL),
+            "note": "GPT-5.5 as a third judge on the SAME gold; corroboration only. "
+                    "Production judges remain the pinned gpt-4o-mini (recovery) / gpt-4o "
+                    "(entailment); GPT-5.5 is unpinned and an adversary in the panel, so it "
+                    "cannot be the production judge."}
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out = config.RESULTS_DIR / f"judge_validation_{stamp}.json"
-    out.write_text(json.dumps({"recovery_judge": rec, "entailment_judge": ent,
-                               "timestamp_utc": stamp}, indent=2))
+    payload["timestamp_utc"] = stamp
+    out.write_text(json.dumps(payload, indent=2))
 
     print("\n" + "=" * 60)
     print("  JUDGE VALIDATION")
@@ -169,6 +296,16 @@ def main() -> None:
           f"a={ent['false_fire_near_miss_a']}  b={ent['false_fire_near_miss_b']}  <- planner over-collateral risk")
     print(f"    FALSE-FIRE on single operands (n={ent['n_near_miss_operand']}, RF4 M-11): "
           f"a={ent['false_fire_operand_a']}  b={ent['false_fire_operand_b']}")
+    if args.frontier:
+        fr = payload["frontier_crosscheck"]["recovery"]
+        print(f"\n  [FRONTIER CROSS-CHECK] corroborating judge = {config.GPT5_MODEL} (NOT production)")
+        print(f"    recovery : n_ans={fr['n_answered']} (refused={fr['refused']}, empty={fr['empty']})  "
+              f"acc={fr['accuracy']}  false_accept={fr['false_accept_rate']}  "
+              f"kappa_vs_gold={fr['kappa_vs_gold']}  kappa_vs_prod={fr['kappa_vs_production']}")
+        print(f"    entail   : n_ans={ent.get('n_answered_c')} (refused={ent.get('c_refused')}, "
+              f"empty={ent.get('c_empty')})  acc={ent.get('acc_c_vs_expected')}  "
+              f"false_fire_near_miss={ent.get('false_fire_near_miss_c')}  "
+              f"kappa_c_vs_b={ent.get('kappa_c_vs_b')}")
     print(f"\n  Saved: {out}")
 
 

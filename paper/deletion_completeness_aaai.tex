@@ -419,7 +419,7 @@ $\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 30/81 \emph{un
 Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 56--74\%$\to$0\% & operands-only; verified-faithful co-delete \\
 Convergence (\S\ref{sec:res-converge})   & all three & 70\% / 100\% (Graphiti/Letta) & clean-delete verified first; explicit baseline \\
 Residual (\S\ref{sec:res-residual})      & Mem0     & 96.4\%; 96.4\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
-Judge (\S\ref{sec:res-judge})            & ---      & $0/8$ false-accept (CI $\le\!.32$) & gold set + 78 near-miss negatives \\
+Judge (\S\ref{sec:res-judge})            & ---      & $0/8$ false-accept (CI $\le\!.32$) & gold + 242 near-miss neg.; GPT-5.5 corroborates \\
 \bottomrule
 \end{tabular}
 \caption{Headline results, ordered by confidence. Each row's claim is admitted
@@ -737,18 +737,28 @@ negatives; $\kappa=0.767$ vs.\ gold). Because this rests on only $8$ negatives,
 the $0$ false-accept count carries a $95\%$ Wilson upper bound of $\approx\!0.32$;
 the lower-bound framing holds \emph{up to that bound}, and its two errors are both
 \emph{conservative} rejections (e.g., scoring ``$\approx$SGD~3{,}142'' as a
-non-recovery of $3{,}200$). Tightening this bound with an expanded gold set of
+non-recovery of $3{,}200$). As a check that this pinned judge is not simply too
+weak to recognize recoveries, we re-ran the same benchmark with a frontier model,
+\texttt{gpt-5.5}, as a third judge: it reproduces the gold labels \emph{exactly}
+($17/17$, $\kappa{=}1.0$ vs.\ gold, $0$ false accepts) and departs from the pinned
+judge on precisely its two conservative misses, confirming the pinned judge errs
+only in the safe direction. Tightening this bound with an expanded gold set of
 adversarial near-miss \emph{recoveries} (``$\approx$3{,}190'' for $3{,}200$;
 ``AB+'' for ``AB negative'') is the single most valuable validation extension
-(\S\ref{sec:limitations}). The \textbf{entailment judge} is validated on $146$ pairs
-including $78$ near-miss negatives (partial operands that should \emph{not}
-entail): inter-judge agreement falls from $\kappa=0.83$ on trivial pairs to
-$0.455$ on the $12$ curated near-misses, where \texttt{gpt-4o-mini} false-fires on
-$41.7\%$ of insufficient operands versus $0\%$ for \texttt{gpt-4o}. Broadening the
-test to all $66$ single operands across the multi-hop corpus (a fuzzier boundary,
-since a lone operand can be near-sufficient) raises both rates ($72.7\%$ vs.\ $50\%$),
-with \texttt{gpt-4o} still the more conservative. This is the direct
-justification for using \texttt{gpt-4o} as the planner's entailment judge
+(\S\ref{sec:limitations}). The \textbf{entailment judge} is validated on $426$
+pairs including $242$ near-miss negatives that should \emph{not} entail: $12$
+hand-curated (topically related but with the quantitative operand removed) and
+$230$ single operands from the multi-hop corpus (a fuzzier boundary, since a lone
+operand can be near-sufficient). On the $12$ curated near-misses \texttt{gpt-4o-mini}
+false-fires on $41.7\%$ versus $0\%$ for \texttt{gpt-4o}; across the $230$ operands
+the rates are $62.2\%$, $39.1\%$, and, for the frontier \texttt{gpt-5.5} we add as a
+third judge, $23.9\%$. \texttt{gpt-5.5} is the \emph{most} accurate against the
+expected labels ($85.2\%$ vs.\ $77.7\%$ and $64.6\%$) and agrees with \texttt{gpt-4o}
+at $\kappa{=}0.66$, yet on the cleanest adversarial test, the $12$ curated
+near-misses, it still false-fires on $25\%$ where \texttt{gpt-4o} fires on none.
+Even a frontier judge over-fires on the adversarial boundary, so \texttt{gpt-4o}'s
+$0\%$ curated false-fire, not model vintage, is what keeps collateral $k$ minimal;
+this justifies \texttt{gpt-4o} as the planner's entailment judge
 (\S\ref{sec:res-planner}).
 
 %========================================================================
@@ -771,13 +781,14 @@ single-record deletion \emph{does} leave a detectable membership signal; only
 artifact-aware deletion removes it.
 
 \paragraph{Judge-dependent measurements, bounded.} Both LLM judges are validated,
-neither is perfect. The entailment judge's inter-rater agreement falls to
-$\kappa{=}0.455$ on hard near-miss negatives, where \texttt{gpt-4o-mini}
-false-fires on $41.7\%$; we use \texttt{gpt-4o} (no false-fires on our cases) as
-the planner's judge, but adversarial partial-operand entailments remain the
-hardest case. The recovery judge had \emph{no} false accepts, but over only $8$
-gold negatives (a $95\%$ Wilson upper bound of $\approx\!0.32$), so the
-lower-bound framing holds up to that bound; tightening it with adversarial
+neither is perfect. On the hardest curated near-misses \texttt{gpt-4o-mini}
+false-fires on $41.7\%$ of insufficient operands and even the frontier
+\texttt{gpt-5.5} on $25\%$; we use \texttt{gpt-4o} (no false-fires on those cases)
+as the planner's judge, but adversarial partial-operand entailments remain the
+hardest case. The recovery judge had \emph{no} false accepts (and \texttt{gpt-5.5},
+run as a third judge, reproduces the gold labels exactly), but over only $8$ gold
+negatives (a $95\%$ Wilson upper bound of $\approx\!0.32$), so the lower-bound
+framing holds up to that bound; tightening it with adversarial
 near-miss \emph{recoveries} (e.g.\ ``$\approx$3{,}190'' for $3{,}200$) is the most
 valuable validation extension. \textsc{Complete} verdicts are also modulo
 the recovery judge's recall.

@@ -160,10 +160,15 @@ caveat / what it does *not* say.
   false-reject 0.222 (conservative — it *rejects* "≈SGD 3,142" for 3,200 and
   "she is vegetarian"). **Ctrl/use:** 0 false-accepts ⇒ every reported leak/recovery
   rate is a **conservative lower bound**.
-- **V2 — Use gpt-4o as the entailment judge.** n = 24 (12 hard near-misses):
-  gpt-4o **0%** false-fire on partial operands vs gpt-4o-mini **41.7%**;
-  inter-judge κ falls **0.83 (trivial) → 0.455 (hard near-miss)**. **Ctrl/use:**
-  the planner (C4) uses gpt-4o so collateral k is not inflated by false entailments.
+- **V2 — Use gpt-4o as the entailment judge.** Validated on 426 pairs incl. 242
+  near-miss negatives (12 curated + 230 single operands). Curated false-fire:
+  gpt-4o **0%** vs gpt-4o-mini **41.7%**; operands: gpt-4o 39.1% / gpt-4o-mini 62.2%.
+  Frontier cross-check (`judge_validation_20260705T102620Z.json`, `--frontier`):
+  **gpt-5.5** is the most accurate judge (85.2% vs 77.7%/64.6%), κ(gpt-5.5,gpt-4o)=0.66,
+  but still false-fires on **25%** of the curated near-misses (vs gpt-4o 0%).
+  **Ctrl/use:** the planner (C4) uses gpt-4o so collateral k is not inflated; even a
+  frontier judge over-fires on the adversarial boundary, so gpt-4o's 0% curated
+  false-fire (not model vintage) is decisive.
 
 ---
 
@@ -179,7 +184,7 @@ caveat / what it does *not* say.
 | **03** | Mem0 | planner end-to-end | **100% / 0 spurious / k=0.902** [.82,.99] (n=92, incl multilevel); depth-first k=6.05 / 342-spurious | spare-bystander test; **148 operands spared**; gpt-4o entailment judge |
 | **07** | Mem0 | ρ gradient (measured, 4 reasoners) | ρ_max bins (n=81): **51 cert / 12 mid / 18 hard**; **30/81 not certifiable** (τ=0.1) | world-context-only probe; **τ-dependent gradient (not bimodal)**; frontier models REFUSE sensitive high-tier (20 flags) → their ρ is a lower bound |
 | **08** | Mem0 | membership inference | intact **.67** / naive **.67 (p=.001, SIG)** / aware **.52 (ns)** | n=48 members + 96 twins (2/fact), bootstrap CI + perm p; intact = power sanity |
-| **judge** | — | judge validation | recovery **0% false-accept**; entail gpt-4o **0%** false-fire | gold-labelled set; 12 hard near-miss negatives |
+| **judge** | — | judge validation | recovery **0% false-accept** (GPT-5.5 corrob. κ=1.0 vs gold, 17/17); entail gpt-4o **0%** curated false-fire (GPT-5.5 25%, gpt-4o-mini 41.7%) | 426 pairs / 242 near-miss neg.; frontier cross-check 2026-07-05 |
 | **09** | Graphiti | KG residue after `remove_episode` | edge **30%**, **KG/summary 70%** (n=10) | clean episode hard-delete verified; residue = stale summaries + shared-entity edges |
 | **10** | Letta | agent-mediated deletion faithfulness | explicit **100%** vs vague **0% / 100% archival** (n=10) | explicit-instruction baseline isolates phrasing/surface, not capability |
 | **11** | Letta | re-derivation + co-delete (ports) | bin1 **100%**, bin2 **.74–.78** (4 reasoners) → **0%**; ρ 0% | operands-only; 4-reasoner sup_A; **direct verified-faithful `passages.delete`** (faithful=100%, bystanders intact 100%) |
@@ -322,3 +327,11 @@ Files under `data/results/` (all `...20260704T...`): `exp01_baseline_...101314Z`
 `exp06_derivation_capture_...094753Z` (2026-06-23). Certificates under
 `data/results/certificates/`. Superseded pre-2026-07-04 result files were pruned
 (recoverable from git history).
+
+Judge frontier cross-check 2026-07-05 (`judge_validation_...102620Z.json`,
+`evaluation/judge.py --frontier`): adds GPT-5.5 as a corroborating THIRD judge
+(recovery κ=1.0 vs gold, 17/17, 0 false-accept; entailment 25% curated false-fire,
+κ(gpt-5.5,gpt-4o)=0.66) and refreshes the entailment validation stats to the
+enlarged corpus (426 pairs / 242 near-miss negatives, replacing the pre-expansion
+146/78). Production judges unchanged: pinned gpt-4o-mini (recovery) / gpt-4o
+(entailment). GPT-5.5 stays corroboration-only (rolling alias + panel adversary).

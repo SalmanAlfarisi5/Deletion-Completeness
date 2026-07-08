@@ -180,147 +180,119 @@ agent-memory works above do not make, and it is where the next section begins.
 
 \section{Problem Formulation}\label{sec:formulation}
 
-\paragraph{Setup.} Let $f$ be a target fact with value $v$ and let $\Sigma(v)$ be
-its set of ground-truth surface forms. A memory store $S$ is a set of records,
-each carrying text; write $\mathrm{str}(r)$ for the set of surface strings
-appearing in record $r$. A deletion operation yields a surviving store
-$S'\subseteq S$. The adversary
-$\mathcal{A}$ has full read access to $S'$, black-box access to a base model $M$,
-and general world knowledge $W$; a query $q_f$ asks for $v$. Write
-$\mathrm{rec}(a)=1$ iff answer $a$ reveals a surface form in $\Sigma(v)$ (within
-the stated value), as scored by the validated recovery judge
-(\S\ref{sec:res-judge}). Certification is relative to a tolerance
-$\tau\in(0,1)$ (we use $\tau{=}0.10$; \S\ref{sec:results}). Two of the three
-channels below depend on $\mathcal{A}$'s reasoning model, so recoverability is
-\emph{adversary-relative} (Def.~4).
+\paragraph{Setup.} Let $f$ be a target fact with value $v$, and let $\Sigma(v)$ be
+its set of ground-truth surface forms, the ways $v$ can be written. A memory store
+$S$ is a set of records, each carrying text; write $\mathrm{str}(r)$ for the set of
+surface strings that appear in record $r$. Deleting from $S$ yields a surviving
+store $S'\subseteq S$. An adversary $\mathcal{A}$ has full read access to $S'$,
+black-box access to a base model $M$, and general world knowledge $W$; a query
+$q_f$ asks for $v$. We write $\mathrm{rec}(a)=1$ when an answer $a$ reveals a
+surface form in $\Sigma(v)$, as scored by the validated recovery judge
+(\S\ref{sec:res-judge}). Certification is relative to a tolerance $\tau\in(0,1)$;
+we use $\tau{=}0.10$ (\S\ref{sec:results}). We ask whether a deleted fact is still
+recoverable, and we split recoverability into three channels that fail for
+different reasons. Two of them depend on the adversary's reasoning model, so
+recoverability is \emph{adversary-relative} (Def.~4).
 
 \paragraph{Definition 1 (Residual survival).}
 $\sigma_{\mathrm{res}}(f,S')=\mathds{1}\!\left[\exists\, r\in S':\;
-\Sigma(v)\cap\mathrm{str}(r)\neq\varnothing\right]$: a surviving record physically
-contains a surface form of $v$.
+\Sigma(v)\cap\mathrm{str}(r)\neq\varnothing\right]$: some surviving record still
+physically contains a surface form of $v$. This channel does not depend on the
+adversary.
 
 \paragraph{Definition 2 (Re-derivation).}
 $\sigma_{\mathrm{red}}^{\mathcal{A}}(f,S')=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid
-S',M,W)\right)$: the adversary reconstructs $v$ by reasoning over the
-\emph{surviving store} plus world knowledge.
+S',M,W)\right)$: the adversary reconstructs $v$ by reasoning over the surviving
+store together with world knowledge, even when no record states $v$ outright.
 
 \paragraph{Definition 3 (Parametric floor).}
 $\rho^{\mathcal{A}}(f)=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid \varnothing, M, C)\right)$, where
 $C\subseteq W$ is the subject's world-knowable context and the store is
-\emph{empty}. $\rho^{\mathcal{A}}$ has no dependence on $S$ and is therefore
-\emph{system-independent}; we estimate it as a recovery rate over stochastic
-samples.
+\emph{empty}. Because $\rho^{\mathcal{A}}$ never reads $S$, it is
+system-independent: it measures what the model recovers had $f$ never been stored
+at all. We estimate it as a recovery rate over stochastic samples.
 
 \paragraph{The three channels, in words.} A deleted home address that survives
-verbatim in a leftover summary note is \emph{residual survival}
-($\sigma_{\mathrm{res}}$); a deleted salary an adversary rebuilds from a surviving
-job title plus a public pay band is \emph{re-derivation} ($\sigma_{\mathrm{red}}$);
-and a deleted ``holds a Class-3 licence,'' whose implication ``at least 18'' any
-model already knows from world knowledge alone, is the \emph{parametric floor}
-($\rho$). The first two shrink as one deletes more; the third does not.
-Recoverability is the worst of the three, and $\rho$ is its irreducible lower bound;
-Figure~\ref{fig:pipeline} overviews how the probe/planner/certificate stack acts on
-each channel.
+verbatim in a leftover summary note is residual survival ($\sigma_{\mathrm{res}}$).
+A deleted salary that an adversary rebuilds from a surviving job title plus a
+public pay band is re-derivation ($\sigma_{\mathrm{red}}$). A deleted ``holds a
+Class-3 licence,'' whose implication ``at least 18'' any model already knows on its
+own, is the parametric floor ($\rho$). Deleting more shrinks the first two; it
+cannot touch the third. Figure~\ref{fig:pipeline} shows how the probe, planner, and
+certificate act on each channel.
 
 \paragraph{Definition 4 (Recoverability, adversary-relative).}
 $R_{\mathcal{A}}(f,S')=\max\!\left(\sigma_{\mathrm{res}},\,
-\sigma_{\mathrm{red}}^{\mathcal{A}},\,\rho^{\mathcal{A}}\right)$; the superscript
-marks the two adversary-dependent channels (residual is adversary-independent).
-The $\max$ is the worst-case-channel principle: one open channel suffices, so a
-rational adversary uses whichever is open. True recoverability is
-$\sup_{\mathcal{A}}R_{\mathcal{A}}$; we bracket it with \textbf{four concrete
-adversaries} spanning open and frontier models---$\mathcal{A}_{\text{mini}}$
+\sigma_{\mathrm{red}}^{\mathcal{A}},\,\rho^{\mathcal{A}}\right)$. A fact is as
+recoverable as its most open channel, since a rational adversary uses whichever one
+is available; residual is the single channel that does not depend on $\mathcal{A}$.
+The true worst case is $\sup_{\mathcal{A}}R_{\mathcal{A}}$, which we bracket with
+four concrete adversaries spanning open and frontier models: $\mathcal{A}_{\text{mini}}$
 (\texttt{gpt-4o-mini}), $\mathcal{A}_{4o}$ (\texttt{gpt-4o}), $\mathcal{A}_{\text{S5}}$
-(Claude~Sonnet~5), and $\mathcal{A}_{\text{G5.5}}$ (GPT-5.5)---so the per-reasoner
-values of $\rho$ are principled points bracketing the floor, not measurement noise.
-A diverse panel matters because adversary strength is not one-dimensional: the
-frontier models re-derive benign facts more readily yet \emph{refuse} sensitive
-attribute inferences, so which adversary is worst varies by fact
-(\S\ref{sec:res-rho}).
+(Claude~Sonnet~5), and $\mathcal{A}_{\text{G5.5}}$ (GPT-5.5). A diverse panel
+matters because adversary strength is not one-dimensional: the frontier models
+re-derive benign facts more readily, yet they refuse sensitive attribute
+inferences, so which adversary is worst varies by fact (\S\ref{sec:res-rho}).
 
 \paragraph{Definition 5 (Floor-reaching and erasure-certification).}
-The \emph{never-stored} recoverability of $f$ is $\rho^{\mathcal{A}}(f)$: what
-$\mathcal{A}$ recovers had $f$ never been stored, with \emph{every} stored operand
-excluded. A deletion is \textbf{floor-reaching} for $\mathcal{A}$ iff
-$\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}^{\mathcal{A}}=0$---recoverability is
-driven to the parametric floor and nothing further is deletable---and
-\textbf{erasure-certified} iff it is floor-reaching for every modeled adversary and
-additionally $\sup_{\mathcal{A}} R_{\mathcal{A}}(f,S')=\max_{\mathcal{A}}
-\rho^{\mathcal{A}}<\tau$, i.e.\ the floor is below $\tau$ under the worst modeled
-adversary.
+A deletion is \emph{floor-reaching} for $\mathcal{A}$ when
+$\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}^{\mathcal{A}}=0$: recoverability has
+been driven down to the parametric floor, and nothing further can be deleted to
+help. It is \emph{erasure-certified} when it is floor-reaching for every modeled
+adversary and the floor itself is below tolerance,
+$\max_{\mathcal{A}}\rho^{\mathcal{A}}<\tau$ (the $\sup$ of Def.~4). These two come
+apart in exactly one way, and that gap is the limit result of the paper.
+Floor-reaching is always achievable: co-delete operands until
+$\sigma_{\mathrm{red}}=0$. Certification, by contrast, fails whenever
+$\rho^{\mathcal{A}}\geq\tau$, because no co-deletion can lower a floor that never
+depended on the store. A fact can then be as erased as deletion can make it and
+still remain world-inferable (R11, Table~\ref{tab:certs}). Reporting the two
+predicates separately is exact, and it avoids the misleading verdict ``complete but
+recoverable.''
 
-\paragraph{Stronger than P2E2 (and why).} This criterion is deliberately
-\emph{stronger} than the dependency-bounded erasure of \citet{p2e2}, whose
-baseline is the pre-insertion database with other, pre-existing facts
-\emph{present}; under it, deleting $f$'s own records already suffices even when $f$
-re-derives from surviving independent operands, so our operand co-deletion would
-count as over-deletion. We reject that baseline as \emph{vacuous for the right to
-be forgotten}: a diagnosis still re-inferable from stored symptoms has not been
+\paragraph{Stronger than prior database erasure.} Our criterion is deliberately
+stronger than the dependency-bounded erasure of \citet{p2e2}, whose baseline keeps
+other pre-existing facts present. Under that baseline, deleting $f$'s own records
+already counts as complete even when $f$ re-derives from surviving operands, so our
+operand co-deletion would look like over-deletion. We reject it as vacuous for the
+right to be forgotten: a diagnosis still inferable from stored symptoms has not been
 forgotten. We therefore set the baseline at $\rho^{\mathcal{A}}$ (world knowledge
-only, every stored operand removed) and cite P2E2 as the weaker criterion we
+only, every stored operand removed), and cite P2E2 as the weaker criterion we
 strengthen.
 
-\paragraph{Remark 1 (the limit result, C5).} Floor-reaching is \emph{always}
-achievable by co-deletion (remove operands until $\sigma_{\mathrm{red}}=0$);
-erasure-\emph{certification} fails exactly when $\rho^{\mathcal{A}}\geq\tau$,
-because $\rho$ has no store dependence and no co-deletion can lower it. The
-certificate then reports \emph{floor-reaching but not erasure-certified} even at
-$\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}=0$ (e.g.\ R11, Table~\ref{tab:certs}):
-the fact is as erased as deletion can make it, yet remains world-inferable. This
-split (always floor-reaching, certification gated by $\rho<\tau$) is exact and
-avoids the misleading ``complete but recoverable.''
-
-\paragraph{Remark 2 (residual--floor boundary, C1/C5).} The same constraining
-context can land in either channel depending on \emph{where it lives}. If $v$ is
-pinned by a stored operand $o\in S'$, the recovery is re-derivation
-($\sigma_{\mathrm{red}}$) and is removable by co-deleting $o$; if $v$ is pinned by
-world-knowable context $C\subseteq W$, the recovery is parametric ($\rho$) and is
-\emph{not} removable. Our multi-hop operands are synthetic and live only in $S'$,
-so their world-knowledge component is generic and inert without the stored
-operand: $\rho=0$ and $\sigma_{\mathrm{red}}\!\to\!0$ under co-deletion
-(\S\ref{sec:res-rederiv}). Our gradient contexts are themselves world-knowable and
-target-constraining, so they enter $W$: $\rho>0$ (\S\ref{sec:res-rho}). This
-boundary (deletable re-derivation vs.\ irreducible floor) is the C1/C5 spine.
-
-\paragraph{Remark 3 (over-deletion is the measured price of erasure).}
-Erasure-certification deletes entailers (e.g.\ C001, C002) the user never named,
-which a reviewer may read as a data-minimization violation. It is the opposite:
-co-deleting un-requested entailers is the \emph{measured, minimized} cost (the
-collateral $k$) of an actual erasure guarantee, because leaving them is not
-minimization but \emph{failed} erasure ($f$ simply re-derives). The planner
-minimizes $k$ (\S\ref{sec:method}), the floor $\rho$ bounds what no deletion can
-remove, and the certificate \emph{surfaces} $k$, so paying it (strong erasure)
-versus not (data minimization) is an explicit, audited policy choice rather than a
-hidden side effect.
-
 \paragraph{The optimization problem (Opt-P2E2).} Let $R_f\subseteq S$ be $f$'s own
-records. We seek the minimal-collateral co-deletion that makes $f$ floor-reaching:
+records. We seek the smallest co-deletion that makes $f$ floor-reaching:
 \begin{equation*}
 \min_{D\,\subseteq\, S\setminus R_f} |D| \quad\text{s.t.}\quad
 \sigma_{\mathrm{red}}^{\mathcal{A}}\!\left(f,\; S\setminus(R_f\cup D)\right) = 0 ,
 \end{equation*}
-where $|D|=k$ is the surfaced collateral cost (Remark~3); erasure-certification
-additionally requires $\rho^{\mathcal{A}}<\tau$ (Def.~5).
+where $|D|=k$ is the collateral cost; erasure-certification additionally requires
+$\rho^{\mathcal{A}}<\tau$ (Def.~5). The co-deleted set $D$ is made of entailers the
+user never named, which can read as a data-minimization violation, but it is the
+opposite: leaving them is not minimization but failed erasure, since $f$ simply
+re-derives. The planner minimizes $k$, the floor $\rho$ bounds what no deletion can
+remove, and because the certificate reports $k$, paying it (strong erasure) or not
+(data minimization) becomes an explicit, audited policy choice rather than a hidden
+side effect.
 
-\paragraph{Proposition 1 (NP-hardness).} \textsc{Opt-P2E2} is NP-hard, by
-reduction \emph{from} \textsc{Minimum Hitting Set}
+\paragraph{Proposition 1 (NP-hardness).} \textsc{Opt-P2E2} is NP-hard, by reduction
+from \textsc{Minimum Hitting Set}
 \citep{karp1972reducibility,garey1979computers}. Given a universe $U$ and sets
-$\mathcal{S}=\{S_1,\dots,S_m\}$ with $S_j\subseteq U$, construct an instance with
-one fact $x_u$ per element $u\in U$ and, for each $S_j$, an entailment
-$\bigwedge_{u\in S_j} x_u \vdash f$ (so each $S_j$ is a re-derivation path); set
-$\sigma_{\mathrm{res}}=0$ and $\rho=0$. The surviving store re-derives $f$ iff some
-path $S_j$ survives intact, so a co-deletion $D$ achieves
-$\sigma_{\mathrm{red}}=0$ iff $D\cap S_j\neq\varnothing$ for every $j$---i.e.\
-$\{u:x_u\in D\}$ is a hitting set of $\mathcal{S}$. Thus $\min|D|$ equals the
-minimum hitting set, which is NP-hard. \textsc{Vertex Cover} is the $2$-uniform
-special case, which is exactly our dataset's pairwise-entailment regime (e.g.\
-F040 re-derived from C001$\wedge$C002): \emph{hardness already holds when every
-fact has exactly two operands}, so the difficulty is intrinsic, not an artifact of
-high-arity rules. P2E2's relational-deletion hardness \citep{p2e2} corroborates.
-``A feasible $D$ hits every minimal re-implying subset'' is the intuition; the
-hardness comes from the reduction. We therefore adopt the greedy,
-entailment-confidence-ordered planner of \S\ref{sec:method}, exact on the small
-dependency graphs seen in practice (mean $k=0.90$, \S\ref{sec:res-planner}).
+$\mathcal{S}=\{S_1,\dots,S_m\}$ with $S_j\subseteq U$, build an instance with one
+fact $x_u$ per element $u\in U$ and, for each $S_j$, an entailment
+$\bigwedge_{u\in S_j} x_u \vdash f$, so each $S_j$ is a re-derivation path; set
+$\sigma_{\mathrm{res}}=0$ and $\rho=0$. The surviving store re-derives $f$ exactly
+when some path $S_j$ survives intact, so a co-deletion $D$ achieves
+$\sigma_{\mathrm{red}}=0$ exactly when $D$ meets every $S_j$, that is, when
+$\{u:x_u\in D\}$ is a hitting set of $\mathcal{S}$. The minimum co-deletion
+therefore equals the minimum hitting set, which is NP-hard. Vertex Cover is the
+$2$-uniform special case, which is exactly our dataset's pairwise-entailment regime
+(for instance, F040 re-derived from C001$\wedge$C002), so the hardness already holds
+when every fact has just two operands: it is intrinsic, not an artifact of
+high-arity rules. The relational hardness of \citet{p2e2} points the same way. We
+therefore adopt the greedy, entailment-confidence-ordered planner of
+\S\ref{sec:method}, which stays exact on the small dependency graphs seen in
+practice (mean $k=0.90$, \S\ref{sec:res-planner}).
 
 \begin{figure*}[t]
 \centering
@@ -336,33 +308,33 @@ dependency graphs seen in practice (mean $k=0.90$, \S\ref{sec:res-planner}).
   into/.style={-{Latex[length=2mm]}, semithick, black!55},
 ]
 % ----- row bands (drawn first => behind everything) -----
-\fill[teal!7]   (-0.55,-0.80) rectangle (12.15,0.80);
-\fill[orange!8] (-0.55,-2.74) rectangle (12.15,-1.14);
-\fill[violet!8] (-0.55,-4.68) rectangle (12.15,-3.08);
+\fill[teal!7]   (-0.55,-0.68) rectangle (12.15,0.68);
+\fill[orange!8] (-0.55,-2.23) rectangle (12.15,-0.87);
+\fill[violet!8] (-0.55,-3.78) rectangle (12.15,-2.42);
 % ----- column headers -----
-\node[hdr] at (4.2,1.55)  {In memory store $S$};
-\node[hdr] at (7.4,1.55)  {Probe {\footnotesize(Def.\,1--3)}};
-\node[hdr] at (10.6,1.55) {Minimal co-deletion};
-\node[hdr] at (15.0,1.55) {Certificate {\footnotesize(Def.\,5)}};
+\node[hdr] at (4.2,1.20)  {In memory store $S$};
+\node[hdr] at (7.4,1.20)  {Probe {\footnotesize(Def.\,1--3)}};
+\node[hdr] at (10.6,1.20) {Minimal co-deletion};
+\node[hdr] at (15.0,1.20) {Certificate {\footnotesize(Def.\,5)}};
 % ----- channel labels (left column) -----
 \node[lab, draw=teal!55!black,   fill=teal!16]   (LR) at (1.0,0)     {\textbf{Residual} $\sigma_{\mathrm{res}}$\\[1pt]\scriptsize surviving artifact holds $v$};
-\node[lab, draw=orange!80!black, fill=orange!20] (LD) at (1.0,-1.94) {\textbf{Re-derivation} $\sigma_{\mathrm{red}}$\\[1pt]\scriptsize surviving facts entail $v$};
-\node[lab, draw=violet!70!black, fill=violet!16] (LP) at (1.0,-3.88) {\textbf{Parametric floor} $\rho$\\[1pt]\scriptsize world-knowable, \emph{irreducible}};
+\node[lab, draw=orange!80!black, fill=orange!20] (LD) at (1.0,-1.55) {\textbf{Re-derivation} $\sigma_{\mathrm{red}}$\\[1pt]\scriptsize surviving facts entail $v$};
+\node[lab, draw=violet!70!black, fill=violet!16] (LP) at (1.0,-3.10) {\textbf{Parametric floor} $\rho$\\[1pt]\scriptsize world-knowable, \emph{irreducible}};
 % ----- store column -----
 \node[cell, draw=teal!55!black]   (SR) at (4.2,0)     {a duplicate / summary\\still contains $v$};
-\node[cell, draw=orange!80!black] (SD) at (4.2,-1.94) {operands $o_1\!\wedge\!o_2\vdash v$\\survive};
-\node[cell, draw=violet!70!black] (SP) at (4.2,-3.88) {\emph{store withheld}:\\base model $M$ + world $W$};
+\node[cell, draw=orange!80!black] (SD) at (4.2,-1.55) {operands $o_1\!\wedge\!o_2\vdash v$\\survive};
+\node[cell, draw=violet!70!black] (SP) at (4.2,-3.10) {\emph{store withheld}:\\base model $M$ + world $W$};
 % ----- probe column -----
 \node[cell, draw=teal!55!black]   (PR) at (7.4,0)     {exact-match scan\\$\Rightarrow\sigma_{\mathrm{res}}{=}1$};
-\node[cell, draw=orange!80!black] (PD) at (7.4,-1.94) {adversary reasons\\over $S'\Rightarrow\sigma_{\mathrm{red}}{=}1$};
-\node[cell, draw=violet!70!black] (PP) at (7.4,-3.88) {query $M$ alone\\$\Rightarrow\rho\in[0,1]$};
+\node[cell, draw=orange!80!black] (PD) at (7.4,-1.55) {adversary reasons\\over $S'\Rightarrow\sigma_{\mathrm{red}}{=}1$};
+\node[cell, draw=violet!70!black] (PP) at (7.4,-3.10) {query $M$ alone\\$\Rightarrow\rho\in[0,1]$};
 % ----- co-deletion column -----
 \node[cell, draw=teal!55!black,   fill=teal!6]   (CR) at (10.6,0)     {delete the artifact\\[1pt]\textcolor{teal!45!black}{\textbf{$\sigma_{\mathrm{res}}{\to}0$}\ $\checkmark$}};
-\node[cell, draw=orange!80!black, fill=orange!6] (CD) at (10.6,-1.94) {co-delete a hitting\\operand (greedy)\\[1pt]\textcolor{orange!60!black}{\textbf{$\sigma_{\mathrm{red}}{\to}0$}\ $\checkmark$}};
-\node[cell, draw=violet!70!black, fill=violet!6, very thick] (CP) at (10.6,-3.88) {$\rho$ \emph{unchanged}:\\no co-deletion\\lowers it};
+\node[cell, draw=orange!80!black, fill=orange!6] (CD) at (10.6,-1.55) {co-delete a hitting\\operand (greedy)\\[1pt]\textcolor{orange!60!black}{\textbf{$\sigma_{\mathrm{red}}{\to}0$}\ $\checkmark$}};
+\node[cell, draw=violet!70!black, fill=violet!6, very thick] (CP) at (10.6,-3.10) {$\rho$ \emph{unchanged}:\\no co-deletion lowers it};
 % ----- the WALL between probe and co-deletion on the floor row -----
-\fill[violet!70!black] (8.98,-4.62) rectangle (9.16,-3.14);
-\node[white, font=\scriptsize\bfseries, rotate=90] at (9.07,-3.88) {WALL};
+\fill[violet!70!black] (8.98,-3.72) rectangle (9.16,-2.48);
+\node[white, font=\scriptsize\bfseries, rotate=90] at (9.07,-3.10) {WALL};
 % ----- arrows: store -> probe -----
 \draw[arr] (SR) -- (PR);
 \draw[arr] (SD) -- (PD);
@@ -370,52 +342,43 @@ dependency graphs seen in practice (mean $k=0.90$, \S\ref{sec:res-planner}).
 % ----- probe -> co-deletion (floor row is stopped by the wall) -----
 \draw[arr] (PR) -- (CR);
 \draw[arr] (PD) -- (CD);
-\draw[-{Bar[width=3.2mm]}, semithick, violet!70!black] (PP) -- (8.95,-3.88);
+\draw[-{Bar[width=3.2mm]}, semithick, violet!70!black] (PP) -- (8.95,-3.10);
 % ----- certificate (top predicates) -----
-\node[cell, draw=black!55, fill=black!3, text width=42mm, minimum height=17mm] (CERT) at (15.0,-0.35)
-  {$R=\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho)$\\[1pt]
-   $=\rho$ once channels closed\\[3pt]
+\node[cell, draw=black!55, fill=black!3, text width=42mm, minimum height=16mm] (CERT) at (15.0,-0.30)
+  {$R=\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho){=}\rho$\\[2pt]
    \texttt{floor\_reaching}: $\checkmark$ always\\
    \texttt{certified} iff $\rho<\tau$};
 % ----- arrows from the two closed channels into the certificate -----
-\draw[into] (CR.east) to[out=0,in=175] (CERT.west);
-\draw[into] (CD.east) to[out=0,in=188] (CERT.west);
+\draw[into] (CR.east) to[out=0,in=170] (CERT.west);
+\draw[into] (CD.east) to[out=0,in=192] (CERT.west);
 % ----- CERT reads rho against tau (down into the gauge) -----
-\draw[into] (CERT.south) -- (15.0,-3.35) node[midway,right,font=\scriptsize]{$\rho$ vs $\tau$};
+\draw[into] (CERT.south) -- (15.0,-2.78) node[midway,right,font=\scriptsize]{$\rho$ vs $\tau$};
 % ----- the parametric floor feeds the gauge -----
-\draw[into] (CP.east) -- (12.95,-3.70);
+\draw[into] (CP.east) -- (12.95,-3.10);
 % ----- gauge: the rho axis / tau policy dial -----
-\fill[teal!16]   (13.10,-3.84) rectangle (13.48,-3.56);
-\fill[violet!14] (13.48,-3.84) rectangle (16.90,-3.56);
-\draw[semithick] (13.10,-3.70) -- (16.90,-3.70);
-\draw[thick] (13.48,-3.58) -- (13.48,-3.82);
-\node[font=\scriptsize] at (13.10,-3.99) {$0$};
-\node[font=\scriptsize] at (13.48,-3.99) {$\tau$};
-\node[font=\scriptsize] at (16.90,-3.99) {$1$};
-\fill[teal!55!black]   (13.10,-3.70) circle (1.7pt);
-\fill[violet!70!black] (16.90,-3.70) circle (1.7pt);
-\node[font=\scriptsize, text=teal!45!black,   align=center, anchor=south] at (13.62,-3.46) {F040 $\rho{=}0$\\certified $\checkmark$};
-\node[font=\scriptsize, text=violet!60!black, align=center, anchor=south] at (16.15,-3.46) {R11 $\rho{=}1$\\uncertifiable};
+\fill[teal!16]   (13.10,-3.24) rectangle (13.48,-2.96);
+\fill[violet!14] (13.48,-3.24) rectangle (16.90,-2.96);
+\draw[semithick] (13.10,-3.10) -- (16.90,-3.10);
+\draw[thick] (13.48,-2.98) -- (13.48,-3.22);
+\node[font=\scriptsize] at (13.10,-3.38) {$0$};
+\node[font=\scriptsize] at (13.48,-3.38) {$\tau$};
+\node[font=\scriptsize] at (16.90,-3.38) {$1$};
+\fill[teal!55!black]   (13.10,-3.10) circle (1.7pt);
+\fill[violet!70!black] (16.90,-3.10) circle (1.7pt);
+\node[font=\scriptsize, text=teal!45!black,   align=center, anchor=south] at (13.62,-2.86) {F040 $\rho{=}0$\\certified $\checkmark$};
+\node[font=\scriptsize, text=violet!60!black, align=center, anchor=south] at (16.15,-2.86) {R11 $\rho{=}1$\\uncertifiable};
 \end{tikzpicture}%
 }
-\caption{\textbf{The \textsc{Redact} pipeline.} Post-deletion recoverability
-decomposes into three causally distinct channels (rows), each measured by its own
-probe: \emph{residual survival} $\sigma_{\mathrm{res}}$ (a surviving artifact still
-contains the value), \emph{re-derivation} $\sigma_{\mathrm{red}}$ (surviving facts
-entail it), and the \emph{parametric floor} $\rho$ (the base model reconstructs the
-value from world knowledge with the store withheld). Overall recoverability is the
-worst open channel, $R=\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho)$
-(Def.~4). The greedy planner closes the two \emph{deletable} channels---it deletes
-the residual artifact and co-deletes a minimal set of entailing operands until
-$\sigma_{\mathrm{red}}<\tau$---but the parametric floor is a \emph{wall}: no
-co-deletion can lower $\rho$, because the $\rho$ probe never reads the store. The
-certificate (Def.~5) therefore emits two predicates: \texttt{floor\_reaching}
-($\sigma_{\mathrm{res}}{=}\sigma_{\mathrm{red}}{=}0$), always achievable, and
-\texttt{completeness\_certified}, achievable only when the worst-adversary floor is
-below tolerance ($\rho<\tau$). The gauge is the limit result: F040 ($\rho{=}0$)
-certifies, while R11 (``Class-3 licence $\Rightarrow$ at least 18'', $\rho{=}1$) is
-floor-reaching yet \emph{uncertifiable}---its value survives in world knowledge no
-deletion can reach---so $\tau$ acts as an explicit policy dial.}
+\caption{\textbf{The \textsc{Redact} pipeline.} Recoverability decomposes into three
+channels (rows), each measured by a dedicated probe: \emph{residual}
+$\sigma_{\mathrm{res}}$, \emph{re-derivation} $\sigma_{\mathrm{red}}$, and the
+\emph{parametric floor} $\rho$; overall recoverability is the worst open channel,
+$R{=}\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho)$ (Def.~4). The greedy
+planner closes the two deletable channels, but $\rho$ is a \emph{wall} no co-deletion
+can lower. The certificate (Def.~5) is thus \texttt{floor\_reaching} (always
+achievable) yet \texttt{completeness\_certified} only when $\rho<\tau$. The gauge
+shows this limit result: F040 ($\rho{=}0$) certifies, while R11 (``Class-3 licence
+$\Rightarrow$ at least 18'', $\rho{=}1$) does not, so $\tau$ is an explicit policy dial.}
 \label{fig:pipeline}
 \end{figure*}
 
@@ -461,7 +424,7 @@ $\sigma_{\mathrm{red}}^{\mathcal{A}}<\tau$, making $f$ floor-reaching with a
 greedily minimal $D$. \emph{Depth-first} (an aggressive comparator) co-deletes
 every entailer above $\tau$ in one shot, with no re-probe stopping rule. The
 reported collateral $k=|D|$ is the measured price of the strong erasure notion
-(Remark~3); the threshold heuristic minimizes it ($k=0.90$ vs.\ depth-first's
+(\S\ref{sec:formulation}); the threshold heuristic minimizes it ($k=0.90$ vs.\ depth-first's
 $5.65$, \S\ref{sec:res-planner}).
 
 \paragraph{Certificate emitter.} For each target the emitter records the three
@@ -475,7 +438,7 @@ $\rho=\max_{\mathcal{A}}\rho^{\mathcal{A}}<\tau$), so a fact recoverable by the
 stronger reasoner is reported uncertified even when the weaker one fails; this
 conservative choice is why $30/81$, more than any single reasoner alone flags, are uncertifiable
 (\S\ref{sec:res-rho}). A \texttt{floor\_reaching} but uncertified verdict is
-precisely the limit result (Remark~1), now an audited field. The certificate thus
+precisely the limit result (Def.~5), now an audited field. The certificate thus
 surfaces both the price ($k$) and the limit ($\rho$) of erasure; a recall caveat
 (\S\ref{sec:res-judge}) qualifies certified verdicts, while uncertified ones are
 sound lower bounds.
@@ -489,10 +452,9 @@ extraction pipeline over local Chroma), \textbf{Zep/Graphiti}
 \citep{rasmussen2025zep} (\texttt{graphiti-core} 0.29.2, a bi-temporal knowledge
 graph over Neo4j~5.26), and \textbf{Letta/MemGPT} \citep{packer2024memgpt}
 (\texttt{letta}~0.16.8, an LLM-paging agent over Postgres + pgvector). Every
-component runs locally with pinned versions and disabled telemetry, so the
-pipeline is reproducible from a clean checkout. The deletion adversary has full
-read access to the surviving store and black-box access to the base model (no
-training-time access). Wherever recovery is model-dependent it is measured against
+component runs locally with pinned versions and disabled telemetry. The deletion
+adversary has full read access to the surviving store and black-box (no
+training-time) access to the base model. Wherever recovery is model-dependent it is measured against
 a four-reasoner adversary panel spanning open and frontier models: %
 \texttt{gpt-4o-mini}, \texttt{gpt-4o}, Claude~Sonnet~5, and GPT-5.5. The
 certificate takes the worst of them (Def.~4); embeddings are local
@@ -619,14 +581,11 @@ the worst-adversary means climb from \textbf{low $0.00$}, through \textbf{mid
 $\sim\!0.1$}, to \textbf{high $\sim\!0.6$}. Certifying erasure under the \emph{worst}
 modeled adversary (the $\sup$ of Def.~4), \textbf{30 of 81 certificates are
 \emph{not} erasure-certifiable} at $\tau{=}0.1$ ($\rho_{\max}>\tau$) \emph{even
-though residual survival is $0$}. The worst-adversary $\rho$ forms a \emph{measured
-gradient} of parametric recoverability (from $51$ facts at the certifiable floor,
-through $12$ in an intermediate band, to $18$ at a hard floor) rather than an
-all-or-nothing split. Because the floor is graded, the uncertifiable count is
-genuinely \emph{threshold-dependent}: $\tau$ is a deliberate \emph{policy dial}, not
-a technicality, with real facts on either side of wherever an auditor sets it: %
-choosing $\tau$ is choosing how much residual world-inferability to tolerate. This
-is the limit result: when the value is recoverable from non-deletable world
+though residual survival is $0$}. Because this floor is a graded gradient rather
+than an all-or-nothing split, the uncertifiable count is genuinely
+\emph{threshold-dependent}: $\tau$ is a deliberate policy dial, not a technicality.
+Choosing it means choosing how much residual world-inferability to tolerate.
+This is the limit result: when a value is recoverable from non-deletable world
 knowledge, no co-deletion can certify erasure. The four-adversary panel exposes a
 subtlety in \emph{who} the worst adversary is. On benign re-derivation the frontier
 models leak \emph{more} than the open ones (\S\ref{sec:res-rederiv}); but on
@@ -636,16 +595,14 @@ safety filters read attribute inference as disallowed; $20$ refusal flags, sever
 unanimous), so their measured $\rho$ there is a refusal-based \emph{lower} bound and
 the worst-adversary high-tier $\rho$ is set by \texttt{gpt-4o}. Stronger models are
 thus not \emph{uniformly} stronger adversaries: an adversary-relativity that taking
-the $\sup$ over a diverse panel is designed to capture. Because $\rho$ is a recovery
-rate over $8$ stochastic samples per fact with no reproducible server-side seed, the
-count carries a Monte-Carlo sensitivity of about $\pm1$--$2$ facts at the
-single-recovery boundary, leaving the limit result intact.
+the $\sup$ over a diverse panel is designed to capture. Because $\rho$ is a rate over
+$8$ stochastic samples per fact, the count carries a Monte-Carlo sensitivity of
+$\pm1$--$2$ facts, leaving the limit result intact.
 This gradient $\rho>0$ does not contradict the $\rho{=}0$ of the multi-hop facts
-in \S\ref{sec:res-rederiv}: there the world-knowledge component is generic and
-inert without the (fictional) stored operand, so co-deletion collapses $\rho$ to
-$0$; here the context is \emph{itself} world-knowable \emph{and}
-target-constraining, so $\rho$ stays positive. This residual--vs--floor boundary
-is the C1/C5 spine and is formalized in \S\ref{sec:formulation}.
+(\S\ref{sec:res-rederiv}): there the world-knowable component is inert without the
+fictional stored operand and collapses under co-deletion, whereas here the context
+is itself world-knowable and target-constraining, so its recovery sits in the
+irreducible floor rather than the deletable re-derivation channel.
 
 \textbf{Control.} The $\rho$ probe sees \emph{only} the subject's world-knowable
 context, never the stored facts, so co-deletion provably cannot lower it. Three
@@ -715,9 +672,8 @@ Re-derivation is thus a recovery channel orthogonal to residual survival, and
 minimal co-deletion closes it down to the parametric floor.
 
 \textbf{Control.} Recovery is binned by mechanism and \emph{never} aggregated
-across bins, and run on four reasoners, because re-derivation is model-dependent
-(the honest negative F043, a CHS$\to$Bishan geographic leap, does not leak on
-either). On Letta the co-deletion is issued through the
+across bins, and run on four reasoners because re-derivation is model-dependent
+(cf.\ the honest negative F043 above). On Letta the co-deletion is issued through the
 \emph{direct, deterministic} \texttt{passages.delete} (by captured passage id),
 not a conversational request, and we \emph{verify} every operand passage is gone:
 faithful co-deletion $=100\%$, bystanders intact $=100\%$. ``Re-derivation

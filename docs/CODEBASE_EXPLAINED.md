@@ -40,8 +40,8 @@ config.py            ← Global settings: API keys, models, thresholds
 llm.py               ← Provider-agnostic LLM helper (OpenAI|Anthropic), cached
 
 data/facts/
-  isolated_facts.json      ← 12 PII facts with no entailment links (F001–F012)
-  multi_hop_facts.json     ← 6 facts re-derivable from context facts (F040–F045)
+  isolated_facts.json      ← 84 PII facts with no entailment links
+  multi_hop_facts.json     ← 92 facts re-derivable from context facts
   context_facts.json       ← Operand facts (entailing) + bystanders (must not be deleted)
   rho_gradient_facts.json  ← Facts tiered by world-knowability for rho measurement
 
@@ -122,26 +122,26 @@ Each probe answers: *"Can an adversary recover fact F from the current system st
 
 ## 6. The Fact Datasets
 
-### `isolated_facts.json` (F001–F012)
-12 PII facts with **no entailment links** to any other stored fact. Examples:
+### `isolated_facts.json`
+84 PII facts with **no entailment links** to any other stored fact. Examples:
 - Alice Chen's emergency contact: `+65-9123-4567`
 - Bob Tan's allergy: `penicillin`
 - Carol Lim's wifi password: `RainbowTiger88`
 
 Used to measure **residual survival** (the only recovery channel for isolated facts). Synthetic, so parametric ρ ≈ 0.
 
-### `multi_hop_facts.json` (F040–F045)
-6 facts that can be **reconstructed from combinations of context facts**, optionally plus world knowledge. Examples:
+### `multi_hop_facts.json`
+92 facts that can be **reconstructed from combinations of context facts**, optionally plus world knowledge. Examples:
 - F040: Alice's salary SGD 8,500 ← C001 (Senior SWE at Google SG) + C002 (Google SG SWE salary band 8k–9k). Basis: `stored` (co-deletion closes the channel completely).
 - F041: Bob's age 35 ← C003 (born 1991) + world knowledge (current year). Basis: `stored+world` (parametric residual ρ remains after co-deletion).
 - F042: Carol's elevated CVD risk ← C005 (LDL 195 mg/dL) + C006 (1-pack/day smoker) + medical world knowledge.
 
 ### `context_facts.json`
 Two roles:
-- **Entailing facts** (C001–C015): the operands that let multi-hop targets be re-derived. The planner must co-delete these.
+- **Entailing facts** (231, `role="entailing"`): the operands that let multi-hop targets be re-derived. The planner must co-delete these.
 - **Bystander facts**: innocent context that the planner must **never** touch (measures collateral damage).
 
-### `rho_gradient_facts.json` (R01–R15)
+### `rho_gradient_facts.json` (R01–R81)
 Facts tiered by how recoverable they are from world knowledge alone:
 - **Low tier**: arbitrary codes/secrets (locker PINs, wifi passwords) — expect ρ ≈ 0
 - **Mid tier**: loosely constrained by occupation priors (occupation → income range) — expect ρ ≈ 0.3–0.6
@@ -221,7 +221,7 @@ The planner distinguishes `delete_value` (narrow: the target's own surface forms
 | `facts_co_deleted` | Which context facts the planner co-deleted |
 | `collateral_k` | Number of co-deleted facts |
 
-**The limit result:** `floor_reaching=True AND completeness_certified=False` means: the system is as erased as deletion can make it, but the base model can still recover the value from world knowledge alone. 6 of 15 rho-gradient facts hit this case.
+**The limit result:** `floor_reaching=True AND completeness_certified=False` means: the system is as erased as deletion can make it, but the base model can still recover the value from world knowledge alone. 30 of 81 rho-gradient facts hit this case.
 
 ---
 
@@ -229,15 +229,15 @@ The planner distinguishes `delete_value` (narrow: the target's own surface forms
 
 | Exp | Question | Key Result |
 |---|---|---|
-| **exp01** | How bad is naive (single-record) deletion? | **75% residual survival** — Mem0 duplicates facts silently |
-| **exp02** | Does artifact-aware deletion fix residual survival? | **83% → 0%** residual |
-| **exp03** | Can the planner close re-derivation with minimal collateral? | **100% completeness, 0 spurious bystanders, mean k=1.17** |
-| **exp04** | Is re-derivation real? Does co-deletion close it? | bin1 (stored-only): 100% → 0%; bin2 (stored+world): 80% → 0%; ρ=0% |
+| **exp01** | How bad is naive (single-record) deletion? | **96.4% residual survival** — Mem0 duplicates facts silently |
+| **exp02** | Does artifact-aware deletion fix residual survival? | **96.4% → 0%** residual |
+| **exp03** | Can the planner close re-derivation with minimal collateral? | **100% completeness, 0 spurious bystanders, mean k=0.90** |
+| **exp04** | Is re-derivation real? Does co-deletion close it? | bin1 (stored-alone): 94–100% → 0%; bin2 (stored+world): 56–74% → 0%; ρ=0% |
 | **exp05** | Is Mem0 duplication an embedder artifact or cadence artifact? | 2×2 factorial: 24–42% row-inflation in ALL cells → Mem0 design limitation |
 | **exp06** | Does `infer=True` capture derivations? | 0% — `infer` does *consolidation* (merge rows), not derivation capture |
-| **exp07** | What is the parametric floor ρ across fact tiers? | low=0.0, mid=0.03–0.63, high=0.83–1.0; 6/15 facts cannot be certified |
-| **exp08** | Does deletion restore membership indistinguishability? | Artifact-aware: AUC 0.51, CI includes 0.5 → indistinguishable; Naive: AUC 0.61, p=0.07 (ns) |
-| **exp09** | Does Zep/Graphiti have KG-residual after `remove_episode`? | Edge 33% clean, but **summary 67%** survives in stale entity/community summaries |
+| **exp07** | What is the parametric floor ρ across fact tiers? | low≈0.0, mid≈0.1, high≈0.6 (worst-adversary means); 30/81 facts cannot be certified |
+| **exp08** | Does deletion restore membership indistinguishability? | Artifact-aware: AUC 0.52, CI [0.498,0.552] includes 0.5 but permutation p=.02 (marginal); Naive: AUC 0.67, p=.001 (significant) |
+| **exp09** | Does Zep/Graphiti have KG-residual after `remove_episode`? | Edge 30% clean, but **summary 70%** survives in stale entity/community summaries |
 | **exp10** | Is Letta's agent-mediated deletion faithful? | Explicit dual-surface: 100% faithful; Vague RTBF: 0% faithful, 100% archival residue |
 | **exp11** | Does the re-derivation channel / planner port to Letta? | Yes: same probe/certificate stack, same results as Mem0 |
 
@@ -298,15 +298,15 @@ The paper argues the following chain:
    - Graphiti: **stale summaries** (bi-temporal KG regenerates summaries on add, not on delete)
    - Letta: **surface-incomplete agent-mediated deletion** (agent scrubs core, misses archival)
 
-2. **Artifact-aware deletion fixes residual survival** (83% → 0%) but opens the re-derivation question.
+2. **Artifact-aware deletion fixes residual survival** (96.4% → 0%) but opens the re-derivation question.
 
-3. **Re-derivation is real, binned, and two-reasoner.** With residual=0, multi-hop facts remain recoverable. It's binned by mechanism (stored-alone vs. stored+world) and verified on ≥2 reasoner models so the result isn't model-specific.
+3. **Re-derivation is real, binned, and multi-reasoner.** With residual=0, multi-hop facts remain recoverable. It's binned by mechanism (stored-alone vs. stored+world) and verified on a four-reasoner panel (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5) so the result isn't model-specific.
 
-4. **The planner closes re-derivation with minimal collateral.** Greedy threshold heuristic achieves 100% completeness, 0 spurious deletions, average 1.17 extra facts deleted per target.
+4. **The planner closes re-derivation with minimal collateral.** Greedy threshold heuristic achieves 100% completeness, 0 spurious deletions, average 0.90 extra facts deleted per target.
 
-5. **The parametric floor is the hard limit.** Some facts (high-tier: driving licence → must be ≥18) can never be certified complete because the base model infers them from world knowledge alone. 6/15 rho-gradient facts hit this limit, producing `floor_reaching=True, completeness_certified=False` certificates.
+5. **The parametric floor is the hard limit.** Some facts (high-tier: driving licence → must be ≥18) can never be certified complete because the base model infers them from world knowledge alone. 30/81 rho-gradient facts hit this limit, producing `floor_reaching=True, completeness_certified=False` certificates.
 
-6. **Membership inference confirms artifact-aware deletion restores privacy.** After artifact-aware deletion, AUC=0.51 with CI including 0.5 — the system can no longer distinguish whether the fact was ever stored.
+6. **Membership inference: naive deletion leaks; artifact-aware largely closes it.** Naive single-record deletion leaves a significant membership signal (AUC 0.67, p=.001). Artifact-aware deletion drives the AUC to 0.52 (CI [0.498, 0.552] includes 0.5, permutation p=.02) — attenuated toward chance but not provably eliminated at n=84.
 
 ---
 

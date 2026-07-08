@@ -91,7 +91,7 @@ python experiments/exp11_letta_rederivation.py --n 6 -v
 ### Results (pre-wave snapshot, 2026-06-23 — SUPERSEDED)
 
 > The table below is the small-scale pre-wave snapshot. The current numbers
-> (the 48/34/101/49-fact wave) live in the paper drafts (`paper/`) and
+> (the 84/92/299/81-fact wave) live in the paper drafts (`paper/`) and
 > `docs/PROJECT_STATUS_REPORT.md` — e.g. residual **96.4% / 96.4%→0%** (exp01/02),
 > **30/81** uncertifiable at τ=0.1 (exp07), MIA naive AUC **0.67** (p=.001) / aware
 > **0.52** (exp08), planner **k≈0.90 / 0 spurious** (exp03). Do not cite the table.
@@ -137,10 +137,12 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
 - Both re-derivation and ρ are **reasoner-model-dependent**, so they are run on
   ≥2 reasoners (gpt-4o-mini, gpt-4o).
 - **Membership inference (exp08)** is powered (n=84 members + 2 matched twins
-  each, bootstrap 95% CI + label-permutation p): artifact-aware deletion **restores
-  membership-indistinguishability** (AUC 0.51, CI includes 0.5, p=.39). Naive
-  single-record deletion **does** leave a detectable signal (AUC 0.65, p=.002); the
-  intact sanity (AUC 0.68, p=.001) confirms the test has power.
+  each = 168 controls, bootstrap 95% CI + label-permutation p): artifact-aware
+  deletion drives the AUC to **0.52** (CI [0.498, 0.552] includes 0.5, though the
+  permutation test is marginally significant, p=.02) — it attenuates the signal
+  toward chance but does not provably eliminate it. Naive single-record deletion
+  **does** leave a detectable signal (AUC 0.67, p=.001); the intact sanity
+  (AUC 0.67, p=.001) confirms the test has power.
 - The **entailment judge** is validated against hard near-miss negatives (partial
   operands): use **gpt-4o** for the planner — gpt-4o-mini false-fires on 42% of
   insufficient operands, which would inflate collateral *k*.

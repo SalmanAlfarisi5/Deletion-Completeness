@@ -144,10 +144,13 @@ costs to make them stay gone.
 
 \section{Related Work}\label{sec:related}
 
-\paragraph{Auditing forgetting in agent memory.} The closest prior work is
-\textsc{ForgetEval} \citep{forgeteval}, the most thorough existing audit of
-forgetting in deployed agent memory: a careful retrieval-based protocol spanning
-Mem0, Graphiti, Letta, and roughly a dozen further systems. We build directly
+\paragraph{Auditing forgetting in agent memory.} Agent memory is now routinely
+benchmarked for long-term \emph{retention}, whether an assistant recalls facts
+across long histories \citep{maharana2024locomo,wu2025longmemeval}; its inverse,
+whether a fact can be reliably \emph{forgotten}, is far less examined. The closest
+prior work is \textsc{ForgetEval} \citep{forgeteval}, the most thorough existing
+audit of forgetting in deployed agent memory: a careful retrieval-based protocol
+spanning Mem0, Graphiti, Letta, and roughly a dozen further systems. We build directly
 on it. Its retrieval-based criterion is the \emph{necessary-but-not-sufficient}
 gap of \S\ref{sec:intro}. Our
 contribution is therefore the stronger, channel-decomposed criterion, not the
@@ -248,17 +251,9 @@ $\rho^{\mathcal{A}}\geq\tau$, because no co-deletion can lower a floor that neve
 depended on the store. A fact can then be as erased as deletion can make it and
 still remain world-inferable (R11, Table~\ref{tab:certs}). Reporting the two
 predicates separately is exact, and it avoids the misleading verdict ``complete but
-recoverable.''
-
-\paragraph{Stronger than prior database erasure.} Our criterion is deliberately
-stronger than the dependency-bounded erasure of \citet{p2e2}, whose baseline keeps
-other pre-existing facts present. Under that baseline, deleting $f$'s own records
-already counts as complete even when $f$ re-derives from surviving operands, so our
-operand co-deletion would look like over-deletion. We reject it as vacuous for the
-right to be forgotten: a diagnosis still inferable from stored symptoms has not been
-forgotten. We therefore set the baseline at $\rho^{\mathcal{A}}$ (world knowledge
-only, every stored operand removed), and cite P2E2 as the weaker criterion we
-strengthen.
+recoverable.'' This baseline (world knowledge only, every stored operand removed)
+is deliberately stronger than the dependency-bounded erasure of \citet{p2e2}, which
+we discuss in \S\ref{sec:related}.
 
 \paragraph{The optimization problem (Opt-P2E2).} Let $R_f\subseteq S$ be $f$'s own
 records. We seek the smallest co-deletion that makes $f$ floor-reaching:
@@ -308,33 +303,33 @@ practice (mean $k=0.90$, \S\ref{sec:res-planner}).
   into/.style={-{Latex[length=2mm]}, semithick, black!55},
 ]
 % ----- row bands (drawn first => behind everything) -----
-\fill[teal!7]   (-0.55,-0.68) rectangle (12.15,0.68);
-\fill[orange!8] (-0.55,-2.23) rectangle (12.15,-0.87);
-\fill[violet!8] (-0.55,-3.78) rectangle (12.15,-2.42);
+\fill[teal!7]   (-0.55,-0.62) rectangle (12.15,0.62);
+\fill[orange!8] (-0.55,-1.97) rectangle (12.15,-0.73);
+\fill[violet!8] (-0.55,-3.32) rectangle (12.15,-2.08);
 % ----- column headers -----
-\node[hdr] at (4.2,1.20)  {In memory store $S$};
-\node[hdr] at (7.4,1.20)  {Probe {\footnotesize(Def.\,1--3)}};
-\node[hdr] at (10.6,1.20) {Minimal co-deletion};
-\node[hdr] at (15.0,1.20) {Certificate {\footnotesize(Def.\,5)}};
+\node[hdr] at (4.2,1.05)  {In memory store $S$};
+\node[hdr] at (7.4,1.05)  {Probe {\footnotesize(Def.\,1--3)}};
+\node[hdr] at (10.6,1.05) {Minimal co-deletion};
+\node[hdr] at (15.0,1.05) {Certificate {\footnotesize(Def.\,5)}};
 % ----- channel labels (left column) -----
 \node[lab, draw=teal!55!black,   fill=teal!16]   (LR) at (1.0,0)     {\textbf{Residual} $\sigma_{\mathrm{res}}$\\[1pt]\scriptsize surviving artifact holds $v$};
-\node[lab, draw=orange!80!black, fill=orange!20] (LD) at (1.0,-1.55) {\textbf{Re-derivation} $\sigma_{\mathrm{red}}$\\[1pt]\scriptsize surviving facts entail $v$};
-\node[lab, draw=violet!70!black, fill=violet!16] (LP) at (1.0,-3.10) {\textbf{Parametric floor} $\rho$\\[1pt]\scriptsize world-knowable, \emph{irreducible}};
+\node[lab, draw=orange!80!black, fill=orange!20] (LD) at (1.0,-1.35) {\textbf{Re-derivation} $\sigma_{\mathrm{red}}$\\[1pt]\scriptsize surviving facts entail $v$};
+\node[lab, draw=violet!70!black, fill=violet!16] (LP) at (1.0,-2.70) {\textbf{Parametric floor} $\rho$\\[1pt]\scriptsize world-knowable, \emph{irreducible}};
 % ----- store column -----
 \node[cell, draw=teal!55!black]   (SR) at (4.2,0)     {a duplicate / summary\\still contains $v$};
-\node[cell, draw=orange!80!black] (SD) at (4.2,-1.55) {operands $o_1\!\wedge\!o_2\vdash v$\\survive};
-\node[cell, draw=violet!70!black] (SP) at (4.2,-3.10) {\emph{store withheld}:\\base model $M$ + world $W$};
+\node[cell, draw=orange!80!black] (SD) at (4.2,-1.35) {operands $o_1\!\wedge\!o_2\vdash v$\\survive};
+\node[cell, draw=violet!70!black] (SP) at (4.2,-2.70) {\emph{store withheld}:\\base model $M$ + world $W$};
 % ----- probe column -----
 \node[cell, draw=teal!55!black]   (PR) at (7.4,0)     {exact-match scan\\$\Rightarrow\sigma_{\mathrm{res}}{=}1$};
-\node[cell, draw=orange!80!black] (PD) at (7.4,-1.55) {adversary reasons\\over $S'\Rightarrow\sigma_{\mathrm{red}}{=}1$};
-\node[cell, draw=violet!70!black] (PP) at (7.4,-3.10) {query $M$ alone\\$\Rightarrow\rho\in[0,1]$};
+\node[cell, draw=orange!80!black] (PD) at (7.4,-1.35) {adversary reasons\\over $S'\Rightarrow\sigma_{\mathrm{red}}{=}1$};
+\node[cell, draw=violet!70!black] (PP) at (7.4,-2.70) {query $M$ alone\\$\Rightarrow\rho\in[0,1]$};
 % ----- co-deletion column -----
 \node[cell, draw=teal!55!black,   fill=teal!6]   (CR) at (10.6,0)     {delete the artifact\\[1pt]\textcolor{teal!45!black}{\textbf{$\sigma_{\mathrm{res}}{\to}0$}\ $\checkmark$}};
-\node[cell, draw=orange!80!black, fill=orange!6] (CD) at (10.6,-1.55) {co-delete a hitting\\operand (greedy)\\[1pt]\textcolor{orange!60!black}{\textbf{$\sigma_{\mathrm{red}}{\to}0$}\ $\checkmark$}};
-\node[cell, draw=violet!70!black, fill=violet!6, very thick] (CP) at (10.6,-3.10) {$\rho$ \emph{unchanged}:\\no co-deletion lowers it};
+\node[cell, draw=orange!80!black, fill=orange!6] (CD) at (10.6,-1.35) {co-delete an operand\\[1pt]\textcolor{orange!60!black}{\textbf{$\sigma_{\mathrm{red}}{\to}0$}\ $\checkmark$}};
+\node[cell, draw=violet!70!black, fill=violet!6, very thick] (CP) at (10.6,-2.70) {$\rho$ \emph{unchanged}:\\no deletion lowers it};
 % ----- the WALL between probe and co-deletion on the floor row -----
-\fill[violet!70!black] (8.98,-3.72) rectangle (9.16,-2.48);
-\node[white, font=\scriptsize\bfseries, rotate=90] at (9.07,-3.10) {WALL};
+\fill[violet!70!black] (8.98,-3.25) rectangle (9.16,-2.15);
+\node[white, font=\scriptsize\bfseries, rotate=90] at (9.07,-2.70) {WALL};
 % ----- arrows: store -> probe -----
 \draw[arr] (SR) -- (PR);
 \draw[arr] (SD) -- (PD);
@@ -342,9 +337,9 @@ practice (mean $k=0.90$, \S\ref{sec:res-planner}).
 % ----- probe -> co-deletion (floor row is stopped by the wall) -----
 \draw[arr] (PR) -- (CR);
 \draw[arr] (PD) -- (CD);
-\draw[-{Bar[width=3.2mm]}, semithick, violet!70!black] (PP) -- (8.95,-3.10);
+\draw[-{Bar[width=3.2mm]}, semithick, violet!70!black] (PP) -- (8.95,-2.70);
 % ----- certificate (top predicates) -----
-\node[cell, draw=black!55, fill=black!3, text width=42mm, minimum height=16mm] (CERT) at (15.0,-0.30)
+\node[cell, draw=black!55, fill=black!3, text width=42mm, minimum height=15mm] (CERT) at (15.0,-0.25)
   {$R=\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho){=}\rho$\\[2pt]
    \texttt{floor\_reaching}: $\checkmark$ always\\
    \texttt{certified} iff $\rho<\tau$};
@@ -352,21 +347,21 @@ practice (mean $k=0.90$, \S\ref{sec:res-planner}).
 \draw[into] (CR.east) to[out=0,in=170] (CERT.west);
 \draw[into] (CD.east) to[out=0,in=192] (CERT.west);
 % ----- CERT reads rho against tau (down into the gauge) -----
-\draw[into] (CERT.south) -- (15.0,-2.78) node[midway,right,font=\scriptsize]{$\rho$ vs $\tau$};
+\draw[into] (CERT.south) -- (15.0,-2.45) node[midway,right,font=\scriptsize]{$\rho$ vs $\tau$};
 % ----- the parametric floor feeds the gauge -----
-\draw[into] (CP.east) -- (12.95,-3.10);
+\draw[into] (CP.east) -- (12.95,-2.70);
 % ----- gauge: the rho axis / tau policy dial -----
-\fill[teal!16]   (13.10,-3.24) rectangle (13.48,-2.96);
-\fill[violet!14] (13.48,-3.24) rectangle (16.90,-2.96);
-\draw[semithick] (13.10,-3.10) -- (16.90,-3.10);
-\draw[thick] (13.48,-2.98) -- (13.48,-3.22);
-\node[font=\scriptsize] at (13.10,-3.38) {$0$};
-\node[font=\scriptsize] at (13.48,-3.38) {$\tau$};
-\node[font=\scriptsize] at (16.90,-3.38) {$1$};
-\fill[teal!55!black]   (13.10,-3.10) circle (1.7pt);
-\fill[violet!70!black] (16.90,-3.10) circle (1.7pt);
-\node[font=\scriptsize, text=teal!45!black,   align=center, anchor=south] at (13.62,-2.86) {F040 $\rho{=}0$\\certified $\checkmark$};
-\node[font=\scriptsize, text=violet!60!black, align=center, anchor=south] at (16.15,-2.86) {R11 $\rho{=}1$\\uncertifiable};
+\fill[teal!16]   (13.10,-2.84) rectangle (13.48,-2.56);
+\fill[violet!14] (13.48,-2.84) rectangle (16.90,-2.56);
+\draw[semithick] (13.10,-2.70) -- (16.90,-2.70);
+\draw[thick] (13.48,-2.58) -- (13.48,-2.82);
+\node[font=\scriptsize] at (13.10,-2.98) {$0$};
+\node[font=\scriptsize] at (13.48,-2.98) {$\tau$};
+\node[font=\scriptsize] at (16.90,-2.98) {$1$};
+\fill[teal!55!black]   (13.10,-2.70) circle (1.7pt);
+\fill[violet!70!black] (16.90,-2.70) circle (1.7pt);
+\node[font=\scriptsize, text=teal!45!black,   align=center, anchor=south] at (13.62,-2.46) {F040 $\rho{=}0$\\certified $\checkmark$};
+\node[font=\scriptsize, text=violet!60!black, align=center, anchor=south] at (16.15,-2.46) {R11 $\rho{=}1$\\uncertifiable};
 \end{tikzpicture}%
 }
 \caption{\textbf{The \textsc{Redact} pipeline.} Recoverability decomposes into three
@@ -512,9 +507,7 @@ $0{\to}2$ spurious bystander deletions on the same $34$ targets), because our
 entailment-judge validation (\S\ref{sec:res-judge}) shows \texttt{gpt-4o-mini}
 false-fires on $41.7\%$ of \emph{insufficient} partial operands while
 \texttt{gpt-4o} false-fires on $0\%$. Using \texttt{gpt-4o} is precisely what
-prevents $k$ from inflating. The
-planner targets the NP-hard Opt-P2E2 problem; ``minimal'' here denotes a
-sufficient co-deletion subset, not a certified optimum.
+prevents $k$ from inflating.
 
 \textbf{Comparator.} Depth-first is a deliberately naive upper bound: one
 probe-free pass that co-deletes every candidate scoring above $\tau$. Because a
@@ -698,19 +691,19 @@ finding of \S\ref{sec:res-converge}.
 % ----- Panel A: explicit -----
 \node[instr] (iA) {\textbf{Explicit instruction}\\``delete X from core \textbf{and} archival''};
 \node[agent, below=3mm of iA] (aA) {agent $\to$ \texttt{memory\_replace}\\\footnotesize(acts on both surfaces)};
-\node[cleared, below=9mm of aA, xshift=-15mm] (cA) {\textbf{core block}\\\footnotesize(X removed)};
-\node[cleared, below=9mm of aA, xshift=15mm]  (rA) {\textbf{archival}\\\footnotesize(X removed)};
+\node[cleared, below=6mm of aA, xshift=-15mm] (cA) {\textbf{core block}\\\footnotesize(X removed)};
+\node[cleared, below=6mm of aA, xshift=15mm]  (rA) {\textbf{archival}\\\footnotesize(X removed)};
 \draw[arr] (aA) -- (cA);
 \draw[arr] (aA) -- (rA);
-\node[faith, below=23mm of aA] {\textbf{100\% faithful}\\\footnotesize both surfaces cleared};
+\node[faith, below=18mm of aA] {\textbf{100\% faithful}\\\footnotesize both surfaces cleared};
 % ----- Panel B: vague -----
 \node[instr, right=30mm of iA] (iB) {\textbf{Vague, realistic request}\\``I'm not comfortable with you keeping X''};
 \node[agent, below=3mm of iB] (aB) {agent $\to$ \texttt{memory\_replace}\\\footnotesize(acts on core only)};
-\node[cleared, below=9mm of aB, xshift=-15mm]  (cB) {\textbf{core block}\\\footnotesize(X removed)};
-\node[residual, below=9mm of aB, xshift=15mm]  (rB) {\textbf{archival}\\{\large\textbf{X}}~\footnotesize(retained)};
+\node[cleared, below=6mm of aB, xshift=-15mm]  (cB) {\textbf{core block}\\\footnotesize(X removed)};
+\node[residual, below=6mm of aB, xshift=15mm]  (rB) {\textbf{archival}\\{\large\textbf{X}}~\footnotesize(retained)};
 \draw[arr] (aB) -- (cB);
 \draw[arr, red!70!black, dashed] (aB) -- (rB) node[midway, right, red!70!black, font=\footnotesize] {misses};
-\node[faith, below=23mm of aB] {\textbf{0\% faithful} / 100\% archival residue\\\footnotesize core cleared, archival silently missed};
+\node[faith, below=18mm of aB] {\textbf{0\% faithful} / 100\% archival residue\\\footnotesize core cleared, archival silently missed};
 \end{tikzpicture}
 \caption{\textbf{Same Letta agent, opposite outcomes by phrasing.} An explicit
 dual-surface instruction (left) makes the agent scrub \emph{both} the core block
@@ -730,8 +723,8 @@ see \S\ref{sec:limitations}). In \textbf{Graphiti}, the explicit
 \texttt{remove\_episode} is clean for the graph: it hard-deletes the episode,
 its \texttt{RELATES\_TO} edges, and orphaned entities (we verify the hard delete
 first). Yet the deleted fact survives in \textbf{stale entity and community
-summaries that are not recomputed on deletion}: edge residue $40\%$ but
-\textbf{KG/summary residue $80\%$} (residual counts a value present in any surviving
+summaries that are not recomputed on deletion}: edge residue $30\%$ but
+\textbf{KG/summary residue $70\%$} (residual counts a value present in any surviving
 edge or summary regardless of its bi-temporal \texttt{invalid\_at}/\texttt{expired\_at},
 consistent with the full-read-access threat model). In \textbf{Letta}, deletion is agent-mediated
 across two surfaces (core blocks and archival passages). An explicit dual-surface
@@ -740,7 +733,9 @@ right-to-be-forgotten request (``I'm not comfortable with you keeping X'') with
 the fact also in archival makes the agent scrub the core block it reasons about
 and silently miss archival: \textbf{$0\%$ faithful, $100\%$ archival
 residue, $0\%$ core residue} (Figure~\ref{fig:agentloop}). Agent-mediated deletion
-is \emph{surface-incomplete} and instruction-dependent.
+is \emph{surface-incomplete} and instruction-dependent: the agent acknowledges a
+successful forget while the fact persists, an over-compliant acknowledgment
+consistent with known sycophancy \citep{sharma2024sycophancy}.
 
 \textbf{Novelty and corroboration.} This agent-loop failure is genuinely new:
 ForgetEval \citep{forgeteval} deliberately bypassed Letta's agent loop
@@ -761,9 +756,9 @@ phrasing/surface coverage, not to a missing capability.
 Naive single-record deletion on Mem0 is residually
 incomplete because the store \emph{silently duplicates} facts. Deleting the single
 surfaced record leaves the value present in \textbf{$96.4\%$} of isolated PII
-targets ($46/48$, Wilson $[86.0,98.9]$; exp01); an artifact-aware deletion drives
+targets ($81/84$, Wilson $[90.0,98.8]$; exp01); an artifact-aware deletion drives
 residual survival from \textbf{$96.4\%$ to $0\%$} (naive $[90.0,98.8]$, aware
-$[0,7.4]$; exp02). Both arms run on the same $n{=}48$ isolated PII set whose probe
+$[0,4.4]$; exp02). Both arms run on the same $n{=}84$ isolated PII set whose probe
 values are \emph{globally distinct} (a cross-fact uniqueness gate now enforces it),
 so each fact's naive measurement is independent of the others'; exp01's $96.4\%$
 and exp02's $96.4\%$ naive rates are two independent stochastic-dedup draws of the
@@ -820,61 +815,49 @@ this justifies \texttt{gpt-4o} as the planner's entailment judge
 %========================================================================
 \section{Limitations}\label{sec:limitations}
 
-We state the boundaries of the evidence, leading with issues we found and
-corrected: the measurement discipline is itself part of what the paper offers.
+We state the boundaries of the evidence, leading with issues we found and corrected.
 
-\paragraph{A retracted, then powered, membership claim.} An early result
-suggested a membership signal survived artifact-aware deletion; at $n{=}6$ it was
-underpowered and we retracted it. Powered to $n{=}48$ members with \emph{two}
-matched near-twins each ($96$ controls), bootstrap $95\%$ CIs, and a
-label-permutation test, the picture is sharp: artifact-aware deletion restores
-membership-indistinguishability (AUC $0.51$, CI $[0.42,0.62]$ includes $0.5$,
-$p{=}.39$), the intact store is detectable (AUC $0.68$, $p{=}.001$, so the test
-\emph{has} power), and, unlike the earlier underpowered $n{=}33$ run where it was
-borderline ($p{=}.065$), the \textbf{naive-deletion signal is now significant}
-(AUC $0.65$, CI $[0.56,0.74]$ excludes $0.5$, $p{=}.002$). At this power, naive
-single-record deletion \emph{does} leave a detectable membership signal; only
-artifact-aware deletion removes it.
+\paragraph{A retracted, then powered, membership claim.} An early membership-signal
+result was underpowered at $n{=}6$, so we retracted it. Powered to $n{=}84$ members
+with two matched near-twins each ($168$ controls), bootstrap CIs, and a
+label-permutation test: the intact store stays clearly detectable (AUC $0.67$,
+$p{=}.001$, so the test has power), naive single-record deletion also leaves a
+detectable signal (AUC $0.67$, $p{=}.001$), and artifact-aware deletion collapses the
+AUC to $0.52$, whose bootstrap CI $[0.498,0.552]$ straddles $0.5$ even though a
+label-permutation test is marginally significant ($p{=}.02$). Naive single-record
+deletion \emph{does} leave a detectable membership signal; artifact-aware deletion
+attenuates it toward chance but does not provably eliminate it at this sample size.
 
-\paragraph{Judge-dependent measurements, bounded.} Both LLM judges are validated,
-neither is perfect. On the hardest curated near-misses \texttt{gpt-4o-mini}
-false-fires on $41.7\%$ of insufficient operands and even the frontier
-\texttt{gpt-5.5} on $25\%$; we use \texttt{gpt-4o} (no false-fires on those cases)
-as the planner's judge, but adversarial partial-operand entailments remain the
-hardest case. The recovery judge had \emph{no} false accepts (and \texttt{gpt-5.5},
-run as a third judge, reproduces the gold labels exactly), but over only $8$ gold
-negatives (a $95\%$ Wilson upper bound of $\approx\!0.32$), so the lower-bound
-framing holds up to that bound; tightening it with adversarial
-near-miss \emph{recoveries} (e.g.\ ``$\approx$3{,}190'' for $3{,}200$) is the most
-valuable validation extension. \textsc{Complete} verdicts are also modulo
-the recovery judge's recall.
+\paragraph{Judge-dependent measurements, bounded.} Both judges are validated but
+imperfect. On the hardest curated near-misses \texttt{gpt-4o-mini} false-fires on
+$41.7\%$ of insufficient operands and even \texttt{gpt-5.5} on $25\%$, so we use
+\texttt{gpt-4o} (no false-fires there) as the planner's judge. The recovery judge
+had no false accepts, but over only $8$ gold negatives (Wilson upper bound
+$\approx\!0.32$), so the lower-bound framing holds up to that bound; expanding the
+gold set with adversarial near-miss recoveries is the most valuable extension, and
+\textsc{complete} verdicts remain modulo the recovery judge's recall.
 
-\paragraph{$\rho$ is a lower bound where it matters most.} The parametric floor is
-estimated by eliciting the value from the base model; for sensitive attributes the
-model often refuses (7 high-tier items drew refusals), so
-the measured $\rho$ \emph{understates} true world-inferability for exactly the
-attributes a privacy audit cares about. A more willing \emph{reasoner} could only push
-the uncertifiable count above $30/81$, never below; this monotonicity is over reasoner
-adversaries: the recovery judge is the single validated \texttt{gpt-4o-mini}.
+\paragraph{$\rho$ is a lower bound where it matters most.} We estimate the
+parametric floor by eliciting the value from the base model, and for sensitive
+attributes the model often refuses ($7$ high-tier items drew refusals), so the
+measured $\rho$ \emph{understates} true world-inferability for exactly the
+attributes a privacy audit cares about. A more willing reasoner could only push the
+uncertifiable count above $30/81$, never below.
 
 \paragraph{The entailment graph must be known.} The decomposition and planner
-assume the entailment graph is specified: the operands that re-imply a fact are
-known, as they are in our controlled setup because we injected them. In a deployed
-store the graph is neither given nor easily recovered: the planner closes only
-re-derivation paths through \emph{known} entailers, so an unmodeled entailer is an
-uncloseable path, and discovering the entailment graph of a live memory is itself
-an open problem. This bounds the method's guarantee independently of the parametric
-floor: even at $\rho{=}0$, completeness is relative to the entailers the auditor
-can see.
+assume the entailment graph is specified, as it is in our controlled setup because
+we injected the operands. In a deployed store the graph is neither given nor easily
+recovered, so the planner closes only paths through \emph{known} entailers: an
+unmodeled entailer is uncloseable, and recovering the graph of a live memory is
+itself an open problem. Even at $\rho{=}0$, then, completeness is relative to the
+entailers the auditor can see.
 
 \paragraph{Small cross-system samples.} The convergence result probes $n{=}10$
-high-stakes targets per system (scaled up from an initial $n{=}3$). The mechanisms
-are qualitatively distinct and each is independently corroborated
-\citep{forgeteval}, but the per-system rates (e.g.\ $80\%$ KG/summary residue in
-the graph store) remain indicative, not precise at this scale; still more targets
-per family is the obvious next step. Finally, all subjects are synthetic,
-so recoveries reflect re-derivability rather than memorized real individuals, and
-we model two reasoner adversaries rather than the supremum over all of them.
+high-stakes targets per system (up from an initial $n{=}3$). The mechanisms are
+qualitatively distinct and each is independently corroborated \citep{forgeteval},
+but the per-system rates (e.g.\ $70\%$ KG/summary residue in the graph store) are
+indicative, not precise at this scale. All subjects are also synthetic, so
+recoveries reflect re-derivability rather than memorized real individuals.
 
 \section{Conclusion and Future Work}\label{sec:conclusion}
 
@@ -885,20 +868,18 @@ erasure and whether it can be certified at all. Across three memory architecture
 the same gap recurs through different by-design mechanisms, and a \emph{measured}
 parametric floor sets a hard limit on what any deletion can promise.
 
-That limit is the paper's broadest implication. For a fact recoverable from world
-knowledge alone ($\rho\geq\tau$), $30$ of our $81$ gradient facts under the
-strongest modeled adversary, \emph{no} external-store deletion method can achieve
-erasure, because the value can be reconstructed without ever reading the store.
-For such facts, right-to-be-forgotten compliance cannot be a deletion operation:
-it requires not storing the fact in the first place, or explicitly accepting and
-disclosing the residual floor. Deletion engineering can close the re-derivation and
-residual channels; it cannot close the parametric one.
+That limit is the paper's broadest implication. When a fact is recoverable from
+world knowledge alone ($\rho\geq\tau$), as $30$ of our $81$ gradient facts are under
+the strongest modeled adversary, no external-store deletion can erase it: the value
+is reconstructed without ever reading the store. Right-to-be-forgotten compliance
+then cannot be a deletion operation; it requires not storing the fact in the first
+place, or accepting and disclosing the residual floor. Deletion engineering closes
+the re-derivation and residual channels, not the parametric one.
 
-One extension is immediate: adding a fourth memory
-architecture to test whether the three-family convergence is universal. The deeper
-open problem is certifying erasure against an unbounded adversary rather than a
-modeled bracket: the floor we measure is a lower bound, so the true limit of
-forgetting in agent memory may be higher still.
+One extension is immediate: a fourth memory architecture, to test whether the
+three-family convergence is universal. The deeper open problem is certifying erasure
+against an unbounded adversary rather than a modeled bracket: the floor we measure is
+a lower bound, so the true limit of forgetting in agent memory may be higher still.
 
 %========================================================================
 % NOTE: do NOT add \bibliographystyle here. aaai2027.sty already issues

@@ -34,9 +34,9 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 ## 2. Key design decisions & rationale (the *why*, mostly not in code)
 
 - **Mem0 = open-source local** (`Memory.from_config`, local Chroma), **not hosted.** Hosted is a moving black box; local + pinned = reproducible.
-- **Models:** primary reasoner + judge = `gpt-4o-mini-2024-07-18`; worst-adversary reasoner = `gpt-4o-2024-08-06`; embeddings = local `all-MiniLM-L6-v2` (free, on GPU). Completeness threshold **τ = 0.10**.
+- **Models:** the certificate is measured against a **four-reasoner adversary panel** — `gpt-4o-mini-2024-07-18` (also the recovery judge), `gpt-4o-2024-08-06` (also the entailment judge), Claude Sonnet 5, and GPT-5.5 — taking the worst; embeddings = local `all-MiniLM-L6-v2` (free, on GPU). Completeness threshold **τ = 0.10**.
 - **Why `gpt-4o` is the *entailment* judge (not mini):** `gpt-4o-mini` false-fires on **41.7%** of *insufficient* partial operands; `gpt-4o` on 0%. A judge that false-fires inflates collateral `k` (it co-deletes bystanders). This is the single justification for the model choice.
-- **Why worst-adversary certification** (`ρ = max over reasoners < τ`): recoverability is *adversary-relative*; a weaker attacker would wrongly certify facts a stronger one recovers. This is why **22/49** (not 14/49 under the weaker reasoner alone) are uncertifiable.
+- **Why worst-adversary certification** (`ρ = max over reasoners < τ`): recoverability is *adversary-relative*; a weaker attacker would wrongly certify facts a stronger one recovers. This is why **30/81** (more than any single reasoner would flag alone) are uncertifiable.
 - **`infer` flag:** exp01/exp02 use `infer=True` (realistic — Mem0 extracts/merges); exp04/re-derivation use `infer=False` (verbatim injection, to keep operand control). `infer=True` **rewrites and merges** facts (e.g. bakes "making him 35" into the birth-year row), which destroys injection control — that's why exp04 can't use it.
 - **ρ ≈ 0 by construction** for isolated/multi-hop facts: subjects are **fictional** with Singapore statistical priors, so the base model can't world-infer them. ρ is only meaningfully positive for the ρ-gradient set (where context is itself world-knowable).
 
@@ -45,11 +45,11 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 ## 3. Methodology gotchas — "don't re-discover" (the expensive lessons)
 
 - **Mem0 `add()` returns lagged/batched IDs** → never attribute a stored row via the id `add()` returns. Deletion is content/search-based (`Deleter.delete_top_match` / `delete_value_rows`).
-- **Mem0 silently DUPLICATES facts at store scale** (~30+ rows), *deterministically* — this is the mechanism behind the exp01/exp02 residual numbers (97.9% / 68.75%). It is **not** fixed by sleeping/reading between writes; it's predominantly paraphrase-variant duplicates (a semantic-dedup design limit), corroborated by Mem0 issues #4896, #4573, #687.
+- **Mem0 silently DUPLICATES facts at store scale** (~30+ rows), *deterministically* — this is the mechanism behind the exp01/exp02 residual numbers (96.4% / 96.4%). It is **not** fixed by sleeping/reading between writes; it's predominantly paraphrase-variant duplicates (a semantic-dedup design limit), corroborated by Mem0 issues #4896, #4573, #687.
 - **Numeric recovery judging:** recovery is scored by an LLM judge that accepts numeric approximations ("3142 ≈ 3200" ✓) but rejects wrong values ("32 ≠ 35" ✗). A dataset bug was found+fixed here (a 750k loan @3.5%/25y ≈ SGD 3,755/mo, not 3,200 → the C009 fact was changed). Watch for this class of bug when adding facts.
 - **`delete_value` vs `probe_value`:** `delete_value` = the target's *own narrow* surface form (used for deletion + residual measurement); `probe_value` = the *broad* recovery criterion (oracle tokens for "did the adversary recover it"). Using the broad form for residual mis-counts an operand sharing a token as target-residual (this specifically bit Letta exp11 — F040's `probe_value` includes "8,000"/"9,000" which overlap an operand's pay-band text).
 - **Letta core-block trap:** the re-derivation adversary reads `list_memories`, which **includes core blocks**. The default human block `"(no information about the user yet)"` lands in the adversary's notes and *suppresses* recovery of "the user"-phrased facts for reasons unrelated to re-derivability → you must seed identity via `set_core_block(uid, "human", "The user's name is <owner>")` (identity only, never the deleted value).
-- **Graphiti residual channel is *stale summaries*, not edges:** `remove_episode` HARD-deletes the episode, its `RELATES_TO` edges, and orphaned entities (cleaner than Mem0's naive delete). The fact survives in **entity-summary and community-summary text that is not recomputed on deletion** — that's the 40% edge / 80% summary residue. The web brain's earlier "bi-temporal invalidation" premise was **wrong** (contradiction didn't fire for a value change); don't repeat it.
+- **Graphiti residual channel is *stale summaries*, not edges:** `remove_episode` HARD-deletes the episode, its `RELATES_TO` edges, and orphaned entities (cleaner than Mem0's naive delete). The fact survives in **entity-summary and community-summary text that is not recomputed on deletion** — that's the 30% edge / 70% summary residue. The web brain's earlier "bi-temporal invalidation" premise was **wrong** (contradiction didn't fire for a value change); don't repeat it.
 
 ---
 
@@ -59,27 +59,27 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 
 | Exp | System | Tests | This session |
 |-----|--------|-------|--------------|
-| 01 | Mem0 | naive deletion residual (duplication) | re-run (97.9%) |
-| 02 | Mem0 | artifact-aware purge (→0%) | re-run (68.75%→0) |
-| 03 | Mem0 | the planner (threshold vs depth-first) | re-run (k=0.91) |
-| 04 | Mem0 | re-derivation at zero residual (binned) | re-run (17/17 bins) |
+| 01 | Mem0 | naive deletion residual (duplication) | re-run (96.4%) |
+| 02 | Mem0 | artifact-aware purge (→0%) | re-run (96.4%→0) |
+| 03 | Mem0 | the planner (threshold vs depth-first) | re-run (k=0.90) |
+| 04 | Mem0 | re-derivation at zero residual (binned) | re-run (34/34 bins + 24 multi-level) |
 | 05 | Mem0 | duplication 2×2 factorial | **NOT re-run** (carries prior 24–42%) |
 | 06 | Mem0 | derivation-capture | **REJECTED** — see below |
-| 07 | base model | ρ-gradient floor | re-run (27/49 cert) |
+| 07 | base model | ρ-gradient floor | re-run (51/81 cert) |
 | 08 | Mem0 | membership inference (MIA) | re-run (naive now significant) |
 | 09 | Graphiti | KG/summary residue | re-run at n=10 |
 | 10 | Letta | agent-loop surface-incompleteness | re-run at n=10 |
-| 11 | Letta | re-derivation (ports exp04) | **NOT re-run** (carries n=6 values) |
+| 11 | Letta | re-derivation (ports exp04) | re-run at 4 reasoners (bin1 100%, bin2 74–78%) |
 
 - **exp06 is a REJECTED negative result — important:** Mem0 does **not** derive a target from operands alone. The earlier-looking "born 1991, making him 35" was **consolidation** (the co-present target merged into the operand row), not derivation. **Never claim derivation-capture.**
-- **exp05 and exp11 were NOT re-run** on the enlarged data, so both papers keep their prior values; exp11's Letta bins (bin1 100%, bin2 80%/100%) are the un-re-run port and are mirrored verbatim in both `.tex` files.
+- **exp05 was NOT re-run** on the enlarged data (keeps its prior 24–42% row-inflation values); **exp11 WAS re-run** with the four-reasoner panel (bin1 100%, bin2 74–78% → 0% after co-delete, faithful direct co-delete 100%, bystanders intact 100%).
 - **Three-family synthesis** (the generalization story): Mem0 = *duplication*, Graphiti = *stale summaries*, Letta = *agent-mediated deletion misses a surface* — three by-design mechanisms converging on residual survival.
 
 ---
 
 ## 5. Dataset semantics (not obvious from the JSON)
 
-- **Subjects are fictional, Singapore-plausible** (no-memorization-confound). After the scale-up: 21 distinct personas across Chinese/Malay/Indian/Eurasian names.
+- **Subjects are fictional, Singapore-plausible** (no-memorization-confound). After the scale-up: 108 distinct subjects across Chinese/Malay/Indian/Eurasian names.
 - **Field meanings:** `probe_value` (broad recovery tokens) vs `delete_value` (narrow target form); `rederivation_basis` ∈ {`stored`, `stored+world`} = the two re-derivation bins; `entailed_by` / `co_delete_required` (operands); `role:"entailing"` + `supports:[...]` on context operands.
 - **ρ-gradient facts now carry** (added this session): `tier` (the *authored hypothesis*), `measured_rho` (per reasoner), `measured_rho_worst` (max over reasoners), `measured_tier` (from measurement), and `tier_flag` (MISMATCH marker). **Report by `measured_*`, treat `tier` as a hypothesis only.**
 - **Canonical example facts** (cited in the paper, keep them intact): **F040** = the clean "co-deletion → recoverability 0" COMPLETE certificate; **R11** = the limit-result INCOMPLETE certificate (ρ=1.0, floor-reaching but not certifiable, e.g. "Class-3 licence → ≥18").
@@ -88,21 +88,20 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 
 ## 6. The robustness wave (this session) — provenance not in the code
 
-- **Datasets scaled** 12/6/21/15 → **48/34/101/49**, personas 3 → 21. New tooling: `data/generate_facts.py` (authoring) + `data/validate_facts.py` (the gate).
+- **Datasets scaled** 12/6/21/15 → **84/92/299/81**, subjects 3 → 108. New tooling: `data/generate_facts.py` (authoring) + `data/validate_facts.py` (the gate).
 - **How generation actually ran:** `validate_facts.py` `import`s `generate_facts` and authors candidates **in-process** (its "[1/6] Authoring…" phase). The standalone `python data/generate_facts.py` dump (`data/results/_fact_candidates.json`) was **never produced** because that path wasn't invoked — run the script directly if you want that inspection file (it's a fresh draw, not the exact candidates that became the dataset).
-- **Anti-selection-bias rule:** ρ-gradient tier mismatches are **flagged, not discarded** (silently dropping them would manufacture a clean gradient). 16/49 facts mismatched.
+- **Anti-selection-bias rule:** ρ-gradient tier mismatches are **flagged, not discarded** (silently dropping them would manufacture a clean gradient). 19/81 facts mismatched.
 - **Persona guard** caught and removed 2 real public figures (Halimah Yacob, Sukhbir Singh Badal).
 - **Two findings the larger n overturned (ratified + locked):**
-  - **A — ρ floor:** the n=15 "sharply bimodal, τ-invariant 9/15" did **not** replicate. At n=49 it's a **measured gradient** (27/8/14), the count is **τ-dependent**, and τ is reframed as a **policy dial**. The limit result survives (45% uncertifiable); only bimodality/invariance died.
-  - **B — MIA:** naive deletion now leaves a **statistically significant** membership signal (AUC 0.68, p=.001); artifact-aware still restores indistinguishability (AUC 0.52). Promoted from a "borderline / retracted" hedge to a demonstrated leak; still a *supporting* result, **not** a 4th pillar, kept out of the abstract.
+  - **A — ρ floor:** the n=15 "sharply bimodal, τ-invariant 9/15" did **not** replicate. At n=81 it's a **measured gradient** (51/12/18), the count is **τ-dependent**, and τ is reframed as a **policy dial**. The limit result survives (37% uncertifiable); only bimodality/invariance died.
+  - **B — MIA:** naive deletion now leaves a **statistically significant** membership signal (AUC 0.67, p=.001); artifact-aware deletion drives the AUC to 0.52 (CI [0.498, 0.552] includes 0.5, but permutation p=.02 — attenuated toward chance, not provably eliminated). Promoted from a "borderline / retracted" hedge to a demonstrated leak; still a *supporting* result, **not** a 4th pillar, kept out of the abstract.
 
 ---
 
-## 7. The two paper versions + the ledger (genuinely ambiguous from the repo)
+## 7. The paper draft + the ledger (genuinely ambiguous from the repo)
 
-- There are **two `.tex` files, both current and synced to the same numbers:**
-  - `paper/deletion_completeness_aaai.tex` — the **submission** version (needs `aaai2027.sty` + `aaai.bst` to compile; not on the box).
-  - `paper/supervisor_draft.tex` — a **self-contained** version that compiles with a plain TeX install (no AAAI sty). Same science, different preamble/bib style.
+- There is now a **single `.tex` file** (the earlier `supervisor_draft.tex` was removed):
+  - `paper/deletion_completeness_aaai.tex` — the **submission** draft (needs `aaai2027.sty` + `aaai.bst` to compile; not on the box).
 - `paper/CLAIMS_LEDGER.md` deliberately contains **"was X → now Y / MOVED" changelog notes** (e.g. *"'bimodal, τ-invariant 9/15' claim no longer holds"*). Those old numbers are **history, not current claims** — the live claim rows carry the new numbers. Don't read the changelog as the current state.
 
 ---
@@ -136,4 +135,4 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 
 - **4 commits on `main`, pushed** to origin: the robustness wave, the §5.2 lock, the supervisor-sync + tidy + report, and your "added results" commit (the result JSONs).
 - **Gitignored (so absent from any code paste):** `.env`, Chroma store, `llm_cache.json`, `data/results/*.csv`, `data/results/certificates/`, `openapi_letta.json`, `__pycache__/`, `.pytest_cache/`.
-- The repo was tidied this session: build artifacts removed, certificates pruned 178→83 (R11/F040 preserved), `CODEBASE_EXPLAINED.md` moved into `docs/`.
+- The repo was tidied: build artifacts removed, `CODEBASE_EXPLAINED.md` moved into `docs/`. The `certificates/` directory now holds 884 certs across 173 fact IDs (R11/F040 preserved).

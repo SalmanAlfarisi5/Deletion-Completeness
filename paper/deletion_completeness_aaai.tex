@@ -218,7 +218,9 @@ job title plus a public pay band is \emph{re-derivation} ($\sigma_{\mathrm{red}}
 and a deleted ``holds a Class-3 licence,'' whose implication ``at least 18'' any
 model already knows from world knowledge alone, is the \emph{parametric floor}
 ($\rho$). The first two shrink as one deletes more; the third does not.
-Recoverability is the worst of the three, and $\rho$ is its irreducible lower bound.
+Recoverability is the worst of the three, and $\rho$ is its irreducible lower bound;
+Figure~\ref{fig:pipeline} overviews how the probe/planner/certificate stack acts on
+each channel.
 
 \paragraph{Definition 4 (Recoverability, adversary-relative).}
 $R_{\mathcal{A}}(f,S')=\max\!\left(\sigma_{\mathrm{res}},\,
@@ -320,10 +322,108 @@ hardness comes from the reduction. We therefore adopt the greedy,
 entailment-confidence-ordered planner of \S\ref{sec:method}, exact on the small
 dependency graphs seen in practice (mean $k=0.90$, \S\ref{sec:res-planner}).
 
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\small,
+  >={Latex[length=2.4mm]},
+  hdr/.style={font=\bfseries, align=center},
+  cell/.style={rounded corners, draw, align=center, text width=25mm,
+               minimum height=11mm, inner sep=3pt, font=\footnotesize},
+  lab/.style={cell, text width=26mm},
+  arr/.style={->, semithick, black!55},
+  into/.style={-{Latex[length=2mm]}, semithick, black!55},
+]
+% ----- row bands (drawn first => behind everything) -----
+\fill[teal!7]   (-0.55,-0.80) rectangle (12.15,0.80);
+\fill[orange!8] (-0.55,-2.74) rectangle (12.15,-1.14);
+\fill[violet!8] (-0.55,-4.68) rectangle (12.15,-3.08);
+% ----- column headers -----
+\node[hdr] at (4.2,1.55)  {In memory store $S$};
+\node[hdr] at (7.4,1.55)  {Probe {\footnotesize(Def.\,1--3)}};
+\node[hdr] at (10.6,1.55) {Minimal co-deletion};
+\node[hdr] at (15.0,1.55) {Certificate {\footnotesize(Def.\,5)}};
+% ----- channel labels (left column) -----
+\node[lab, draw=teal!55!black,   fill=teal!16]   (LR) at (1.0,0)     {\textbf{Residual} $\sigma_{\mathrm{res}}$\\[1pt]\scriptsize surviving artifact holds $v$};
+\node[lab, draw=orange!80!black, fill=orange!20] (LD) at (1.0,-1.94) {\textbf{Re-derivation} $\sigma_{\mathrm{red}}$\\[1pt]\scriptsize surviving facts entail $v$};
+\node[lab, draw=violet!70!black, fill=violet!16] (LP) at (1.0,-3.88) {\textbf{Parametric floor} $\rho$\\[1pt]\scriptsize world-knowable, \emph{irreducible}};
+% ----- store column -----
+\node[cell, draw=teal!55!black]   (SR) at (4.2,0)     {a duplicate / summary\\still contains $v$};
+\node[cell, draw=orange!80!black] (SD) at (4.2,-1.94) {operands $o_1\!\wedge\!o_2\vdash v$\\survive};
+\node[cell, draw=violet!70!black] (SP) at (4.2,-3.88) {\emph{store withheld}:\\base model $M$ + world $W$};
+% ----- probe column -----
+\node[cell, draw=teal!55!black]   (PR) at (7.4,0)     {exact-match scan\\$\Rightarrow\sigma_{\mathrm{res}}{=}1$};
+\node[cell, draw=orange!80!black] (PD) at (7.4,-1.94) {adversary reasons\\over $S'\Rightarrow\sigma_{\mathrm{red}}{=}1$};
+\node[cell, draw=violet!70!black] (PP) at (7.4,-3.88) {query $M$ alone\\$\Rightarrow\rho\in[0,1]$};
+% ----- co-deletion column -----
+\node[cell, draw=teal!55!black,   fill=teal!6]   (CR) at (10.6,0)     {delete the artifact\\[1pt]\textcolor{teal!45!black}{\textbf{$\sigma_{\mathrm{res}}{\to}0$}\ $\checkmark$}};
+\node[cell, draw=orange!80!black, fill=orange!6] (CD) at (10.6,-1.94) {co-delete a hitting\\operand (greedy)\\[1pt]\textcolor{orange!60!black}{\textbf{$\sigma_{\mathrm{red}}{\to}0$}\ $\checkmark$}};
+\node[cell, draw=violet!70!black, fill=violet!6, very thick] (CP) at (10.6,-3.88) {$\rho$ \emph{unchanged}:\\no co-deletion\\lowers it};
+% ----- the WALL between probe and co-deletion on the floor row -----
+\fill[violet!70!black] (8.98,-4.62) rectangle (9.16,-3.14);
+\node[white, font=\scriptsize\bfseries, rotate=90] at (9.07,-3.88) {WALL};
+% ----- arrows: store -> probe -----
+\draw[arr] (SR) -- (PR);
+\draw[arr] (SD) -- (PD);
+\draw[arr] (SP) -- (PP);
+% ----- probe -> co-deletion (floor row is stopped by the wall) -----
+\draw[arr] (PR) -- (CR);
+\draw[arr] (PD) -- (CD);
+\draw[-{Bar[width=3.2mm]}, semithick, violet!70!black] (PP) -- (8.95,-3.88);
+% ----- certificate (top predicates) -----
+\node[cell, draw=black!55, fill=black!3, text width=42mm, minimum height=17mm] (CERT) at (15.0,-0.35)
+  {$R=\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho)$\\[1pt]
+   $=\rho$ once channels closed\\[3pt]
+   \texttt{floor\_reaching}: $\checkmark$ always\\
+   \texttt{certified} iff $\rho<\tau$};
+% ----- arrows from the two closed channels into the certificate -----
+\draw[into] (CR.east) to[out=0,in=175] (CERT.west);
+\draw[into] (CD.east) to[out=0,in=188] (CERT.west);
+% ----- CERT reads rho against tau (down into the gauge) -----
+\draw[into] (CERT.south) -- (15.0,-3.35) node[midway,right,font=\scriptsize]{$\rho$ vs $\tau$};
+% ----- the parametric floor feeds the gauge -----
+\draw[into] (CP.east) -- (12.95,-3.70);
+% ----- gauge: the rho axis / tau policy dial -----
+\fill[teal!16]   (13.10,-3.84) rectangle (13.48,-3.56);
+\fill[violet!14] (13.48,-3.84) rectangle (16.90,-3.56);
+\draw[semithick] (13.10,-3.70) -- (16.90,-3.70);
+\draw[thick] (13.48,-3.58) -- (13.48,-3.82);
+\node[font=\scriptsize] at (13.10,-3.99) {$0$};
+\node[font=\scriptsize] at (13.48,-3.99) {$\tau$};
+\node[font=\scriptsize] at (16.90,-3.99) {$1$};
+\fill[teal!55!black]   (13.10,-3.70) circle (1.7pt);
+\fill[violet!70!black] (16.90,-3.70) circle (1.7pt);
+\node[font=\scriptsize, text=teal!45!black,   align=center, anchor=south] at (13.62,-3.46) {F040 $\rho{=}0$\\certified $\checkmark$};
+\node[font=\scriptsize, text=violet!60!black, align=center, anchor=south] at (16.15,-3.46) {R11 $\rho{=}1$\\uncertifiable};
+\end{tikzpicture}%
+}
+\caption{\textbf{The \textsc{Redact} pipeline.} Post-deletion recoverability
+decomposes into three causally distinct channels (rows), each measured by its own
+probe: \emph{residual survival} $\sigma_{\mathrm{res}}$ (a surviving artifact still
+contains the value), \emph{re-derivation} $\sigma_{\mathrm{red}}$ (surviving facts
+entail it), and the \emph{parametric floor} $\rho$ (the base model reconstructs the
+value from world knowledge with the store withheld). Overall recoverability is the
+worst open channel, $R=\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho)$
+(Def.~4). The greedy planner closes the two \emph{deletable} channels---it deletes
+the residual artifact and co-deletes a minimal set of entailing operands until
+$\sigma_{\mathrm{red}}<\tau$---but the parametric floor is a \emph{wall}: no
+co-deletion can lower $\rho$, because the $\rho$ probe never reads the store. The
+certificate (Def.~5) therefore emits two predicates: \texttt{floor\_reaching}
+($\sigma_{\mathrm{res}}{=}\sigma_{\mathrm{red}}{=}0$), always achievable, and
+\texttt{completeness\_certified}, achievable only when the worst-adversary floor is
+below tolerance ($\rho<\tau$). The gauge is the limit result: F040 ($\rho{=}0$)
+certifies, while R11 (``Class-3 licence $\Rightarrow$ at least 18'', $\rho{=}1$) is
+floor-reaching yet \emph{uncertifiable}---its value survives in world knowledge no
+deletion can reach---so $\tau$ acts as an explicit policy dial.}
+\label{fig:pipeline}
+\end{figure*}
+
 \section{Method}\label{sec:method}
 
 Our pipeline instantiates each object of \S\ref{sec:formulation} as a concrete,
-reusable component behind a single \texttt{MemorySystemAdapter} interface, so the
+reusable component (Figure~\ref{fig:pipeline}) behind a single
+\texttt{MemorySystemAdapter} interface, so the
 identical probe/planner/certificate stack runs unchanged on all three systems.
 
 \paragraph{Probe battery.} Three probes measure the three channels of Def.~4.

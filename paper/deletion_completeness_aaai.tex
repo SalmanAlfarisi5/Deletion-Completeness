@@ -158,7 +158,12 @@ archival endpoints to keep the model out of the recall path), which is exactly t
 loop we exercise and find surface-incomplete (\S\ref{sec:res-converge}); and its
 own per-system observations (Graphiti shedding synthesized fact strings, Mem0's
 router favoring link-and-keep) name the mechanisms our decomposition isolates,
-independently corroborating the convergence result.
+independently corroborating the convergence result. A complementary governance
+direction attaches \emph{provenance} to agent memory: \textsc{MemLineage}
+\citep{memlineage} signs each entry and tracks its derivation lineage so that actions
+descending from untrusted content can be gated. It shares our premise that memories
+derive from one another, but it enforces \emph{trust} while keeping the content in
+place, whereas we \emph{remove} a fact and certify the removal.
 
 \paragraph{Unlearning methods.} Classical machine unlearning removes a training example
 by retraining or editing model weights
@@ -455,8 +460,10 @@ adversary has full read access to the surviving store and black-box (no
 training-time) access to the base model. Wherever recovery is model-dependent it is measured against
 a four-reasoner adversary panel spanning prior-generation and frontier models: %
 \texttt{gpt-4o-mini}, \texttt{gpt-4o}, Claude~Sonnet~5, and GPT-5.5. The
-certificate takes the worst of them (Def.~4); embeddings are local
-\texttt{all-MiniLM-L6-v2}. The completeness threshold is $\tau=0.10$. Datasets are
+certificate takes the worst of them (Def.~4). Because this panel already includes the
+frontier GPT-5.5 and Sonnet~5, and GPT-5.5 independently reproduces our recovery-judge
+gold labels (\S\ref{sec:res-judge}), the results below are not an artifact of older
+models. Embeddings are local \texttt{all-MiniLM-L6-v2}. The completeness threshold is $\tau=0.10$. Datasets are
 synthetic subjects placed in realistic statistical contexts: 84 isolated PII facts,
 92 multi-hop facts (including a multi-level set whose targets are entailed
 only through \emph{unstored} intermediate facts) with their stored operands and
@@ -838,6 +845,15 @@ One extension is immediate: a fourth memory architecture, to test whether the
 three-family convergence is universal. The deeper open problem is certifying erasure
 against an unbounded adversary rather than a modeled bracket: the floor we measure is
 a lower bound, so the true limit of forgetting in agent memory may be higher still.
+
+\paragraph{Broader impact.} Our goal is to make deletion in agent memory
+\emph{auditable}: the certificate tells an operator when a fact is truly gone and, more
+usefully, when it cannot be. The recovery probes that expose incompleteness are the
+same techniques an adversary would use, but they run on synthetic subjects only, so no
+real personal data is at risk; we intend them as a tool for builders to verify erasure,
+not to attack deployed stores. The limit result also carries a design message: when a
+value is world-inferable, privacy is better served by not storing it than by deleting
+it after the fact.
 
 %========================================================================
 % NOTE: do NOT add \bibliographystyle here. aaai2027.sty already issues

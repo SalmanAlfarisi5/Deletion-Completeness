@@ -16,7 +16,7 @@
 %   (camera-ready / non-anonymous mode). For AAAI double-blind REVIEW submission,
 %   change to \usepackage[submission]{aaai2027}, anonymize the \author and
 %   \affiliations block, and remove the /Author line from \pdfinfo. See AAAI_SETUP.md.
-\usepackage{aaai2027}  % AAAI author kit
+\usepackage[submission]{aaai2027}  % AAAI author kit (anonymous submission mode for double-blind review)
 % NOTE(AAAI kit): aaai2027.sty auto-loads all required fonts (newtxtext for serif,
 %   helvet for sans-serif, courier for monospace). The AAAI-27 kit forbids loading
 %   \usepackage{times}, \usepackage{helvet}, \usepackage{courier}, or any other font
@@ -42,8 +42,6 @@
 %   REMOVE the /Author line below to preserve double-blind review. See AAAI_SETUP.md.
 \pdfinfo{
 /TemplateVersion (2027.1)
-/Title (REDACT: Recoverability Decomposition and Auditable Co-Deletion for the Right to Be Forgotten in LLM Agent Memory)
-/Author (Muhammad Salman Al Farisi, Tan Tian Huat)
 }
 
 \setcounter{secnumdepth}{2}
@@ -51,11 +49,9 @@
 \title{\textsc{Redact}: Recoverability Decomposition and Auditable\\
        Co-Deletion for the Right to Be Forgotten in LLM Agent Memory}
 \author{
-    Muhammad Salman Al Farisi, Tan Tian Huat
+    Anonymous Submission
 }
 \affiliations{
-    National University of Singapore\\
-    muhammad.salman@u.nus.edu, tianhuat.tan@nus.edu.sg
 }
 
 \begin{document}
@@ -164,13 +160,20 @@ own per-system observations (Graphiti shedding synthesized fact strings, Mem0's
 router favoring link-and-keep) name the mechanisms our decomposition isolates,
 independently corroborating the convergence result.
 
-\paragraph{Unlearning methods.} Classical machine unlearning removes a training
-example by retraining or editing model weights
-\citep{bourtoule2021unlearning,cao2015towards,nguyen2022survey}. \textsc{Agentic
-Unlearning} \citep{agenticunlearning} carries this to agents, separating parametric
-from memory recovery (its ``backflow''), but still assumes \emph{weight access} to
-edit the model; we operate black-box and memory-store-only, so we neither claim the
-parametric/memory split as novel nor perform model surgery.
+\paragraph{Unlearning methods.} Classical machine unlearning removes a training example
+by retraining or editing model weights
+\citep{bourtoule2021unlearning,cao2015towards,nguyen2022survey}; recent work shows that
+such isolated-fact removal overlooks \emph{latent inferential dependencies}, so a
+``forgotten'' fact persists through correlated surviving knowledge \citep{dollmsforget},
+which is the re-derivation channel we isolate and then close. Closest to us,
+\textsc{Agentic Unlearning} \citep{agenticunlearning} also splits parametric from memory
+recovery (its ``backflow'') and, on the memory side, prunes dependent artifacts by a
+dependency closure that needs no weight access. We differ by making the decomposition
+adversary-relative, by separating re-derivation from an \emph{irreducible} parametric
+floor that we \emph{measure} rather than assume, and by emitting a minimal-collateral,
+auditable certificate; we thus neither claim the parametric/memory split as novel nor
+edit weights. Forgetting by editing the retrieval store rather than the model also links
+us to RAG-unlearning \citep{ragunlearn}.
 
 \paragraph{Deletion under dependencies.} Our formal grounding is the database line
 on erasure when records are inter-derivable: P2E2's meaningful-erasure criterion

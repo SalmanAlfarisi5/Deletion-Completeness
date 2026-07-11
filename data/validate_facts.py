@@ -183,6 +183,24 @@ def referential_integrity(mh_facts: list[dict], ctx_facts: list[dict]) -> list[s
     return problems
 
 
+def cross_file_id_uniqueness(iso_facts: list[dict], mh_facts: list[dict],
+                             ctx_facts: list[dict], rho_facts: list[dict]) -> list[str]:
+    """Every fact id must be globally unique across the four datasets. A collision
+    (the same id naming two *different* facts in two files) is a latent corruption:
+    any code that later merges two sets into one id-keyed dict silently drops the
+    duplicate, and a certificate keyed by id resolves to the wrong fact. Historically
+    the isolated and multi-hop sets both minted F1xx ids (see the build note at the
+    id-minting site), colliding on F100--F131; this gate prevents recurrence."""
+    from collections import defaultdict
+    seen: dict[str, list[str]] = defaultdict(list)
+    for name, facts in (("isolated", iso_facts), ("multi_hop", mh_facts),
+                        ("context", ctx_facts), ("rho_gradient", rho_facts)):
+        for f in facts:
+            seen[f["id"]].append(name)
+    return [f"{fid} appears in {len(files)} sets: {', '.join(files)}"
+            for fid, files in sorted(seen.items()) if len(files) > 1]
+
+
 def check_value_uniqueness(iso_facts: list[dict], ctx_facts: list[dict]) -> list[str]:
     """Cross-fact value-uniqueness gate (RF4 C-01).
 
@@ -651,6 +669,13 @@ def main() -> int:
           f"      {len(uniq_problems)} VALUE COLLISIONS:\n        - "
           + "\n        - ".join(uniq_problems))
 
+    print("\n[6c/6] Cross-file id uniqueness (no id shared across datasets) ...", flush=True)
+    id_problems = cross_file_id_uniqueness(iso_facts, mh_facts, ctx_facts, rho_facts)
+    print("      OK -- every fact id is globally unique across datasets"
+          if not id_problems else
+          f"      {len(id_problems)} ID COLLISIONS:\n        - "
+          + "\n        - ".join(id_problems))
+
     # ---- counts -------------------------------------------------------------
     iso_personas = sorted({f["subject"] for f in iso_facts})
     iso_cats = sorted({f["category"] for f in iso_facts})
@@ -742,6 +767,8 @@ def main() -> int:
         fails.append(f"{len(ref_problems)} referential-integrity problems")
     if uniq_problems:
         fails.append(f"{len(uniq_problems)} value-collision problems (RF4 C-01)")
+    if id_problems:
+        fails.append(f"{len(id_problems)} cross-file id collisions")
     if any(f.get("flag") == "ERROR" for f in flags):
         fails.append("rho measurement errors present")
 

@@ -145,7 +145,7 @@
       "paraphrase_residue": false
     },
     {
-      "fact_id": "F102",
+      "fact_id": "F186",
       "inject_tools": [],
       "forget_tools": [
         "memory_replace"

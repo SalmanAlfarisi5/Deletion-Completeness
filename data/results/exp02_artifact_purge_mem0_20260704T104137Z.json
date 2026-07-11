@@ -125,7 +125,7 @@
       "extra_artifacts_purged": 3
     },
     {
-      "fact_id": "F100",
+      "fact_id": "F184",
       "category": "personal_contact",
       "value_rows_before": 2,
       "residual_before": 1.0,
@@ -134,7 +134,7 @@
       "extra_artifacts_purged": 1
     },
     {
-      "fact_id": "F101",
+      "fact_id": "F185",
       "category": "medical",
       "value_rows_before": 3,
       "residual_before": 1.0,
@@ -143,7 +143,7 @@
       "extra_artifacts_purged": 3
     },
     {
-      "fact_id": "F102",
+      "fact_id": "F186",
       "category": "financial",
       "value_rows_before": 2,
       "residual_before": 1.0,
@@ -152,7 +152,7 @@
       "extra_artifacts_purged": 1
     },
     {
-      "fact_id": "F103",
+      "fact_id": "F187",
       "category": "preference",
       "value_rows_before": 4,
       "residual_before": 1.0,
@@ -161,7 +161,7 @@
       "extra_artifacts_purged": 3
     },
     {
-      "fact_id": "F104",
+      "fact_id": "F188",
       "category": "location",
       "value_rows_before": 3,
       "residual_before": 1.0,
@@ -170,7 +170,7 @@
       "extra_artifacts_purged": 3
     },
     {
-      "fact_id": "F105",
+      "fact_id": "F189",
       "category": "education",
       "value_rows_before": 3,
       "residual_before": 1.0,
@@ -179,7 +179,7 @@
       "extra_artifacts_purged": 2
     },
     {
-      "fact_id": "F106",
+      "fact_id": "F190",
       "category": "employment",
       "value_rows_before": 3,
       "residual_before": 1.0,
@@ -188,7 +188,7 @@
       "extra_artifacts_purged": 3
     },
     {
-      "fact_id": "F107",
+      "fact_id": "F191",
       "category": "device",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -197,7 +197,7 @@
       "extra_artifacts_purged": 4
     },
     {
-      "fact_id": "F108",
+      "fact_id": "F192",
       "category": "personal_contact",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -206,7 +206,7 @@
       "extra_artifacts_purged": 4
     },
     {
-      "fact_id": "F109",
+      "fact_id": "F193",
       "category": "medical",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -215,7 +215,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F110",
+      "fact_id": "F194",
       "category": "financial",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -224,7 +224,7 @@
       "extra_artifacts_purged": 6
     },
     {
-      "fact_id": "F111",
+      "fact_id": "F195",
       "category": "preference",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -233,7 +233,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F112",
+      "fact_id": "F196",
       "category": "location",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -242,7 +242,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F113",
+      "fact_id": "F197",
       "category": "education",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -251,7 +251,7 @@
       "extra_artifacts_purged": 4
     },
     {
-      "fact_id": "F114",
+      "fact_id": "F198",
       "category": "employment",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -260,7 +260,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F115",
+      "fact_id": "F199",
       "category": "device",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -269,7 +269,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F116",
+      "fact_id": "F200",
       "category": "personal_contact",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -278,7 +278,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F117",
+      "fact_id": "F201",
       "category": "medical",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -287,7 +287,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F118",
+      "fact_id": "F202",
       "category": "financial",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -296,7 +296,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F119",
+      "fact_id": "F203",
       "category": "preference",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -305,7 +305,7 @@
       "extra_artifacts_purged": 4
     },
     {
-      "fact_id": "F120",
+      "fact_id": "F204",
       "category": "location",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -314,7 +314,7 @@
       "extra_artifacts_purged": 4
     },
     {
-      "fact_id": "F121",
+      "fact_id": "F205",
       "category": "education",
       "value_rows_before": 4,
       "residual_before": 1.0,
@@ -323,7 +323,7 @@
       "extra_artifacts_purged": 3
     },
     {
-      "fact_id": "F122",
+      "fact_id": "F206",
       "category": "employment",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -332,7 +332,7 @@
       "extra_artifacts_purged": 4
     },
     {
-      "fact_id": "F123",
+      "fact_id": "F207",
       "category": "device",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -341,7 +341,7 @@
       "extra_artifacts_purged": 3
     },
     {
-      "fact_id": "F124",
+      "fact_id": "F208",
       "category": "personal_contact",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -350,7 +350,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F125",
+      "fact_id": "F209",
       "category": "medical",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -359,7 +359,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F126",
+      "fact_id": "F210",
       "category": "financial",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -368,7 +368,7 @@
       "extra_artifacts_purged": 6
     },
     {
-      "fact_id": "F127",
+      "fact_id": "F211",
       "category": "preference",
       "value_rows_before": 6,
       "residual_before": 1.0,
@@ -377,7 +377,7 @@
       "extra_artifacts_purged": 5
     },
     {
-      "fact_id": "F128",
+      "fact_id": "F212",
       "category": "location",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -386,7 +386,7 @@
       "extra_artifacts_purged": 4
     },
     {
-      "fact_id": "F129",
+      "fact_id": "F213",
       "category": "education",
       "value_rows_before": 5,
       "residual_before": 1.0,
@@ -395,7 +395,7 @@
       "extra_artifacts_purged": 4
     },
     {
-      "fact_id": "F130",
+      "fact_id": "F214",
       "category": "employment",
       "value_rows_before": 4,
       "residual_before": 1.0,
@@ -404,7 +404,7 @@
       "extra_artifacts_purged": 3
     },
     {
-      "fact_id": "F131",
+      "fact_id": "F215",
       "category": "device",
       "value_rows_before": 4,
       "residual_before": 1.0,

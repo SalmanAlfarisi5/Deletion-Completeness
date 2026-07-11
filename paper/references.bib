@@ -35,14 +35,39 @@
 @misc{agenticunlearning,
   author        = {Wang, Bin and Wang, Fan and Wang, Pingping and Cong, Jinyu
                    and Yu, Yang and Yin, Yilong and Han, Zhongyi and Wei, Benzheng},
-  title         = {Agentic Unlearning: When the {LLM} Agent Meets Machine
+  title         = {Agentic Unlearning: When {LLM} Agent Meets Machine
                    Unlearning},
   year          = {2026},
   eprint        = {2602.17692},
   archivePrefix = {arXiv},
   primaryClass  = {cs.LG},
-  note          = {Weight-access dual-pathway (``backflow'') separating
-                   parametric from memory recovery},
+  note          = {Dual-pathway (``backflow''): a parametric (weight-level)
+                   pathway plus a memory-side dependency-closure pathway that
+                   prunes dependent artifacts without weight access.},
+}
+
+@inproceedings{dollmsforget,
+  author        = {Wei, Rongzhe and Niu, Peizhi and Hsu, Hans Hao-Hsun and
+                   Wu, Ruihan and Yin, Haoteng and Ghassemi, Mohsen and Li, Yifan
+                   and Potluru, Vamsi K. and Chien, Eli and Chaudhuri, Kamalika
+                   and Milenkovic, Olgica and Li, Pan},
+  title         = {Do {LLMs} Really Forget? Evaluating Unlearning with Knowledge
+                   Correlation and Confidence Awareness},
+  booktitle     = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year          = {2025},
+  note          = {arXiv:2506.05735. Shows unlearning that removes isolated facts
+                   overlooks latent inferential dependencies, so ``forgotten''
+                   facts persist through correlated surviving knowledge.},
+}
+
+@article{ragunlearn,
+  author        = {Wang, Shang and Zhu, Tianqing and Ye, Dayong and Zhou, Wanlei},
+  title         = {When Machine Unlearning Meets Retrieval-Augmented Generation
+                   ({RAG}): Keep Secret or Forget Knowledge?},
+  journal       = {IEEE Transactions on Dependable and Secure Computing (TDSC)},
+  year          = {2025},
+  note          = {arXiv:2410.15267. Forgets knowledge by editing the external
+                   retrieval knowledge base rather than the model weights.},
 }
 
 % ---------------------------------------------------------------------

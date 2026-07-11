@@ -98,7 +98,11 @@ diagnosis from stored symptoms. The most thorough current audits of agent
 forgetting \citep{forgeteval} check whether a forget command removes a value from
 top-$k$ retrieval. That check is \emph{necessary but not sufficient}: it does not
 ask \emph{why} a deleted fact returns, nor \emph{what minimal further deletion}
-would actually close the leak. Those two questions are the subject of this paper.
+would actually close the leak. Those two questions are the subject of this
+paper.\footnote{The authors used generative-AI assistants to help draft and edit prose
+and code. All definitions, proofs, experiments, reported numbers, and citations were
+verified by the authors, who take full responsibility for the content, consistent with
+AAAI's policy on the use of generative AI.}
 
 We cast deletion-completeness as whether a deleted fact remains recoverable, and
 decompose recoverability into three causally distinct channels: residual survival
@@ -630,9 +634,30 @@ survival is zero by construction. Whatever the adversary now recovers, it recove
 what that reasoning needs: \emph{stored-alone}, where the surviving operands suffice, and
 \emph{stored+world}, where they must be combined with world knowledge.
 
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+re-derivation (\%) & mini & 4o & S5 & G5.5 & post \\
+\midrule
+Mem0 bin~1 (stored-alone)  & 100 & 94 & 100 & 100 & 0 \\
+Mem0 bin~2 (stored+world)  & 56  & 59 & 68  & 74  & 0 \\
+Letta bin~2 (stored+world) & 76  & 76 & 74  & 78  & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Re-derivation rate at residual $0$ (operands-only control), by adversary
+(\texttt{gpt-4o-mini}, \texttt{gpt-4o}, Sonnet~5, GPT-5.5); ``post'' is after
+co-deleting the operands. The multi-level joins and chains re-derive at $100\%$ and also
+collapse to $0$; the parametric floor is $\rho=0$ throughout. Extended detail
+(confidence intervals, Letta faithfulness) is in the supplementary material.}
+\label{tab:rederiv}
+\end{table}
+
 On Mem0, across all four adversaries, the target is re-derived on nearly every
 stored-alone fact and on about two-thirds of the stored+world facts, and co-deleting the
-operands drives both to zero, down to a parametric floor of $\rho=0$. The frontier models
+operands drives both to zero, down to a parametric floor of $\rho=0$ (Table~\ref{tab:rederiv}). The frontier models
 are the stronger adversaries here: they re-derive the stored+world facts most often, the
 worst case the certificate must anticipate. A harder \emph{multi-level} set stresses the
 planner's reach, since each target is entailed not by stored facts but by \emph{derived}
@@ -653,8 +678,8 @@ each co-deletion goes through the direct, deterministic \texttt{passages.delete}
 captured passage id, not a conversational request, and we verify every operand passage is
 actually gone. So ``re-derivation closed'' cannot be confused with ``the delete silently
 did not run,'' which keeps this result cleanly separate from the agent-mediated-deletion
-finding of \S\ref{sec:res-converge}. Per-reasoner and per-bin rates, and the Letta
-faithfulness figures, are in the supplementary material.
+finding of \S\ref{sec:res-converge}. Confidence intervals and the full multi-level and
+Letta-faithfulness breakdowns are in the supplementary material.
 
 \subsection{Generalization: Three Families, One Phenomenon}\label{sec:res-converge}
 

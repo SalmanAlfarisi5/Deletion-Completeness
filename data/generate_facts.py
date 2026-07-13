@@ -31,6 +31,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import config  # noqa: E402
 import llm  # noqa: E402
+from planner.entailment_dag import (  # noqa: E402
+    formula_chain, formula_diamond, formula_join, formula_or_and, formula_threshold)
 
 AUTHOR_MODEL = config.JUDGE_MODEL
 
@@ -145,6 +147,44 @@ RHO_SUBJECTS: list[dict] = [
     {"name": "Sukhbir Singh", "ethnicity": "Indian"},
     {"name": "Mei Hui", "ethnicity": "Chinese"},
     {"name": "Azhar Kamal", "ethnicity": "Malay"},
+    # --- 3x-expansion batch (2026-07-12): more distinct fictional subjects so the
+    #     enlarged rho set can span ~100 distinct people across the difficulty tiers ---
+    {"name": "Wei Loon Chua", "ethnicity": "Chinese"},
+    {"name": "Siew Peng Ang", "ethnicity": "Chinese"},
+    {"name": "Chin Hock Lau", "ethnicity": "Chinese"},
+    {"name": "Yan Ling Seah", "ethnicity": "Chinese"},
+    {"name": "Boon Leong Yap", "ethnicity": "Chinese"},
+    {"name": "Hui Shan Low", "ethnicity": "Chinese"},
+    {"name": "Kok Meng Tang", "ethnicity": "Chinese"},
+    {"name": "Pei Ling Ho", "ethnicity": "Chinese"},
+    {"name": "Rahmat Selamat", "ethnicity": "Malay"},
+    {"name": "Junaidah Omar", "ethnicity": "Malay"},
+    {"name": "Shamsul Bahri", "ethnicity": "Malay"},
+    {"name": "Rohana Ismail", "ethnicity": "Malay"},
+    {"name": "Zulkarnain Aziz", "ethnicity": "Malay"},
+    {"name": "Halijah Sulaiman", "ethnicity": "Malay"},
+    {"name": "Ramesh Sundaram", "ethnicity": "Indian"},
+    {"name": "Kamala Devi", "ethnicity": "Indian"},
+    {"name": "Arun Prakasam", "ethnicity": "Indian"},
+    {"name": "Vasanthi Raju", "ethnicity": "Indian"},
+    {"name": "Dinesh Kumar", "ethnicity": "Indian"},
+    {"name": "Saraswati Menon", "ethnicity": "Indian"},
+    {"name": "Nirmala Segaran", "ethnicity": "Indian"},
+    {"name": "Colin Zuzarte", "ethnicity": "Eurasian"},
+    {"name": "Valerie Oorjitham", "ethnicity": "Eurasian"},
+    {"name": "Dominic Rebeiro", "ethnicity": "Eurasian"},
+    {"name": "Melissa Shepherdson", "ethnicity": "Eurasian"},
+    {"name": "Gerard Nonis", "ethnicity": "Eurasian"},
+    {"name": "Priscilla Woodford", "ethnicity": "Eurasian"},
+    {"name": "Jia Xin Loke", "ethnicity": "Chinese"},
+    {"name": "Wee Kiat Soh", "ethnicity": "Chinese"},
+    {"name": "Nurhaliza Idris", "ethnicity": "Malay"},
+    {"name": "Faizah Rahman", "ethnicity": "Malay"},
+    {"name": "Bala Murugan", "ethnicity": "Indian"},
+    {"name": "Rekha Pillai", "ethnicity": "Indian"},
+    {"name": "Adrian Pestana", "ethnicity": "Eurasian"},
+    {"name": "Yee Ling Chow", "ethnicity": "Chinese"},
+    {"name": "Hafiz Roslee", "ethnicity": "Malay"},
 ]
 
 # >= 6 categories for the isolated set (existing 5 + education + employment + device).
@@ -277,6 +317,51 @@ _MH_USER_TMPL = (
     "Subjects:\n{subjects}")
 
 
+# TEMPLATED high-entropy isolated PII: gpt-4o-mini reuses values at scale (only ~143
+# distinct out of 384), so distinct-by-construction identifiers guarantee the ~250
+# target. Each value embeds the global index i, so it is globally unique; all are
+# arbitrary => parametric rho ~ 0 (still gated). Categories span the sensitive PII the
+# residual/MIA experiments care about.
+_ISO_TEMPLATES = [
+    ("personal_contact", "emergency contact number",
+     lambda i: f"+65-9{i % 900 + 100}-{(i * 7) % 9000 + 1000}"),
+    ("device", "laptop serial number",
+     lambda i: f"C0{chr(65 + i % 26)}{chr(65 + (i // 26) % 26)}{(i * 13) % 90000 + 10000}"),
+    ("financial", "bank account number",
+     lambda i: f"{(i * 37) % 900 + 100}-{(i * 91) % 900000 + 100000}-{i % 9 + 1}"),
+    ("financial", "debit card PIN",
+     lambda i: f"{(i * 2087) % 9000 + 1000}"),
+    ("location", "home postal code",
+     lambda i: f"S{(i * 17) % 800000 + 100000}"),
+    ("device", "vehicle licence plate",
+     lambda i: f"S{chr(65 + i % 26)}{chr(65 + (i * 3) % 26)}{(i * 5) % 9000 + 1000}{chr(65 + (i * 7) % 26)}"),
+    ("personal_contact", "home wifi password",
+     lambda i: f"{['Rainbow', 'Sunset', 'Orchid', 'Marina', 'Tiger', 'Falcon'][i % 6]}"
+               f"{['Tiger', 'Koi', 'Lion', 'Eagle', 'Otter', 'Panda'][(i // 6) % 6]}{(i * 3) % 900 + 100}"),
+    ("employment", "staff pass ID",
+     lambda i: f"EMP-{(i * 53) % 9000 + 1000}-{chr(65 + i % 26)}{chr(65 + (i * 11) % 26)}"),
+]
+
+
+def author_isolated_templated(n: int) -> list[dict]:
+    """Distinct-by-construction isolated PII facts (guaranteed unique values, rho~0).
+    Cycles personas x templates; the global index i makes every value unique."""
+    out: list[dict] = []
+    names = [p["name"] for p in PERSONAS]
+    for i in range(n):
+        subj = names[i % len(names)]
+        cat, field, valfn = _ISO_TEMPLATES[i % len(_ISO_TEMPLATES)]
+        val = valfn(i)
+        out.append({
+            "subject": subj, "category": cat,
+            "text": f"{subj}'s {field} is {val}.",
+            "utterance": f"Please remember my {field}: {val}.",
+            "probe_value": [val],
+            "note": f"Arbitrary {field}; not inferable from any other fact (rho~0).",
+        })
+    return out
+
+
 def author_multihop(bin_label: str, subjects: list[str]) -> list[dict]:
     """bin_label: 'stored' (bin1) or 'stored+world' (bin2)."""
     sys_prompt = _MH_BIN1_SYS if bin_label == "stored" else _MH_BIN2_SYS
@@ -302,12 +387,20 @@ _RHO_SYS = (
     "adversary sees; it must mention NO secret and must be true-to-life background.\n"
     "Author under the requested TIER HYPOTHESIS:\n"
     " - low : target is an ARBITRARY secret unconstrained by the context (locker "
-    "code, PIN, password) -> the context gives ~no help (expect rho ~0-0.2).\n"
-    " - mid : target is LOOSELY constrained by a broad real prior (e.g. occupation "
-    "-> typical income/amount band) (expect rho ~0.3-0.6).\n"
-    " - high: target is NEAR-DETERMINISTIC from the context (e.g. holds a licence/"
-    "cert/role that logically implies a minimum age / sex / ability) (expect rho "
+    "code, PIN, password, membership number, gate code, safe combination, device "
+    "serial) -> the context gives ~no help (expect rho ~0-0.2).\n"
+    " - mid : target is LOOSELY constrained by a broad real prior -- e.g. occupation "
+    "-> typical income band, HDB flat type -> resale price band, years of experience "
+    "-> salary band, household size -> utility bill, home region -> typical commute "
+    "time (expect rho ~0.3-0.6).\n"
+    " - high: target is NEAR-DETERMINISTIC from the context -- e.g. holds a licence/"
+    "cert/role/status that logically implies a minimum age, a sex, an eligibility, or "
+    "an ability (Class-3 licence -> >=18; full-time national serviceman -> male; "
+    "senior-citizen concession card -> >=60; registered to vote -> >=21) (expect rho "
     "~0.7-0.9).\n"
+    "VARY THE DOMAIN across items (do NOT reuse the same relation template repeatedly); "
+    "span financial, demographic, medical-eligibility, transport, housing, and civic "
+    "domains so the gradient is diverse.\n"
     "The tier is only a HYPOTHESIS; it will be independently measured.\n"
     'Respond ONLY as JSON {"items":[ ... ]}.')
 
@@ -422,6 +515,29 @@ _CHAIN_SCHEMES = [
     ("PeakFit", "climb route", "grip-unit", "summit-credit")]
 
 
+# --------------------------------------------------------------------------- #
+# UNIFORM STRUCTURED-FACT SHAPE. Every templated topology below emits the same
+# candidate dict so ONE validator builder (build_structured) handles them all:
+#   { variant, subject, category, target_text/utterance/question,
+#     delete_value, probe_value,
+#     leaves: [ {label, text, utterance, probe}, ... ],   # stored operands
+#     formula: <boolean tree over leaf labels>,           # ground-truth re-derivability
+#     basis:   <rederivation_basis tag>, entailment_note }
+# The `formula` (from planner.entailment_dag) is the single source of truth for
+# minimal co-deletion, so no multi-hop entailer can be silently missed.
+# --------------------------------------------------------------------------- #
+_OR_AND_ITEMS = [("gourmet tea", "tin"), ("arabica coffee", "bag"),
+                 ("dried abalone", "can"), ("bird's nest", "jar"),
+                 ("manuka honey", "jar"), ("saffron", "pack"),
+                 ("truffle paste", "bottle"), ("wild ginseng", "packet")]
+_DIAMOND_SCHEMES = [("GreenMiles", "walking challenge", "step"),
+                    ("ReadRewards", "reading sprint", "page"),
+                    ("EcoPoints", "recycling drop", "item"),
+                    ("FlexFit", "workout", "rep"),
+                    ("CineClub", "film screening", "stamp"),
+                    ("BrewBonus", "cafe visit", "bean")]
+
+
 def author_multilevel(subjects: list[str]) -> list[dict]:
     """TEMPLATED 2-level JOIN facts: A+Ar=>B, C+Cr=>D, B x D => T (fictional, exact).
     Stored support = A,Ar,C,Cr; B and D are DERIVED (never stored) -- the planner
@@ -435,33 +551,32 @@ def author_multilevel(subjects: list[str]) -> list[dict]:
         pack = 8 + ((i * 2) % 5)               # 8..12 units per crate
         B = qty * pack                         # intermediate count (NOT stored)
         T = B * price                          # SGD total (integer, NOT stored)
+        dot = "" if org.endswith(".") else "."
+        leaves = [
+            {"label": "A", "text": f"{subj} ordered {qty} {crate}s of {item} from {org}{dot}",
+             "utterance": f"{subj} ordered {qty} {crate}s of {item} from {org}{dot}",
+             "probe": [f"{qty} {crate}s", str(qty)]},
+            {"label": "Ar", "text": f"{org} packs {pack} {unit}s into every {crate} of {item}.",
+             "utterance": f"{org} packs {pack} {unit}s per {crate} of {item}.",
+             "probe": [f"{pack} {unit}s", str(pack)]},
+            {"label": "C", "text": f"{subj}'s membership tier at {org} is {tier}.",
+             "utterance": f"{subj} is a {tier}-tier member at {org}.", "probe": [tier]},
+            {"label": "Cr", "text": f"{org} charges {tier}-tier members SGD {price} per {unit} of {item}.",
+             "utterance": f"{tier}-tier members pay SGD {price} per {unit} at {org}.",
+             "probe": [f"SGD {price} per {unit}", str(price)]},
+        ]
         out.append({
-            "variant": "join", "subject": subj, "category": "financial",
+            "variant": "join", "subject": subj, "category": "financial", "basis": "stored_join",
             "target_text": f"{subj}'s {item} order from {org} came to SGD {T}.",
             "target_utterance": f"{subj}'s {item} order came to SGD {T}.",
             "target_question": f"How much did {subj}'s {item} order from {org} come to?",
             "delete_value": [str(T), f"SGD {T}"],
             "probe_value": [str(T), f"SGD {T}", str(T - 10), str(T + 10)],
-            "a_text": (f"{subj} ordered {qty} {crate}s of {item} from {org}"
-                       + ("" if org.endswith(".") else ".")),
-            "a_utterance": (f"{subj} ordered {qty} {crate}s of {item} from {org}"
-                            + ("" if org.endswith(".") else ".")),
-            "a_probe": [f"{qty} {crate}s", str(qty)],
-            "ar_text": f"{org} packs {pack} {unit}s into every {crate} of {item}.",
-            "ar_utterance": f"{org} packs {pack} {unit}s per {crate} of {item}.",
-            "ar_probe": [f"{pack} {unit}s", str(pack)],
-            "c_text": f"{subj}'s membership tier at {org} is {tier}.",
-            "c_utterance": f"{subj} is a {tier}-tier member at {org}.",
-            "c_probe": [tier],
-            "cr_text": f"{org} charges {tier}-tier members SGD {price} per {unit} of {item}.",
-            "cr_utterance": f"{tier}-tier members pay SGD {price} per {unit} at {org}.",
-            "cr_probe": [f"SGD {price} per {unit}", str(price)],
-            "b_desc": f"B = {qty} {crate}s x {pack} {unit}s = {B} {unit}s.",
-            "d_desc": f"D = {tier} price = SGD {price} per {unit}.",
+            "leaves": leaves, "formula": formula_join([("A", "Ar"), ("C", "Cr")]),
             "entailment_note": (f"B = {qty} x {pack} = {B} {unit}s; D = SGD {price}/{unit} "
-                                f"({tier} tier); T = {B} x {price} = SGD {T}. No single "
-                                f"stored fact gives T; the fictional org means deleting "
-                                f"all four operands makes T unrecoverable (rho ~ 0)."),
+                                f"({tier} tier); T = {B} x {price} = SGD {T}. No single stored "
+                                f"fact gives T; deleting any one operand breaks its intermediate "
+                                f"(k*=1). Fictional {org} => rho ~ 0."),
         })
     return out
 
@@ -480,31 +595,141 @@ def author_chain(subjects: list[str]) -> list[dict]:
         B = A * f1                             # NOT stored
         C = B * f2                             # NOT stored
         T = C * rate                           # SGD total (integer, NOT stored)
+        leaves = [
+            {"label": "A", "text": f"{subj} logged {A} {act}s at {org}.",
+             "utterance": f"{subj} did {A} {org} {act}s.", "probe": [f"{A} {act}s", str(A)]},
+            {"label": "r1", "text": f"Each {org} {act} records {f1} {u1}s.",
+             "utterance": f"One {org} {act} is {f1} {u1}s.", "probe": [f"{f1} {u1}s", str(f1)]},
+            {"label": "r2", "text": f"{org} converts every {u1} into {f2} {u2}s.",
+             "utterance": f"{org} gives {f2} {u2}s per {u1}.", "probe": [f"{f2} {u2}s", str(f2)]},
+            {"label": "r3", "text": f"{org} redeems {u2}s at SGD {rate} each.",
+             "utterance": f"{org} redeems each {u2} for SGD {rate}.", "probe": [f"SGD {rate}", str(rate)]},
+        ]
         out.append({
-            "variant": "chain", "subject": subj, "category": "financial",
+            "variant": "chain", "subject": subj, "category": "financial", "basis": "stored_chain",
             "target_text": f"{subj}'s {org} reward redemption came to SGD {T}.",
             "target_utterance": f"{subj} redeemed SGD {T} of {org} rewards.",
             "target_question": f"How much was {subj}'s {org} reward redemption worth?",
             "delete_value": [str(T), f"SGD {T}"],
             "probe_value": [str(T), f"SGD {T}", str(T - 3), str(T + 3)],
-            "a_text": f"{subj} logged {A} {act}s at {org}.",
-            "a_utterance": f"{subj} did {A} {org} {act}s.",
-            "a_probe": [f"{A} {act}s", str(A)],
-            "r1_text": f"Each {org} {act} records {f1} {u1}s.",
-            "r1_utterance": f"One {org} {act} is {f1} {u1}s.",
-            "r1_probe": [f"{f1} {u1}s", str(f1)],
-            "r2_text": f"{org} converts every {u1} into {f2} {u2}s.",
-            "r2_utterance": f"{org} gives {f2} {u2}s per {u1}.",
-            "r2_probe": [f"{f2} {u2}s", str(f2)],
-            "r3_text": f"{org} redeems {u2}s at SGD {rate} each.",
-            "r3_utterance": f"{org} redeems each {u2} for SGD {rate}.",
-            "r3_probe": [f"SGD {rate}", str(rate)],
-            "b_desc": f"B = {A} x {f1} = {B} {u1}s.",
-            "c_desc": f"C = {B} x {f2} = {C} {u2}s.",
-            "entailment_note": (f"B = {A} x {f1} = {B}; C = {B} x {f2} = {C}; "
-                                f"T = {C} x {rate} = SGD {T}. Fictional {org} scheme, "
-                                f"multiplication only; deleting the chain makes T "
-                                f"unrecoverable (rho ~ 0)."),
+            "leaves": leaves, "formula": formula_chain(["A", "r1", "r2", "r3"]),
+            "entailment_note": (f"B = {A} x {f1} = {B}; C = {B} x {f2} = {C}; T = {C} x {rate} "
+                                f"= SGD {T}. Depth-3 chain; deleting any one stored root breaks "
+                                f"it (k*=1) but T's direct entailer C is unstored. Fictional "
+                                f"{org} => rho ~ 0."),
+        })
+    return out
+
+
+def author_or_and(subjects: list[str]) -> list[dict]:
+    """TEMPLATED ((A v B) ^ C) => T. A and B are REDUNDANT sources both stating the
+    quantity Q; C is the per-unit rate; T = Q x rate. Minimal co-deletion = {C}
+    (k*=1), while a confidence-ordered greedy that deletes the two OR-branches first
+    pays 2 -- the greedy-suboptimality this topology is built to expose."""
+    out: list[dict] = []
+    for i, subj in enumerate(subjects):
+        org = _FICT_ORGS[i % len(_FICT_ORGS)]
+        item, unit = _OR_AND_ITEMS[i % len(_OR_AND_ITEMS)]
+        Q = 12 + (i % 9)                       # 12..20 units
+        rate = 2 + (i % 5)                     # SGD 2..6 per unit
+        T = Q * rate
+        leaves = [
+            {"label": "A", "text": f"{org}'s order ledger shows {subj} bought {Q} {unit}s of {item}.",
+             "utterance": f"{org} ledger: {subj} bought {Q} {unit}s of {item}.",
+             "probe": [f"{Q} {unit}s", str(Q)]},
+            {"label": "B", "text": f"{subj}'s receipt from {org} lists {Q} {unit}s of {item}.",
+             "utterance": f"{subj}'s {org} receipt lists {Q} {unit}s of {item}.",
+             "probe": [f"{Q} {unit}s", str(Q)]},
+            {"label": "C", "text": f"{org} prices {item} at SGD {rate} per {unit}.",
+             "utterance": f"{org} charges SGD {rate} per {unit} of {item}.",
+             "probe": [f"SGD {rate}", str(rate)]},
+        ]
+        out.append({
+            "variant": "or_and", "subject": subj, "category": "financial", "basis": "stored_or_and",
+            "target_text": f"{subj}'s {item} purchase from {org} came to SGD {T}.",
+            "target_utterance": f"{subj}'s {item} purchase came to SGD {T}.",
+            "target_question": f"How much did {subj}'s {item} purchase from {org} come to?",
+            "delete_value": [str(T), f"SGD {T}"],
+            "probe_value": [str(T), f"SGD {T}", str(T - 2), str(T + 2)],
+            "leaves": leaves, "formula": formula_or_and(["A", "B"], "C"),
+            "entailment_note": (f"Q={Q} {unit}s (redundantly in A and B); rate=SGD {rate}/{unit} "
+                                f"(C); T=Q x rate=SGD {T}. Either A or B gives Q; C gives the rate. "
+                                f"Minimal co-deletion = delete C (k*=1); deleting both A and B "
+                                f"costs 2. Fictional {org} => rho ~ 0."),
+        })
+    return out
+
+
+def author_diamond(subjects: list[str]) -> list[dict]:
+    """TEMPLATED diamond: A=>C, B=>D, (C ^ D) => T (fictional, exact). Each stored
+    operand EMBEDS its own rule so A alone yields intermediate C and B alone yields D;
+    T = C + D. Minimal co-deletion = delete A or B (k*=1); C,D are unstored, so a
+    one-hop planner (looking only at T's direct entailers) would miss them."""
+    out: list[dict] = []
+    for i, subj in enumerate(subjects):
+        org, act, unit = _DIAMOND_SCHEMES[i % len(_DIAMOND_SCHEMES)]
+        a, m1 = 6 + (i % 6), 2 + (i % 4)       # C = a x m1 (morning)
+        b, m2 = 5 + (i % 5), 3 + (i % 3)       # D = b x m2 (evening)
+        C, D = a * m1, b * m2
+        T = C + D
+        leaves = [
+            {"label": "A", "text": (f"{subj} did {a} morning {act}s, and {org} awards {m1} "
+                                    f"{unit}-credits per {act}."),
+             "utterance": f"{subj} did {a} morning {act}s; {org} gives {m1} {unit}-credits each.",
+             "probe": [str(a), str(m1)]},
+            {"label": "B", "text": (f"{subj} did {b} evening {act}s, and {org} awards {m2} "
+                                    f"{unit}-credits per {act}."),
+             "utterance": f"{subj} did {b} evening {act}s; {org} gives {m2} {unit}-credits each.",
+             "probe": [str(b), str(m2)]},
+        ]
+        out.append({
+            "variant": "diamond", "subject": subj, "category": "preference", "basis": "stored_diamond",
+            "target_text": f"{subj}'s total {org} {unit}-credit balance is {T}.",
+            "target_utterance": f"{subj} has {T} {org} {unit}-credits in total.",
+            "target_question": f"What is {subj}'s total {org} {unit}-credit balance?",
+            "delete_value": [str(T)], "probe_value": [str(T), str(T - 1), str(T + 1)],
+            "leaves": leaves, "formula": formula_diamond("A", "B"),
+            "entailment_note": (f"A=>C={a}x{m1}={C} (morning); B=>D={b}x{m2}={D} (evening); "
+                                f"T=C+D={T}. Each operand embeds its own rule, so A alone gives C "
+                                f"and B alone gives D, but T needs both. Minimal co-deletion = "
+                                f"delete A or B (k*=1). C,D unstored. Fictional {org} => rho ~ 0."),
+        })
+    return out
+
+
+def author_threshold(subjects: list[str]) -> list[dict]:
+    """TEMPLATED (>= 2 of {A,B,C}) => T. Three linear relations in two unknowns (the
+    target spend T and a fictional auxiliary z=bonus tokens); ANY TWO of the three
+    solve for T exactly, any ONE is underdetermined. Minimal co-deletion = delete any
+    2 (k* = n-k+1 = 2) -- the only topology whose minimum hitting set exceeds one."""
+    out: list[dict] = []
+    for i, subj in enumerate(subjects):
+        org = _FICT_ORGS[i % len(_FICT_ORGS)]
+        T = 20 + (i % 15)                      # target spend 20..34
+        z = 3 + (i % 7)                        # fictional auxiliary 3..9
+        s1, s2, s3 = T + z, T + 2 * z, 2 * T + z
+        leaves = [
+            {"label": "A", "text": (f"At {org}, {subj}'s dollar-spend plus their bonus-token "
+                                    f"count equals {s1}."),
+             "utterance": f"{org}: {subj}'s spend + token-count = {s1}.", "probe": [str(s1)]},
+            {"label": "B", "text": (f"At {org}, {subj}'s dollar-spend plus twice their bonus-token "
+                                    f"count equals {s2}."),
+             "utterance": f"{org}: {subj}'s spend + 2x token-count = {s2}.", "probe": [str(s2)]},
+            {"label": "C", "text": (f"At {org}, twice {subj}'s dollar-spend plus their bonus-token "
+                                    f"count equals {s3}."),
+             "utterance": f"{org}: 2x {subj}'s spend + token-count = {s3}.", "probe": [str(s3)]},
+        ]
+        out.append({
+            "variant": "threshold", "subject": subj, "category": "financial", "basis": "stored_threshold",
+            "target_text": f"{subj}'s dollar-spend at {org} is SGD {T}.",
+            "target_utterance": f"{subj} spent SGD {T} at {org}.",
+            "target_question": f"What is {subj}'s dollar-spend at {org}?",
+            "delete_value": [str(T), f"SGD {T}"], "probe_value": [str(T), f"SGD {T}", str(T - 1), str(T + 1)],
+            "leaves": leaves, "formula": formula_threshold(["A", "B", "C"], 2),
+            "entailment_note": (f"Unknowns spend={T}, tokens={z} (fictional). A: spend+tokens={s1}; "
+                                f"B: spend+2*tokens={s2}; C: 2*spend+tokens={s3}. Any TWO solve "
+                                f"spend={T}; any one is underdetermined. Minimal co-deletion = "
+                                f"delete any 2 (k*=2)."),
         })
     return out
 
@@ -551,26 +776,47 @@ def rho_subjects(tier: str, n: int, used: set[str]) -> list[str]:
     return out
 
 
-def author_all(*, n_isolated_per_persona: int = 4, n_mh_bin1: int = 34,
-               n_mh_bin2: int = 30, n_rho_per_tier: int = 22,
-               n_bystanders: int = 44, n_ml_join: int = 12,
-               n_ml_chain: int = 12) -> dict:
+def author_all(*, n_isolated_per_persona: int = 8, n_isolated_templated: int = 200,
+               n_mh_bin1: int = 70, n_mh_bin2: int = 70, n_rho_per_tier: int = 85,
+               n_bystanders: int = 120, n_ml_join: int = 32,
+               n_ml_chain: int = 32, n_or_and: int = 32,
+               n_diamond: int = 32, n_threshold: int = 32) -> dict:
     """Author every set's candidates.  Returns a dict of candidate lists.
-    Counts bumped for the ~2x expansion. multilevel_join / multilevel_chain are
-    TEMPLATED (exact by construction), so their counts are produced verbatim."""
-    used: set[str] = set()
-    iso = author_isolated(isolated_assignments(n_isolated_per_persona))
+
+    Counts bumped for the ~3x expansion (targets ~250 per dataset after gating).
+    The LLM-authored sets (isolated / flat multi-hop bin1,bin2 / bystanders / rho)
+    over-produce because the gates discard candidates; the TEMPLATED structured sets
+    (join / chain / or_and / diamond / threshold) are exact by construction, so their
+    counts pass through verbatim. Each structured topology draws from a DIFFERENT slice
+    of the persona pool (staggered offsets) so the same person is not overused."""
+    # LLM-authored (natural variety) + TEMPLATED (guaranteed-distinct high-entropy) so
+    # the set can actually reach ~250 distinct values (gpt-4o-mini alone reuses values).
+    iso = (author_isolated(isolated_assignments(n_isolated_per_persona))
+           + author_isolated_templated(n_isolated_templated))
     mh1 = author_multihop("stored", multihop_subjects(n_mh_bin1))
     mh2 = author_multihop("stored+world", multihop_subjects(n_mh_bin2))
     byst = author_bystanders(bystander_subjects(n_bystanders))
-    ml_join = author_multilevel(multilevel_subjects(n_ml_join))
-    ml_chain = author_chain(multilevel_subjects(n_ml_chain, offset=n_ml_join))
+    # Templated structured topologies (uniform leaves+formula shape).
+    off = 0
+    ml_join = author_multilevel(multilevel_subjects(n_ml_join, offset=off)); off += n_ml_join
+    ml_chain = author_chain(multilevel_subjects(n_ml_chain, offset=off)); off += n_ml_chain
+    or_and = author_or_and(multilevel_subjects(n_or_and, offset=off)); off += n_or_and
+    diamond = author_diamond(multilevel_subjects(n_diamond, offset=off)); off += n_diamond
+    threshold = author_threshold(multilevel_subjects(n_threshold, offset=off))
+    # rho: cycle the subject pool per tier (staggered offset) so a subject may carry
+    # facts in DIFFERENT tiers/domains -- diversity + scale without needing ~250
+    # distinct names. build_rho keeps distinct (subject, tier).
     rho = []
-    for tier in ("low", "mid", "high"):
-        rho += author_rho(tier, rho_subjects(tier, n_rho_per_tier, used))
+    rho_pool = [p["name"] for p in RHO_SUBJECTS]
+    for ti, tier in enumerate(("low", "mid", "high")):
+        subs = [rho_pool[(ti * n_rho_per_tier + i) % len(rho_pool)]
+                for i in range(n_rho_per_tier)]
+        rho += author_rho(tier, subs)
     return {"isolated": iso, "multihop_bin1": mh1, "multihop_bin2": mh2,
             "bystanders": byst, "rho": rho,
-            "multilevel_join": ml_join, "multilevel_chain": ml_chain}
+            "multilevel_join": ml_join, "multilevel_chain": ml_chain,
+            "structured_or_and": or_and, "structured_diamond": diamond,
+            "structured_threshold": threshold}
 
 
 if __name__ == "__main__":

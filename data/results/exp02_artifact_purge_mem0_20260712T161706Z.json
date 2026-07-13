@@ -1,0 +1,2297 @@
+{
+  "experiment": "exp02_artifact_purge",
+  "timestamp_utc": "20260712T161706Z",
+  "user_id": "u_alice_aw_36be3bad",
+  "metrics": {
+    "residual_naive_rate": 0.9723320158102767,
+    "residual_naive_rate_ci95": [
+      0.944,
+      0.9865
+    ],
+    "residual_artifact_aware_rate": 0.0,
+    "residual_artifact_aware_rate_ci95": [
+      0.0,
+      0.015
+    ],
+    "mean_extra_artifacts_purged": 4.434782608695652
+  },
+  "rows": [
+    {
+      "fact_id": "F001",
+      "category": "personal_contact",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F002",
+      "category": "medical",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F003",
+      "category": "medical",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F004",
+      "category": "financial",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F005",
+      "category": "personal_contact",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F006",
+      "category": "preference",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F007",
+      "category": "location",
+      "value_rows_before": 2,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 1
+    },
+    {
+      "fact_id": "F008",
+      "category": "personal_contact",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F009",
+      "category": "medical",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F010",
+      "category": "financial",
+      "value_rows_before": 1,
+      "residual_before": 1.0,
+      "residual_naive": 0.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 0
+    },
+    {
+      "fact_id": "F011",
+      "category": "preference",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F012",
+      "category": "location",
+      "value_rows_before": 2,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 1
+    },
+    {
+      "fact_id": "F184",
+      "category": "personal_contact",
+      "value_rows_before": 2,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 1
+    },
+    {
+      "fact_id": "F185",
+      "category": "medical",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F186",
+      "category": "financial",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F187",
+      "category": "preference",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F188",
+      "category": "location",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F189",
+      "category": "education",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F190",
+      "category": "employment",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F191",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F192",
+      "category": "personal_contact",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F193",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F194",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F196",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F197",
+      "category": "education",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F198",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F199",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F200",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F201",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F202",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F203",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F204",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F205",
+      "category": "education",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F206",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F207",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F208",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F209",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F210",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F211",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F212",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F213",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F214",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F215",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F132",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F133",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F134",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F135",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F137",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F140",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F141",
+      "category": "education",
+      "value_rows_before": 0,
+      "residual_before": 0.0,
+      "residual_naive": 0.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 0
+    },
+    {
+      "fact_id": "F143",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F144",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F145",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F146",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F147",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F148",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F149",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F150",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F152",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F153",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F155",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F156",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F157",
+      "category": "education",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F158",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F160",
+      "category": "personal_contact",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F162",
+      "category": "financial",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F164",
+      "category": "location",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F166",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F168",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F169",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F170",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F171",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F172",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F173",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F174",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F176",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F177",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F178",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F179",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F180",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F181",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F182",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F183",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F216",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F217",
+      "category": "medical",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F219",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F220",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F221",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F222",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F225",
+      "category": "medical",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F226",
+      "category": "financial",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F227",
+      "category": "preference",
+      "value_rows_before": 0,
+      "residual_before": 0.0,
+      "residual_naive": 0.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 0
+    },
+    {
+      "fact_id": "F228",
+      "category": "location",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F232",
+      "category": "personal_contact",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F233",
+      "category": "medical",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F234",
+      "category": "financial",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F235",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F236",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F237",
+      "category": "education",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F238",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F241",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F243",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F245",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F247",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F249",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F251",
+      "category": "preference",
+      "value_rows_before": 0,
+      "residual_before": 0.0,
+      "residual_naive": 0.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 0
+    },
+    {
+      "fact_id": "F252",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F253",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F254",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F256",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F257",
+      "category": "medical",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F258",
+      "category": "financial",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F259",
+      "category": "preference",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F260",
+      "category": "location",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F261",
+      "category": "education",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F262",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F263",
+      "category": "device",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F265",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F267",
+      "category": "preference",
+      "value_rows_before": 0,
+      "residual_before": 0.0,
+      "residual_naive": 0.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 0
+    },
+    {
+      "fact_id": "F271",
+      "category": "device",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F272",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F275",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F276",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F284",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F287",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F288",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F289",
+      "category": "medical",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F291",
+      "category": "preference",
+      "value_rows_before": 2,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 1
+    },
+    {
+      "fact_id": "F293",
+      "category": "education",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F294",
+      "category": "employment",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F296",
+      "category": "personal_contact",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F297",
+      "category": "medical",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F299",
+      "category": "preference",
+      "value_rows_before": 0,
+      "residual_before": 0.0,
+      "residual_naive": 0.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 0
+    },
+    {
+      "fact_id": "F300",
+      "category": "location",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F302",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F309",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F310",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F311",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F314",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F316",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F318",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F323",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F324",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F328",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F329",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F330",
+      "category": "financial",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F331",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F333",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F334",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F337",
+      "category": "medical",
+      "value_rows_before": 15,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F339",
+      "category": "preference",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F341",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F345",
+      "category": "medical",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F347",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F348",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F352",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F353",
+      "category": "medical",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F355",
+      "category": "preference",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F356",
+      "category": "location",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F357",
+      "category": "education",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F358",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F360",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F362",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F363",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F365",
+      "category": "education",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F366",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F368",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F369",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F370",
+      "category": "financial",
+      "value_rows_before": 2,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 1
+    },
+    {
+      "fact_id": "F371",
+      "category": "preference",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F372",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F373",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F374",
+      "category": "employment",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F377",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F378",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F379",
+      "category": "preference",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F382",
+      "category": "employment",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F388",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F389",
+      "category": "education",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F390",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F398",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F401",
+      "category": "medical",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F404",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F406",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F408",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F409",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F410",
+      "category": "financial",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F411",
+      "category": "financial",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F412",
+      "category": "location",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F413",
+      "category": "device",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F414",
+      "category": "personal_contact",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F415",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F416",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F417",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F418",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F419",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F420",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F421",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F422",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F423",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F424",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F425",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F426",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F427",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F428",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F429",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F430",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F431",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F432",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F433",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F434",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F435",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F436",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F437",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F438",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F439",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F440",
+      "category": "personal_contact",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F441",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F442",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F444",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F445",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F446",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F447",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F448",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F449",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F450",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F451",
+      "category": "financial",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F452",
+      "category": "location",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F453",
+      "category": "device",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F454",
+      "category": "personal_contact",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F455",
+      "category": "employment",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 4
+    },
+    {
+      "fact_id": "F456",
+      "category": "personal_contact",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F457",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F458",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F459",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F460",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F461",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F462",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F463",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F464",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F465",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F466",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 6
+    },
+    {
+      "fact_id": "F467",
+      "category": "financial",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F468",
+      "category": "location",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F469",
+      "category": "device",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F470",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F471",
+      "category": "employment",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F472",
+      "category": "personal_contact",
+      "value_rows_before": 6,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F473",
+      "category": "device",
+      "value_rows_before": 5,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 5
+    },
+    {
+      "fact_id": "F474",
+      "category": "financial",
+      "value_rows_before": 4,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 3
+    },
+    {
+      "fact_id": "F475",
+      "category": "financial",
+      "value_rows_before": 3,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 2
+    },
+    {
+      "fact_id": "F476",
+      "category": "location",
+      "value_rows_before": 2,
+      "residual_before": 1.0,
+      "residual_naive": 1.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 1
+    },
+    {
+      "fact_id": "F477",
+      "category": "device",
+      "value_rows_before": 1,
+      "residual_before": 1.0,
+      "residual_naive": 0.0,
+      "residual_artifact_aware": 0.0,
+      "extra_artifacts_purged": 0
+    }
+  ]
+}

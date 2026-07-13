@@ -33,11 +33,12 @@ from probes.base_probe import normalize_values  # noqa: E402
 from probes.exact_match import ExactMatchProbe  # noqa: E402
 from probes.parametric_probe import ParametricProbe  # noqa: E402
 
-# target fact id -> value-free attribute to ask the agent to forget.
-# Scaled to ~10 sensitive-PII targets (the paper's agent-mediated hook); the
-# attribute names the field WITHOUT revealing its value or hinting at the
-# core-vs-archival surface, so the vague RTBF phrasing stays realistic.
-TARGETS = {
+# The agent-mediated deletion hook targets SENSITIVE-PII isolated facts. Each is named
+# to the agent by a VALUE-FREE attribute (the field only -- never the value, never a
+# hint about the core-vs-archival surface), so the vague RTBF phrasing stays realistic.
+# Canonical paper targets are kept first for continuity; the set is then auto-scaled to
+# --n from the enlarged isolated set (see select_targets).
+CANONICAL = {
     "F001": "the user's emergency contact number",
     "F008": "Bob Tan's car licence plate",
     "F003": "Carol Lim's blood type",
@@ -49,6 +50,26 @@ TARGETS = {
     "F012": "Carol Lim's home wifi password",
     "F102": "Hui Min Lim's bank account number",
 }
+_SENSITIVE_CATS = ("personal_contact", "medical", "financial", "location", "device")
+_CATEGORY_ATTR = {
+    "personal_contact": "contact number", "medical": "medical information",
+    "financial": "financial account details", "location": "home address",
+    "device": "device details",
+}
+
+
+def select_targets(iso: dict, n: int) -> dict:
+    """Value-free (id -> attribute) map of ~n sensitive-PII targets: canonical paper
+    facts first, then more sensitive-category isolated facts. Each uid stores exactly
+    one fact, so a vague field reference is unambiguous."""
+    out = {fid: a for fid, a in CANONICAL.items() if fid in iso}
+    for fid, f in iso.items():
+        if len(out) >= n:
+            break
+        if fid in out or f.get("category") not in _SENSITIVE_CATS:
+            continue
+        out[fid] = f"{f['subject']}'s {_CATEGORY_ATTR.get(f['category'], 'personal information')}"
+    return out
 
 
 def layers_with_value(probe_result) -> set[str]:
@@ -66,6 +87,7 @@ def layers_with_value(probe_result) -> set[str]:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Letta residual + agent-deletion faithfulness")
+    ap.add_argument("--n", type=int, default=30, help="sensitive-PII targets (enlarged from 10)")
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()
@@ -73,6 +95,8 @@ def main() -> None:
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
 
     iso = {f["id"]: f for f in load_facts(config.FACTS_DIR / "isolated_facts.json")}
+    TARGETS = select_targets(iso, args.n)
+    print(f"agent-mediated deletion on {len(TARGETS)} sensitive-PII targets")
     from systems.letta_adapter import LettaAdapter
     adapter = LettaAdapter()
     exact, param = ExactMatchProbe(), ParametricProbe()

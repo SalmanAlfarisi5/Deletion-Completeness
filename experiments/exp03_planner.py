@@ -42,8 +42,10 @@ def main() -> None:
     ap.add_argument("--bystanders", type=int, default=4)
     ap.add_argument("--entailment-model", default=config.SECOND_MODEL,
                     help="entailment judge — default gpt-4o (0%% partial-operand false-fire); reproduces the paper")
-    ap.add_argument("--heuristic", choices=["threshold", "depth_first"], default="threshold",
-                    help="threshold = minimal (recommended); depth_first = aggressive comparator")
+    ap.add_argument("--heuristic", choices=["exact", "threshold", "depth_first"], default="exact",
+                    help="exact = provably-minimal min-hitting-set over the entailment DAG "
+                         "(recommended, robust on all topologies); threshold = LLM-confidence "
+                         "greedy comparator; depth_first = aggressive one-shot comparator")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--verbose", "-v", action="store_true")
@@ -132,7 +134,7 @@ def main() -> None:
          "metrics": metrics, "rows": rows, "certificates": certs}, indent=2, default=str))
 
     print("\n" + "=" * 60)
-    print("  EXP03 — PLANNER (threshold heuristic)")
+    print(f"  EXP03 — PLANNER ({args.heuristic} heuristic)")
     print("=" * 60)
     print(f"  Achieved completeness        : {metrics['completeness_rate']:.0%} of targets "
           f"[{comp_ci[0]:.0%}, {comp_ci[1]:.0%}]")

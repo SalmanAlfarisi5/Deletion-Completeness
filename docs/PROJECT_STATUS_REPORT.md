@@ -1,10 +1,16 @@
 # Deletion-Completeness — Project Status Report
 
+> **Synced to the 3× wave (2026-07-13).** All numbers below reflect the current verified
+> run; the authoritative source is **`docs/RESULTS_3X_WAVE.md`** (datasets 253/298/963/250;
+> 6 topologies; exact DAG planner + exp12; 4-model judge; residual 97.2%→0%; planner exact
+> k=1.04; rho 84/250 uncertifiable; MIA .66/.66/.51; Graphiti 83% / Letta 0%-faithful).
+> Verified by `evaluation/verify_wave.py` → ALL CHECKS PASS.
+
 **Project:** Decomposing Recoverability — Minimal Co-Deletion for the Right to be Forgotten in LLM Agent Memory
 **Author:** Muhammad Salman Al Farisi (NUS School of Computing) · Advisor: Tan Tian Huat
 **Target venue:** AAAI 2027 (abstract 2026-07-21, full paper 2026-07-28)
-**Report date:** 2026-07-08 (updated to the 84-fact wave)
-**Scope of this report:** full project state after the dataset scale-up to the **84-fact wave** (isolated 84 / multi-hop 92 / context 299 / ρ-gradient 81), full experiment re-run, and paper sync.
+**Report date:** 2026-07-13 (updated to the 3× wave)
+**Scope of this report:** full project state after the 3× dataset scale-up (isolated 253 / multi-hop 298 / context 963 / ρ-gradient 250), full experiment re-run, and paper sync.
 
 ---
 
@@ -21,8 +27,8 @@ This session took the project from **small-n point estimates** to **statisticall
 ## 2. Core contributions (locked framing)
 
 1. **A formal, adversary-relative deletion-completeness criterion** for agent memory, strictly stronger than dependency-bounded database erasure (P2E2), decomposing recoverability into residual / re-derivation / parametric channels.
-2. **A minimal co-deletion planner** for the resulting NP-hard problem (reduction from Minimum Hitting Set; Vertex Cover = the 2-operand regime), reaching completeness at **mean collateral k = 0.90** with **0 spurious deletions**, plus a machine-readable certificate separating what deletion achieved from what it cannot.
-3. **A *measured* parametric floor ρ and its limit result:** under the worst modeled adversary, **30/81 facts cannot be certified erased** even at zero residual survival — and the count is threshold-dependent, so the certification threshold τ is a deliberate **policy dial**.
+2. **A minimal co-deletion planner** for the resulting NP-hard problem (reduction from Minimum Hitting Set; Vertex Cover = the 2-operand regime), reaching completeness at **mean collateral k = 1.04** with **0 spurious deletions**, plus a machine-readable certificate separating what deletion achieved from what it cannot.
+3. **A *measured* parametric floor ρ and its limit result:** under the worst modeled adversary, **84/250 facts cannot be certified erased** even at zero residual survival — and the count is threshold-dependent, so the certification threshold τ is a deliberate **policy dial**.
 4. **Evidence of generality:** the same probe/planner/certificate stack, run on three memory architectures (Mem0 dedup pipeline, Graphiti bi-temporal KG, Letta paging agent), exposes residual survival in all three through *different by-design mechanisms* — including an agent-loop failure prior audits bypass.
 
 **Claims we deliberately do NOT make:** first to evaluate these systems (ForgetEval already benchmarks all three); the parametric/memory split as novel (Agentic Unlearning's "backflow"); the agent-loop finding as a standalone contribution (it is the sharpest *instance* of generality, not the headline).
@@ -69,39 +75,40 @@ Both F and G hit the **same failure mode**: a long job was backgrounded and the 
 
 All CIs are 95%. Computed via `evaluation/stats.py` (Wilson for proportions, bootstrap for means), re-verified from `data/results/*.json`.
 
-| Experiment | Old | New | n |
+| Experiment | 84-fact wave | 3× wave (current) | n |
 |-----------|-----|-----|---|
-| **exp01** naive residual (Mem0) | 75% | **96.4%** [90.0, 98.8] | 84 |
-| **exp02** naive → aware residual | 83% → 0% | **96.4%** [90.0, 98.8] → **0%** [0, 4.4] | 84 |
-| **exp03** planner completeness | 100% | **100%** [96, 100] | 92 |
-| **exp03** mean collateral *k* | 1.17 | **0.90** [0.82, 0.99] | 92 |
-| **exp03** spurious deletions | 0 | **0** | 92 |
-| **exp03** depth-first comparator | k=5.5, 22 spurious | **k=6.05** [5.87, 6.24], **342 spurious** | 92 |
-| **exp04** bin1 leak (stored) | 100% (n=1) | **94–100%** (4 reasoners) | 34 |
-| **exp04** bin2 leak (stored+world) | 80% (n=5) | **56/59/68/74%** (mini/4o/Sonnet5/GPT-5.5) | 34 |
-| **exp04** after co-delete | 0% | **0%** [0, 0.10] | 34 |
-| **exp07** certifiable (ρ≤τ) | 6/15 | **51/81 = 63%** [52.1, 72.7] | 81 |
-| **exp07** uncertifiable (worst-adv) | 9/15 (60%) | **30/81 (37%)** | 81 |
-| **exp08** intact MIA | AUC .72, p=.002 | **AUC .67, p=.001** | 84+168 |
-| **exp08** naive MIA | AUC .61, p=.065 (ns) | **AUC .67** [.62, .72], **p=.001 (SIGNIFICANT)** | 84+168 |
-| **exp08** aware MIA | AUC .51 (ns) | **AUC .52** [.498, .552], p=.02 (marginal) | 84+168 |
-| **exp09** Graphiti edge / summary residue | 33% / 67% | **30% / 70%** | 10 |
-| **exp10** Letta faithful / archival residue | 0% / 100% | **0% / 100% / 0% core** | 10 |
+| **exp01** naive residual (Mem0) | 96.4% [90.0, 98.8] | **97.2%** [94.4, 98.7] | 253 |
+| **exp02** naive → aware residual | 96.4% → 0% | **97.2%** [94.4, 98.7] → **0%** [0, 1.5] | 253 |
+| **exp03** planner completeness | 100% [96,100] | **100%** [96, 100] | 298 |
+| **exp03** mean collateral *k* | 0.90 [0.82, 0.99] | **1.04** [0.99, 1.09] | 298 |
+| **exp03** spurious deletions | 0 | **0** | 298 |
+| **exp03** depth-first comparator | k=6.05, 342 spurious | **k=6.18, 1116 spurious** | 298 |
+| **exp03** exact vs optimum k* (exp12) | — | **gap≈0 (provably minimal)** | 298 |
+| **exp04** bin1 leak (stored) | 94–100% (4 reasoners) | **97–100%** (4 reasoners) | 74 |
+| **exp04** bin2 leak (stored+world) | 56/59/68/74% | **62/72/68/66%** (mini/4o/Sonnet5/GPT-5.5) | 74 |
+| **exp04** after co-delete | 0% | **0%** [0, 0.05] | 74 |
+| **exp07** certifiable (ρ≤τ) | 51/81 = 63% | **166/250 = 66%** [60.3, 72.0] | 250 |
+| **exp07** uncertifiable (worst-adv) | 30/81 (37%) | **84/250 (34%)** | 250 |
+| **exp08** intact MIA | AUC .67, p=.001 | **AUC .66** [.637,.688], p=.001 | 253+759 |
+| **exp08** naive MIA | AUC .67, p=.001 | **AUC .66** [.637, .687], **p=.001 (SIGNIFICANT)** | 253+759 |
+| **exp08** aware MIA | AUC .52 [.498,.552], p=.02 | **AUC .51** [.498, .523], p=.04 (marginal) | 253+759 |
+| **exp09** Graphiti edge / summary residue | 30% / 70% | **20% / 83%** | 30 |
+| **exp10** Letta faithful / archival / core residue | 0% / 100% / 0% | **0% / 100% / 13% core** | 30 |
 
-**Not re-run:** only the Mem0 duplication factorial (`exp05`) — the paper carries its prior 24–42% row-inflation values. `exp11` (Letta re-derivation) **was** re-run on the enlarged data with the four-reasoner panel: bin1 100%, bin2 74–78% → 0% after co-delete, faithful direct co-delete 100%, bystanders intact 100%.
+**All experiments re-run on the 3× data.** The Mem0 duplication factorial (`exp05`) was re-run: **80–82%** duplication incidence in all four cells, row-inflation **×1.75–1.82** (both byte-identical and paraphrase copies present). `exp11` (Letta re-derivation) was re-run on the enlarged data with the four-reasoner panel: bin1 96–100%, bin2 59/65/59/65% → 0% after co-delete, faithful direct co-delete 100%, bystanders intact 100%.
 
 ---
 
 ## 5. The two reframes (ratified and locked)
 
 ### A — ρ floor: bimodality died, gradient + policy-dial survives
-At n=15 the worst-adversary ρ was *sharply bimodal* (`{0 ×6, ≥0.5 ×9}`, nothing between), which made "9/15 uncertifiable" τ-invariant. **This did not replicate at n=81:** the split is **51 at ρ≤τ / 12 in an intermediate band / 18 at ρ≥0.5** (`is_bimodal=False`), and **19/81** facts measured a different tier than authored. Consequences, applied to the paper:
+At n=15 the worst-adversary ρ was *sharply bimodal* (`{0 ×6, ≥0.5 ×9}`, nothing between), which made "9/15 uncertifiable" τ-invariant. **This did not replicate at scale (n=250):** the split is **166 at ρ≤τ / 42 in an intermediate band / 42 at ρ≥0.5** (`is_bimodal=False`), and **74/250** facts measured a different tier than authored. Consequences, applied to the paper:
 - Every "bimodal" / "τ-invariant" / "cherry-pick" line **deleted**.
 - Reframed positively as a **measured gradient of parametric recoverability**, with τ a **deliberate policy dial** — real facts sit on either side of wherever the auditor sets it.
-- The **limit result survives** (ρ≥τ ⇒ no deletion certifies erasure); only the bimodality/invariance gloss died. Uncertifiable fraction moved 60% → **37%**.
+- The **limit result survives** (ρ≥τ ⇒ no deletion certifies erasure); only the bimodality/invariance gloss died. Uncertifiable fraction moved 60% → **34%** (84/250).
 
 ### B — MIA: borderline flipped to significant
-At the powered sample (84 members + 168 matched twins), naive single-record deletion now leaves a **statistically significant** membership signal (AUC 0.67, p=.001, CI excludes 0.5), while **artifact-aware deletion drives the AUC to 0.52** (CI [0.498, 0.552] includes 0.5, but the label-permutation test is marginally significant, p=.02 — it attenuates the signal toward chance without provably eliminating it). The old §6 hedge ("not demonstrated to leak / borderline p=.065") is obsolete. MIA is treated as a **supporting result, not a 4th pillar** — it stays out of the abstract's contribution list and remains in §6 as the "retracted → powered → significant" credibility arc.
+At the powered sample (253 members + 759 matched twins), naive single-record deletion now leaves a **statistically significant** membership signal (AUC 0.66, p=.001, CI excludes 0.5), while **artifact-aware deletion drives the AUC to 0.51** (CI [0.498, 0.523] includes 0.5, but the label-permutation test is marginally significant, p=.04 — it attenuates the signal toward chance without provably eliminating it). The old §6 hedge ("not demonstrated to leak / borderline p=.065") is obsolete. MIA is treated as a **supporting result, not a 4th pillar** — it stays out of the abstract's contribution list and remains in §6 as the "retracted → powered → significant" credibility arc.
 
 ---
 
@@ -156,8 +163,8 @@ The local Chroma vector store and `llm_cache.json` are intentionally untracked (
 - **Environment:** project venv at `/home/salman/Desktop/venv/myenv` (Python 3.12.3); pinned deps in `requirements.txt` + full lock in `requirements.lock`. `make test` runs the 46 unit tests.
 - **Models:** the adversary panel is four reasoners — `gpt-4o-mini-2024-07-18` (also the recovery judge), `gpt-4o-2024-08-06` (the entailment judge), Claude Sonnet 5, and GPT-5.5 — with each certificate taking the worst; local `all-MiniLM-L6-v2` embeddings on GPU. τ = 0.10.
 - **Local services** (start only for cross-system exp09/exp10; all torn down at session end): Postgres (`~/pg-env`, :5432), Letta server (:8283), Neo4j (`~/neo4j-stack`, :7687, user `neo4j`). Start commands are in the project memory.
-- **Load-bearing gotchas:** Mem0 2.0.7 uses `filters={"user_id":…}` and returns `{"results":[…]}`; Mem0 silently duplicates facts at store scale (drives the residual numbers); `infer=True` rewrites/merges facts (exp04 uses `infer=False`); recovery scored by a validated LLM judge (0 false-accepts on n=8 gold negatives → lower-bound framing, Wilson upper ≈0.32); the entailment judge must be `gpt-4o` (gpt-4o-mini false-fires on 41.7% of insufficient partial operands, inflating collateral k).
-- **Worst-adversary rule:** certificates certify erasure only under `ρ = max over modeled reasoners < τ`; this is why **30/81** (more than any single reasoner would flag alone) are uncertifiable.
+- **Load-bearing gotchas:** Mem0 2.0.7 uses `filters={"user_id":…}` and returns `{"results":[…]}`; Mem0 silently duplicates facts at store scale (drives the residual numbers); `infer=True` rewrites/merges facts (exp04 uses `infer=False`); recovery scored by a validated LLM judge (near-zero false-accepts on n=229 gold, .0072 for gpt-4o-mini/gpt-4o and 0 for Sonnet5/GPT-5.5 → lower-bound framing); the entailment judge is `gpt-4o` — the lowest-false-fire *reproducible dated snapshot* (multi-hop miss-rate = 0 for all four models; near-miss false-fire 45% gpt-4o vs 76% gpt-4o-mini; Sonnet 5's 3.4% is best overall but a rolling alias). Because the planner co-deletes by the known entailment DAG, judge false-fire never inflates collateral k.
+- **Worst-adversary rule:** certificates certify erasure only under `ρ = max over modeled reasoners < τ`; this is why **84/250** (more than any single reasoner would flag alone) are uncertifiable.
 
 ---
 

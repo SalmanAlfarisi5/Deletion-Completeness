@@ -40,17 +40,18 @@ caveat / what it does *not* say.
 
 ### C2 — Naive deletion is residually incomplete because the store silently duplicates *(Mem0)*
 - **Support:** exp01, exp02.
-- **H:** naive single-record delete leaves the value in **96.4%** [Wilson 90.0,
-  98.8] of isolated PII targets (81/84, n=84, exp01); residual **96.4%**
-  [90.0, 98.8] (naive) **→ 0%** [0, 4.4] (artifact-aware), n=84 (exp02).
+- **H:** naive single-record delete leaves the value in **97.2%** [Wilson 94.4,
+  98.7] of isolated PII targets (n=253, exp01); residual **97.2%**
+  [94.4, 98.7] (naive) **→ 0%** [0, 1.5] (artifact-aware), n=253 (exp02).
   Isolated facts carry globally-distinct probe values (cross-fact uniqueness gate,
   now auto-enforced by `dedup_isolated`), so exp02's naive arm is not
-  self-contaminated; at the enlarged **n=84** the two naive arms **coincide at
-  96.4%** (two independent stochastic-dedup draws).
+  self-contaminated; at the enlarged **n=253** the two naive arms **coincide at
+  97.2%** (two independent stochastic-dedup draws).
 - **Ctrl:** exp05 **2×2 factorial** (embedder MiniLM/OpenAI × cadence 0 s/1.5 s):
-  value duplication in **all four** cells, **paraphrase-variant duplicates ≥
-  byte-identical in every cell**, and **76–78%** duplication incidence over
-  corpus-unique facts → a **semantic-dedup design limitation**, not our embedder
+  value duplication in **all four** cells, with **both byte-identical and
+  paraphrase-variant duplicates present in every cell** (mixed dominance), and
+  **80–82%** duplication incidence over corpus-unique facts (row-inflation
+  ×1.75–1.82) → a **semantic-dedup design limitation**, not our embedder
   and not an injection-timing race. Corroborated by Mem0 issues (#4896 hash-only
   dedup, #4573, #687).
 - **Scope:** mechanism is Mem0-specific. Generalization is carried by the *other
@@ -58,14 +59,14 @@ caveat / what it does *not* say.
 
 ### C3 — At residual = 0, facts still re-derive from surviving operands; faithful co-deletion closes the channel
 - **Support:** exp04 (Mem0), **exp11 (Letta)**.
-- **H (Mem0):** leak **bin1 .94–1.0** (stored-alone, n=34) / **bin2 .56/.59/.68/.74**
-  (stored+world, n=34) across the **4-reasoner adversary set** (gpt-4o-mini / gpt-4o /
-  Sonnet 5 / GPT-5.5) → **0% after co-delete** [CI 0, .10]; ρ = 0%. **Frontier
-  reasoners re-derive MORE** (bin2 .68/.74 vs .56/.59 backbone) — the worst-adversary
-  case the certificate is built for. **NEW multi-level set** (join depth-2 + chain
+- **H (Mem0):** leak **bin1 .97–1.0** (stored-alone, n=74) / **bin2 .62/.72/.68/.66**
+  (stored+world, n=74) across the **4-reasoner adversary set** (gpt-4o-mini / gpt-4o /
+  Sonnet 5 / GPT-5.5) → **0% after co-delete** [CI 0, .05]; ρ = 0%. **The worst
+  re-deriver is gpt-4o (.72), not the frontier models** (Sonnet 5 .68, GPT-5.5 .66) —
+  the certificate is built for whichever reasoner is worst per fact. **NEW multi-level set** (join depth-2 + chain
   depth-3, n=12 each): **1.0 re-derivation → 0% after co-delete**, ρ=0 — the target's
   direct entailers are themselves unstored, so co-deletion must recurse to the stored
-  roots. **Ports to Letta (exp11):** bin1 100%, bin2 **.74–.78** (4 reasoners) → 0%
+  roots. **Ports to Letta (exp11):** bin1 100%, bin2 **.59–.65** (4 reasoners, n=40) → 0%
   after co-delete; faithful direct `passages.delete` = 100%, bystanders intact = 100%.
 - **Ctrl:** **operands-only** control — target value never stored, so residual = 0
   by construction (verified with the **narrow `delete_value`**, not the broad
@@ -79,31 +80,33 @@ caveat / what it does *not* say.
   (CHS → Bishan: model won't make the leap). Recovery scored by a validated judge
   with **0% false-accept** (§ V1) ⇒ all leak rates are conservative lower bounds.
 
-### C4 — A greedy co-deletion planner reaches completeness with minimal collateral, and emits a certificate
-- **Support:** exp03.
+### C4 — An exact minimal co-deletion planner reaches completeness with minimal collateral, and emits a certificate
+- **Support:** exp03, exp12.
 - **H:** **100% completeness [Wilson .96, 1.0], 0 spurious bystander deletions,
-  mean collateral k = 0.902 [bootstrap .82, .99]** (operands spared by minimality
-  = **148**) — on the **full n=92** multi-hop set (incl. 24 multi-level targets),
-  gpt-4o entailment judge. Depth-first comparator: k=6.05 / 342 spurious. (Held from
-  k=0.912 at n=34.)
-- **Ctrl:** bystanders must be **spared** (0 spurious is the selectivity test);
-  result is **robust to entailment-judge choice** — re-run with gpt-4o entailment
-  judge leaves k / spurious / completeness unchanged; backed by entailment
-  near-miss validation (§ V2: gpt-4o **0%** vs gpt-4o-mini **41.7%** false-fire on
-  partial operands → using gpt-4o is what keeps k from inflating).
-- **Scope:** greedy heuristic for the NP-hard Opt-P2E2; "minimal" = co-deletes a
-  *sufficient subset*, not a proven optimum.
+  exact mean collateral k = 1.04** (min-hitting-set over the entailment DAG, measured
+  optimality gap ≈0 vs the ground-truth optimum k*; greedy threshold k=1.10 / 0 spurious;
+  depth-first k=6.18 / 1116 spurious, exp12) — on the **full n=298** multi-hop set (incl.
+  the 5 hard topologies), gpt-4o entailment judge; **466 operands spared** by minimality.
+- **Ctrl:** bystanders must be **spared** (0 spurious is the selectivity test); the
+  method is **structurally decoupled from the entailment judge** — the exact planner
+  co-deletes over the *known* entailment DAG (recursing to stored roots), so a judge's
+  false-fire cannot inflate k. The judge only orders the *greedy comparators*; V2 shows
+  every model has a **0% multi-hop miss-rate** (never loses a true entailer) and gpt-4o
+  is the lowest-false-fire reproducible snapshot used for those comparators.
+- **Scope:** the dependency graphs are small, so Opt-P2E2 (NP-hard in general) is solved
+  **exactly**; "minimal" = a proven minimum hitting set (gap ≈0 vs k* per exp12), not just
+  a sufficient subset.
 
 ### C5 — The parametric floor ρ is *measured* on a gradient; when ρ > τ, completeness cannot be certified even at residual = 0 *(the limit result)*
 - **Support:** exp07.
 - **H:** measured worst-adversary ρ (sup over **4 reasoners**: gpt-4o-mini, gpt-4o,
-  Sonnet 5, GPT-5.5) on **n=81** facts: **51 certifiable (ρ≤τ) / 12 contested-middle
-  (τ<ρ<0.5) / 18 hard-floor (ρ≥0.5)** → **30 of 81 NOT certified-complete** (ρ>τ) at
-  τ=0.1 despite residual=0 [certifiable 51/81=.63, Wilson .52–.73]. Per-reasoner
-  high-tier ρ: mini 0.41, gpt-4o 0.73, Sonnet 5 0.57, GPT-5.5 0.36. ⚠ The floor is a
-  **τ-dependent GRADIENT, not bimodal** (12 facts in the contested middle). NEW
-  NUANCE (frontier safety filters): GPT-5.5 and Sonnet 5 **refuse sensitive
-  high-tier ρ facts** (NSF→sex, licence→age; 20 refusal flags, several 8/8) → their
+  Sonnet 5, GPT-5.5) on **n=250** facts: **166 certifiable (ρ≤τ) / 42 contested-middle
+  (τ<ρ<0.5) / 42 hard-floor (ρ≥0.5)** → **84 of 250 NOT certified-complete** (ρ>τ) at
+  τ=0.1 despite residual=0 [certifiable 166/250=.66, Wilson .60–.72]. ⚠ The floor is a
+  **τ-dependent GRADIENT, not bimodal** (42 facts in the contested middle; 74/250
+  authored-tier vs measured-band mismatch). NUANCE (frontier safety filters): GPT-5.5
+  and Sonnet 5 **refuse sensitive high-tier ρ facts** (NSF→sex, licence→age; **29
+  refusal flags, all high-tier — verified no rate-limit contamination**) → their
   measured ρ there is a refusal-based **lower bound**, so the worst-adversary
   high-tier ρ is set by gpt-4o (which refuses less).
 - **Ctrl:** ρ probe sees **world-context only** (never stored facts) → co-deletion
@@ -119,11 +122,11 @@ caveat / what it does *not* say.
 
 ### C6 — Artifact-aware deletion restores membership-indistinguishability; at powered n≈60 naive's residual signal IS significant
 - **Support:** exp08.
-- **H:** retrieval-score MIA AUC (n=84 members, 2 twins/fact = 168 controls) —
-  **intact 0.67** (p=.001, CI [.626,.724], excludes .5) · **naive 0.666** (p=.001,
-  CI [.619,.721], **excludes .5 → SIGNIFICANT**) · **artifact-aware 0.522**
-  (p=.02, CI [.498,.552], includes .5 → indistinguishable).
-- **Ctrl:** **n = 84 members + 168 matched near-twins (2/fact)**, bootstrap 95% CI +
+- **H:** retrieval-score MIA AUC (n=253 members, 3 twins/fact = 759 controls) —
+  **intact 0.66** (p=.001, CI [.637,.688], excludes .5) · **naive 0.66** (p=.001,
+  CI [.637,.687], **excludes .5 → SIGNIFICANT**) · **artifact-aware 0.51**
+  (p=.04, CI [.498,.523], includes .5 → indistinguishable).
+- **Ctrl:** **n = 253 members + 759 matched near-twins (3/fact)**, bootstrap 95% CI +
   label-permutation p, **continuous** retrieval scores (no thresholding). The
   **intact arm is the power sanity** (p=.001 shows the test can detect a real
   signal); the **aware-arm CI includes .5** → indistinguishability restored.
@@ -155,20 +158,25 @@ caveat / what it does *not* say.
 
 ### Validation claims (load-bearing for everything above)
 
-- **V1 — Recovery judge makes all leak rates lower bounds.** exp `judge`:
-  n = 17, **false-accept 0.0** (tp 7 / fp 0 / tn 8 / fn 2), κ = 0.767 vs gold,
-  false-reject 0.222 (conservative — it *rejects* "≈SGD 3,142" for 3,200 and
-  "she is vegetarian"). **Ctrl/use:** 0 false-accepts ⇒ every reported leak/recovery
-  rate is a **conservative lower bound**.
-- **V2 — Use gpt-4o as the entailment judge.** Validated on 426 pairs incl. 242
-  near-miss negatives (12 curated + 230 single operands). Curated false-fire:
-  gpt-4o **0%** vs gpt-4o-mini **41.7%**; operands: gpt-4o 39.1% / gpt-4o-mini 62.2%.
-  Frontier cross-check (`judge_validation_20260705T102620Z.json`, `--frontier`):
-  **gpt-5.5** is the most accurate judge (85.2% vs 77.7%/64.6%), κ(gpt-5.5,gpt-4o)=0.66,
-  but still false-fires on **25%** of the curated near-misses (vs gpt-4o 0%).
-  **Ctrl/use:** the planner (C4) uses gpt-4o so collateral k is not inflated; even a
-  frontier judge over-fires on the adversarial boundary, so gpt-4o's 0% curated
-  false-fire (not model vintage) is decisive.
+- **V1 — Recovery judge makes leak rates near-lower-bounds.** exp `judge`, validated
+  across **all 4 models on n=229 gold** (90 pos / 139 neg): false-accept
+  **gpt-4o-mini .0072 (1/139)**, gpt-4o .0072 (1/139), **Sonnet 5 0**, GPT-5.5 0;
+  recall .72 / .91 / .98 / .97; κ vs gold .75 / .92 / .98 / .97. Production judge =
+  the pinned **gpt-4o-mini** backbone (Sonnet 5's 0 false-accept reported as
+  corroboration, but it's a rolling alias). **Ctrl/use:** the ≤0.72% false-accept
+  means every reported leak/recovery rate is a **lower bound to within that margin**
+  (95% Wilson upper ≈ .04) — not literally 0, stated honestly in the paper's Limitations.
+- **V2 — gpt-4o is the entailment judge (reproducible snapshot).** Validated on
+  **n=1370 pairs** across all 4 models. **Safety-critical result: multi-hop miss-rate
+  = 0 for ALL four models** (recall_multihop = 1.0; per-topology recall 100% on
+  chain/join/or_and/diamond/threshold) — no model ever *loses* a true entailer. On
+  near-miss negatives (partial operands) false-fire diverges: **gpt-4o-mini 76% /
+  gpt-4o 45% / GPT-5.5 30% / Sonnet 5 3.4%**. Production judge = **gpt-4o** (lowest
+  false-fire among *reproducible dated snapshots*; Sonnet 5 is best overall but a
+  rolling alias). **Ctrl/use:** the exact planner co-deletes over the *known* DAG, not
+  this judge, so its 45% near-miss false-fire never inflates k; the judge only orders
+  the greedy comparators. Inter-model κ (entailment): .26–.63, i.e. the near-miss
+  boundary is genuinely hard, which is exactly why the method does not rely on it.
 
 ---
 
@@ -176,18 +184,18 @@ caveat / what it does *not* say.
 
 | exp | system | measures | headline | control that backs it |
 |---|---|---|---|---|
-| **01** | Mem0 | naive-delete residual | **96.4%** [90.0,98.8] residual (81/84, n=84) | mechanism-tracked: top-1 delete leaves a copy iff duplicated |
-| **02** | Mem0 | naive vs artifact-aware | **96.4% → 0%** [naive 90.0,98.8; aware 0,4.4] (n=84) | same facts, two strategies; +3.82 extra; uniqueness auto-enforced (dedup_isolated, RF4 C-01) |
-| **05** | Mem0 | duplication factorial | dup **76–78%** over corpus-unique facts (row-inflation 2.9–3.2×) | **2×2** embedder×cadence; paraphrase ≥ byte-ID in all 4 cells; GH issues |
+| **01** | Mem0 | naive-delete residual | **97.2%** [94.4,98.7] residual (n=253) | mechanism-tracked: top-1 delete leaves a copy iff duplicated |
+| **02** | Mem0 | naive vs artifact-aware | **97.2% → 0%** [naive 94.4,98.7; aware 0,1.5] (n=253) | same facts, two strategies; uniqueness auto-enforced (dedup_isolated) |
+| **05** | Mem0 | duplication factorial | dup **80–82%** over corpus-unique facts (row-inflation +174–182%) | **2×2** embedder×cadence; byte+paraphrase both present (mixed dominance); GH issues |
 | **06** | Mem0 | infer=True derivation-capture | **0% — REJECTED** | infer=False control: 0 captured ⇒ it was consolidation/merging, not derivation |
-| **04** | Mem0 | re-derivation (operands-only) | bin1 94–100% / bin2 **.56/.59/.68/.74** (4 reasoners) → **0%**; **multilevel join+chain 100%→0%**; ρ 0% (n=34/bin; ML n=12/topology) | residual=0 by construction; **4-reasoner sup_A**, binned; frontier reasoners leak more |
-| **03** | Mem0 | planner end-to-end | **100% / 0 spurious / k=0.902** [.82,.99] (n=92, incl multilevel); depth-first k=6.05 / 342-spurious | spare-bystander test; **148 operands spared**; gpt-4o entailment judge |
-| **07** | Mem0 | ρ gradient (measured, 4 reasoners) | ρ_max bins (n=81): **51 cert / 12 mid / 18 hard**; **30/81 not certifiable** (τ=0.1) | world-context-only probe; **τ-dependent gradient (not bimodal)**; frontier models REFUSE sensitive high-tier (20 flags) → their ρ is a lower bound |
-| **08** | Mem0 | membership inference | intact **.67** / naive **.67 (p=.001, SIG)** / aware **.52 (ns)** | n=48 members + 96 twins (2/fact), bootstrap CI + perm p; intact = power sanity |
-| **judge** | — | judge validation | recovery **0% false-accept** (GPT-5.5 corrob. κ=1.0 vs gold, 17/17); entail gpt-4o **0%** curated false-fire (GPT-5.5 25%, gpt-4o-mini 41.7%) | 426 pairs / 242 near-miss neg.; frontier cross-check 2026-07-05 |
-| **09** | Graphiti | KG residue after `remove_episode` | edge **30%**, **KG/summary 70%** (n=10) | clean episode hard-delete verified; residue = stale summaries + shared-entity edges |
-| **10** | Letta | agent-mediated deletion faithfulness | explicit **100%** vs vague **0% / 100% archival** (n=10) | explicit-instruction baseline isolates phrasing/surface, not capability |
-| **11** | Letta | re-derivation + co-delete (ports) | bin1 **100%**, bin2 **.74–.78** (4 reasoners) → **0%**; ρ 0% | operands-only; 4-reasoner sup_A; **direct verified-faithful `passages.delete`** (faithful=100%, bystanders intact 100%) |
+| **04** | Mem0 | re-derivation (operands-only) | bin1 97–100% / bin2 **.62/.72/.68/.66** (4 reasoners) → **0%**; **5 topologies (join/chain/or_and/diamond/threshold) 100%→0%**; ρ 0% (n=74/flat bin; 30/topology) | residual=0 by construction; **4-reasoner sup_A**, binned; worst bin2 = gpt-4o (.72), not frontier |
+| **03** | Mem0 | planner (exact / greedy / depth) | **exact 100% / 0 spurious / k=1.04** (gap≈0, n=298); threshold k=1.10 / 0 spurious; depth-first k=6.18 / 1116 spurious | min-hitting-set over the entailment DAG; **466 spared**; provably minimal (exp12) |
+| **07** | Mem0 | ρ gradient (measured, 4 reasoners) | ρ_max bins (n=250): **166 cert / 42 mid / 42 hard**; **84/250 not certifiable** (τ=0.1) | world-context-only probe; **τ-dependent gradient**; frontier REFUSE sensitive high-tier (29 flags, high-tier only ✓) → their ρ is a lower bound |
+| **08** | Mem0 | membership inference | intact **.66** / naive **.66 (p=.001, SIG)** / aware **.51 (p=.04)** | n=253 members + 759 twins (3/fact), bootstrap CI + perm p; intact = power sanity |
+| **judge** | — | judge validation (4 models) | recovery false-accept **.0072** (gpt-4o-mini/gpt-4o 1/139; Sonnet5/GPT-5.5 0); entail **0% multi-hop miss-rate all 4 models**; near-miss false-fire mini 76% / gpt-4o 45% / GPT-5.5 30% / Sonnet5 3.4% | **n=229 recovery gold / 1370 entailment pairs**; production: recovery gpt-4o-mini, entail gpt-4o (pinned snapshots) |
+| **09** | Graphiti | KG residue after `remove_episode` | edge **20%**, **KG/summary 83%** (n=30) | clean episode hard-delete verified; residue = stale summaries + shared-entity edges |
+| **10** | Letta | agent-mediated deletion faithfulness | vague **0% faithful / 100% archival** / 13% core (n=30) | explicit-instruction baseline isolates phrasing/surface, not capability |
+| **11** | Letta | re-derivation + co-delete (ports) | bin1 **100%**, bin2 **.59–.65** (4 reasoners) → **0%**; ρ 0% (n=40) | operands-only; 4-reasoner sup_A; **direct verified-faithful `passages.delete`** |
 
 ---
 
@@ -207,8 +215,8 @@ delete-old" = our duplication). See § G.
 
 | family | system (version) | residual mechanism (by design) | evidence | headline |
 |---|---|---|---|---|
-| **dedup pipeline** | Mem0 (mem0ai 2.0.7, OSS + Chroma) | **duplication** — naive delete leaves copies | exp01/02/05 | 96.4% residual; 96.4%→0% aware (n=84); dup 76–78% over corpus-unique facts |
-| **bi-temporal KG** | Zep/Graphiti (graphiti-core 0.29.2 + Neo4j 5.26) | **stale entity/community summaries** (not recomputed on delete) | exp09 | clean `remove_episode` still leaves **70%** KG/summary residue (n=10) |
+| **dedup pipeline** | Mem0 (mem0ai 2.0.7, OSS + Chroma) | **duplication** — naive delete leaves copies | exp01/02/05 | 97.2% residual; 97.2%→0% aware (n=253); dup 80–82% over corpus-unique facts |
+| **bi-temporal KG** | Zep/Graphiti (graphiti-core 0.29.2 + Neo4j 5.26) | **stale entity/community summaries** (not recomputed on delete) | exp09 | clean `remove_episode` still leaves **83%** KG/summary residue (n=30) |
 | **LLM-paging** | Letta/MemGPT (letta 0.16.8 + Postgres + pgvector) | **surface-incomplete agent-mediated deletion** (scrubs core, misses archival) | exp10/11 | vague forget: **0% faithful / 100% archival**; re-derivation **ports & closes** |
 
 Empirical corrections folded in (premises that turned out wrong — keep, don't
@@ -315,7 +323,21 @@ Three distinguished neighbours + the DB lineage. Full notes in `REFERENCES.md`.
 
 ## Provenance (result files this ledger is computed from)
 
-Frontier re-run 2026-07-04 (4-reasoner adversary panel: gpt-4o-mini, gpt-4o,
+**3× expansion wave 2026-07-12/13 (CURRENT; supersedes the 2026-07-04 wave below).**
+Same 4-reasoner adversary panel (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5);
+enlarged datasets **iso253 / mh298 / ctx963 / rho250**; 5 hard multi-hop topologies
+(join/chain/or_and/diamond/threshold) with a boolean **entailment DAG**; exact
+min-hitting-set planner (+ greedy/depth-first comparators, new `exp12`); 4-model judge
+validation (229 recovery gold, 1{,}370 entailment pairs). rho/re-derivation re-run with
+`probes/parametric_probe` hardened so a rate-limit is never miscounted as a refusal
+(correct by construction); verified by `evaluation/verify_wave.py` (rho refusals high-tier
+only, 0 measurement errors, all post-co-delete re-derivation = 0). Files under
+`data/results/` with `...20260712T...` / `...20260713T...` timestamps (exp01/02/03×3/04/
+05/07/08/12 + judge_validation; exp09/10/11 from the cross-system phase). exp06 unchanged
+(rejected negative). See `docs/RESULTS_3X_WAVE.md`.
+
+Prior wave, retained for history --- Frontier re-run 2026-07-04 (4-reasoner adversary
+panel: gpt-4o-mini, gpt-4o,
 Claude Sonnet 5, GPT-5.5; enlarged datasets iso84 / mh92 / ctx299 / rho81).
 Files under `data/results/` (all `...20260704T...`): `exp01_baseline_...101314Z`,
 `exp02_artifact_purge_...104137Z`, `exp03_planner_threshold_...122021Z` +

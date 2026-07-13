@@ -29,6 +29,7 @@ import os
 import random
 import sys
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -51,9 +52,27 @@ TIER_ORDER = ["low", "mid", "high"]
 SWEEP_TOLS = [0.0, 0.05, 0.10, 0.20]
 
 
+def _measure_fact(param: ParametricProbe, f: dict, n: int) -> dict:
+    """Measure rho (context) and the base-rate condition for one fact. estimate_rho
+    already treats a per-sample refusal/API error as a non-recovery, so this does not
+    raise on a transient error -- safe to run in a thread pool (the llm cache is
+    thread-safe; the validator's measure_rho parallelizes the same call)."""
+    base_ctx = f"{f['subject']} is a person in Singapore."   # strips the informative attribute
+    ctx = param.estimate_rho(f, f["world_context"], n=n)
+    base = param.estimate_rho(f, base_ctx, n=n)
+    refusals = sum(looks_like_refusal(a) for a in ctx["answers"])
+    return {"reasoner": param.model, "fact_id": f["id"], "tier": f["tier"],
+            "subject": f["subject"], "rho_context": ctx["rho"],
+            "rho_baserate": base["rho"], "context_lift": ctx["rho"] - base["rho"],
+            "refusals": refusals, "n": n,
+            "answers_context": ctx["answers"], "answers_baserate": base["answers"]}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="rho-gradient measurement + pipeline")
     ap.add_argument("--n-samples", type=int, default=8)
+    ap.add_argument("--workers", type=int, default=8,
+                    help="parallel facts per reasoner (rho calls are independent + cached)")
     ap.add_argument("--single", action="store_true")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--keep", action="store_true")
@@ -85,21 +104,19 @@ def main() -> None:
         if reasoner in done:
             continue
         param = ParametricProbe(model=reasoner)
-        for f in tqdm(facts, desc=f"rho/{reasoner.split('-')[0]}"):
-            base_ctx = f"{f['subject']} is a person in Singapore."   # strips the informative attribute
-            ctx = param.estimate_rho(f, f["world_context"], n=args.n_samples)
-            base = param.estimate_rho(f, base_ctx, n=args.n_samples)
-            rho_by_fact[f["id"]][reasoner] = ctx["rho"]
-            refusals = sum(looks_like_refusal(a) for a in ctx["answers"])
-            rows.append({"reasoner": reasoner, "fact_id": f["id"], "tier": f["tier"],
-                         "subject": f["subject"], "rho_context": ctx["rho"],
-                         "rho_baserate": base["rho"], "context_lift": ctx["rho"] - base["rho"],
-                         "refusals": refusals, "n": args.n_samples,
-                         "answers_context": ctx["answers"], "answers_baserate": base["answers"]})
-            if args.verbose:
-                tqdm.write(f"  [{f['id']} {f['tier']:4s}] {reasoner.split('-')[0]:11s} "
-                           f"rho={ctx['rho']:.2f} base={base['rho']:.2f} "
-                           f"lift={ctx['rho']-base['rho']:+.2f} refusals={refusals}/{args.n_samples}")
+        # Facts are independent -> measure them in parallel (huge wall-clock win at
+        # 250 facts x n samples x 4 reasoners). Checkpoint stays per-reasoner.
+        with ThreadPoolExecutor(max_workers=args.workers) as ex:
+            futs = {ex.submit(_measure_fact, param, f, args.n_samples): f for f in facts}
+            for fut in tqdm(as_completed(futs), total=len(facts),
+                            desc=f"rho/{reasoner.split('-')[0]}"):
+                row = fut.result()
+                rho_by_fact[row["fact_id"]][reasoner] = row["rho_context"]
+                rows.append(row)
+                if args.verbose:
+                    tqdm.write(f"  [{row['fact_id']} {row['tier']:4s}] {reasoner.split('-')[0]:11s} "
+                               f"rho={row['rho_context']:.2f} base={row['rho_baserate']:.2f} "
+                               f"lift={row['context_lift']:+.2f} refusals={row['refusals']}/{args.n_samples}")
         done.add(reasoner)   # checkpoint after each reasoner (protects the multi-hour run)
         ckpt_p.write_text(json.dumps(
             {"n": args.n_samples, "reasoners": reasoners, "n_facts": len(facts),

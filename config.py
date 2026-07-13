@@ -186,13 +186,17 @@ def mem0_oss_config(embedder: str = "huggingface",
         emb = {"provider": "openai", "config": {"model": "text-embedding-3-small"}}
     else:
         emb = {"provider": "huggingface", "config": {"model": EMBED_MODEL}}
+    # MEM0_STORE_SUFFIX isolates the Chroma store (path + collection) per PROCESS, so
+    # experiments can run in PARALLEL without colliding on the same SQLite DB file
+    # (Chroma is single-writer per path). Empty by default -> the shared default store.
+    suffix = os.getenv("MEM0_STORE_SUFFIX", "")
     return {
         "llm": llm,
         "embedder": emb,
         "vector_store": {
             "provider": "chroma",
-            "config": {"collection_name": collection,
-                       "path": str(RESULTS_DIR / f"chroma_{embedder}")},
+            "config": {"collection_name": f"{collection}{suffix}",
+                       "path": str(RESULTS_DIR / f"chroma_{embedder}{suffix}")},
         },
         "version": "v1.1",
     }

@@ -42,6 +42,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import config  # noqa: E402
 import generate_facts as gen  # noqa: E402  (sibling module in data/)
+import planner.entailment_dag as ed  # noqa: E402
 from planner.entailment_detector import EntailmentDetector  # noqa: E402
 from probes.base_probe import normalize_values  # noqa: E402
 from probes.parametric_probe import ParametricProbe  # noqa: E402
@@ -50,12 +51,22 @@ ISO_PATH = config.FACTS_DIR / "isolated_facts.json"
 MH_PATH = config.FACTS_DIR / "multi_hop_facts.json"
 CTX_PATH = config.FACTS_DIR / "context_facts.json"
 RHO_PATH = config.FACTS_DIR / "rho_gradient_facts.json"
+SEED_DIR = config.FACTS_DIR / "_seed"   # frozen canonical base for a reproducible rebuild
 
-# Floors (the binding constraints from the brief).
+# The five structured topologies (uniform leaves+formula shape) and their bases.
+STRUCT_KEYS = {"multilevel_join": "join", "multilevel_chain": "chain",
+               "structured_or_and": "or_and", "structured_diamond": "diamond",
+               "structured_threshold": "threshold"}
+STRUCT_BASES = ("stored_join", "stored_chain", "stored_or_and",
+                "stored_diamond", "stored_threshold")
+
+# Floors (binding constraints for the ~3x expansion: ~250 per dataset).
+FLOOR_ISO_TOTAL = 230
 FLOOR_ISO_PERSONAS = 15
-FLOOR_MH_PER_BIN = 15
-FLOOR_RHO_PER_TIER = 15
-FLOOR_ML_PER_VARIANT = 8   # >= 8 join (depth-2) + >= 8 chain (depth-3) multilevel targets
+FLOOR_MH_PER_BIN = 40             # flat bin1 (stored) and bin2 (stored+world)
+FLOOR_RHO_TOTAL = 230
+FLOOR_RHO_PER_TIER = 15           # keep authored-tier diversity (measured tier may differ)
+FLOOR_STRUCT_PER_TOPOLOGY = 25    # each of join/chain/or_and/diamond/threshold
 
 # tier classification from a measured rho (midpoints split the _meta gaps
 # 0.2-0.3 and 0.6-0.7).
@@ -105,6 +116,13 @@ def _load(path):
     return obj.get("_meta", {}), obj["facts"]
 
 
+def _load_base(path):
+    """Load the frozen seed (data/facts/_seed/) if present so the rebuild is
+    reproducible and idempotent; otherwise fall back to the live file."""
+    seed = SEED_DIR / path.name
+    return _load(seed if seed.exists() else path)
+
+
 def _write(path, meta, facts):
     path.write_text(json.dumps({"_meta": meta, "facts": facts}, indent=2,
                                ensure_ascii=False) + "\n")
@@ -119,6 +137,14 @@ def _contains(text: str, value: str) -> bool:
     tc = t.replace(",", "").replace(" ", "")
     vc = v.replace(",", "").replace(" ", "")
     return bool(vc) and vc in tc
+
+
+def _max_fid(*factlists) -> int:
+    """Highest F-id number across the given fact lists (F-ids share a namespace across
+    isolated + multi-hop, so new ids must be minted above the global max)."""
+    nums = [int(f["id"][1:]) for lst in factlists for f in lst
+            if f.get("id", "").startswith("F") and f["id"][1:].isdigit()]
+    return max(nums, default=99)
 
 
 def _measured_tier(rho: float) -> str:
@@ -211,7 +237,12 @@ def check_value_uniqueness(iso_facts: list[dict], ctx_facts: list[dict]) -> list
     inflates exp05's dup-incidence with mere vocabulary overlap. Uses the same
     digit-normalizing _contains as the probes.
     """
-    store = iso_facts + ctx_facts
+    # SCOPE: only facts CO-INJECTED with the isolated set matter. exp01/02/05 inject
+    # isolated alone; exp08 adds the bystander background. Entailing OPERANDS
+    # (role='entailing') are only injected with their multi-hop targets, never with
+    # isolated facts, so their dense numeric surface ('12 crates', 'SGD 35') produces
+    # false-positive substring collisions -- excluded here.
+    store = iso_facts + [c for c in ctx_facts if c.get("role") != "entailing"]
 
     def hay(g):
         return " || ".join([g.get("text", ""), g.get("utterance", ""),
@@ -246,9 +277,12 @@ def dedup_isolated(iso_facts: list[dict], ctx_facts: list[dict]) -> list[dict]:
             break
         drop = set()
         for p in probs:
+            # message format: "<iso F-id> value ... also appears in <other id>"
             ids = _re.findall(r"F\d+", p)
             if len(ids) >= 2:
-                drop.add(max(ids, key=lambda x: int(x[1:])))  # keep the older id
+                drop.add(max(ids, key=lambda x: int(x[1:])))  # iso-vs-iso: drop the newer
+            elif ids:
+                drop.add(ids[0])  # iso-vs-context (bystander): drop the isolated fact
         if not drop:
             break
         iso = [f for f in iso if f["id"] not in drop]
@@ -387,13 +421,12 @@ def measure_rho(facts: list[dict], n: int, workers: int, remeasure: bool):
 # --------------------------------------------------------------------------- #
 # Builders (assign ids, wire references, extend _meta)
 # --------------------------------------------------------------------------- #
-def build_isolated(existing, kept_cands, cap=None):
+def build_isolated(existing, kept_cands, cap=None, start=100):
+    """Append isolated facts starting at F{start}. `start` is a GLOBAL F-id ceiling
+    (max over isolated AND multi-hop) so new isolated ids never collide with new
+    multi-hop ids -- the two sets mint from disjoint blocks (see main())."""
     facts = list(existing)
-    # Continue the F1xx block after the highest existing id -- never restart at 100
-    # (a re-run with existing F1xx facts would otherwise mint duplicate ids).
-    used = [int(f["id"][1:]) for f in existing
-            if f.get("id", "").startswith("F") and f["id"][1:].isdigit()]
-    nid = max([n for n in used if n >= 100], default=99) + 1
+    nid = start
     for c in (kept_cands[:cap] if cap else kept_cands):
         facts.append({
             "id": f"F{nid}", "subject": c["subject"], "category": c["category"],
@@ -406,11 +439,13 @@ def build_isolated(existing, kept_cands, cap=None):
 
 
 def build_multihop_and_context(existing_mh, existing_ctx, kept_mh, byst_cands,
-                               n_floor_total):
+                               n_floor_total, f_start=None):
     mh = list(existing_mh)
     ctx = list(existing_ctx)
-    # next ids
-    f_next = max([int(f["id"][1:]) for f in existing_mh] + [45]) + 1  # F046+
+    # next ids: multi-hop F-ids start at f_start (a high, disjoint block from isolated
+    # ids -- see main()); context C-ids continue their own namespace.
+    f_next = f_start if f_start is not None else (
+        max([int(f["id"][1:]) for f in existing_mh] + [45]) + 1)
     c_next = max([int(c["id"][1:]) for c in existing_ctx] + [22]) + 1  # C023+
     for c, _r in kept_mh:
         fid = f"F{f_next:03d}"; f_next += 1
@@ -455,85 +490,70 @@ def build_multihop_and_context(existing_mh, existing_ctx, kept_mh, byst_cands,
     return mh, ctx
 
 
-def _ml_support(c: dict) -> list[tuple[str, str, str, list]]:
-    """Stored support operands of a multilevel candidate: (node_label, text,
-    utterance, probe). join -> A,Ar,C,Cr ; chain -> A,r1,r2,r3."""
-    keys = ([("A", "a"), ("r1", "r1"), ("r2", "r2"), ("r3", "r3")]
-            if c.get("variant") == "chain"
-            else [("A", "a"), ("Ar", "ar"), ("C", "c"), ("Cr", "cr")])
-    out = []
-    for label, k in keys:
-        out.append((label, c[f"{k}_text"], c.get(f"{k}_utterance", c[f"{k}_text"]),
-                    normalize_values(c.get(f"{k}_probe") or [c[f"{k}_text"]])))
-    return out
+def gate_structured(cands: list[dict], workers: int):
+    """Gate for the TEMPLATED structured topologies (join / chain / or_and / diamond
+    / threshold), all in the uniform ``leaves`` + ``formula`` shape.
 
-
-def gate_multilevel(cands: list[dict], workers: int):
-    """Gate for the TEMPLATED multi-level set. The facts are correct by
-    construction (exact multiplicative arithmetic, fictional rules), so this gate
-    is a safety net that PASSES when (a) NO single stored support fully recovers T
-    (near-miss) and (b) delete_value is not a substring of any support
-    (contamination). The JOINT multi-step entailment is reported (via SECOND_MODEL,
-    which can do the arithmetic) but NOT used to discard -- the gpt-4o-mini judge
-    under-fires on multi-step derivations, so gating on it would wrongly drop valid
-    facts (mirrors the rho-gradient flag-don't-discard policy)."""
+    The facts are correct by construction (exact arithmetic, fictional rules), so this
+    gate is a SAFETY NET that DISCARDS a candidate only on a real structural defect:
+      (a) contamination: delete_value is a substring of any stored leaf text;
+      (b) formula/leaf mismatch: the formula's leaf labels != the candidate's leaves;
+      (c) single-sufficient leaf: some ONE leaf alone re-derives the target per the
+          GROUND-TRUTH boolean formula (would break the near-miss property).
+    The LLM JOINT-entailment answer (strong model) is REPORTED but never used to
+    discard -- the gpt-4o-mini judge under-fires on multi-step derivations, so gating
+    on it would wrongly drop valid facts (mirrors the rho flag-don't-discard policy).
+    The near-miss ground truth here is the formula, not the fallible LLM judge."""
     def task(c):
         try:
-            sup = _ml_support(c)
-            texts = [t for _, t, _, _ in sup]
-            det = EntailmentDetector(model=config.JUDGE_MODEL)
-            det_strong = EntailmentDetector(model=config.SECOND_MODEL)
-            tgt = c["target_text"]
-            joint = _retry(lambda: det_strong.check_detailed(texts, tgt))
-            singles_full = [_retry(lambda t=t: det.check_detailed(t, tgt))["answer"].upper() == "YES"
-                            for t in texts]
-            any_single = any(singles_full)
+            leaves = c["leaves"]
+            texts = [lf["text"] for lf in leaves]
+            formula = c["formula"]
+            labels_match = ed.leaf_labels(formula) == {lf["label"] for lf in leaves}
+            single_ok = ed.single_sufficient_leaves(formula) == []
             contam = any(_contains(t, v) for t in texts
                          for v in normalize_values(c["delete_value"]))
-            passed = (not any_single) and (not contam)
+            passed = labels_match and single_ok and not contam
+            # LLM joint report only (strong model can do the arithmetic).
+            det_strong = EntailmentDetector(model=config.SECOND_MODEL)
+            joint = _retry(lambda: det_strong.check_detailed(texts, c["target_text"]))
             return {"passed": passed, "variant": c.get("variant"),
+                    "k_star": ed.min_codelete_size(formula),
                     "joint": f"{joint['answer']}@{joint['confidence']:.2f}",
-                    "any_single_recovers": any_single, "contam": contam,
                     "reason": ("ok" if passed else
-                               "single-recovers" if any_single else "contamination")}
+                               "label-mismatch" if not labels_match else
+                               "single-recovers" if not single_ok else "contamination")}
         except Exception as e:  # noqa: BLE001 -- discard-on-error (conservative)
             return {"passed": False, "reason": f"error:{e}"}
 
-    out = _parallel(task, cands, workers, desc="multilevel-gate")
+    out = _parallel(task, cands, workers, desc="structured-gate")
     kept, disc = [], []
     for c, r in zip(cands, out):
         (kept if r["passed"] else disc).append((c, r))
     return kept, disc
 
 
-def build_multilevel(mh: list[dict], ctx: list[dict], kept: list):
-    """Append multilevel targets (into mh, with the new basis tag + entailment_dag)
-    and their stored support operands (into ctx, role='entailing'). Ids continue
-    the F/C blocks after whatever build_multihop_and_context already appended."""
-    f_next = max([int(f["id"][1:]) for f in mh if f["id"][1:].isdigit()] + [45]) + 1
+def build_structured(mh: list[dict], ctx: list[dict], kept: list, f_min: int = 0):
+    """Append structured targets (into mh, with basis tag + packaged entailment_dag)
+    and their stored leaf operands (into ctx, role='entailing'). Consumes the uniform
+    candidate shape, so ONE builder handles every topology. Ids continue the F/C
+    blocks after whatever build_multihop_and_context already appended; f_min anchors
+    the F-ids into the multi-hop high block so they can never fall back into the
+    isolated block (robust even if no flat facts were added first)."""
+    f_next = max(max([int(f["id"][1:]) for f in mh if f["id"][1:].isdigit()] + [45]) + 1, f_min)
     c_next = max([int(c["id"][1:]) for c in ctx if c["id"][1:].isdigit()] + [22]) + 1
     for c, _r in kept:
-        variant = c.get("variant", "join")
-        basis = "stored_chain" if variant == "chain" else "stored_multilevel"
         fid = f"F{f_next:03d}"; f_next += 1
-        dag_nodes: dict[str, str] = {}
+        leaf_ids: dict[str, str] = {}
         support_ids: list[str] = []
-        for label, text, utt, probe in _ml_support(c):
+        for lf in c["leaves"]:
             cid = f"C{c_next:03d}"; c_next += 1
             support_ids.append(cid)
-            dag_nodes[label] = cid
+            leaf_ids[lf["label"]] = cid
             ctx.append({"id": cid, "subject": c["subject"], "category": "reference",
                         "role": "entailing", "supports": [fid],
-                        "text": text, "utterance": utt, "probe_value": probe})
-        if variant == "chain":       # A->B->C->T (B,C derived)
-            edges = [[dag_nodes["A"], "B"], [dag_nodes["r1"], "B"], ["B", "C"],
-                     [dag_nodes["r2"], "C"], ["C", "T"], [dag_nodes["r3"], "T"]]
-            derived = ["B", "C", "T"]
-        else:                        # (A,Ar)->B ; (C,Cr)->D ; (B,D)->T (B,D derived)
-            edges = [[dag_nodes["A"], "B"], [dag_nodes["Ar"], "B"],
-                     [dag_nodes["C"], "D"], [dag_nodes["Cr"], "D"],
-                     ["B", "T"], ["D", "T"]]
-            derived = ["B", "D", "T"]
+                        "text": lf["text"], "utterance": lf.get("utterance", lf["text"]),
+                        "probe_value": normalize_values(lf.get("probe") or [lf["text"]])})
         mh.append({
             "id": fid, "subject": c["subject"], "category": c.get("category", "financial"),
             "text": c["target_text"], "utterance": c["target_utterance"],
@@ -543,22 +563,54 @@ def build_multilevel(mh: list[dict], ctx: list[dict], kept: list):
                                       + normalize_values(c["delete_value"])), key=str),
             "entailed_by": list(support_ids),
             "co_delete_required": list(support_ids),
-            "rederivation_basis": basis,
+            "rederivation_basis": c["basis"],
             "entailment_note": c.get("entailment_note", ""),
-            "entailment_dag": {"nodes": dag_nodes, "edges": edges, "derived": derived},
+            "entailment_dag": ed.build_dag(leaf_ids, c["formula"], c["variant"]),
         })
     return mh, ctx
 
 
-def build_rho(existing_rho, kept_cands):
+# Old-format structured facts (entailment_dag = {nodes,edges,derived}) are re-authored
+# fresh in the uniform leaves+formula shape, so they are stripped from the seed before
+# the rebuild (their orphaned entailing operands go too).
+OLD_STRUCTURED_BASES = {"stored_multilevel", "stored_chain"}
+
+
+def strip_old_structured(mh: list[dict], ctx: list[dict]):
+    """Drop seed multi-hop facts in the OLD structured format + their now-orphaned
+    entailing operands; keep flat facts, all their operands, and every bystander."""
+    keep_mh = [f for f in mh if f.get("rederivation_basis") not in OLD_STRUCTURED_BASES]
+    referenced: set[str] = set()
+    for f in keep_mh:
+        referenced |= set(f.get("entailed_by", [])) | set(f.get("co_delete_required", []))
+    keep_ctx = [c for c in ctx
+                if c.get("role") != "entailing" or c["id"] in referenced]
+    return keep_mh, keep_ctx
+
+
+def build_rho(existing_rho, kept_cands, cap_total: int = 250):
+    """Append rho candidates up to cap_total, keeping DISTINCT target values. A subject
+    may carry several facts across different domains/tiers (a locker code AND an income
+    band AND a licence->age), which is realistic and diverse; ~100 distinct subjects
+    still back the set, well above the old effective-n concern. Keying on value (not
+    (subject, tier)) is what lets the set scale, since the authoring reuses the subject
+    pool."""
     facts = list(existing_rho)
-    used = {f.get("subject") for f in existing_rho}
+    # rho facts are measured independently (one elicitation each), so there is NO
+    # exp02-style purge contamination -> the SAME value may recur across DIFFERENT
+    # subjects. Only skip an exact-duplicate fact (same subject + same value).
+    seen = {(f.get("subject"), v) for f in existing_rho
+            for v in normalize_values(f.get("delete_value", []))}
     nums = [int(f["id"][1:]) for f in existing_rho if f["id"][1:].isdigit()]
     n_next = (max(nums) if nums else 15) + 1
     for c in kept_cands:
-        if c["subject"] in used:
-            continue  # keep subjects distinct
-        used.add(c["subject"])
+        if len(facts) >= cap_total:
+            break
+        vals = normalize_values(c["delete_value"])
+        keys = {(c["subject"], v) for v in vals}
+        if not vals or keys & seen:
+            continue  # skip only an exact-duplicate (subject, value) fact
+        seen |= keys
         facts.append({
             "id": f"R{n_next:02d}", "tier": c["tier"], "subject": c["subject"],
             "world_context": c["world_context"], "text": c["text"],
@@ -579,7 +631,13 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--remeasure", action="store_true", help="re-measure rho even if stored")
     ap.add_argument("--dry-run", action="store_true", help="validate but do not write data/facts/*")
+    ap.add_argument("--smoke", action="store_true",
+                    help="tiny author counts + few rho samples + dry-run: exercises the whole "
+                         "pipeline cheaply to catch runtime bugs (floors are not enforced)")
     args = ap.parse_args()
+    if args.smoke:
+        args.dry_run = True
+        args.n_samples = min(args.n_samples, 3)
 
     problems = config.validate()
     if problems:
@@ -592,14 +650,23 @@ def main() -> int:
     print(f"  judge:     {config.JUDGE_MODEL}   |  rho n-samples={args.n_samples}")
     print("=" * 74)
 
-    iso_meta, iso_existing = _load(ISO_PATH)
-    mh_meta, mh_existing = _load(MH_PATH)
-    ctx_meta, ctx_existing = _load(CTX_PATH)
-    rho_meta, rho_existing = _load(RHO_PATH)
+    iso_meta, iso_existing = _load_base(ISO_PATH)
+    mh_meta, mh_existing = _load_base(MH_PATH)
+    ctx_meta, ctx_existing = _load_base(CTX_PATH)
+    rho_meta, rho_existing = _load_base(RHO_PATH)
+    # Re-author the structured facts fresh in the uniform format: drop the seed's
+    # old-format structured facts (and their orphaned operands) before rebuilding.
+    mh_existing, ctx_existing = strip_old_structured(mh_existing, ctx_existing)
+    src = "seed" if (SEED_DIR / ISO_PATH.name).exists() else "live files"
+    print(f"      base = {src}: iso={len(iso_existing)}  mh(flat)={len(mh_existing)}  "
+          f"ctx={len(ctx_existing)}  rho={len(rho_existing)}  (old structured stripped)")
 
     # ---- author candidates (gpt-4o-mini) ------------------------------------
     print("\n[1/6] Authoring candidates with gpt-4o-mini ...", flush=True)
-    cand = gen.author_all()
+    _smoke_counts = dict(n_isolated_per_persona=1, n_mh_bin1=6, n_mh_bin2=6, n_rho_per_tier=6,
+                         n_bystanders=8, n_ml_join=4, n_ml_chain=4, n_or_and=4,
+                         n_diamond=4, n_threshold=4)
+    cand = gen.author_all(**(_smoke_counts if args.smoke else {}))
     print(f"      isolated={len(cand['isolated'])}  bin1={len(cand['multihop_bin1'])}  "
           f"bin2={len(cand['multihop_bin2'])}  bystanders={len(cand['bystanders'])}  "
           f"rho={len(cand['rho'])}")
@@ -632,24 +699,35 @@ def main() -> int:
     print(f"      bin1(stored)       kept {len(mh1_kept)} / {len(cand['multihop_bin1'])}")
     print(f"      bin2(stored+world) kept {len(mh2_kept)} / {len(cand['multihop_bin2'])}")
 
-    # ---- multi-level (join depth-2 + chain depth-3): near-miss + contamination ---
-    print("\n[4b/6] Multi-level: near-miss + contamination (templated, exact) ...", flush=True)
-    mlj_kept, _mlj_disc = gate_multilevel(cand.get("multilevel_join", []), args.workers)
-    mlc_kept, _mlc_disc = gate_multilevel(cand.get("multilevel_chain", []), args.workers)
-    print(f"      join(depth-2)  kept {len(mlj_kept)} / {len(cand.get('multilevel_join', []))}")
-    print(f"      chain(depth-3) kept {len(mlc_kept)} / {len(cand.get('multilevel_chain', []))}")
+    # ---- structured topologies (join/chain/or_and/diamond/threshold) --------
+    print("\n[4b/6] Structured topologies: formula near-miss + contamination (templated) ...",
+          flush=True)
+    struct_kept: dict[str, list] = {}
+    for key, name in STRUCT_KEYS.items():
+        kept_s, _disc = gate_structured(cand.get(key, []), args.workers)
+        struct_kept[name] = kept_s
+        print(f"      {name:10s} kept {len(kept_s)} / {len(cand.get(key, []))}")
 
-    # ---- assemble final sets (gentle caps so sizes track the spec) ----------
-    iso_facts = build_isolated(iso_existing, iso_kept, cap=48)         # ~2x -> ~96 total
-    mh1_use = [k for k in mh1_kept][:17]                             # +17 flat bin1
-    mh2_use = [k for k in mh2_kept][:17]                             # +17 flat bin2
-    n_floor_total = len(mh_existing) + len(mh1_use) + len(mh2_use)
+    # ---- assemble final sets (caps so sizes track the ~250 spec) ------------
+    # Isolated and multi-hop share the F-id namespace, so mint from DISJOINT blocks
+    # above the global F-max: isolated at [fmax+1 ..], multi-hop at [fmax+1000 ..].
+    fmax = _max_fid(iso_existing, mh_existing)
+    iso_facts = build_isolated(iso_existing, iso_kept, cap=None, start=fmax + 1)  # all survivors
+    mh1_use = [k for k in mh1_kept][:40]                              # +40 flat bin1
+    mh2_use = [k for k in mh2_kept][:40]                              # +40 flat bin2
+    n_struct = sum(min(len(v), 30) for v in struct_kept.values())
+    n_floor_total = len(mh_existing) + len(mh1_use) + len(mh2_use) + n_struct
     mh_facts, ctx_facts = build_multihop_and_context(
-        mh_existing, ctx_existing, mh1_use + mh2_use, cand["bystanders"], n_floor_total)
-    # multi-level targets + their stored support operands (appended after the flat set)
-    ml_use = [k for k in mlj_kept][:12] + [k for k in mlc_kept][:12]
-    mh_facts, ctx_facts = build_multilevel(mh_facts, ctx_facts, ml_use)
-    iso_facts = dedup_isolated(iso_facts, ctx_facts)   # RF4 C-01: enforce unique isolated values
+        mh_existing, ctx_existing, mh1_use + mh2_use, cand["bystanders"], n_floor_total,
+        f_start=fmax + 1000)
+    # structured targets + their stored leaf operands (appended after the flat set)
+    for name in ("join", "chain", "or_and", "diamond", "threshold"):
+        mh_facts, ctx_facts = build_structured(mh_facts, ctx_facts, struct_kept[name][:30],
+                                               f_min=fmax + 1000)
+    # RF4 C-01: drop isolated value collisions FIRST (against the full enlarged context),
+    # THEN cap to ~250, so dedup can't push the surviving count below the floor.
+    iso_facts = dedup_isolated(iso_facts, ctx_facts)
+    iso_facts = iso_facts[: len(iso_existing) + 170]
 
     # ---- rho-gradient: MEASURE both reasoners, FLAG mismatches (no discard) --
     print("\n[5/6] rho-gradient: measuring rho for ALL facts (both reasoners) ...", flush=True)
@@ -681,8 +759,8 @@ def main() -> int:
     iso_cats = sorted({f["category"] for f in iso_facts})
     bin1 = [f for f in mh_facts if f.get("rederivation_basis") == "stored"]
     bin2 = [f for f in mh_facts if f.get("rederivation_basis") == "stored+world"]
-    bin4 = [f for f in mh_facts if f.get("rederivation_basis") == "stored_multilevel"]
-    bin5 = [f for f in mh_facts if f.get("rederivation_basis") == "stored_chain"]
+    struct = {b: [f for f in mh_facts if f.get("rederivation_basis") == b]
+              for b in STRUCT_BASES}
     ent = [c for c in ctx_facts if c.get("role") == "entailing"]
     byst = [c for c in ctx_facts if c.get("role") == "bystander"]
     rho_by_tier = {t: [f for f in rho_facts if f.get("tier") == t]
@@ -722,8 +800,8 @@ def main() -> int:
           f"; {len(iso_kept)} passed the rho~0 gate)  "
           f"| {len(iso_personas)} distinct personas | {len(iso_cats)} categories")
     print(f"  multi_hop_facts.json  : {len(mh_facts):3d} facts  "
-          f"| bin1(stored)={len(bin1)}  bin2(stored+world)={len(bin2)}  "
-          f"| multilevel join(d2)={len(bin4)}  chain(d3)={len(bin5)}")
+          f"| bin1(stored)={len(bin1)}  bin2(stored+world)={len(bin2)}  | "
+          + "  ".join(f"{b.replace('stored_', '')}={len(struct[b])}" for b in STRUCT_BASES))
     print(f"  context_facts.json    : {len(ctx_facts):3d} facts  "
           f"| entailing={len(ent)}  bystander={len(byst)}")
     print(f"  rho_gradient_facts.json: {len(rho_facts):3d} facts | "
@@ -750,16 +828,19 @@ def main() -> int:
 
     # ---- gate decision ------------------------------------------------------
     fails = []
+    if len(iso_facts) < FLOOR_ISO_TOTAL:
+        fails.append(f"isolated total {len(iso_facts)} < {FLOOR_ISO_TOTAL}")
     if len(iso_personas) < FLOOR_ISO_PERSONAS:
         fails.append(f"isolated personas {len(iso_personas)} < {FLOOR_ISO_PERSONAS}")
     if len(bin1) < FLOOR_MH_PER_BIN:
         fails.append(f"multi-hop bin1 {len(bin1)} < {FLOOR_MH_PER_BIN}")
     if len(bin2) < FLOOR_MH_PER_BIN:
         fails.append(f"multi-hop bin2 {len(bin2)} < {FLOOR_MH_PER_BIN}")
-    if len(bin4) < FLOOR_ML_PER_VARIANT:
-        fails.append(f"multilevel join {len(bin4)} < {FLOOR_ML_PER_VARIANT}")
-    if len(bin5) < FLOOR_ML_PER_VARIANT:
-        fails.append(f"multilevel chain {len(bin5)} < {FLOOR_ML_PER_VARIANT}")
+    for b in STRUCT_BASES:
+        if len(struct[b]) < FLOOR_STRUCT_PER_TOPOLOGY:
+            fails.append(f"structured {b} {len(struct[b])} < {FLOOR_STRUCT_PER_TOPOLOGY}")
+    if len(rho_facts) < FLOOR_RHO_TOTAL:
+        fails.append(f"rho total {len(rho_facts)} < {FLOOR_RHO_TOTAL}")
     for t in ("low", "mid", "high"):
         if len(rho_by_tier[t]) < FLOOR_RHO_PER_TIER:
             fails.append(f"rho tier {t} {len(rho_by_tier[t])} < {FLOOR_RHO_PER_TIER}")
@@ -773,6 +854,11 @@ def main() -> int:
         fails.append("rho measurement errors present")
 
     print("\n" + "=" * 74)
+    if fails and args.smoke:
+        print("  SMOKE: pipeline ran; floors not enforced (tiny counts). Issues: "
+              + "; ".join(fails))
+        print("=" * 74)
+        return 0
     if fails:
         print("  GATE: FAIL -- " + "; ".join(fails))
         print("=" * 74)

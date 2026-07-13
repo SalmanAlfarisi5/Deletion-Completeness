@@ -54,8 +54,9 @@ def main() -> None:
     if config.validate():
         raise SystemExit("Config not ready:\n  - " + "\n  - ".join(config.validate()))
 
-    # Member pool = the enlarged ISOLATED set (n=48): single clear value per fact, so
-    # value-twins are well matched. multi-hop / rho facts have no single swappable value.
+    # Member pool = the full enlarged ISOLATED set (~250): single clear value per fact,
+    # so value-twins are well matched. multi-hop / rho facts have no single swappable
+    # value. Members auto-scale with the isolated set; run --twins 3 for more controls.
     members = load_facts(config.FACTS_DIR / "isolated_facts.json")
     background = [c for c in load_facts(config.FACTS_DIR / "context_facts.json")
                  if c.get("role") == "bystander"]

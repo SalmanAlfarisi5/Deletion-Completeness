@@ -1,0 +1,55 @@
+{
+  "experiment": "exp05_duplication",
+  "timestamp_utc": "20260712T195316Z",
+  "infer": true,
+  "cells": [
+    {
+      "embedder": "huggingface",
+      "cadence_s": 0.0,
+      "facts": 1216,
+      "measurable": 398,
+      "rows": 3338,
+      "row_inflation": 1.745,
+      "dup_incidence": 0.804,
+      "dup_facts": 320,
+      "byte_identical": 185,
+      "paraphrase": 135
+    },
+    {
+      "embedder": "huggingface",
+      "cadence_s": 1.5,
+      "facts": 1216,
+      "measurable": 398,
+      "rows": 3423,
+      "row_inflation": 1.815,
+      "dup_incidence": 0.817,
+      "dup_facts": 325,
+      "byte_identical": 205,
+      "paraphrase": 120
+    },
+    {
+      "embedder": "openai",
+      "cadence_s": 0.0,
+      "facts": 1216,
+      "measurable": 398,
+      "rows": 3361,
+      "row_inflation": 1.764,
+      "dup_incidence": 0.802,
+      "dup_facts": 319,
+      "byte_identical": 203,
+      "paraphrase": 116
+    },
+    {
+      "embedder": "openai",
+      "cadence_s": 1.5,
+      "facts": 1216,
+      "measurable": 398,
+      "rows": 3389,
+      "row_inflation": 1.787,
+      "dup_incidence": 0.799,
+      "dup_facts": 318,
+      "byte_identical": 154,
+      "paraphrase": 164
+    }
+  ]
+}

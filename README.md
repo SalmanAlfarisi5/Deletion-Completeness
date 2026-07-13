@@ -91,10 +91,15 @@ python experiments/exp11_letta_rederivation.py --n 6 -v
 ### Results (pre-wave snapshot, 2026-06-23 — SUPERSEDED)
 
 > The table below is the small-scale pre-wave snapshot. The current numbers
-> (the 84/92/299/81-fact wave) live in the paper drafts (`paper/`) and
-> `docs/PROJECT_STATUS_REPORT.md` — e.g. residual **96.4% / 96.4%→0%** (exp01/02),
-> **30/81** uncertifiable at τ=0.1 (exp07), MIA naive AUC **0.67** (p=.001) / aware
-> **0.52** (exp08), planner **k≈0.90 / 0 spurious** (exp03). Do not cite the table.
+> (the **3× wave**: 253 isolated / 298 multi-hop / 963 context / 250 rho) live in
+> `docs/RESULTS_3X_WAVE.md`, the paper drafts (`paper/`), and `CLAIMS_LEDGER.md` —
+> e.g. residual **97.2% / 97.2%→0%** (exp01/02), **84/250** uncertifiable at τ=0.1
+> (exp07), MIA naive AUC **0.66** (p=.001) / aware **0.51** (exp08), planner
+> **exact k=1.04 / 0 spurious** with a measured optimality gap ≈0 (exp03), and a new
+> **exp12** minimality result (depth-first over-deletes 6× with 1116 spurious). The
+> planner now solves the exact min-hitting-set over a boolean **entailment DAG**, and
+> the multi-hop set adds 5 hard topologies (join, chain, disjunctive, diamond,
+> threshold). Do not cite the table.
 
 | experiment | metric | result |
 |---|---|---|
@@ -127,25 +132,30 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
 - Residual-survival experiments use `infer=True` (realistic). exp04 is a
   **contamination-free control**: it injects *source facts only* (never the
   target value), verbatim, and verifies the target is absent before probing.
-- Recovery is scored by a **validated LLM judge** (0% false-accept → reported
-  leak rates are conservative lower bounds; κ=0.77 vs gold).
-- Re-derivation is **binned by mechanism, never aggregated**, and run on **≥2
-  reasoner models** (gpt-4o-mini, gpt-4o agree).
+- Recovery is scored by a **validated LLM judge**, checked across all 4 models on
+  n=229 gold (false-accept **.0072** = 1/139 for gpt-4o-mini/gpt-4o, 0 for Sonnet5/
+  GPT-5.5 → reported leak rates are lower bounds to within that <1% margin; κ up to
+  .98 vs gold).
+- Re-derivation is **binned by mechanism, never aggregated**, and run on the **4-reasoner
+  adversary panel** (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5), taking the worst.
 - The parametric floor **ρ is measured on a gradient** (exp07), not asserted:
   some facts stay recoverable from non-deletable world knowledge alone, so
   completeness cannot be certified (ρ>τ) even with residual=0 — the limit result.
-- Both re-derivation and ρ are **reasoner-model-dependent**, so they are run on
-  ≥2 reasoners (gpt-4o-mini, gpt-4o).
-- **Membership inference (exp08)** is powered (n=84 members + 2 matched twins
-  each = 168 controls, bootstrap 95% CI + label-permutation p): artifact-aware
-  deletion drives the AUC to **0.52** (CI [0.498, 0.552] includes 0.5, though the
-  permutation test is marginally significant, p=.02) — it attenuates the signal
+- Both re-derivation and ρ are **reasoner-model-dependent**, so they are run on the
+  4-reasoner panel (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5), certifying by the worst.
+- **Membership inference (exp08)** is powered (n=253 members + 3 matched twins
+  each = 759 controls, bootstrap 95% CI + label-permutation p): artifact-aware
+  deletion drives the AUC to **0.51** (CI [0.498, 0.523] includes 0.5, though the
+  permutation test is marginally significant, p=.04) — it attenuates the signal
   toward chance but does not provably eliminate it. Naive single-record deletion
-  **does** leave a detectable signal (AUC 0.67, p=.001); the intact sanity
-  (AUC 0.67, p=.001) confirms the test has power.
-- The **entailment judge** is validated against hard near-miss negatives (partial
-  operands): use **gpt-4o** for the planner — gpt-4o-mini false-fires on 42% of
-  insufficient operands, which would inflate collateral *k*.
+  **does** leave a detectable signal (AUC 0.66, p=.001); the intact sanity
+  (AUC 0.66, p=.001) confirms the test has power.
+- The **entailment judge** is validated across all 4 models on n=1370 pairs: every
+  model has a **0% multi-hop miss-rate** (never loses a true entailer — the safety
+  property). On near-miss partial operands, false-fire is mini **76%** / gpt-4o
+  **45%** / GPT-5.5 **30%** / Sonnet5 **3.4%**; the planner uses pinned **gpt-4o**,
+  but because it co-deletes over the *known* entailment DAG (not the judge), a
+  judge's false-fire cannot inflate collateral *k*.
 - **Cross-system (exp09, Zep/Graphiti):** explicit `remove_episode` is *clean* for
   edges, but the deleted fact survives in **stale entity/community summaries** (not
   recomputed on deletion) — a by-design KG-residual channel, distinct from Mem0's

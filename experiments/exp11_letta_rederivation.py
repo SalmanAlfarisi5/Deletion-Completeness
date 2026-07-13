@@ -56,7 +56,9 @@ from probes.parametric_probe import ParametricProbe  # noqa: E402
 
 
 def bin_of(fact: dict) -> int:
-    return {"stored": 1, "stored+world": 2, "world": 3}.get(
+    return {"stored": 1, "stored+world": 2, "world": 3,
+            "stored_join": 4, "stored_multilevel": 4, "stored_chain": 5,
+            "stored_or_and": 6, "stored_diamond": 7, "stored_threshold": 8}.get(
         fact.get("rederivation_basis", "stored+world"), 2)
 
 

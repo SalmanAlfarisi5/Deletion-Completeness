@@ -76,8 +76,12 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
     if provider == "openai":
         from openai import OpenAI
 
+        # max_retries=8 so rate-limit (429) / transient (5xx) errors back off and retry
+        # instead of raising -> under parallel load a throttled call is retried, not
+        # miscounted as a refusal (which would deflate rho in exp07/estimate_rho).
         client = OpenAI(api_key=config.OPENAI_API_KEY,
-                        base_url=config.OPENAI_BASE_URL or None)
+                        base_url=config.OPENAI_BASE_URL or None,
+                        max_retries=8, timeout=90.0)
         kwargs: dict = dict(model=model, messages=messages)
         if config.uses_max_completion_tokens(model):
             kwargs["max_completion_tokens"] = max_tokens
@@ -92,7 +96,7 @@ def chat(messages: list[dict], model: str | None = None, temperature: float = 0.
     else:  # anthropic
         from anthropic import Anthropic
 
-        client = Anthropic(api_key=config.ANTHROPIC_API_KEY)
+        client = Anthropic(api_key=config.ANTHROPIC_API_KEY, max_retries=8, timeout=90.0)
         system = "\n".join(m["content"] for m in messages if m["role"] == "system")
         convo = [m for m in messages if m["role"] != "system"]
         kwargs = dict(model=model, messages=convo, max_tokens=max_tokens)

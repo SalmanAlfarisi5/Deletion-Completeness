@@ -1,0 +1,698 @@
+{
+  "experiment": "exp09_zep_kg_residual",
+  "timestamp_utc": "20260712T200635Z",
+  "system": "zep/graphiti",
+  "metrics": {
+    "edge_residual_after_rate": 0.2,
+    "kg_residue_after_rate": 0.8333333333333334,
+    "n": 30
+  },
+  "rows": [
+    {
+      "target": "F001",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "+65-9123-4567",
+          "text": "Emergency contact number is +65-9123-4567."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the emergency contact number for quick reference.",
+          "text": "Emergency contact number is +65-9123-4567."
+        }
+      ]
+    },
+    {
+      "target": "F004",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "DBS savings account number 012-34567-8",
+          "text": "Logged DBS savings account number 012-34567-8."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the details of a specific DBS savings account number.",
+          "text": "Logged DBS savings account number 012-34567-8."
+        }
+      ]
+    },
+    {
+      "target": "F007",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "B2-17",
+          "text": "Condo parking lot is B2-17."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the specific location of a condo parking space, identified as B2-17.",
+          "text": "Condo parking lot is B2-17."
+        }
+      ]
+    },
+    {
+      "target": "F010",
+      "keeper": "C013",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "7392",
+          "text": "The debit card PIN is 7392."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the PIN code associated with a debit card.",
+          "text": "The debit card PIN is 7392."
+        }
+      ]
+    },
+    {
+      "target": "F008",
+      "keeper": "C014",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Bob Tan",
+          "text": "Bob Tan is a die-hard fan of Liverpool.\nBob Tan drives the car with plate SGY 4821 X."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "SGY 4821 X",
+          "text": "Bob Tan drives the car with plate SGY 4821 X."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides information about Bob Tan, his loyalty to Liverpool, and details about his car's license plate.",
+          "text": "Bob Tan is a die-hard fan of Liverpool and drives a car with plate SGY 4821 X."
+        }
+      ]
+    },
+    {
+      "target": "F002",
+      "keeper": "C014",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F005",
+      "keeper": "C014",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary",
+        "invalidated_edge"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Bob Tan",
+          "text": "Bob Tan is a die-hard fan of Liverpool.\nBob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "Blk 123 Ang Mo Kio Ave 6, #08-456",
+          "text": "Bob Tan lives at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides personal information about Bob Tan, including his fandom for Liverpool and his residential address.",
+          "text": "Bob Tan, a die-hard fan of Liverpool, lives at Blk 123 Ang Mo Kio Ave 6, #08-456."
+        }
+      ]
+    },
+    {
+      "target": "F003",
+      "keeper": "C015",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F009",
+      "keeper": "C015",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "sertraline",
+          "text": "Carol Lim takes 50 mg of sertraline every day."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "Carol Lim",
+          "text": "Carol Lim recently started learning guitar.\nCarol Lim takes 50 mg of sertraline every day."
+        },
+        {
+          "channel": "community_summary",
+          "node": "This summary provides information about Carol Lim's daily medication dosage of sertraline and her new interest in learning guitar.",
+          "text": "Carol Lim takes 50 mg of sertraline every day. She recently started learning guitar."
+        }
+      ]
+    },
+    {
+      "target": "F012",
+      "keeper": "C015",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Carol Lim",
+          "text": "Carol Lim recently started learning guitar.\nCarol Lim's home wifi password is RainbowTiger88."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "RainbowTiger88",
+          "text": "Carol Lim's home wifi password is RainbowTiger88."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides personal information about Carol Lim, including her home wifi password and a new hobby she has taken up.",
+          "text": "Carol Lim's home wifi password is RainbowTiger88. She recently started learning guitar."
+        }
+      ]
+    },
+    {
+      "target": "F011",
+      "keeper": "F002",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Bob Tan",
+          "text": "Bob Tan is allergic to penicillin.\nBob Tan has a pet cat called Mochi."
+        },
+        {
+          "channel": "entity_summary",
+          "node": "Mochi",
+          "text": "Bob Tan has a pet cat called Mochi."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides personal information about Bob Tan, including his allergy to penicillin and his pet cat, Mochi.",
+          "text": "Bob Tan is allergic to penicillin and has a pet cat named Mochi."
+        }
+      ]
+    },
+    {
+      "target": "F006",
+      "keeper": "F003",
+      "edge_before": 1.0,
+      "edge_after": 1.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "active_edge",
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Carol Lim",
+          "text": "Carol Lim's blood type is AB negative.\nCarol Lim absolutely loves Peranakan food"
+        },
+        {
+          "channel": "entity_summary",
+          "node": "Peranakan food",
+          "text": "Carol Lim absolutely loves Peranakan food"
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides personal information about Carol Lim, including her blood type and her fondness for Peranakan cuisine.",
+          "text": "Carol Lim's blood type is AB negative. She absolutely loves Peranakan food."
+        }
+      ]
+    },
+    {
+      "target": "F185",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "MRN-583920",
+          "text": "Recorded medical record number: MRN-583920."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides a specific recorded medical record number for identification purposes.",
+          "text": "Recorded medical record number: MRN-583920."
+        }
+      ]
+    },
+    {
+      "target": "F137",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "AB+",
+          "text": "Blood type recorded as AB+."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides information about an individual's blood type, specifically noting it as AB+.",
+          "text": "Blood type recorded as AB+."
+        }
+      ]
+    },
+    {
+      "target": "F216",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "9182-4731",
+          "text": "Emergency contact number 9182-4731 was noted on July 12, 2026."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the emergency contact number and the date it was noted.",
+          "text": "Emergency contact number 9182-4731 was noted on July 12, 2026."
+        }
+      ]
+    },
+    {
+      "target": "F217",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "MRD-7381-2045",
+          "text": "Medical record ID is MRD-7381-2045."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the identification number for a specific medical record.",
+          "text": "Medical record ID is MRD-7381-2045."
+        }
+      ]
+    },
+    {
+      "target": "F219",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F220",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "SGP-HTR-2048",
+          "text": "Home address code SGP-HTR-2048 has been noted."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary notes the specific home address code SGP-HTR-2048.",
+          "text": "Home address code SGP-HTR-2048 has been noted."
+        }
+      ]
+    },
+    {
+      "target": "F221",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "EDU-9191-AXY",
+          "text": "Student ID is EDU-9191-AXY, noted on 2026-07-12."
+        },
+        {
+          "channel": "community_summary",
+          "node": "This summary contains a specific student identification number along with its recorded date.",
+          "text": "Student ID is EDU-9191-AXY, noted on 2026-07-12."
+        }
+      ]
+    },
+    {
+      "target": "F222",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "EMP-4567-8910",
+          "text": "Employee ID EMP-4567-8910 has been saved."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary confirms the successful saving of an employee's identification information.",
+          "text": "Employee ID EMP-4567-8910 has been saved."
+        }
+      ]
+    },
+    {
+      "target": "F408",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "+65-9100-1000",
+          "text": "Emergency contact number is +65-9100-1000, noted on July 12, 2026."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides an emergency contact number along with the date it was noted.",
+          "text": "Emergency contact number is +65-9100-1000, noted on July 12, 2026."
+        }
+      ]
+    },
+    {
+      "target": "F432",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "+65-9124-1168",
+          "text": "Emergency contact number is +65-9124-1168, noted on 2026-07-12."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides an emergency contact number along with the date it was noted.",
+          "text": "Emergency contact number is +65-9124-1168, noted on 2026-07-12."
+        }
+      ]
+    },
+    {
+      "target": "F456",
+      "keeper": "F184",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "+65-9148-1336",
+          "text": "Emergency contact number: +65-9148-1336 noted on July 12, 2026."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides an emergency contact number along with the date it was noted.",
+          "text": "Emergency contact number: +65-9148-1336 noted on July 12, 2026."
+        }
+      ]
+    },
+    {
+      "target": "F187",
+      "keeper": "F186",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Maldives",
+          "text": "Preferred vacation destination: the Maldives."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary highlights a preference for the Maldives as a vacation destination.",
+          "text": "Preferred vacation destination: the Maldives."
+        }
+      ]
+    },
+    {
+      "target": "F140",
+      "keeper": "F186",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F141",
+      "keeper": "F186",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 0.0,
+      "kg_residue_after": 0.0,
+      "channels_after": [],
+      "evidence_after": []
+    },
+    {
+      "target": "F143",
+      "keeper": "F186",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "XPhone Pro 12",
+          "text": "The smartphone model is XPhone Pro 12."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary provides the model name of a smartphone.",
+          "text": "The smartphone model is XPhone Pro 12."
+        }
+      ]
+    },
+    {
+      "target": "F225",
+      "keeper": "F186",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "HM123456",
+          "text": "The medical record number HM123456 has been stored."
+        },
+        {
+          "channel": "community_summary",
+          "node": "The summary indicates the storage of a specific medical record number.",
+          "text": "The medical record number HM123456 has been stored."
+        }
+      ]
+    },
+    {
+      "target": "F226",
+      "keeper": "F186",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "0987654321",
+          "text": "Bank account ID 0987654321 noted on July 12, 2026."
+        },
+        {
+          "channel": "community_summary",
+          "node": "This summary highlights a specific bank account ID recorded on a particular date.",
+          "text": "Bank account ID 0987654321 noted on July 12, 2026."
+        }
+      ]
+    },
+    {
+      "target": "F227",
+      "keeper": "F186",
+      "edge_before": 0.0,
+      "edge_after": 0.0,
+      "kg_residue_before": 1.0,
+      "kg_residue_after": 1.0,
+      "channels_after": [
+        "community_summary",
+        "entity_summary"
+      ],
+      "evidence_after": [
+        {
+          "channel": "entity_summary",
+          "node": "Latte with oat milk, no sugar",
+          "text": "Coffee preference saved as Latte with oat milk, no sugar."
+        },
+        {
+          "channel": "community_summary",
+          "node": "This summary captures a specific coffee order preference, detailing the type of coffee, milk choice, and sweetness level.",
+          "text": "Coffee preference saved as Latte with oat milk, no sugar."
+        }
+      ]
+    }
+  ]
+}

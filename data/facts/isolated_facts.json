@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "description": "Isolated facts: arbitrary values with NO entailment links to any other stored fact. Recovery after deletion can only be RESIDUAL SURVIVAL (a derived artifact still contains it), never re-derivation. Parametric risk rho is ~0 by construction (values are synthetic). All persons are fictional. [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)] [uniqueness pass 2026-07-02: 15 colliding facts regenerated to globally-unique probe values verified against the combined isolated+context store] [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)]",
+    "description": "Isolated facts: arbitrary values with NO entailment links to any other stored fact. Recovery after deletion can only be RESIDUAL SURVIVAL (a derived artifact still contains it), never re-derivation. Parametric risk rho is ~0 by construction (values are synthetic). All persons are fictional. [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)] [uniqueness pass 2026-07-02: 15 colliding facts regenerated to globally-unique probe values verified against the combined isolated+context store] [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)] [extended: enlarged to >=15 fictional personas across >=6 categories; every new fact passed the parametric rho~0 gate (not recoverable by the base model)]",
     "account_owner": "Alice Chen",
     "fields": {
       "id": "stable identifier",
@@ -296,18 +296,6 @@
       ],
       "entailed_by": [],
       "note": "Account number is arbitrary; not inferable from any other fact."
-    },
-    {
-      "id": "F195",
-      "subject": "Xin Yi Chua",
-      "category": "preference",
-      "text": "Xin Yi Chua prefers green tea over coffee.",
-      "utterance": "Note that I prefer green tea over coffee.",
-      "probe_value": [
-        "green tea"
-      ],
-      "entailed_by": [],
-      "note": "Preference is arbitrary; not inferable from any other fact."
     },
     {
       "id": "F196",
@@ -1030,6 +1018,2048 @@
       ],
       "entailed_by": [],
       "note": "Serial number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F216",
+      "subject": "Wei Jie Tan",
+      "category": "personal_contact",
+      "text": "Wei Jie Tan's emergency contact number is 9182-4731.",
+      "utterance": "Save my emergency contact number: 9182-4731.",
+      "probe_value": [
+        "9182-4731"
+      ],
+      "entailed_by": [],
+      "note": "Contact number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F217",
+      "subject": "Wei Jie Tan",
+      "category": "medical",
+      "text": "Wei Jie Tan's medical record ID is MRD-7381-2045.",
+      "utterance": "Store my medical record ID: MRD-7381-2045.",
+      "probe_value": [
+        "MRD-7381-2045"
+      ],
+      "entailed_by": [],
+      "note": "Record ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F219",
+      "subject": "Wei Jie Tan",
+      "category": "preference",
+      "text": "Wei Jie Tan's favorite coffee blend is 'Arabica Gold'.",
+      "utterance": "Save my favorite coffee blend: Arabica Gold.",
+      "probe_value": [
+        "Arabica Gold"
+      ],
+      "entailed_by": [],
+      "note": "Coffee blend is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F220",
+      "subject": "Wei Jie Tan",
+      "category": "location",
+      "text": "Wei Jie Tan's home address code is SGP-HTR-2048.",
+      "utterance": "Store my home address code: SGP-HTR-2048.",
+      "probe_value": [
+        "SGP-HTR-2048"
+      ],
+      "entailed_by": [],
+      "note": "Address code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F221",
+      "subject": "Wei Jie Tan",
+      "category": "education",
+      "text": "Wei Jie Tan's student ID is EDU-9191-AXY.",
+      "utterance": "Remember my student ID: EDU-9191-AXY.",
+      "probe_value": [
+        "EDU-9191-AXY"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F222",
+      "subject": "Wei Jie Tan",
+      "category": "employment",
+      "text": "Wei Jie Tan's employee ID is EMP-4567-8910.",
+      "utterance": "Save my employee ID: EMP-4567-8910.",
+      "probe_value": [
+        "EMP-4567-8910"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F225",
+      "subject": "Hui Min Lim",
+      "category": "medical",
+      "text": "Hui Min Lim's medical record number is HM123456.",
+      "utterance": "Store my medical record number: HM123456.",
+      "probe_value": [
+        "HM123456"
+      ],
+      "entailed_by": [],
+      "note": "The record number is arbitrary; it does not relate to any personal details."
+    },
+    {
+      "id": "F226",
+      "subject": "Hui Min Lim",
+      "category": "financial",
+      "text": "Hui Min Lim's bank account ID is 0987654321.",
+      "utterance": "Remember my bank account ID: 0987654321.",
+      "probe_value": [
+        "0987654321"
+      ],
+      "entailed_by": [],
+      "note": "The account ID is arbitrary; it is not derived from any other information."
+    },
+    {
+      "id": "F227",
+      "subject": "Hui Min Lim",
+      "category": "preference",
+      "text": "Hui Min Lim's preferred coffee order is 'Latte with oat milk, no sugar'.",
+      "utterance": "Save my coffee preference: Latte with oat milk, no sugar.",
+      "probe_value": [
+        "Latte with oat milk, no sugar"
+      ],
+      "entailed_by": [],
+      "note": "The order is arbitrary; it cannot be inferred from lifestyle choices."
+    },
+    {
+      "id": "F228",
+      "subject": "Hui Min Lim",
+      "category": "location",
+      "text": "Hui Min Lim's favorite park is 'Serangoon Gardens Park'.",
+      "utterance": "Add my favorite park: Serangoon Gardens Park.",
+      "probe_value": [
+        "Serangoon Gardens Park"
+      ],
+      "entailed_by": [],
+      "note": "The park name is arbitrary; it doesn't relate to any identifiable patterns."
+    },
+    {
+      "id": "F232",
+      "subject": "Jun Wei Ong",
+      "category": "personal_contact",
+      "text": "Jun Wei Ong's personal contact ID is PZ3QX7J5L8.",
+      "utterance": "Save my personal contact ID: PZ3QX7J5L8.",
+      "probe_value": [
+        "PZ3QX7J5L8"
+      ],
+      "entailed_by": [],
+      "note": "Contact ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F233",
+      "subject": "Jun Wei Ong",
+      "category": "medical",
+      "text": "Jun Wei Ong's medical record number is 4B2M1X7K9A.",
+      "utterance": "Store my medical record number: 4B2M1X7K9A.",
+      "probe_value": [
+        "4B2M1X7K9A"
+      ],
+      "entailed_by": [],
+      "note": "Medical record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F234",
+      "subject": "Jun Wei Ong",
+      "category": "financial",
+      "text": "Jun Wei Ong's bank account number is 987654321012.",
+      "utterance": "Remember my bank account number: 987654321012.",
+      "probe_value": [
+        "987654321012"
+      ],
+      "entailed_by": [],
+      "note": "Bank account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F235",
+      "subject": "Jun Wei Ong",
+      "category": "preference",
+      "text": "Jun Wei Ong's favorite coffee blend is 'Dark Roast 42'.",
+      "utterance": "Save my favorite coffee blend: Dark Roast 42.",
+      "probe_value": [
+        "Dark Roast 42"
+      ],
+      "entailed_by": [],
+      "note": "Coffee blend is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F236",
+      "subject": "Jun Wei Ong",
+      "category": "location",
+      "text": "Jun Wei Ong's preferred vacation spot code is V3N0K6T2.",
+      "utterance": "Store my preferred vacation spot code: V3N0K6T2.",
+      "probe_value": [
+        "V3N0K6T2"
+      ],
+      "entailed_by": [],
+      "note": "Vacation spot code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F237",
+      "subject": "Jun Wei Ong",
+      "category": "education",
+      "text": "Jun Wei Ong's student ID is ED123456789.",
+      "utterance": "Remember my student ID: ED123456789.",
+      "probe_value": [
+        "ED123456789"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F238",
+      "subject": "Jun Wei Ong",
+      "category": "employment",
+      "text": "Jun Wei Ong's employee ID is EMP-567890.",
+      "utterance": "Save my employee ID: EMP-567890.",
+      "probe_value": [
+        "EMP-567890"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F241",
+      "subject": "Mei Fang Goh",
+      "category": "medical",
+      "text": "Mei Fang Goh's blood type is O+.",
+      "utterance": "Record my blood type as O+.",
+      "probe_value": [
+        "O+"
+      ],
+      "entailed_by": [],
+      "note": "Blood type is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F243",
+      "subject": "Mei Fang Goh",
+      "category": "preference",
+      "text": "Mei Fang Goh prefers the color teal.",
+      "utterance": "Note that my favorite color is teal.",
+      "probe_value": [
+        "teal"
+      ],
+      "entailed_by": [],
+      "note": "Color preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F245",
+      "subject": "Mei Fang Goh",
+      "category": "education",
+      "text": "Mei Fang Goh's student ID is A12345678.",
+      "utterance": "Save my student ID as A12345678.",
+      "probe_value": [
+        "A12345678"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F247",
+      "subject": "Mei Fang Goh",
+      "category": "device",
+      "text": "Mei Fang Goh's smartphone model is XZ-9000.",
+      "utterance": "Keep my smartphone model as XZ-9000.",
+      "probe_value": [
+        "XZ-9000"
+      ],
+      "entailed_by": [],
+      "note": "Device model is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F249",
+      "subject": "Boon Hock Teo",
+      "category": "medical",
+      "text": "Boon Hock Teo's medical record ID is M123456789.",
+      "utterance": "Store my medical record ID: M123456789.",
+      "probe_value": [
+        "M123456789"
+      ],
+      "entailed_by": [],
+      "note": "Record ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F251",
+      "subject": "Boon Hock Teo",
+      "category": "preference",
+      "text": "Boon Hock Teo's preferred coffee order is 'Caramel Macchiato, no foam'.",
+      "utterance": "Save my coffee preference: Caramel Macchiato, no foam.",
+      "probe_value": [
+        "Caramel Macchiato, no foam"
+      ],
+      "entailed_by": [],
+      "note": "Coffee order is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F252",
+      "subject": "Boon Hock Teo",
+      "category": "location",
+      "text": "Boon Hock Teo's favorite park is 'Greenwood Park'.",
+      "utterance": "Remember my favorite park: Greenwood Park.",
+      "probe_value": [
+        "Greenwood Park"
+      ],
+      "entailed_by": [],
+      "note": "Park name is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F253",
+      "subject": "Boon Hock Teo",
+      "category": "education",
+      "text": "Boon Hock Teo's student ID is S2023-ABCD.",
+      "utterance": "Store my student ID: S2023-ABCD.",
+      "probe_value": [
+        "S2023-ABCD"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F254",
+      "subject": "Boon Hock Teo",
+      "category": "employment",
+      "text": "Boon Hock Teo's employee ID is EID-001234.",
+      "utterance": "Save my employee ID: EID-001234.",
+      "probe_value": [
+        "EID-001234"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F256",
+      "subject": "Xin Yi Chua",
+      "category": "personal_contact",
+      "text": "Xin Yi Chua's personal contact code is PZ7Q3B9L.",
+      "utterance": "Store my personal contact code: PZ7Q3B9L.",
+      "probe_value": [
+        "PZ7Q3B9L"
+      ],
+      "entailed_by": [],
+      "note": "Contact code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F257",
+      "subject": "Xin Yi Chua",
+      "category": "medical",
+      "text": "Xin Yi Chua's medical record number is 6F4Z8M2X.",
+      "utterance": "Remember my medical record number: 6F4Z8M2X.",
+      "probe_value": [
+        "6F4Z8M2X"
+      ],
+      "entailed_by": [],
+      "note": "Medical record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F258",
+      "subject": "Xin Yi Chua",
+      "category": "financial",
+      "text": "Xin Yi Chua's bank account identifier is 3ZQ5H8L2.",
+      "utterance": "Save my bank account identifier: 3ZQ5H8L2.",
+      "probe_value": [
+        "3ZQ5H8L2"
+      ],
+      "entailed_by": [],
+      "note": "Bank account identifier is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F259",
+      "subject": "Xin Yi Chua",
+      "category": "preference",
+      "text": "Xin Yi Chua's favorite snack code is SNK4T1C.",
+      "utterance": "Note my favorite snack code: SNK4T1C.",
+      "probe_value": [
+        "SNK4T1C"
+      ],
+      "entailed_by": [],
+      "note": "Snack code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F260",
+      "subject": "Xin Yi Chua",
+      "category": "location",
+      "text": "Xin Yi Chua's residence identifier is RSD9K3G5.",
+      "utterance": "Store my residence identifier: RSD9K3G5.",
+      "probe_value": [
+        "RSD9K3G5"
+      ],
+      "entailed_by": [],
+      "note": "Residence identifier is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F261",
+      "subject": "Xin Yi Chua",
+      "category": "education",
+      "text": "Xin Yi Chua's student ID number is ED8F1K6B.",
+      "utterance": "Remember my student ID number: ED8F1K6B.",
+      "probe_value": [
+        "ED8F1K6B"
+      ],
+      "entailed_by": [],
+      "note": "Student ID number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F262",
+      "subject": "Xin Yi Chua",
+      "category": "employment",
+      "text": "Xin Yi Chua's employee reference code is EMP5Q2R9.",
+      "utterance": "Save my employee reference code: EMP5Q2R9.",
+      "probe_value": [
+        "EMP5Q2R9"
+      ],
+      "entailed_by": [],
+      "note": "Employee reference code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F263",
+      "subject": "Xin Yi Chua",
+      "category": "device",
+      "text": "Xin Yi Chua's smartphone IMEI number is 352817054321678.",
+      "utterance": "Store my smartphone IMEI number: 352817054321678.",
+      "probe_value": [
+        "352817054321678"
+      ],
+      "entailed_by": [],
+      "note": "IMEI number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F265",
+      "subject": "Kai Xin Ng",
+      "category": "medical",
+      "text": "Kai Xin Ng's medical record number is 7854-3210.",
+      "utterance": "Store my medical record number as 7854-3210.",
+      "probe_value": [
+        "7854-3210"
+      ],
+      "entailed_by": [],
+      "note": "Record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F267",
+      "subject": "Kai Xin Ng",
+      "category": "preference",
+      "text": "Kai Xin Ng's preferred coffee order is 'Caramel Latte, no sugar'.",
+      "utterance": "Save my coffee preference as Caramel Latte, no sugar.",
+      "probe_value": [
+        "Caramel Latte, no sugar"
+      ],
+      "entailed_by": [],
+      "note": "Preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F271",
+      "subject": "Kai Xin Ng",
+      "category": "device",
+      "text": "Kai Xin Ng's tablet serial number is A1B2C3D4E5F6.",
+      "utterance": "Save my tablet serial number: A1B2C3D4E5F6.",
+      "probe_value": [
+        "A1B2C3D4E5F6"
+      ],
+      "entailed_by": [],
+      "note": "Serial is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F272",
+      "subject": "Pei Shan Sim",
+      "category": "personal_contact",
+      "text": "Pei Shan Sim's emergency contact number is 9182-3745.",
+      "utterance": "Store my emergency contact number: 9182-3745.",
+      "probe_value": [
+        "9182-3745"
+      ],
+      "entailed_by": [],
+      "note": "The number is arbitrary; it doesn't correlate with any known pattern."
+    },
+    {
+      "id": "F275",
+      "subject": "Pei Shan Sim",
+      "category": "preference",
+      "text": "Pei Shan Sim prefers the brand 'ZyloTech' for electronics.",
+      "utterance": "Remember that I prefer ZyloTech for electronics.",
+      "probe_value": [
+        "ZyloTech"
+      ],
+      "entailed_by": [],
+      "note": "Brand preference is subjective and arbitrary; not deducible from external factors."
+    },
+    {
+      "id": "F276",
+      "subject": "Pei Shan Sim",
+      "category": "location",
+      "text": "Pei Shan Sim's favorite park is 'Serene Green Park'.",
+      "utterance": "Save my favorite park: Serene Green Park.",
+      "probe_value": [
+        "Serene Green Park"
+      ],
+      "entailed_by": [],
+      "note": "Park names are unique and arbitrary; they cannot be inferred."
+    },
+    {
+      "id": "F284",
+      "subject": "Nurul Aisyah",
+      "category": "location",
+      "text": "Nurul Aisyah's preferred meeting place is at the Esplanade.",
+      "utterance": "Save my preferred meeting place as the Esplanade.",
+      "probe_value": [
+        "Esplanade"
+      ],
+      "entailed_by": [],
+      "note": "The meeting place is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F287",
+      "subject": "Nurul Aisyah",
+      "category": "device",
+      "text": "Nurul Aisyah's smartphone serial number is SM-G981B123456.",
+      "utterance": "Save my smartphone serial number: SM-G981B123456.",
+      "probe_value": [
+        "SM-G981B123456"
+      ],
+      "entailed_by": [],
+      "note": "The serial number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F288",
+      "subject": "Faizal Osman",
+      "category": "personal_contact",
+      "text": "Faizal Osman's personal contact ID is 9F3D8A21B7C5.",
+      "utterance": "Store my personal contact ID: 9F3D8A21B7C5.",
+      "probe_value": [
+        "9F3D8A21B7C5"
+      ],
+      "entailed_by": [],
+      "note": "ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F289",
+      "subject": "Faizal Osman",
+      "category": "medical",
+      "text": "Faizal Osman's medical record number is MRE-7842-56K9.",
+      "utterance": "Remember my medical record number: MRE-7842-56K9.",
+      "probe_value": [
+        "MRE-7842-56K9"
+      ],
+      "entailed_by": [],
+      "note": "Record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F291",
+      "subject": "Faizal Osman",
+      "category": "preference",
+      "text": "Faizal Osman's preferred coffee order is 'Caramel Macchiato, extra hot, no whipped cream'.",
+      "utterance": "Store my coffee preference: Caramel Macchiato, extra hot, no whipped cream.",
+      "probe_value": [
+        "Caramel Macchiato, extra hot, no whipped cream"
+      ],
+      "entailed_by": [],
+      "note": "Preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F293",
+      "subject": "Faizal Osman",
+      "category": "education",
+      "text": "Faizal Osman's student ID is EDU-2023-FAI.",
+      "utterance": "Save my student ID: EDU-2023-FAI.",
+      "probe_value": [
+        "EDU-2023-FAI"
+      ],
+      "entailed_by": [],
+      "note": "ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F294",
+      "subject": "Faizal Osman",
+      "category": "employment",
+      "text": "Faizal Osman's employee ID is EMP-009876.",
+      "utterance": "Store my employee ID: EMP-009876.",
+      "probe_value": [
+        "EMP-009876"
+      ],
+      "entailed_by": [],
+      "note": "ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F296",
+      "subject": "Aishah Ibrahim",
+      "category": "personal_contact",
+      "text": "Aishah Ibrahim's secondary email address is aibrahim_77@randommail.com.",
+      "utterance": "Add my secondary email: aibrahim_77@randommail.com.",
+      "probe_value": [
+        "aibrahim_77@randommail.com"
+      ],
+      "entailed_by": [],
+      "note": "Email is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F297",
+      "subject": "Aishah Ibrahim",
+      "category": "medical",
+      "text": "Aishah Ibrahim's medical record number is 9B7F2C4D8E.",
+      "utterance": "Store my medical record number: 9B7F2C4D8E.",
+      "probe_value": [
+        "9B7F2C4D8E"
+      ],
+      "entailed_by": [],
+      "note": "Record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F299",
+      "subject": "Aishah Ibrahim",
+      "category": "preference",
+      "text": "Aishah Ibrahim's preferred coffee order is 'Caramel Macchiato, extra shot, no foam'.",
+      "utterance": "Save my coffee preference: Caramel Macchiato, extra shot, no foam.",
+      "probe_value": [
+        "Caramel Macchiato, extra shot, no foam"
+      ],
+      "entailed_by": [],
+      "note": "Preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F300",
+      "subject": "Aishah Ibrahim",
+      "category": "location",
+      "text": "Aishah Ibrahim's favorite park is 'Labrador Nature Reserve'.",
+      "utterance": "Store my favorite park: Labrador Nature Reserve.",
+      "probe_value": [
+        "Labrador Nature Reserve"
+      ],
+      "entailed_by": [],
+      "note": "Location is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F302",
+      "subject": "Aishah Ibrahim",
+      "category": "employment",
+      "text": "Aishah Ibrahim's employee ID is EMP-2023-456.",
+      "utterance": "Save my employee ID: EMP-2023-456.",
+      "probe_value": [
+        "EMP-2023-456"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F309",
+      "subject": "Hakim Abdullah",
+      "category": "education",
+      "text": "Hakim Abdullah graduated from the Singapore University of Technology and Design in 2020.",
+      "utterance": "I graduated from SUTD in 2020.",
+      "probe_value": [
+        "Singapore University of Technology and Design",
+        "SUTD"
+      ],
+      "entailed_by": [],
+      "note": "Institution name is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F310",
+      "subject": "Hakim Abdullah",
+      "category": "employment",
+      "text": "Hakim Abdullah's employee ID is E123456789.",
+      "utterance": "Store my employee ID: E123456789.",
+      "probe_value": [
+        "E123456789"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F311",
+      "subject": "Hakim Abdullah",
+      "category": "device",
+      "text": "Hakim Abdullah's smartphone model is Galaxy Z Flip 4.",
+      "utterance": "Save my smartphone model: Galaxy Z Flip 4.",
+      "probe_value": [
+        "Galaxy Z Flip 4"
+      ],
+      "entailed_by": [],
+      "note": "Device model is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F314",
+      "subject": "Zarina Mohd",
+      "category": "financial",
+      "text": "Zarina Mohd's bank account number is 765432109876.",
+      "utterance": "Store my bank account number: 765432109876.",
+      "probe_value": [
+        "765432109876"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; lacks inferable context."
+    },
+    {
+      "id": "F316",
+      "subject": "Zarina Mohd",
+      "category": "location",
+      "text": "Zarina Mohd's favorite park is called Green Haven Park.",
+      "utterance": "Add my favorite park: Green Haven Park.",
+      "probe_value": [
+        "Green Haven Park"
+      ],
+      "entailed_by": [],
+      "note": "Park name is arbitrary; cannot be deduced from other facts."
+    },
+    {
+      "id": "F318",
+      "subject": "Zarina Mohd",
+      "category": "employment",
+      "text": "Zarina Mohd's employee ID is ZM12345.",
+      "utterance": "Store my employee ID: ZM12345.",
+      "probe_value": [
+        "ZM12345"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; it does not connect to known identifiers."
+    },
+    {
+      "id": "F323",
+      "subject": "Iskandar Yusof",
+      "category": "preference",
+      "text": "Iskandar Yusof's favorite ice cream flavor is mango.",
+      "utterance": "Note my favorite ice cream flavor: mango.",
+      "probe_value": [
+        "mango"
+      ],
+      "entailed_by": [],
+      "note": "Flavor preference is arbitrary; it cannot be guessed from known facts."
+    },
+    {
+      "id": "F324",
+      "subject": "Iskandar Yusof",
+      "category": "location",
+      "text": "Iskandar Yusof's residential address is 12 Orchard Road, #05-34.",
+      "utterance": "Save my address: 12 Orchard Road, #05-34.",
+      "probe_value": [
+        "12 Orchard Road, #05-34"
+      ],
+      "entailed_by": [],
+      "note": "Address is arbitrary; it cannot be inferred from any other details."
+    },
+    {
+      "id": "F328",
+      "subject": "Deepa Menon",
+      "category": "personal_contact",
+      "text": "Deepa Menon's personal contact code is ZB47KJ9P.",
+      "utterance": "Remember my personal contact code: ZB47KJ9P.",
+      "probe_value": [
+        "ZB47KJ9P"
+      ],
+      "entailed_by": [],
+      "note": "Contact code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F329",
+      "subject": "Deepa Menon",
+      "category": "medical",
+      "text": "Deepa Menon's medical ID number is 8F3H2K1L.",
+      "utterance": "Store my medical ID: 8F3H2K1L.",
+      "probe_value": [
+        "8F3H2K1L"
+      ],
+      "entailed_by": [],
+      "note": "Medical ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F330",
+      "subject": "Deepa Menon",
+      "category": "financial",
+      "text": "Deepa Menon's bank account number is 5623-8894-7436.",
+      "utterance": "Save my bank account number: 5623-8894-7436.",
+      "probe_value": [
+        "5623-8894-7436"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F331",
+      "subject": "Deepa Menon",
+      "category": "preference",
+      "text": "Deepa Menon's favorite coffee blend is 'Sumatra Dark Roast 21A'.",
+      "utterance": "Note my favorite coffee blend: Sumatra Dark Roast 21A.",
+      "probe_value": [
+        "Sumatra Dark Roast 21A"
+      ],
+      "entailed_by": [],
+      "note": "Coffee blend is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F333",
+      "subject": "Deepa Menon",
+      "category": "education",
+      "text": "Deepa Menon's student ID is 2019-SEM9-ABCD.",
+      "utterance": "Store my student ID: 2019-SEM9-ABCD.",
+      "probe_value": [
+        "2019-SEM9-ABCD"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F334",
+      "subject": "Deepa Menon",
+      "category": "employment",
+      "text": "Deepa Menon's employee ID is EMP-1023X.",
+      "utterance": "Save my employee ID: EMP-1023X.",
+      "probe_value": [
+        "EMP-1023X"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F337",
+      "subject": "Suresh Pillai",
+      "category": "medical",
+      "text": "Suresh Pillai's blood type is O-.",
+      "utterance": "Remember that my blood type is O-.",
+      "probe_value": [
+        "O-"
+      ],
+      "entailed_by": [],
+      "note": "Blood type is arbitrary; not derivable from any other information."
+    },
+    {
+      "id": "F339",
+      "subject": "Suresh Pillai",
+      "category": "preference",
+      "text": "Suresh Pillai's preferred coffee order is a double shot espresso.",
+      "utterance": "My coffee preference is a double shot espresso.",
+      "probe_value": [
+        "double shot espresso"
+      ],
+      "entailed_by": [],
+      "note": "Coffee order is arbitrary; it is personal and not inferable."
+    },
+    {
+      "id": "F341",
+      "subject": "Suresh Pillai",
+      "category": "education",
+      "text": "Suresh Pillai's university ID is UNI-2023-0456.",
+      "utterance": "Remember my university ID: UNI-2023-0456.",
+      "probe_value": [
+        "UNI-2023-0456"
+      ],
+      "entailed_by": [],
+      "note": "University ID is arbitrary; it has no relationship to other information."
+    },
+    {
+      "id": "F345",
+      "subject": "Anand Raj",
+      "category": "medical",
+      "text": "Anand Raj's medical record number is MRN-839201.",
+      "utterance": "Record my medical record number: MRN-839201.",
+      "probe_value": [
+        "MRN-839201"
+      ],
+      "entailed_by": [],
+      "note": "Medical record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F347",
+      "subject": "Anand Raj",
+      "category": "preference",
+      "text": "Anand Raj's preferred coffee order is 'Cappuccino with almond milk' at Cafe XYZ.",
+      "utterance": "Remember my coffee order: Cappuccino with almond milk at Cafe XYZ.",
+      "probe_value": [
+        "Cappuccino with almond milk",
+        "Cafe XYZ"
+      ],
+      "entailed_by": [],
+      "note": "Coffee preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F348",
+      "subject": "Anand Raj",
+      "category": "location",
+      "text": "Anand Raj's current residential address is 45 Maple Street, Singapore 123456.",
+      "utterance": "Save my address: 45 Maple Street, Singapore 123456.",
+      "probe_value": [
+        "45 Maple Street, Singapore 123456"
+      ],
+      "entailed_by": [],
+      "note": "Address is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F352",
+      "subject": "Kavitha Subramaniam",
+      "category": "personal_contact",
+      "text": "Kavitha Subramaniam's personal contact ID is PXDZ-48J4-2T9K.",
+      "utterance": "Store my personal contact ID: PXDZ-48J4-2T9K.",
+      "probe_value": [
+        "PXDZ-48J4-2T9K"
+      ],
+      "entailed_by": [],
+      "note": "Contact ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F353",
+      "subject": "Kavitha Subramaniam",
+      "category": "medical",
+      "text": "Kavitha Subramaniam's medical record number is 7D6F-2J9K-WR8Q.",
+      "utterance": "Remember my medical record number: 7D6F-2J9K-WR8Q.",
+      "probe_value": [
+        "7D6F-2J9K-WR8Q"
+      ],
+      "entailed_by": [],
+      "note": "Medical record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F355",
+      "subject": "Kavitha Subramaniam",
+      "category": "preference",
+      "text": "Kavitha Subramaniam's preferred coffee blend is RST-9B1-3M4J.",
+      "utterance": "Store my coffee preference: RST-9B1-3M4J.",
+      "probe_value": [
+        "RST-9B1-3M4J"
+      ],
+      "entailed_by": [],
+      "note": "Coffee blend is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F356",
+      "subject": "Kavitha Subramaniam",
+      "category": "location",
+      "text": "Kavitha Subramaniam's favorite park code is LND-82F1-5X3Z.",
+      "utterance": "Remember my favorite park code: LND-82F1-5X3Z.",
+      "probe_value": [
+        "LND-82F1-5X3Z"
+      ],
+      "entailed_by": [],
+      "note": "Park code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F357",
+      "subject": "Kavitha Subramaniam",
+      "category": "education",
+      "text": "Kavitha Subramaniam's student ID is 9012-ABC-3456.",
+      "utterance": "Save my student ID: 9012-ABC-3456.",
+      "probe_value": [
+        "9012-ABC-3456"
+      ],
+      "entailed_by": [],
+      "note": "Student ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F358",
+      "subject": "Kavitha Subramaniam",
+      "category": "employment",
+      "text": "Kavitha Subramaniam's employee number is EMP-2023-785.",
+      "utterance": "Store my employee number: EMP-2023-785.",
+      "probe_value": [
+        "EMP-2023-785"
+      ],
+      "entailed_by": [],
+      "note": "Employee number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F360",
+      "subject": "Vimal Nair",
+      "category": "personal_contact",
+      "text": "Vimal Nair's emergency contact number is 8654-7321.",
+      "utterance": "Set my emergency contact number to 8654-7321.",
+      "probe_value": [
+        "8654-7321"
+      ],
+      "entailed_by": [],
+      "note": "Number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F362",
+      "subject": "Vimal Nair",
+      "category": "financial",
+      "text": "Vimal Nair's investment account number is 7432-XQZ-159.",
+      "utterance": "Update my investment account number to 7432-XQZ-159.",
+      "probe_value": [
+        "7432-XQZ-159"
+      ],
+      "entailed_by": [],
+      "note": "Account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F363",
+      "subject": "Vimal Nair",
+      "category": "preference",
+      "text": "Vimal Nair's preferred coffee order is a medium latte with almond milk.",
+      "utterance": "Save my coffee preference as a medium latte with almond milk.",
+      "probe_value": [
+        "medium latte with almond milk"
+      ],
+      "entailed_by": [],
+      "note": "Coffee preference is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F365",
+      "subject": "Vimal Nair",
+      "category": "education",
+      "text": "Vimal Nair graduated with a degree in Computer Science from Singapore Institute of Technology.",
+      "utterance": "Record my degree as Computer Science from Singapore Institute of Technology.",
+      "probe_value": [
+        "Computer Science from Singapore Institute of Technology"
+      ],
+      "entailed_by": [],
+      "note": "Degree and institution are arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F366",
+      "subject": "Vimal Nair",
+      "category": "employment",
+      "text": "Vimal Nair's employee ID is 0987-XYZ.",
+      "utterance": "Save my employee ID as 0987-XYZ.",
+      "probe_value": [
+        "0987-XYZ"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F368",
+      "subject": "Latha Krishnan",
+      "category": "personal_contact",
+      "text": "Latha Krishnan's personal contact ID is PKR-4829-ALM.",
+      "utterance": "Save my personal contact ID: PKR-4829-ALM.",
+      "probe_value": [
+        "PKR-4829-ALM"
+      ],
+      "entailed_by": [],
+      "note": "Contact ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F369",
+      "subject": "Latha Krishnan",
+      "category": "medical",
+      "text": "Latha Krishnan's medical record number is 7B8X-5T2Y-QZ1.",
+      "utterance": "Store my medical record number: 7B8X-5T2Y-QZ1.",
+      "probe_value": [
+        "7B8X-5T2Y-QZ1"
+      ],
+      "entailed_by": [],
+      "note": "Medical record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F370",
+      "subject": "Latha Krishnan",
+      "category": "financial",
+      "text": "Latha Krishnan's bank account number is 112-4589-3034.",
+      "utterance": "Remember my bank account number: 112-4589-3034.",
+      "probe_value": [
+        "112-4589-3034"
+      ],
+      "entailed_by": [],
+      "note": "Bank account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F371",
+      "subject": "Latha Krishnan",
+      "category": "preference",
+      "text": "Latha Krishnan's favorite color code is #A3DCA4.",
+      "utterance": "Log my favorite color code: #A3DCA4.",
+      "probe_value": [
+        "#A3DCA4"
+      ],
+      "entailed_by": [],
+      "note": "Color code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F372",
+      "subject": "Latha Krishnan",
+      "category": "location",
+      "text": "Latha Krishnan's preferred travel destination code is SG-TRV-2023.",
+      "utterance": "Save my preferred travel destination code: SG-TRV-2023.",
+      "probe_value": [
+        "SG-TRV-2023"
+      ],
+      "entailed_by": [],
+      "note": "Travel destination code is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F373",
+      "subject": "Latha Krishnan",
+      "category": "education",
+      "text": "Latha Krishnan's student ID number is ED-4052-XYZ.",
+      "utterance": "Store my student ID number: ED-4052-XYZ.",
+      "probe_value": [
+        "ED-4052-XYZ"
+      ],
+      "entailed_by": [],
+      "note": "Student ID number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F374",
+      "subject": "Latha Krishnan",
+      "category": "employment",
+      "text": "Latha Krishnan's employee identification number is EMP-0098-DJK.",
+      "utterance": "Remember my employee ID number: EMP-0098-DJK.",
+      "probe_value": [
+        "EMP-0098-DJK"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F377",
+      "subject": "Marcus Pereira",
+      "category": "medical",
+      "text": "Marcus Pereira's medical record number is MP-2023-AXT9.",
+      "utterance": "Store my medical record number: MP-2023-AXT9.",
+      "probe_value": [
+        "MP-2023-AXT9"
+      ],
+      "entailed_by": [],
+      "note": "Medical record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F378",
+      "subject": "Marcus Pereira",
+      "category": "financial",
+      "text": "Marcus Pereira's bank account number is 001-234567-890.",
+      "utterance": "Remember my bank account number: 001-234567-890.",
+      "probe_value": [
+        "001-234567-890"
+      ],
+      "entailed_by": [],
+      "note": "Bank account number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F379",
+      "subject": "Marcus Pereira",
+      "category": "preference",
+      "text": "Marcus Pereira's preferred coffee order is 'Caramel Macchiato, extra hot, no foam.'",
+      "utterance": "Save my coffee preference: Caramel Macchiato, extra hot, no foam.",
+      "probe_value": [
+        "Caramel Macchiato, extra hot, no foam"
+      ],
+      "entailed_by": [],
+      "note": "Coffee order is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F382",
+      "subject": "Marcus Pereira",
+      "category": "employment",
+      "text": "Marcus Pereira's employee ID is EMP-7845-XYZ.",
+      "utterance": "Save my employee ID: EMP-7845-XYZ.",
+      "probe_value": [
+        "EMP-7845-XYZ"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F388",
+      "subject": "Natalie de Souza",
+      "category": "location",
+      "text": "Natalie de Souza's favorite park is called Green Oasis Park.",
+      "utterance": "Save my favorite park as Green Oasis Park.",
+      "probe_value": [
+        "Green Oasis Park"
+      ],
+      "entailed_by": [],
+      "note": "Park name is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F389",
+      "subject": "Natalie de Souza",
+      "category": "education",
+      "text": "Natalie de Souza graduated with a degree in Environmental Science from Singapore University.",
+      "utterance": "Record my degree as Environmental Science from Singapore University.",
+      "probe_value": [
+        "Environmental Science from Singapore University"
+      ],
+      "entailed_by": [],
+      "note": "Degree information is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F390",
+      "subject": "Natalie de Souza",
+      "category": "employment",
+      "text": "Natalie de Souza's employee ID is 8472-BXJ.",
+      "utterance": "Keep my employee ID as 8472-BXJ.",
+      "probe_value": [
+        "8472-BXJ"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F398",
+      "subject": "Gabriel Sequeira",
+      "category": "employment",
+      "text": "Gabriel Sequeira's employee ID is GSE-2023-001.",
+      "utterance": "Store my employee ID: GSE-2023-001.",
+      "probe_value": [
+        "GSE-2023-001"
+      ],
+      "entailed_by": [],
+      "note": "Employee ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F401",
+      "subject": "Cheryl Theseira",
+      "category": "medical",
+      "text": "Cheryl Theseira's medical record number is 1234-5678-9012.",
+      "utterance": "Store my medical record number: 1234-5678-9012.",
+      "probe_value": [
+        "1234-5678-9012"
+      ],
+      "entailed_by": [],
+      "note": "Record number is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F404",
+      "subject": "Cheryl Theseira",
+      "category": "location",
+      "text": "Cheryl Theseira's favorite park is 'Serangoon Garden Park'.",
+      "utterance": "Store my favorite park: Serangoon Garden Park.",
+      "probe_value": [
+        "Serangoon Garden Park"
+      ],
+      "entailed_by": [],
+      "note": "Park name is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F406",
+      "subject": "Cheryl Theseira",
+      "category": "employment",
+      "text": "Cheryl Theseira's employee ID is 2000456.",
+      "utterance": "Save my employee ID: 2000456.",
+      "probe_value": [
+        "2000456"
+      ],
+      "entailed_by": [],
+      "note": "ID is arbitrary; not inferable from any other fact."
+    },
+    {
+      "id": "F408",
+      "subject": "Wei Jie Tan",
+      "category": "personal_contact",
+      "text": "Wei Jie Tan's emergency contact number is +65-9100-1000.",
+      "utterance": "Please remember my emergency contact number: +65-9100-1000.",
+      "probe_value": [
+        "+65-9100-1000"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F409",
+      "subject": "Hui Min Lim",
+      "category": "device",
+      "text": "Hui Min Lim's laptop serial number is C0BA10013.",
+      "utterance": "Please remember my laptop serial number: C0BA10013.",
+      "probe_value": [
+        "C0BA10013"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F410",
+      "subject": "Jun Wei Ong",
+      "category": "financial",
+      "text": "Jun Wei Ong's bank account number is 174-100182-3.",
+      "utterance": "Please remember my bank account number: 174-100182-3.",
+      "probe_value": [
+        "174-100182-3"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F411",
+      "subject": "Mei Fang Goh",
+      "category": "financial",
+      "text": "Mei Fang Goh's debit card PIN is 7261.",
+      "utterance": "Please remember my debit card PIN: 7261.",
+      "probe_value": [
+        "7261"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary debit card PIN; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F412",
+      "subject": "Boon Hock Teo",
+      "category": "location",
+      "text": "Boon Hock Teo's home postal code is S100068.",
+      "utterance": "Please remember my home postal code: S100068.",
+      "probe_value": [
+        "S100068"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F413",
+      "subject": "Xin Yi Chua",
+      "category": "device",
+      "text": "Xin Yi Chua's vehicle licence plate is SFP1025J.",
+      "utterance": "Please remember my vehicle licence plate: SFP1025J.",
+      "probe_value": [
+        "SFP1025J"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F414",
+      "subject": "Kai Xin Ng",
+      "category": "personal_contact",
+      "text": "Kai Xin Ng's home wifi password is RainbowKoi118.",
+      "utterance": "Please remember my home wifi password: RainbowKoi118.",
+      "probe_value": [
+        "RainbowKoi118"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home wifi password; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F415",
+      "subject": "Pei Shan Sim",
+      "category": "employment",
+      "text": "Pei Shan Sim's staff pass ID is EMP-1371-HZ.",
+      "utterance": "Please remember my staff pass ID: EMP-1371-HZ.",
+      "probe_value": [
+        "EMP-1371-HZ"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary staff pass ID; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F416",
+      "subject": "Nurul Aisyah",
+      "category": "personal_contact",
+      "text": "Nurul Aisyah's emergency contact number is +65-9108-1056.",
+      "utterance": "Please remember my emergency contact number: +65-9108-1056.",
+      "probe_value": [
+        "+65-9108-1056"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F417",
+      "subject": "Faizal Osman",
+      "category": "device",
+      "text": "Faizal Osman's laptop serial number is C0JA10117.",
+      "utterance": "Please remember my laptop serial number: C0JA10117.",
+      "probe_value": [
+        "C0JA10117"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F418",
+      "subject": "Aishah Ibrahim",
+      "category": "financial",
+      "text": "Aishah Ibrahim's bank account number is 470-100910-2.",
+      "utterance": "Please remember my bank account number: 470-100910-2.",
+      "probe_value": [
+        "470-100910-2"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F419",
+      "subject": "Hakim Abdullah",
+      "category": "financial",
+      "text": "Hakim Abdullah's debit card PIN is 5957.",
+      "utterance": "Please remember my debit card PIN: 5957.",
+      "probe_value": [
+        "5957"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary debit card PIN; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F420",
+      "subject": "Zarina Mohd",
+      "category": "location",
+      "text": "Zarina Mohd's home postal code is S100204.",
+      "utterance": "Please remember my home postal code: S100204.",
+      "probe_value": [
+        "S100204"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F421",
+      "subject": "Iskandar Yusof",
+      "category": "device",
+      "text": "Iskandar Yusof's vehicle licence plate is SNN1065N.",
+      "utterance": "Please remember my vehicle licence plate: SNN1065N.",
+      "probe_value": [
+        "SNN1065N"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F422",
+      "subject": "Deepa Menon",
+      "category": "personal_contact",
+      "text": "Deepa Menon's home wifi password is OrchidLion142.",
+      "utterance": "Please remember my home wifi password: OrchidLion142.",
+      "probe_value": [
+        "OrchidLion142"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home wifi password; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F423",
+      "subject": "Suresh Pillai",
+      "category": "employment",
+      "text": "Suresh Pillai's staff pass ID is EMP-1795-PJ.",
+      "utterance": "Please remember my staff pass ID: EMP-1795-PJ.",
+      "probe_value": [
+        "EMP-1795-PJ"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary staff pass ID; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F424",
+      "subject": "Anand Raj",
+      "category": "personal_contact",
+      "text": "Anand Raj's emergency contact number is +65-9116-1112.",
+      "utterance": "Please remember my emergency contact number: +65-9116-1112.",
+      "probe_value": [
+        "+65-9116-1112"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F425",
+      "subject": "Kavitha Subramaniam",
+      "category": "device",
+      "text": "Kavitha Subramaniam's laptop serial number is C0RA10221.",
+      "utterance": "Please remember my laptop serial number: C0RA10221.",
+      "probe_value": [
+        "C0RA10221"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F426",
+      "subject": "Vimal Nair",
+      "category": "financial",
+      "text": "Vimal Nair's bank account number is 766-101638-1.",
+      "utterance": "Please remember my bank account number: 766-101638-1.",
+      "probe_value": [
+        "766-101638-1"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F427",
+      "subject": "Latha Krishnan",
+      "category": "financial",
+      "text": "Latha Krishnan's debit card PIN is 4653.",
+      "utterance": "Please remember my debit card PIN: 4653.",
+      "probe_value": [
+        "4653"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary debit card PIN; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F428",
+      "subject": "Marcus Pereira",
+      "category": "location",
+      "text": "Marcus Pereira's home postal code is S100340.",
+      "utterance": "Please remember my home postal code: S100340.",
+      "probe_value": [
+        "S100340"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F429",
+      "subject": "Natalie de Souza",
+      "category": "device",
+      "text": "Natalie de Souza's vehicle licence plate is SVL1105R.",
+      "utterance": "Please remember my vehicle licence plate: SVL1105R.",
+      "probe_value": [
+        "SVL1105R"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F430",
+      "subject": "Gabriel Sequeira",
+      "category": "personal_contact",
+      "text": "Gabriel Sequeira's home wifi password is TigerEagle166.",
+      "utterance": "Please remember my home wifi password: TigerEagle166.",
+      "probe_value": [
+        "TigerEagle166"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home wifi password; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F431",
+      "subject": "Cheryl Theseira",
+      "category": "employment",
+      "text": "Cheryl Theseira's staff pass ID is EMP-2219-XT.",
+      "utterance": "Please remember my staff pass ID: EMP-2219-XT.",
+      "probe_value": [
+        "EMP-2219-XT"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary staff pass ID; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F432",
+      "subject": "Wei Jie Tan",
+      "category": "personal_contact",
+      "text": "Wei Jie Tan's emergency contact number is +65-9124-1168.",
+      "utterance": "Please remember my emergency contact number: +65-9124-1168.",
+      "probe_value": [
+        "+65-9124-1168"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F433",
+      "subject": "Hui Min Lim",
+      "category": "device",
+      "text": "Hui Min Lim's laptop serial number is C0ZA10325.",
+      "utterance": "Please remember my laptop serial number: C0ZA10325.",
+      "probe_value": [
+        "C0ZA10325"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F434",
+      "subject": "Jun Wei Ong",
+      "category": "financial",
+      "text": "Jun Wei Ong's bank account number is 162-102366-9.",
+      "utterance": "Please remember my bank account number: 162-102366-9.",
+      "probe_value": [
+        "162-102366-9"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F435",
+      "subject": "Mei Fang Goh",
+      "category": "financial",
+      "text": "Mei Fang Goh's debit card PIN is 3349.",
+      "utterance": "Please remember my debit card PIN: 3349.",
+      "probe_value": [
+        "3349"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary debit card PIN; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F436",
+      "subject": "Boon Hock Teo",
+      "category": "location",
+      "text": "Boon Hock Teo's home postal code is S100476.",
+      "utterance": "Please remember my home postal code: S100476.",
+      "probe_value": [
+        "S100476"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F437",
+      "subject": "Xin Yi Chua",
+      "category": "device",
+      "text": "Xin Yi Chua's vehicle licence plate is SDJ1145V.",
+      "utterance": "Please remember my vehicle licence plate: SDJ1145V.",
+      "probe_value": [
+        "SDJ1145V"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F438",
+      "subject": "Kai Xin Ng",
+      "category": "personal_contact",
+      "text": "Kai Xin Ng's home wifi password is RainbowPanda190.",
+      "utterance": "Please remember my home wifi password: RainbowPanda190.",
+      "probe_value": [
+        "RainbowPanda190"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home wifi password; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F439",
+      "subject": "Pei Shan Sim",
+      "category": "employment",
+      "text": "Pei Shan Sim's staff pass ID is EMP-2643-FD.",
+      "utterance": "Please remember my staff pass ID: EMP-2643-FD.",
+      "probe_value": [
+        "EMP-2643-FD"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary staff pass ID; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F440",
+      "subject": "Nurul Aisyah",
+      "category": "personal_contact",
+      "text": "Nurul Aisyah's emergency contact number is +65-9132-1224.",
+      "utterance": "Please remember my emergency contact number: +65-9132-1224.",
+      "probe_value": [
+        "+65-9132-1224"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F441",
+      "subject": "Faizal Osman",
+      "category": "device",
+      "text": "Faizal Osman's laptop serial number is C0HB10429.",
+      "utterance": "Please remember my laptop serial number: C0HB10429.",
+      "probe_value": [
+        "C0HB10429"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F442",
+      "subject": "Aishah Ibrahim",
+      "category": "financial",
+      "text": "Aishah Ibrahim's bank account number is 458-103094-8.",
+      "utterance": "Please remember my bank account number: 458-103094-8.",
+      "probe_value": [
+        "458-103094-8"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F444",
+      "subject": "Zarina Mohd",
+      "category": "location",
+      "text": "Zarina Mohd's home postal code is S100612.",
+      "utterance": "Please remember my home postal code: S100612.",
+      "probe_value": [
+        "S100612"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F445",
+      "subject": "Iskandar Yusof",
+      "category": "device",
+      "text": "Iskandar Yusof's vehicle licence plate is SLH1185Z.",
+      "utterance": "Please remember my vehicle licence plate: SLH1185Z.",
+      "probe_value": [
+        "SLH1185Z"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F446",
+      "subject": "Deepa Menon",
+      "category": "personal_contact",
+      "text": "Deepa Menon's home wifi password is OrchidTiger214.",
+      "utterance": "Please remember my home wifi password: OrchidTiger214.",
+      "probe_value": [
+        "OrchidTiger214"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home wifi password; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F447",
+      "subject": "Suresh Pillai",
+      "category": "employment",
+      "text": "Suresh Pillai's staff pass ID is EMP-3067-NN.",
+      "utterance": "Please remember my staff pass ID: EMP-3067-NN.",
+      "probe_value": [
+        "EMP-3067-NN"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary staff pass ID; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F448",
+      "subject": "Anand Raj",
+      "category": "personal_contact",
+      "text": "Anand Raj's emergency contact number is +65-9140-1280.",
+      "utterance": "Please remember my emergency contact number: +65-9140-1280.",
+      "probe_value": [
+        "+65-9140-1280"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F449",
+      "subject": "Kavitha Subramaniam",
+      "category": "device",
+      "text": "Kavitha Subramaniam's laptop serial number is C0PB10533.",
+      "utterance": "Please remember my laptop serial number: C0PB10533.",
+      "probe_value": [
+        "C0PB10533"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F450",
+      "subject": "Vimal Nair",
+      "category": "financial",
+      "text": "Vimal Nair's bank account number is 754-103822-7.",
+      "utterance": "Please remember my bank account number: 754-103822-7.",
+      "probe_value": [
+        "754-103822-7"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F451",
+      "subject": "Latha Krishnan",
+      "category": "financial",
+      "text": "Latha Krishnan's debit card PIN is 9741.",
+      "utterance": "Please remember my debit card PIN: 9741.",
+      "probe_value": [
+        "9741"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary debit card PIN; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F452",
+      "subject": "Marcus Pereira",
+      "category": "location",
+      "text": "Marcus Pereira's home postal code is S100748.",
+      "utterance": "Please remember my home postal code: S100748.",
+      "probe_value": [
+        "S100748"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F453",
+      "subject": "Natalie de Souza",
+      "category": "device",
+      "text": "Natalie de Souza's vehicle licence plate is STF1225D.",
+      "utterance": "Please remember my vehicle licence plate: STF1225D.",
+      "probe_value": [
+        "STF1225D"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F454",
+      "subject": "Gabriel Sequeira",
+      "category": "personal_contact",
+      "text": "Gabriel Sequeira's home wifi password is TigerKoi238.",
+      "utterance": "Please remember my home wifi password: TigerKoi238.",
+      "probe_value": [
+        "TigerKoi238"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home wifi password; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F455",
+      "subject": "Cheryl Theseira",
+      "category": "employment",
+      "text": "Cheryl Theseira's staff pass ID is EMP-3491-VX.",
+      "utterance": "Please remember my staff pass ID: EMP-3491-VX.",
+      "probe_value": [
+        "EMP-3491-VX"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary staff pass ID; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F456",
+      "subject": "Wei Jie Tan",
+      "category": "personal_contact",
+      "text": "Wei Jie Tan's emergency contact number is +65-9148-1336.",
+      "utterance": "Please remember my emergency contact number: +65-9148-1336.",
+      "probe_value": [
+        "+65-9148-1336"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F457",
+      "subject": "Hui Min Lim",
+      "category": "device",
+      "text": "Hui Min Lim's laptop serial number is C0XB10637.",
+      "utterance": "Please remember my laptop serial number: C0XB10637.",
+      "probe_value": [
+        "C0XB10637"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F458",
+      "subject": "Jun Wei Ong",
+      "category": "financial",
+      "text": "Jun Wei Ong's bank account number is 150-104550-6.",
+      "utterance": "Please remember my bank account number: 150-104550-6.",
+      "probe_value": [
+        "150-104550-6"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F459",
+      "subject": "Mei Fang Goh",
+      "category": "financial",
+      "text": "Mei Fang Goh's debit card PIN is 8437.",
+      "utterance": "Please remember my debit card PIN: 8437.",
+      "probe_value": [
+        "8437"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary debit card PIN; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F460",
+      "subject": "Boon Hock Teo",
+      "category": "location",
+      "text": "Boon Hock Teo's home postal code is S100884.",
+      "utterance": "Please remember my home postal code: S100884.",
+      "probe_value": [
+        "S100884"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F461",
+      "subject": "Xin Yi Chua",
+      "category": "device",
+      "text": "Xin Yi Chua's vehicle licence plate is SBD1265H.",
+      "utterance": "Please remember my vehicle licence plate: SBD1265H.",
+      "probe_value": [
+        "SBD1265H"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F462",
+      "subject": "Kai Xin Ng",
+      "category": "personal_contact",
+      "text": "Kai Xin Ng's home wifi password is RainbowEagle262.",
+      "utterance": "Please remember my home wifi password: RainbowEagle262.",
+      "probe_value": [
+        "RainbowEagle262"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home wifi password; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F463",
+      "subject": "Pei Shan Sim",
+      "category": "employment",
+      "text": "Pei Shan Sim's staff pass ID is EMP-3915-DH.",
+      "utterance": "Please remember my staff pass ID: EMP-3915-DH.",
+      "probe_value": [
+        "EMP-3915-DH"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary staff pass ID; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F464",
+      "subject": "Nurul Aisyah",
+      "category": "personal_contact",
+      "text": "Nurul Aisyah's emergency contact number is +65-9156-1392.",
+      "utterance": "Please remember my emergency contact number: +65-9156-1392.",
+      "probe_value": [
+        "+65-9156-1392"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F465",
+      "subject": "Faizal Osman",
+      "category": "device",
+      "text": "Faizal Osman's laptop serial number is C0FC10741.",
+      "utterance": "Please remember my laptop serial number: C0FC10741.",
+      "probe_value": [
+        "C0FC10741"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F466",
+      "subject": "Aishah Ibrahim",
+      "category": "financial",
+      "text": "Aishah Ibrahim's bank account number is 446-105278-5.",
+      "utterance": "Please remember my bank account number: 446-105278-5.",
+      "probe_value": [
+        "446-105278-5"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F467",
+      "subject": "Hakim Abdullah",
+      "category": "financial",
+      "text": "Hakim Abdullah's debit card PIN is 7133.",
+      "utterance": "Please remember my debit card PIN: 7133.",
+      "probe_value": [
+        "7133"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary debit card PIN; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F468",
+      "subject": "Zarina Mohd",
+      "category": "location",
+      "text": "Zarina Mohd's home postal code is S101020.",
+      "utterance": "Please remember my home postal code: S101020.",
+      "probe_value": [
+        "S101020"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F469",
+      "subject": "Iskandar Yusof",
+      "category": "device",
+      "text": "Iskandar Yusof's vehicle licence plate is SJB1305L.",
+      "utterance": "Please remember my vehicle licence plate: SJB1305L.",
+      "probe_value": [
+        "SJB1305L"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F470",
+      "subject": "Deepa Menon",
+      "category": "personal_contact",
+      "text": "Deepa Menon's home wifi password is OrchidOtter286.",
+      "utterance": "Please remember my home wifi password: OrchidOtter286.",
+      "probe_value": [
+        "OrchidOtter286"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home wifi password; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F471",
+      "subject": "Suresh Pillai",
+      "category": "employment",
+      "text": "Suresh Pillai's staff pass ID is EMP-4339-LR.",
+      "utterance": "Please remember my staff pass ID: EMP-4339-LR.",
+      "probe_value": [
+        "EMP-4339-LR"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary staff pass ID; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F472",
+      "subject": "Anand Raj",
+      "category": "personal_contact",
+      "text": "Anand Raj's emergency contact number is +65-9164-1448.",
+      "utterance": "Please remember my emergency contact number: +65-9164-1448.",
+      "probe_value": [
+        "+65-9164-1448"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary emergency contact number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F473",
+      "subject": "Kavitha Subramaniam",
+      "category": "device",
+      "text": "Kavitha Subramaniam's laptop serial number is C0NC10845.",
+      "utterance": "Please remember my laptop serial number: C0NC10845.",
+      "probe_value": [
+        "C0NC10845"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary laptop serial number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F474",
+      "subject": "Vimal Nair",
+      "category": "financial",
+      "text": "Vimal Nair's bank account number is 742-106006-4.",
+      "utterance": "Please remember my bank account number: 742-106006-4.",
+      "probe_value": [
+        "742-106006-4"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary bank account number; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F475",
+      "subject": "Latha Krishnan",
+      "category": "financial",
+      "text": "Latha Krishnan's debit card PIN is 5829.",
+      "utterance": "Please remember my debit card PIN: 5829.",
+      "probe_value": [
+        "5829"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary debit card PIN; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F476",
+      "subject": "Marcus Pereira",
+      "category": "location",
+      "text": "Marcus Pereira's home postal code is S101156.",
+      "utterance": "Please remember my home postal code: S101156.",
+      "probe_value": [
+        "S101156"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary home postal code; not inferable from any other fact (rho~0)."
+    },
+    {
+      "id": "F477",
+      "subject": "Natalie de Souza",
+      "category": "device",
+      "text": "Natalie de Souza's vehicle licence plate is SRZ1345P.",
+      "utterance": "Please remember my vehicle licence plate: SRZ1345P.",
+      "probe_value": [
+        "SRZ1345P"
+      ],
+      "entailed_by": [],
+      "note": "Arbitrary vehicle licence plate; not inferable from any other fact (rho~0)."
     }
   ]
 }

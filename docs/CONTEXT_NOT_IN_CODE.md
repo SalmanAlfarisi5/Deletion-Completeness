@@ -1,5 +1,10 @@
 # Context Not in the Codebase
 
+> **Synced to the 3× wave (2026-07-13).** Numbers below reflect the current verified run
+> (datasets 253/298/963/250; 5 hard topologies; exact DAG planner + exp12; 4-model judge;
+> rho-hardening; `huggingface_hub==1.8.0` venv pin). Authoritative source:
+> **`docs/RESULTS_3X_WAVE.md`** and **`memory/project-3x-expansion-wave.md`**.
+
 Everything here is **tacit knowledge** — decisions, runtime infrastructure, gotchas, data semantics, and framing — that the source files either don't state, state only partially, or state ambiguously. The code shows the *what*; this shows the *why*, the *how-to-run*, and the *don't-re-discover*. Pair it with `docs/PROJECT_STATUS_REPORT.md` (results) and `docs/CODEBASE_EXPLAINED.md` (structure).
 
 > Caveat: file/line and exact method names below should be verified against current code before quoting — they drift. The conceptual facts, decisions, and infra are durable.
@@ -35,8 +40,8 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 
 - **Mem0 = open-source local** (`Memory.from_config`, local Chroma), **not hosted.** Hosted is a moving black box; local + pinned = reproducible.
 - **Models:** the certificate is measured against a **four-reasoner adversary panel** — `gpt-4o-mini-2024-07-18` (also the recovery judge), `gpt-4o-2024-08-06` (also the entailment judge), Claude Sonnet 5, and GPT-5.5 — taking the worst; embeddings = local `all-MiniLM-L6-v2` (free, on GPU). Completeness threshold **τ = 0.10**.
-- **Why `gpt-4o` is the *entailment* judge (not mini):** `gpt-4o-mini` false-fires on **41.7%** of *insufficient* partial operands; `gpt-4o` on 0%. A judge that false-fires inflates collateral `k` (it co-deletes bystanders). This is the single justification for the model choice.
-- **Why worst-adversary certification** (`ρ = max over reasoners < τ`): recoverability is *adversary-relative*; a weaker attacker would wrongly certify facts a stronger one recovers. This is why **30/81** (more than any single reasoner would flag alone) are uncertifiable.
+- **Why `gpt-4o` is the *entailment* judge (not mini):** validated across all 4 models on n=1370 pairs, every model has a **0% multi-hop miss-rate** (never loses a true entailer — the safety property), but on *insufficient* partial operands the near-miss false-fire is `gpt-4o-mini` **76%** / `gpt-4o` **45%** / GPT-5.5 **30%** / Sonnet5 **3.4%**. `gpt-4o` is the lowest-false-fire *reproducible dated snapshot* (Sonnet5 is best overall but a rolling alias). **Crucially, the exact planner co-deletes over the *known* entailment DAG, not the judge**, so a judge's false-fire can't inflate collateral `k` — the judge only orders the greedy comparators.
+- **Why worst-adversary certification** (`ρ = max over reasoners < τ`): recoverability is *adversary-relative*; a weaker attacker would wrongly certify facts a stronger one recovers. This is why **84/250** (more than any single reasoner would flag alone) are uncertifiable.
 - **`infer` flag:** exp01/exp02 use `infer=True` (realistic — Mem0 extracts/merges); exp04/re-derivation use `infer=False` (verbatim injection, to keep operand control). `infer=True` **rewrites and merges** facts (e.g. bakes "making him 35" into the birth-year row), which destroys injection control — that's why exp04 can't use it.
 - **ρ ≈ 0 by construction** for isolated/multi-hop facts: subjects are **fictional** with Singapore statistical priors, so the base model can't world-infer them. ρ is only meaningfully positive for the ρ-gradient set (where context is itself world-knowable).
 
@@ -45,11 +50,11 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 ## 3. Methodology gotchas — "don't re-discover" (the expensive lessons)
 
 - **Mem0 `add()` returns lagged/batched IDs** → never attribute a stored row via the id `add()` returns. Deletion is content/search-based (`Deleter.delete_top_match` / `delete_value_rows`).
-- **Mem0 silently DUPLICATES facts at store scale** (~30+ rows), *deterministically* — this is the mechanism behind the exp01/exp02 residual numbers (96.4% / 96.4%). It is **not** fixed by sleeping/reading between writes; it's predominantly paraphrase-variant duplicates (a semantic-dedup design limit), corroborated by Mem0 issues #4896, #4573, #687.
+- **Mem0 silently DUPLICATES facts at store scale** (~30+ rows), *deterministically* — this is the mechanism behind the exp01/exp02 residual numbers (97.2% / 97.2%). It is **not** fixed by sleeping/reading between writes; it's a mix of byte-identical and paraphrase-variant duplicates (80–82% incidence, a semantic-dedup design limit), corroborated by Mem0 issues #4896, #4573, #687.
 - **Numeric recovery judging:** recovery is scored by an LLM judge that accepts numeric approximations ("3142 ≈ 3200" ✓) but rejects wrong values ("32 ≠ 35" ✗). A dataset bug was found+fixed here (a 750k loan @3.5%/25y ≈ SGD 3,755/mo, not 3,200 → the C009 fact was changed). Watch for this class of bug when adding facts.
 - **`delete_value` vs `probe_value`:** `delete_value` = the target's *own narrow* surface form (used for deletion + residual measurement); `probe_value` = the *broad* recovery criterion (oracle tokens for "did the adversary recover it"). Using the broad form for residual mis-counts an operand sharing a token as target-residual (this specifically bit Letta exp11 — F040's `probe_value` includes "8,000"/"9,000" which overlap an operand's pay-band text).
 - **Letta core-block trap:** the re-derivation adversary reads `list_memories`, which **includes core blocks**. The default human block `"(no information about the user yet)"` lands in the adversary's notes and *suppresses* recovery of "the user"-phrased facts for reasons unrelated to re-derivability → you must seed identity via `set_core_block(uid, "human", "The user's name is <owner>")` (identity only, never the deleted value).
-- **Graphiti residual channel is *stale summaries*, not edges:** `remove_episode` HARD-deletes the episode, its `RELATES_TO` edges, and orphaned entities (cleaner than Mem0's naive delete). The fact survives in **entity-summary and community-summary text that is not recomputed on deletion** — that's the 30% edge / 70% summary residue. The web brain's earlier "bi-temporal invalidation" premise was **wrong** (contradiction didn't fire for a value change); don't repeat it.
+- **Graphiti residual channel is *stale summaries*, not edges:** `remove_episode` HARD-deletes the episode, its `RELATES_TO` edges, and orphaned entities (cleaner than Mem0's naive delete). The fact survives in **entity-summary and community-summary text that is not recomputed on deletion** — that's the 20% edge / 83% summary residue (n=30). The web brain's earlier "bi-temporal invalidation" premise was **wrong** (contradiction didn't fire for a value change); don't repeat it.
 
 ---
 
@@ -59,20 +64,20 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 
 | Exp | System | Tests | This session |
 |-----|--------|-------|--------------|
-| 01 | Mem0 | naive deletion residual (duplication) | re-run (96.4%) |
-| 02 | Mem0 | artifact-aware purge (→0%) | re-run (96.4%→0) |
-| 03 | Mem0 | the planner (threshold vs depth-first) | re-run (k=0.90) |
-| 04 | Mem0 | re-derivation at zero residual (binned) | re-run (34/34 bins + 24 multi-level) |
-| 05 | Mem0 | duplication 2×2 factorial | **NOT re-run** (carries prior 24–42%) |
+| 01 | Mem0 | naive deletion residual (duplication) | re-run (97.2%, n=253) |
+| 02 | Mem0 | artifact-aware purge (→0%) | re-run (97.2%→0) |
+| 03 | Mem0 | the planner (exact / threshold / depth-first) | re-run (exact k=1.04, n=298) + exp12 minimality |
+| 04 | Mem0 | re-derivation at zero residual (binned) | re-run (n=74 flat bin + 5 hard topologies) |
+| 05 | Mem0 | duplication 2×2 factorial | re-run (80–82% dup, row-inflation ×1.75–1.82) |
 | 06 | Mem0 | derivation-capture | **REJECTED** — see below |
-| 07 | base model | ρ-gradient floor | re-run (51/81 cert) |
-| 08 | Mem0 | membership inference (MIA) | re-run (naive now significant) |
-| 09 | Graphiti | KG/summary residue | re-run at n=10 |
-| 10 | Letta | agent-loop surface-incompleteness | re-run at n=10 |
-| 11 | Letta | re-derivation (ports exp04) | re-run at 4 reasoners (bin1 100%, bin2 74–78%) |
+| 07 | base model | ρ-gradient floor | re-run (166/250 cert, n=250) |
+| 08 | Mem0 | membership inference (MIA) | re-run (n=253+759; naive significant, aware attenuated) |
+| 09 | Graphiti | KG/summary residue | re-run at n=30 |
+| 10 | Letta | agent-loop surface-incompleteness | re-run at n=30 |
+| 11 | Letta | re-derivation (ports exp04) | re-run at 4 reasoners (bin1 96–100%, bin2 .59–.65) |
 
 - **exp06 is a REJECTED negative result — important:** Mem0 does **not** derive a target from operands alone. The earlier-looking "born 1991, making him 35" was **consolidation** (the co-present target merged into the operand row), not derivation. **Never claim derivation-capture.**
-- **exp05 was NOT re-run** on the enlarged data (keeps its prior 24–42% row-inflation values); **exp11 WAS re-run** with the four-reasoner panel (bin1 100%, bin2 74–78% → 0% after co-delete, faithful direct co-delete 100%, bystanders intact 100%).
+- **exp05 WAS re-run** on the enlarged data (80–82% duplication incidence in all four cells, row-inflation ×1.75–1.82, both byte-identical and paraphrase copies present); **exp11 WAS re-run** with the four-reasoner panel (bin1 96–100%, bin2 .59–.65 → 0% after co-delete, faithful direct co-delete 100%, bystanders intact 100%).
 - **Three-family synthesis** (the generalization story): Mem0 = *duplication*, Graphiti = *stale summaries*, Letta = *agent-mediated deletion misses a surface* — three by-design mechanisms converging on residual survival.
 
 ---
@@ -88,13 +93,13 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 
 ## 6. The robustness wave (this session) — provenance not in the code
 
-- **Datasets scaled** 12/6/21/15 → **84/92/299/81**, subjects 3 → 108. New tooling: `data/generate_facts.py` (authoring) + `data/validate_facts.py` (the gate).
+- **Datasets scaled** 12/6/21/15 → 84/92/299/81 → **253/298/963/250** (the 3× wave), subjects 3 → 108+. New tooling: `data/generate_facts.py` (authoring) + `data/validate_facts.py` (the gate).
 - **How generation actually ran:** `validate_facts.py` `import`s `generate_facts` and authors candidates **in-process** (its "[1/6] Authoring…" phase). The standalone `python data/generate_facts.py` dump (`data/results/_fact_candidates.json`) was **never produced** because that path wasn't invoked — run the script directly if you want that inspection file (it's a fresh draw, not the exact candidates that became the dataset).
-- **Anti-selection-bias rule:** ρ-gradient tier mismatches are **flagged, not discarded** (silently dropping them would manufacture a clean gradient). 19/81 facts mismatched.
+- **Anti-selection-bias rule:** ρ-gradient tier mismatches are **flagged, not discarded** (silently dropping them would manufacture a clean gradient). 74/250 facts mismatched.
 - **Persona guard** caught and removed 2 real public figures (Halimah Yacob, Sukhbir Singh Badal).
 - **Two findings the larger n overturned (ratified + locked):**
-  - **A — ρ floor:** the n=15 "sharply bimodal, τ-invariant 9/15" did **not** replicate. At n=81 it's a **measured gradient** (51/12/18), the count is **τ-dependent**, and τ is reframed as a **policy dial**. The limit result survives (37% uncertifiable); only bimodality/invariance died.
-  - **B — MIA:** naive deletion now leaves a **statistically significant** membership signal (AUC 0.67, p=.001); artifact-aware deletion drives the AUC to 0.52 (CI [0.498, 0.552] includes 0.5, but permutation p=.02 — attenuated toward chance, not provably eliminated). Promoted from a "borderline / retracted" hedge to a demonstrated leak; still a *supporting* result, **not** a 4th pillar, kept out of the abstract.
+  - **A — ρ floor:** the n=15 "sharply bimodal, τ-invariant 9/15" did **not** replicate. At n=250 it's a **measured gradient** (166/42/42), the count is **τ-dependent**, and τ is reframed as a **policy dial**. The limit result survives (34% uncertifiable, 84/250); only bimodality/invariance died.
+  - **B — MIA:** naive deletion now leaves a **statistically significant** membership signal (AUC 0.66, p=.001); artifact-aware deletion drives the AUC to 0.51 (CI [0.498, 0.523] includes 0.5, but permutation p=.04 — attenuated toward chance, not provably eliminated). Promoted from a "borderline / retracted" hedge to a demonstrated leak; still a *supporting* result, **not** a 4th pillar, kept out of the abstract.
 
 ---
 
@@ -108,8 +113,8 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 
 ## 8. Judge validation specifics (the numbers behind "validated")
 
-- **Recovery judge:** 0 false-accepts, but on only **n=8** gold negatives → 95% Wilson upper bound **≈0.32**, so "lower bound" holds *up to that bound*; κ=0.767 vs gold. Tightening it with adversarial near-miss *recoveries* ("≈3,190" for 3,200) is the planned validation extension.
-- **Entailment judge:** κ falls from 0.83 (trivial pairs) to **0.455** on hard near-miss negatives; `gpt-4o-mini` false-fires on 41.7% there → use `gpt-4o` (see §2).
+- **Recovery judge:** validated across all 4 models on **n=229** gold (90 pos / 139 neg). False-accept is **0.72% (1/139)** for gpt-4o-mini and gpt-4o, **0** for Sonnet5/GPT-5.5 → "lower bound" holds up to that <1% margin (95% Wilson upper ≈ .04); κ up to .98 vs gold. Production = pinned gpt-4o-mini.
+- **Entailment judge:** validated on **n=1370** pairs across 4 models. **Multi-hop miss-rate = 0 for all four** (the safety property — never lose a true entailer); inter-model κ on the hard near-miss boundary is only .26–.63 (genuinely hard). Near-miss false-fire: `gpt-4o-mini` 76% / `gpt-4o` 45% / GPT-5.5 30% / Sonnet5 3.4% → use pinned `gpt-4o` for the greedy comparators, but the planner co-deletes over the known DAG so this never inflates `k` (see §2).
 
 ---
 

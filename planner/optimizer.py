@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 import config
+from planner.entailment_dag import dag_of, min_hitting_sets
 
 
 @dataclass
@@ -108,6 +109,60 @@ class GreedyPlanner:
                              "conf": conf, "rederiv": rederiv})
             if max(residual, rederiv) < self.tau:
                 break
+
+        return self._finalize(pr, user_id, target_fact)
+
+    def heuristic_exact(self, user_id: str, target_fact: dict,
+                        candidates: list[dict], inj_map: dict) -> PlanResult:
+        """EXACT minimal co-deletion via the known boolean entailment DAG.
+
+        This is the robust, recommended method: it co-deletes exactly a MINIMUM
+        HITTING SET of the re-derivation formula (planner/entailment_dag), so it
+        provably closes every re-derivation path and can never silently miss a
+        multi-hop entailer for lack of an LLM-judged edge. Unlike the confidence-
+        ordered greedy it does not over-delete on disjunctive/threshold topologies
+        (e.g. ((A|B)&C): it deletes {C}, k=1, not {A,B}), and it does not stop early
+        when no single operand entails the target. A full-operand fallback guarantees
+        completeness if a residual path somehow survives the minimum hitting set."""
+        pr = PlanResult(heuristic="exact")
+        own_ids = set(inj_map.get(target_fact["id"], {}).get("memory_ids", []))
+
+        # Stage 1: probe.
+        residual, rederiv, rho = self._recoverability(user_id, target_fact)
+        pr.trace.append({"stage": "probe", "residual": residual, "rederiv": rederiv, "rho": rho})
+        pr.parametric_risk = rho
+        if max(residual, rederiv) < self.tau:
+            return self._finalize(pr, user_id, target_fact)
+
+        # Stage 2: purge the target's own artifacts (narrow delete_value).
+        self.deleter.delete_records(user_id, list(own_ids))
+        pr.artifacts_purged = list(own_ids) + self._purge_value_artifacts(
+            user_id, target_fact, exclude=own_ids)
+        residual, rederiv, rho = self._recoverability(user_id, target_fact)
+        pr.trace.append({"stage": "purge_artifacts", "residual": residual, "rederiv": rederiv})
+        if max(residual, rederiv) < self.tau:
+            return self._finalize(pr, user_id, target_fact)
+
+        # Stage 3: delete a MINIMUM hitting set of the entailment formula (exact).
+        dag = dag_of(target_fact)
+        hitting = min(min_hitting_sets(dag["formula"]), key=len)  # a minimum hitting set (labels)
+        for cid in (dag["leaves"][lbl] for lbl in hitting):
+            self.deleter.delete_records(user_id, inj_map.get(cid, {}).get("memory_ids", []))
+            pr.facts_co_deleted.append(cid)
+        residual, rederiv, rho = self._recoverability(user_id, target_fact)
+        pr.trace.append({"stage": "exact_codelete", "hitting_set": list(pr.facts_co_deleted),
+                         "rederiv": rederiv})
+
+        # Fallback (robustness): if a residual path somehow survives the minimum
+        # hitting set, co-delete every remaining operand and flag it.
+        if max(residual, rederiv) >= self.tau:
+            for cid in dag["leaves"].values():
+                if cid not in pr.facts_co_deleted:
+                    self.deleter.delete_records(user_id, inj_map.get(cid, {}).get("memory_ids", []))
+                    pr.facts_co_deleted.append(cid)
+            residual, rederiv, rho = self._recoverability(user_id, target_fact)
+            pr.trace.append({"stage": "exact_fallback_full",
+                             "co_deleted": list(pr.facts_co_deleted), "rederiv": rederiv})
 
         return self._finalize(pr, user_id, target_fact)
 

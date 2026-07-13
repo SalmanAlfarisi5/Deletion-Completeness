@@ -5,6 +5,23 @@ someone who knows nothing about it. Read this once and you will understand the
 entire project: the problem, the idea, what we built, every experiment, and every
 number. Everything here is grounded in the actual code and the paper.*
 
+> **⚠ Updated for the 3× wave (2026-07-13).** Since this was first written, the project
+> was expanded ~3×: datasets are now **253 isolated / 298 multi-hop / 963 context / 250
+> rho**; the multi-hop set adds **5 harder entailment topologies** (join, chain,
+> *disjunctive* `((A∨B)∧C)`, diamond, *threshold* "≥k of n"); the planner is now an
+> **exact minimum-hitting-set solver over a boolean entailment DAG** (provably minimal,
+> never misses a multi-hop entailer), with the old greedy + a depth-first pass kept as
+> comparators (new experiment **exp12**); and the LLM judges are validated across **all 4
+> models**. **For the current, verified headline numbers see `docs/RESULTS_3X_WAVE.md`**
+> (authoritative). The numbers throughout the body below are the earlier wave and are
+> superseded by `RESULTS_3X_WAVE.md` — the *ideas* and *structure* (the three channels,
+> the two tools, the limit result) are unchanged. Key current numbers: residual
+> **97.2%→0%**, planner **exact k=1.04 / 0
+> spurious** (depth-first over-deletes 6× / 1116 spurious), rho **84/250 uncertifiable**,
+> MIA intact/naive/aware **.66/.66/.51**, judge **0 multi-hop miss-rate across all 4
+> models**, cross-system Graphiti **83%** summary residue / Letta **0% faithful / 100%
+> archival**.
+
 > **How to use this document.** Read it top to bottom. Sections 1–5 are the story
 > (the "why" and the "big idea"). Sections 6–9 are the machinery (what we built).
 > Section 10 is every experiment and its result. Sections 11–13 are reference
@@ -271,11 +288,14 @@ at a candidate surviving fact and the deleted target and answers:
 - **NO** — no meaningful help.
 
 It returns a confidence score. **Important finding:** the small model
-(`gpt-4o-mini`) is trigger-happy — it wrongly shouts "YES!" on **41.7%** of *partial*
+(`gpt-4o-mini`) is trigger-happy — it wrongly shouts "YES!" on **76%** of *partial*
 clue-sets (e.g. "Bob has a home loan" → it claims you can compute the exact monthly
-payment, which you can't). The bigger model (`gpt-4o`) makes this mistake **0%** of
-the time. So the planner uses **gpt-4o** for entailment. If it used the small model,
-it would over-delete bystanders and inflate k. (This is a recurring theme: *the
+payment, which you can't). The bigger pinned model (`gpt-4o`) cuts this to **45%**, and
+frontier Sonnet 5 to just **3.4%** — but critically, *all four models never miss a true
+entailer* (0% multi-hop miss-rate), which is the safety property that matters. The
+planner uses **gpt-4o** for entailment (the lowest-false-fire *reproducible dated
+snapshot*). And because the planner co-deletes by the known entailment DAG rather than
+the judge, the judge's false-fire never inflates k. (This is a recurring theme: *the
 choice of judge model is validated, not assumed.*)
 
 ### The threshold planner, step by step
@@ -303,7 +323,7 @@ Step 3 — Co-delete the ingredients, one at a time, smartest-first.
 
 The magic is **Step 3's "re-probe and stop early."** As soon as enough ingredients
 are gone to break the rebuild, it halts — so it usually deletes only a fact or two.
-That's why the average collateral is **k = 0.90** (less than one extra fact per
+That's why the average collateral is **k = 1.04** (about one extra fact per
 target, on average).
 
 ### The comparison that proves the point (depth-first)
@@ -311,7 +331,7 @@ target, on average).
 To show the re-probing matters, we built a deliberately dumb comparator called
 **depth-first**: it deletes *every* candidate above the threshold in **one shot**,
 with **no re-probing and no stopping**. It also reaches 100% completeness — but at
-**k = 6.05** (about **6× more** deletions) and **342 spurious bystander deletions**.
+**k = 6.18** (about **6× more** deletions) and **1116 spurious bystander deletions**.
 The lesson: **re-probing buys you both minimality and selectivity.** The threshold
 planner reaches the *same* completeness at a fraction of the damage.
 
@@ -397,7 +417,7 @@ this — we **measure** it.
 
 ### How we measure ρ (experiment exp07)
 
-We wrote **81 facts** spread across a difficulty gradient — from "impossible to
+We wrote **250 facts** spread across a difficulty gradient — from "impossible to
 guess" to "obvious from context":
 
 - **Low tier** — arbitrary secrets: locker PINs, Wi-Fi passwords. Expect **ρ ≈ 0**
@@ -413,16 +433,16 @@ adversary models** and keep the **worst (highest)** ρ for each fact.
 
 ### The headline result
 
-Sorting all 81 facts by their worst-case ρ (Table `tab:rho` in the paper):
+Sorting all 250 facts by their worst-case ρ (Table `tab:rho` in the paper):
 
 | Worst-case ρ | Meaning | # of facts | Certifiable? |
 |---|---|---|---|
-| ρ ≤ 0.1 (= τ) | certifiable floor | **51** | ✅ yes |
-| 0.1 < ρ < 0.5 | intermediate band | **12** | ❌ no |
-| ρ ≥ 0.5 | hard floor | **18** | ❌ no |
-| **total** | | **81** | **51 certifiable** |
+| ρ ≤ 0.1 (= τ) | certifiable floor | **166** | ✅ yes |
+| 0.1 < ρ < 0.5 | intermediate band | **42** | ❌ no |
+| ρ ≥ 0.5 | hard floor | **42** | ❌ no |
+| **total** | | **250** | **166 certifiable** |
 
-So **30 of 81 facts cannot be certified as erased** (12 + 18) — *even though their
+So **84 of 250 facts cannot be certified as erased** (42 + 42) — *even though their
 residual is 0 and every rebuild path was closed*. That's the limit result: **once a
 value is inferable from world knowledge no one can delete, no co-deletion can certify
 its erasure.**
@@ -533,8 +553,8 @@ to keep the pipeline reproducible and avoid a model grading its own work.
 
 | Family | System | The leak mechanism (by design) | Headline |
 |---|---|---|---|
-| Dedup pipeline | **Mem0** | silent **duplication** (paraphrase copies) | 96.4% residual → 0% when artifact-aware |
-| Bi-temporal KG | **Graphiti** | **stale summaries** (not recomputed on delete) | edge 30% clean, but **70%** summary residue |
+| Dedup pipeline | **Mem0** | silent **duplication** (paraphrase copies) | 97.2% residual → 0% when artifact-aware |
+| Bi-temporal KG | **Graphiti** | **stale summaries** (not recomputed on delete) | edge 20% residue, but **83%** summary residue |
 | LLM-paging agent | **Letta** | agent scrubs core, **misses archival** | **0% faithful / 100% archival** on vague request |
 
 ---
@@ -543,26 +563,26 @@ to keep the pipeline reproducible and avoid a model grading its own work.
 
 There are **11 experiments** (exp01–exp11) plus a judge-validation run. Here's each
 one: the question it asks, what it did, and the number it produced. All numbers are
-from the current large-scale run (datasets: **84** isolated facts, **92** multi-hop
-facts, **299** context facts, **81** ρ-gradient facts). The tolerance is **τ = 0.10**
+from the current large-scale run (datasets: **253** isolated facts, **298** multi-hop
+facts, **963** context facts, **250** ρ-gradient facts). The tolerance is **τ = 0.10**
 throughout.
 
 ### exp01 — How bad is naive (single-record) deletion? *(Mem0)*
 Delete just the one record the system surfaces, then check if the value survives
 elsewhere.
-**Result: 96.4% residual survival** (81 of 84 facts). Naive deletion almost always
+**Result: 97.2% residual survival** (246 of 253 facts). Naive deletion almost always
 leaves a copy — because Mem0 duplicated the fact.
 
 ### exp02 — Does artifact-aware deletion fix residual survival? *(Mem0)*
 Same facts, but now delete *every* record carrying the value.
-**Result: 96.4% → 0%.** Cleaning up all copies fully closes Channel 1. (Both runs
-land on the same 96.4% independently — a small built-in replication.)
+**Result: 97.2% → 0%.** Cleaning up all copies fully closes Channel 1. (Both runs
+land on the same 97.2% independently — a small built-in replication.)
 
 ### exp03 — Can the planner close re-derivation with minimal collateral? *(Mem0)*
-Run the full threshold planner on all 92 multi-hop targets.
-**Result: 100% completeness, 0 spurious bystander deletions, mean k = 0.90** (148
+Run the full exact planner on all 298 multi-hop targets.
+**Result: 100% completeness, 0 spurious bystander deletions, mean k = 1.04** (466
 operands spared by stopping early). The dumb comparator (depth-first) also reaches
-100% but at k = 6.05 with 342 spurious deletions. **Re-probing is what keeps it
+100% but at k = 6.18 with 1116 spurious deletions. **Re-probing is what keeps it
 minimal and selective.**
 
 ### exp04 — Is re-derivation real, and does co-deletion close it? *(Mem0)*
@@ -570,20 +590,20 @@ The clean "operands-only control": inject the *ingredients* but **never store th
 target value**, so residual is 0 by construction. Whatever the model recovers, it
 recovered by *reasoning*. Bin the targets into **bin1 (stored-alone: ingredients
 suffice)** and **bin2 (stored+world: need world knowledge too)**.
-**Result:** bin1 re-derives at **94–100%**, bin2 at **56 / 59 / 68 / 74%** across the
-four adversaries — and **both drop to 0% after co-deleting the operands**, with ρ = 0.
-Note the frontier models re-derive *more* (74% vs 56%) — the worst case the
-certificate is built for. A special **multi-level set** (where the target's direct
+**Result:** bin1 re-derives at **97–100%**, bin2 at **62 / 72 / 68 / 66%** (mini / gpt-4o /
+Sonnet 5 / GPT-5.5) — and **both drop to 0% after co-deleting the operands**, with ρ = 0.
+Note the worst re-deriver is **gpt-4o (72%)**, not the frontier models — the worst case the
+certificate is built for (it certifies against whichever reasoner is strongest per fact). A special **multi-level set** (where the target's direct
 ingredients are *themselves* unstored and must be traced to deeper roots) re-derives
 at **100% → 0%**, proving the planner recurses to the real roots, not just one hop.
 
 ### exp05 — Is Mem0's duplication our fault (embedder/timing) or Mem0's design? *(Mem0)*
 A **2×2 factorial**: two embedders (local MiniLM vs OpenAI) × two injection speeds
 (0s vs 1.5s pause).
-**Result: duplication in ALL FOUR cells (76–78%), paraphrase-copies outnumber
-byte-identical copies everywhere.** So it's a **semantic-dedup design limitation of
-Mem0**, not our embedder and not a timing race. (Corroborated by Mem0's own bug
-reports.)
+**Result: duplication in ALL FOUR cells (80–82%), with both byte-identical and
+paraphrase copies in every cell (row-inflation ×1.75–1.82).** So it's a **semantic-dedup
+design limitation of Mem0**, not our embedder and not a timing race. (Corroborated by
+Mem0's own bug reports.)
 
 ### exp06 — Does Mem0's "infer=True" mode capture derivations? *(Mem0)*
 Check whether Mem0, when consolidating, actually *computes* a target from its
@@ -594,25 +614,25 @@ not real derivation. So **we do NOT claim Mem0 derives facts.** (An honest negat
 keep to stay defensible.)
 
 ### exp07 — What is the parametric floor ρ, across difficulty tiers? *(base model)*
-Withhold the store, ask the model for each of 81 facts 8 times, four adversaries, keep
+Withhold the store, ask the model for each of 250 facts 8 times, four adversaries, keep
 the worst ρ per fact. (Full detail in Section 8.)
-**Result: 51 certifiable / 12 intermediate / 18 hard-floor → 30 of 81 cannot be
+**Result: 166 certifiable / 42 intermediate / 42 hard-floor → 84 of 250 cannot be
 certified erased at τ = 0.1.** The floor is a **gradient**, so τ is a policy dial.
-The measured band disagrees with the *authored* difficulty tier on 19/81 facts (we
+The measured band disagrees with the *authored* difficulty tier on 74/250 facts (we
 always trust the measurement, not the guess).
 
 ### exp08 — Does deletion restore "membership indistinguishability"? *(Mem0)*
 A membership-inference attack (MIA): can an attacker tell whether a fact was **ever
 stored**, just from the system's retrieval-similarity scores? Test three states:
-intact (never deleted), naive-deleted, artifact-aware-deleted. Uses **84 members +
-168 matched near-twins**, with confidence intervals and a permutation test.
+intact (never deleted), naive-deleted, artifact-aware-deleted. Uses **253 members +
+759 matched near-twins**, with confidence intervals and a permutation test.
 **Result:**
-- **Intact: AUC 0.67, p = .001** — a real signal (this is the sanity check: the test
+- **Intact: AUC 0.66, p = .001** — a real signal (this is the sanity check: the test
   *has* power to detect leakage).
-- **Naive: AUC 0.666, p = .001** — **still leaks** significantly. Naive deletion
+- **Naive: AUC 0.66, p = .001** — **still leaks** significantly. Naive deletion
   barely dents the signal.
-- **Artifact-aware: AUC 0.52**, CI [0.498, 0.552] just includes 0.5, permutation p =
-  .02 — **attenuated toward chance, but not provably eliminated.**
+- **Artifact-aware: AUC 0.51**, CI [0.498, 0.523] just includes 0.5, permutation p =
+  .04 — **attenuated toward chance, but not provably eliminated.**
 So the honest statement: artifact-aware deletion *sharply reduces* the membership
 signal but we can't prove it's fully gone at this sample size. (This experiment has a
 history — see the note below.)
@@ -620,7 +640,7 @@ history — see the note below.)
 ### exp09 — Does Graphiti leak after a clean delete? *(Zep/Graphiti)*
 Delete an episode with `remove_episode`, verify the graph is clean, then scan the
 summaries.
-**Result: edges 30% clean, but summary residue 70%** (n = 10). The value survives in
+**Result: edges 20% residue, but summary residue 83%** (n = 30). The value survives in
 **stale entity/community summaries** — a KG-residual channel, different from Mem0's
 duplication.
 
@@ -635,7 +655,7 @@ problem, not a missing capability.** This is the paper's hook.
 
 ### exp11 — Does the re-derivation channel and planner port to Letta? *(Letta/MemGPT)*
 Repeat exp04's operands-only control on a totally different system.
-**Result: bin1 100%, bin2 74–78% (four adversaries) → 0% after co-delete; ρ = 0;
+**Result: bin1 96–100%, bin2 59/65/59/65% (four adversaries) → 0% after co-delete; ρ = 0;
 faithful direct co-delete 100%; bystanders intact 100%.** The framework ports
 unchanged. (Co-deletion here uses the *direct, verified* `passages.delete`, not the
 agent — so "re-derivation closed" can't be confused with "the delete didn't run,"
@@ -645,18 +665,23 @@ keeping this cleanly separate from exp10.)
 Two judges do load-bearing work: the **recovery judge** (did this answer recover the
 value?) and the **entailment judge** (do these facts entail the target?).
 **Result:**
-- **Recovery judge: 0 false accepts** (0/8 gold negatives; 95% Wilson upper bound ≈
-  0.32). It never says "recovered" when it wasn't → **every leak rate we report is a
-  conservative lower bound.** Its only errors are on the safe side (it rejects a close
-  numeric near-miss). GPT-5.5, run as an independent third judge, reproduced the gold
-  labels exactly.
-- **Entailment judge: gpt-4o false-fires 0% on curated near-misses vs gpt-4o-mini's
-  41.7%.** Even frontier GPT-5.5 false-fires 25%. So **gpt-4o is the right entailment
-  judge** — its clean behavior is what keeps the planner's k minimal.
+- **Recovery judge (n = 229 gold): near-zero false accepts** — gpt-4o-mini and gpt-4o
+  each false-accept only **0.72%** (Sonnet 5 and GPT-5.5: **0**). It essentially never
+  says "recovered" when it wasn't → **every leak rate we report is a conservative lower
+  bound.** All four models were validated; the pinned production judge is **gpt-4o-mini**
+  (lowest false-accept among reproducible dated snapshots).
+- **Entailment judge (n = 1370 pairs): multi-hop miss-rate = 0 for all four models** —
+  the safety-critical result the whole method depends on: no model ever *loses* a true
+  entailer. On curated near-misses (the over-detection axis) false-fire is Sonnet 5
+  **3.4%**, GPT-5.5 **30%**, gpt-4o **45%**, gpt-4o-mini **76%**. The pinned production
+  judge is **gpt-4o**: it's the lowest-false-fire among *reproducible dated snapshots*
+  (Sonnet 5 is best overall but a rolling alias, so it's reported as corroboration only).
+  Crucially, the planner co-deletes by the **known entailment DAG**, not this judge, so a
+  judge's false-fire never inflates the planner's k.
 
 ### A note on exp08's history (a credibility asset, not a weakness)
 An early version reported a membership signal at only **n = 6** — badly underpowered.
-We **retracted it**, re-ran properly at **n = 84**, and reported the nuanced result
+We **retracted it**, re-ran properly at **n = 253**, and reported the nuanced result
 above. Showing "we caught our own mistake and fixed it" is used in the paper's
 Limitations as a sign of rigor.
 
@@ -668,47 +693,48 @@ Everything you might want to cite, in one place. (Ground truth = the large-scale
 τ = 0.10; four adversaries = gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5.)
 
 **Datasets**
-- Isolated PII facts: **84**
-- Multi-hop facts: **92** (includes a multi-level subset)
-- Context facts: **299** (231 entailing operands + 68 bystanders)
-- ρ-gradient facts: **81** (low/mid/high tiers)
+- Isolated PII facts: **253**
+- Multi-hop facts: **298** (6 topologies: flat/join/chain/or_and/diamond/threshold)
+- Context facts: **963** (775 entailing operands + 188 bystanders)
+- ρ-gradient facts: **250** (low/mid/high tiers)
 
 **Residual survival (Channel 1) — exp01/02, Mem0**
-- Naive single-record delete: **96.4%** residual (81/84) [Wilson 90.0–98.8]
-- Artifact-aware delete: **0%** [0–4.4]
-- Duplication incidence (exp05): **76–78%**, row-inflation **2.9–3.2×**, in all 4 cells
+- Naive single-record delete: **97.2%** residual (246/253) [Wilson 94.4–98.7]
+- Artifact-aware delete: **0%** [0–1.5]
+- Duplication incidence (exp05): **80–82%**, row-inflation **×1.75–1.82**, in all 4 cells
 
 **Re-derivation (Channel 2) — exp04 (Mem0) / exp11 (Letta)**
-- bin1 stored-alone: **94–100%** → **0%** after co-delete
-- bin2 stored+world (Mem0): **56 / 59 / 68 / 74%** (4 adversaries) → **0%**
-- bin2 stored+world (Letta): **74–78%** → **0%**
-- multi-level set: **100%** → **0%**
+- bin1 stored-alone: **97–100%** → **0%** after co-delete
+- bin2 stored+world (Mem0): **62 / 72 / 68 / 66%** (4 adversaries) → **0%**
+- bin2 stored+world (Letta): **59 / 65 / 59 / 65%** → **0%**
+- 5 hard topologies (join/chain/or_and/diamond/threshold): **100%** → **0%**
 - ρ throughout: **0** (fictional subjects)
 
 **The planner (Tool 1) — exp03, Mem0**
 - Completeness: **100%** [Wilson 0.96–1.0]
 - Spurious bystander deletions: **0**
-- Mean collateral: **k = 0.90** [0.82–0.99]; **148** operands spared
-- Depth-first comparator: **k = 6.05**, **342** spurious
+- Mean collateral: **k = 1.04** [0.99–1.09]; **466** operands spared
+- Depth-first comparator: **k = 6.18**, **1116** spurious (exp12: exact is provably minimal, gap≈0)
 
 **Parametric floor (Channel 3) — exp07, base model**
-- **30 of 81** facts uncertifiable at τ = 0.1 (12 intermediate + 18 hard-floor)
-- 51 certifiable
-- 19/81 measured band ≠ authored tier; 20 refusal flags
+- **84 of 250** facts uncertifiable at τ = 0.1 (42 intermediate + 42 hard-floor)
+- 166 certifiable
+- 74/250 measured band ≠ authored tier; 29 refusal flags (high-tier only)
 
-**Membership inference — exp08, Mem0 (n = 84 members + 168 twins)**
-- Intact AUC **0.67** (p = .001) — power sanity
-- Naive AUC **0.666** (p = .001) — significant leak
-- Artifact-aware AUC **0.52** (CI [0.498, 0.552] incl. 0.5; p = .02) — attenuated
+**Membership inference — exp08, Mem0 (n = 253 members + 759 twins)**
+- Intact AUC **0.66** (p = .001) — power sanity
+- Naive AUC **0.66** (p = .001) — significant leak
+- Artifact-aware AUC **0.51** (CI [0.498, 0.523] incl. 0.5; p = .04) — attenuated
 
 **Cross-system — exp09/10**
-- Graphiti: edge **30%**, summary **70%** residue (n = 10)
-- Letta: explicit **100%** faithful; vague **0%** faithful / **100%** archival (n = 10)
+- Graphiti: edge **20%**, summary **83%** residue (n = 30)
+- Letta: faithful-delete **0%**; core residue **13%** / archival **100%** (n = 30)
 
 **Judges**
-- Recovery: **0/8** false accepts (Wilson upper ≈ 0.32)
-- Entailment false-fire on curated near-misses: gpt-4o **0%**, gpt-4o-mini **41.7%**,
-  GPT-5.5 **25%**
+- Recovery false-accept on gold (n = 229): gpt-4o-mini **.0072**, gpt-4o **.0072**,
+  Sonnet 5 **0**, GPT-5.5 **0**
+- Entailment multi-hop miss-rate: **0** (all 4 models, n = 1370 pairs); near-miss false-fire
+  Sonnet 5 **3.4%**, GPT-5.5 **30%**, gpt-4o **45%**, gpt-4o-mini **76%**
 
 ---
 
@@ -759,10 +785,10 @@ llm.py           — one function for all AI calls (OpenAI + Anthropic), with an
                    on-disk cache so re-runs are free and deterministic
 
 data/facts/      — the controlled datasets (JSON):
-    isolated_facts.json      (84 standalone PII facts — for residual)
-    multi_hop_facts.json     (92 rebuildable facts — for re-derivation)
-    context_facts.json       (299: entailing operands + bystanders)
-    rho_gradient_facts.json  (81 facts tiered by world-knowability — for ρ)
+    isolated_facts.json      (253 standalone PII facts — for residual)
+    multi_hop_facts.json     (298 rebuildable facts — for re-derivation)
+    context_facts.json       (963: 775 entailing operands + 188 bystanders)
+    rho_gradient_facts.json  (250 facts tiered by world-knowability — for ρ)
 
 systems/         — one adapter per memory system, all behind base.py:
     mem0_adapter.py, zep_adapter.py, letta_adapter.py
@@ -819,10 +845,10 @@ sufficient** — the value can hide in an artifact or be rebuilt from surviving 
    parametric floor). This is stronger than existing database "deletion under
    dependencies" theory.
 2. A **minimal co-deletion planner** for the resulting NP-hard problem — reaches 100%
-   completeness at mean **k = 0.90** with **0 spurious** deletions — plus an
+   completeness at mean **k = 1.04** with **0 spurious** deletions — plus an
    **auditable certificate** separating what deletion achieved from what it cannot.
 3. A **measured** parametric floor and its **limit result**: under the strongest
-   adversary, **30/81 facts cannot be certified erased** even at zero residual.
+   adversary, **30/250 facts cannot be certified erased** even at zero residual.
 4. **Evidence of generality**: the same stack on three architectures finds residual
    survival in all three via different by-design mechanisms — including the agent-loop
    failure prior audits skipped.
@@ -888,7 +914,7 @@ rejection. Keep them straight in the rewrite.
    they skipped), not as *the* contribution.
 
 6. **We do NOT claim artifact-aware deletion fully erases the membership signal.**
-   At n=84 the AUC is 0.52 with the CI just including 0.5 and a marginal p=.02. The
+   At n=253 the AUC is 0.51 with the CI just including 0.5 and a marginal p=.04. The
    honest claim is "sharply reduces, does not provably eliminate."
 
 7. **We do NOT claim the ρ floor is bimodal / all-or-nothing.** The large data shows a

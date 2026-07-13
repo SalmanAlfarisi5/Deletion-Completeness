@@ -40,8 +40,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Planner end-to-end (threshold)")
     ap.add_argument("--n", type=int, default=None, help="targets (default: all in the file)")
     ap.add_argument("--bystanders", type=int, default=4)
-    ap.add_argument("--entailment-model", default=config.SECOND_MODEL,
-                    help="entailment judge — default gpt-4o (0%% partial-operand false-fire); reproduces the paper")
+    ap.add_argument("--entailment-model", default=config.ENTAILMENT_JUDGE_MODEL,
+                    help="entailment judge (config.ENTAILMENT_JUDGE_MODEL; frontier wave = claude-sonnet-5)")
     ap.add_argument("--heuristic", choices=["exact", "threshold", "depth_first"], default="exact",
                     help="exact = provably-minimal min-hitting-set over the entailment DAG "
                          "(recommended, robust on all topologies); threshold = LLM-confidence "

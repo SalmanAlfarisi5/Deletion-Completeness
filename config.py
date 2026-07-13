@@ -64,6 +64,13 @@ JUDGE_MODEL = os.getenv("JUDGE_MODEL", _DEFAULT_JUDGE.get(LLM_PROVIDER, "gpt-4o-
 REASONER_MODEL = os.getenv("REASONER_MODEL", JUDGE_MODEL)
 SECOND_MODEL = os.getenv("SECOND_MODEL", "gpt-4o-2024-08-06")
 
+# Entailment JUDGE, decoupled from SECOND_MODEL. SECOND_MODEL does triple duty
+# (backbone reasoner #2, dataset-validation model, and — historically — entailment
+# judge); this var lets the entailment judge be set independently of the adversary
+# panel and the frozen dataset. Default keeps pinned gpt-4o for back-compat; the
+# frontier-judge wave sets ENTAILMENT_JUDGE_MODEL=claude-sonnet-5. See docs/JUDGE_UPGRADE.md.
+ENTAILMENT_JUDGE_MODEL = os.getenv("ENTAILMENT_JUDGE_MODEL", SECOND_MODEL)
+
 # --------------------------------------------------------------------------- #
 # Frontier adversary reasoners (RTBF worst-adversary set, Def. 4)
 # --------------------------------------------------------------------------- #

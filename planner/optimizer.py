@@ -10,7 +10,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 import config
-from planner.entailment_dag import dag_of, min_hitting_sets
+from planner.entailment_dag import dag_of, min_hitting_sets, min_hitting_set_covering
+from probes.base_probe import normalize_values
 
 
 @dataclass
@@ -144,8 +145,17 @@ class GreedyPlanner:
             return self._finalize(pr, user_id, target_fact)
 
         # Stage 3: delete a MINIMUM hitting set of the entailment formula (exact).
+        # An operand whose OWN text carries a surface form of the target value is itself
+        # a residual copy: deleting the other branch of an AND would leave it exposed and
+        # fail to close the channel (forcing a full-operand fallback). Force such operands
+        # into the hitting set so the exact planner picks the minimum co-deletion that is
+        # also residual-clean -- still k* when one exists (e.g. F040: pick {C002}, not {C001}).
         dag = dag_of(target_fact)
-        hitting = min(min_hitting_sets(dag["formula"]), key=len)  # a minimum hitting set (labels)
+        vals = [v.lower() for v in normalize_values(target_fact.get("probe_value")) if v]
+        cid_text = {c["id"]: (c.get("text") or "") for c in candidates}
+        forced = {lbl for lbl, cid in dag["leaves"].items()
+                  if any(v in cid_text.get(cid, "").lower() for v in vals)}
+        hitting = min_hitting_set_covering(dag["formula"], forced)  # a minimum hitting set (labels)
         for cid in (dag["leaves"][lbl] for lbl in hitting):
             self.deleter.delete_records(user_id, inj_map.get(cid, {}).get("memory_ids", []))
             pr.facts_co_deleted.append(cid)

@@ -94,6 +94,31 @@ def min_codelete_size(formula: Node) -> int:
     return len(next(iter(min_hitting_sets(formula))))
 
 
+def min_hitting_set_covering(formula: Node, forced: "set[str]") -> "frozenset[str]":
+    """Smallest hitting set of ``formula`` that INCLUDES every leaf in ``forced``.
+
+    Use when some operands must be deleted regardless of the boolean structure --
+    e.g. an operand whose own text carries a surface form of the target value is
+    itself a residual copy, so deleting the *other* branch of an AND would leave the
+    value exposed and fail to close the channel. Forcing those leaves in makes the
+    exact planner pick the minimum co-deletion that is *also* residual-clean, instead
+    of an equal-size hitting set that leaves a value-carrying operand behind.
+
+    With ``forced`` empty this is exactly the plain minimum hitting set (no behaviour
+    change for well-formed facts). Leaves are few, so brute force by increasing size.
+    """
+    forced = set(forced) & leaf_labels(formula)
+    if not forced:
+        return min(min_hitting_sets(formula), key=len)
+    leaves = sorted(leaf_labels(formula))
+    for size in range(len(forced), len(leaves) + 1):
+        for combo in combinations(leaves, size):
+            d = set(combo)
+            if forced <= d and is_hitting_set(formula, d):
+                return frozenset(d)
+    return frozenset(leaves)
+
+
 def single_sufficient_leaves(formula: Node) -> list[str]:
     """Leaves that ALONE re-derive the target (i.e. the formula is True when only
     that one leaf survives). These are the operands a near-miss gate expects NOT to
@@ -232,6 +257,17 @@ if __name__ == "__main__":
     allok &= check("join", formula_join([("A", "Ar"), ("C", "Cr")]), 1)
     # diamond A,B: delete either
     allok &= check("diamond", formula_diamond("A", "B"), 1, [{"A"}, {"B"}])
+    # value-carrier covering: flat AND(A,B) where B carries the target value -> the
+    # exact planner must delete {B} (not {A}), still k*=1; and OR needs both anyway.
+    _cov_and = min_hitting_set_covering(formula_flat(["A", "B"]), {"B"})
+    _cov_none = min_hitting_set_covering(formula_flat(["A", "B"]), set())
+    _cov_or = min_hitting_set_covering({"op": "OR", "args": ["A", "B"]}, {"B"})
+    _cov_ok = (_cov_and == frozenset({"B"}) and len(_cov_none) == 1
+               and _cov_or == frozenset({"A", "B"}))
+    print(("  OK  " if _cov_ok else " FAIL ") +
+          f"covering     forced-B->{sorted(_cov_and)}  none->{sorted(_cov_none)}  "
+          f"OR-forced-B->{sorted(_cov_or)}")
+    allok &= _cov_ok
     # evaluate sanity: or_and stays derivable if only A (and C) deleted-of-B? check
     f = formula_or_and(["A", "B"], "C")
     assert evaluate(f, {"A", "B", "C"}) is True          # full store: derivable

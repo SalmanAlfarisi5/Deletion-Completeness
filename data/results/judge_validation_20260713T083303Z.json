@@ -1,0 +1,699 @@
+{
+  "timestamp_utc": "20260713T083303Z",
+  "models": [
+    "gpt-4o-mini-2024-07-18",
+    "gpt-4o-2024-08-06",
+    "claude-sonnet-5",
+    "gpt-5.5"
+  ],
+  "n_recovery_gold": 351,
+  "n_entailment_pairs": 1370,
+  "recovery": {
+    "gpt-4o-mini-2024-07-18": {
+      "model": "gpt-4o-mini-2024-07-18",
+      "n": 351,
+      "n_pos": 157,
+      "n_neg": 194,
+      "abstain": {
+        "refused": 0,
+        "empty": 0
+      },
+      "accuracy": 0.8775,
+      "false_accept": {
+        "rate": 0.0206,
+        "k": 4,
+        "n": 194,
+        "ci95": [
+          0.008,
+          0.0518
+        ]
+      },
+      "false_reject": {
+        "rate": 0.2484,
+        "k": 39,
+        "n": 157,
+        "ci95": [
+          0.1874,
+          0.3215
+        ]
+      },
+      "recall": {
+        "rate": 0.7516,
+        "k": 118,
+        "n": 157,
+        "ci95": [
+          0.6785,
+          0.8126
+        ]
+      },
+      "kappa_vs_gold": 0.7469,
+      "confusion": {
+        "tp": 118,
+        "fp": 4,
+        "tn": 190,
+        "fn": 39
+      }
+    },
+    "gpt-4o-2024-08-06": {
+      "model": "gpt-4o-2024-08-06",
+      "n": 351,
+      "n_pos": 157,
+      "n_neg": 194,
+      "abstain": {
+        "refused": 0,
+        "empty": 0
+      },
+      "accuracy": 0.9658,
+      "false_accept": {
+        "rate": 0.0052,
+        "k": 1,
+        "n": 194,
+        "ci95": [
+          0.0009,
+          0.0286
+        ]
+      },
+      "false_reject": {
+        "rate": 0.0701,
+        "k": 11,
+        "n": 157,
+        "ci95": [
+          0.0396,
+          0.1211
+        ]
+      },
+      "recall": {
+        "rate": 0.9299,
+        "k": 146,
+        "n": 157,
+        "ci95": [
+          0.8789,
+          0.9604
+        ]
+      },
+      "kappa_vs_gold": 0.9304,
+      "confusion": {
+        "tp": 146,
+        "fp": 1,
+        "tn": 193,
+        "fn": 11
+      }
+    },
+    "claude-sonnet-5": {
+      "model": "claude-sonnet-5",
+      "n": 351,
+      "n_pos": 157,
+      "n_neg": 194,
+      "abstain": {
+        "refused": 0,
+        "empty": 0
+      },
+      "accuracy": 0.9915,
+      "false_accept": {
+        "rate": 0.0,
+        "k": 0,
+        "n": 194,
+        "ci95": [
+          0.0,
+          0.0194
+        ]
+      },
+      "false_reject": {
+        "rate": 0.0191,
+        "k": 3,
+        "n": 157,
+        "ci95": [
+          0.0065,
+          0.0547
+        ]
+      },
+      "recall": {
+        "rate": 0.9809,
+        "k": 154,
+        "n": 157,
+        "ci95": [
+          0.9453,
+          0.9935
+        ]
+      },
+      "kappa_vs_gold": 0.9827,
+      "confusion": {
+        "tp": 154,
+        "fp": 0,
+        "tn": 194,
+        "fn": 3
+      }
+    },
+    "gpt-5.5": {
+      "model": "gpt-5.5",
+      "n": 351,
+      "n_pos": 157,
+      "n_neg": 194,
+      "abstain": {
+        "refused": 0,
+        "empty": 0
+      },
+      "accuracy": 0.9915,
+      "false_accept": {
+        "rate": 0.0,
+        "k": 0,
+        "n": 194,
+        "ci95": [
+          0.0,
+          0.0194
+        ]
+      },
+      "false_reject": {
+        "rate": 0.0191,
+        "k": 3,
+        "n": 157,
+        "ci95": [
+          0.0065,
+          0.0547
+        ]
+      },
+      "recall": {
+        "rate": 0.9809,
+        "k": 154,
+        "n": 157,
+        "ci95": [
+          0.9453,
+          0.9935
+        ]
+      },
+      "kappa_vs_gold": 0.9827,
+      "confusion": {
+        "tp": 154,
+        "fp": 0,
+        "tn": 194,
+        "fn": 3
+      }
+    }
+  },
+  "entailment": {
+    "gpt-4o-mini-2024-07-18": {
+      "model": "gpt-4o-mini-2024-07-18",
+      "n_pairs": 1370,
+      "abstain": {
+        "refused": 0,
+        "empty": 0
+      },
+      "accuracy": 0.5723,
+      "false_fire_near_miss": {
+        "rate": 0.7571,
+        "k": 586,
+        "n": 774,
+        "ci95": [
+          0.7257,
+          0.786
+        ]
+      },
+      "recall_true_entailer": {
+        "rate": 1.0,
+        "k": 298,
+        "n": 298,
+        "ci95": [
+          0.9873,
+          1.0
+        ]
+      },
+      "miss_rate_true_entailer": {
+        "rate": 0.0,
+        "k": 0,
+        "n": 298,
+        "ci95": [
+          0.0,
+          0.0127
+        ]
+      },
+      "recall_multihop": {
+        "rate": 1.0,
+        "k": 120,
+        "n": 120,
+        "ci95": [
+          0.969,
+          1.0
+        ]
+      },
+      "miss_rate_multihop": {
+        "rate": 0.0,
+        "k": 0,
+        "n": 120,
+        "ci95": [
+          0.0,
+          0.031
+        ]
+      },
+      "recall_by_topology": {
+        "chain": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "diamond": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "join": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "or_and": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "stored": {
+          "rate": 1.0,
+          "k": 74,
+          "n": 74,
+          "ci95": [
+            0.9507,
+            1.0
+          ]
+        },
+        "stored+world": {
+          "rate": 1.0,
+          "k": 74,
+          "n": 74,
+          "ci95": [
+            0.9507,
+            1.0
+          ]
+        },
+        "threshold": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        }
+      }
+    },
+    "gpt-4o-2024-08-06": {
+      "model": "gpt-4o-2024-08-06",
+      "n_pairs": 1370,
+      "abstain": {
+        "refused": 0,
+        "empty": 0
+      },
+      "accuracy": 0.738,
+      "false_fire_near_miss": {
+        "rate": 0.4548,
+        "k": 352,
+        "n": 774,
+        "ci95": [
+          0.42,
+          0.49
+        ]
+      },
+      "recall_true_entailer": {
+        "rate": 0.9765,
+        "k": 291,
+        "n": 298,
+        "ci95": [
+          0.9523,
+          0.9886
+        ]
+      },
+      "miss_rate_true_entailer": {
+        "rate": 0.0235,
+        "k": 7,
+        "n": 298,
+        "ci95": [
+          0.0114,
+          0.0477
+        ]
+      },
+      "recall_multihop": {
+        "rate": 1.0,
+        "k": 120,
+        "n": 120,
+        "ci95": [
+          0.969,
+          1.0
+        ]
+      },
+      "miss_rate_multihop": {
+        "rate": 0.0,
+        "k": 0,
+        "n": 120,
+        "ci95": [
+          0.0,
+          0.031
+        ]
+      },
+      "recall_by_topology": {
+        "chain": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "diamond": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "join": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "or_and": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "stored": {
+          "rate": 1.0,
+          "k": 74,
+          "n": 74,
+          "ci95": [
+            0.9507,
+            1.0
+          ]
+        },
+        "stored+world": {
+          "rate": 0.9054,
+          "k": 67,
+          "n": 74,
+          "ci95": [
+            0.8174,
+            0.9534
+          ]
+        },
+        "threshold": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        }
+      }
+    },
+    "claude-sonnet-5": {
+      "model": "claude-sonnet-5",
+      "n_pairs": 1370,
+      "abstain": {
+        "refused": 0,
+        "empty": 0
+      },
+      "accuracy": 0.9686,
+      "false_fire_near_miss": {
+        "rate": 0.0336,
+        "k": 26,
+        "n": 774,
+        "ci95": [
+          0.023,
+          0.0488
+        ]
+      },
+      "recall_true_entailer": {
+        "rate": 0.943,
+        "k": 281,
+        "n": 298,
+        "ci95": [
+          0.9106,
+          0.9641
+        ]
+      },
+      "miss_rate_true_entailer": {
+        "rate": 0.057,
+        "k": 17,
+        "n": 298,
+        "ci95": [
+          0.0359,
+          0.0894
+        ]
+      },
+      "recall_multihop": {
+        "rate": 1.0,
+        "k": 120,
+        "n": 120,
+        "ci95": [
+          0.969,
+          1.0
+        ]
+      },
+      "miss_rate_multihop": {
+        "rate": 0.0,
+        "k": 0,
+        "n": 120,
+        "ci95": [
+          0.0,
+          0.031
+        ]
+      },
+      "recall_by_topology": {
+        "chain": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "diamond": {
+          "rate": 0.9667,
+          "k": 29,
+          "n": 30,
+          "ci95": [
+            0.8333,
+            0.9941
+          ]
+        },
+        "join": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "or_and": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "stored": {
+          "rate": 0.9459,
+          "k": 70,
+          "n": 74,
+          "ci95": [
+            0.8691,
+            0.9788
+          ]
+        },
+        "stored+world": {
+          "rate": 0.8378,
+          "k": 62,
+          "n": 74,
+          "ci95": [
+            0.7376,
+            0.9047
+          ]
+        },
+        "threshold": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        }
+      }
+    },
+    "gpt-5.5": {
+      "model": "gpt-5.5",
+      "n_pairs": 1370,
+      "abstain": {
+        "refused": 0,
+        "empty": 0
+      },
+      "accuracy": 0.8197,
+      "false_fire_near_miss": {
+        "rate": 0.3049,
+        "k": 236,
+        "n": 774,
+        "ci95": [
+          0.2735,
+          0.3382
+        ]
+      },
+      "recall_true_entailer": {
+        "rate": 0.9631,
+        "k": 287,
+        "n": 298,
+        "ci95": [
+          0.9351,
+          0.9793
+        ]
+      },
+      "miss_rate_true_entailer": {
+        "rate": 0.0369,
+        "k": 11,
+        "n": 298,
+        "ci95": [
+          0.0207,
+          0.0649
+        ]
+      },
+      "recall_multihop": {
+        "rate": 1.0,
+        "k": 120,
+        "n": 120,
+        "ci95": [
+          0.969,
+          1.0
+        ]
+      },
+      "miss_rate_multihop": {
+        "rate": 0.0,
+        "k": 0,
+        "n": 120,
+        "ci95": [
+          0.0,
+          0.031
+        ]
+      },
+      "recall_by_topology": {
+        "chain": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "diamond": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "join": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "or_and": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        },
+        "stored": {
+          "rate": 1.0,
+          "k": 74,
+          "n": 74,
+          "ci95": [
+            0.9507,
+            1.0
+          ]
+        },
+        "stored+world": {
+          "rate": 0.8514,
+          "k": 63,
+          "n": 74,
+          "ci95": [
+            0.7531,
+            0.9149
+          ]
+        },
+        "threshold": {
+          "rate": 1.0,
+          "k": 30,
+          "n": 30,
+          "ci95": [
+            0.8865,
+            1.0
+          ]
+        }
+      }
+    }
+  },
+  "recovery_pairwise_kappa": {
+    "gpt-4o-mini-2024-07-18 vs gpt-4o-2024-08-06": 0.7542,
+    "gpt-4o-mini-2024-07-18 vs claude-sonnet-5": 0.7514,
+    "gpt-4o-mini-2024-07-18 vs gpt-5.5": 0.7632,
+    "gpt-4o-2024-08-06 vs claude-sonnet-5": 0.9244,
+    "gpt-4o-2024-08-06 vs gpt-5.5": 0.9477,
+    "claude-sonnet-5 vs gpt-5.5": 0.9653
+  },
+  "entailment_pairwise_kappa": {
+    "gpt-4o-mini-2024-07-18 vs gpt-4o-2024-08-06": 0.6285,
+    "gpt-4o-mini-2024-07-18 vs claude-sonnet-5": 0.2615,
+    "gpt-4o-mini-2024-07-18 vs gpt-5.5": 0.4632,
+    "gpt-4o-2024-08-06 vs claude-sonnet-5": 0.4802,
+    "gpt-4o-2024-08-06 vs gpt-5.5": 0.6326,
+    "claude-sonnet-5 vs gpt-5.5": 0.6306
+  },
+  "recovery_judge_selection": {
+    "selected": "gpt-4o-2024-08-06",
+    "best_overall": "claude-sonnet-5",
+    "constraint": "pinned snapshot (reproducible) + not the strongest self-adversary",
+    "flag": "claude-sonnet-5 has a lower/equal false-accept but is not a pinned snapshot; kept gpt-4o-2024-08-06 for reproducibility (frontier value is reported as corroboration)."
+  },
+  "entailment_judge_selection": {
+    "selected": "gpt-4o-2024-08-06",
+    "best_overall": "claude-sonnet-5",
+    "constraint": "pinned snapshot + recall>=0.6, minimize near-miss false-fire",
+    "note": "The planner co-deletes by the known entailment DAG, not this judge, so a low multi-hop recall here motivates the exact planner rather than weakening the method (see planner/entailment_dag)."
+  }
+}

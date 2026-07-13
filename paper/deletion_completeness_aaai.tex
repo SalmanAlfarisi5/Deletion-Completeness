@@ -71,7 +71,7 @@ re-derivation from surviving facts, and a parametric floor recoverable from the
 base model alone) and give a planner that computes the minimal co-deletion
 closing the deletable channels, emitting an auditable certificate. Because the
 parametric floor cannot be deleted, certification has a hard limit: under the
-strongest modeled adversary, \textbf{84 of 250} facts cannot be certified erased
+strongest modeled adversary, \textbf{86 of 250} facts cannot be certified erased
 (at threshold $\tau{=}0.1$), even with zero residual survival and no helpful
 co-deletion. The same stack, run across three memory architectures (a
 deduplication pipeline, a bi-temporal knowledge graph, and a paging agent), finds
@@ -119,11 +119,11 @@ certify. Concretely, we contribute:
 memory, strictly stronger than dependency-bounded database erasure, decomposing
 recoverability into residual, re-derivation, and parametric channels (\S\ref{sec:formulation});
 \item a minimal co-deletion planner for the resulting NP-hard problem, reaching
-completeness at mean collateral $k=1.04$ with zero spurious deletions, plus an
+completeness at mean collateral $k=1.03$ with zero spurious deletions, plus an
 auditable certificate that separates what deletion achieved from what it cannot
 (\S\ref{sec:method},\,\S\ref{sec:res-planner});
 \item a \emph{measured} parametric floor and its limit result: under the strongest
-modeled adversary, $84/250$ facts cannot be certified erased even at zero residual
+modeled adversary, $86/250$ facts cannot be certified erased even at zero residual
 survival. Measured as a recovery rate over $8$ samples per fact,
 the count is a Monte-Carlo estimate stable to $\pm1$--$2$ facts at the $n{=}8$-sample boundary
 (\S\ref{sec:res-rho});
@@ -299,7 +299,7 @@ when every fact has just two operands: it is intrinsic, not an artifact of
 high-arity rules. The relational hardness of \citet{p2e2} points the same way. We
 therefore adopt the greedy, entailment-confidence-ordered planner of
 \S\ref{sec:method}, which stays exact on the small dependency graphs seen in
-practice (mean $k=1.04$, \S\ref{sec:res-planner}).
+practice (mean $k=1.03$, \S\ref{sec:res-planner}).
 
 \begin{figure*}[t]
 \centering
@@ -421,7 +421,7 @@ near-miss cannot read as full entailment). The exact planner co-deletes over the
 \emph{known} entailment DAG, so it does not depend on the judge to rediscover a
 multi-hop path; the judge instead orders the greedy comparators and, in a deployed
 store, would be the means of discovering the graph (\S\ref{sec:limitations}). Our
-four-model validation (\S\ref{sec:res-judge}) motivates using \texttt{gpt-4o} for
+four-model validation (\S\ref{sec:res-judge}) motivates using Sonnet~5 for
 the greedy comparator: every model has a \emph{zero} miss-rate on true multi-hop
 entailers, but the weaker judges false-fire on partial operands, which would inflate
 a judge-driven planner's collateral.
@@ -442,9 +442,9 @@ entailment confidence, re-probing after each until
 $\sigma_{\mathrm{red}}^{\mathcal{A}}<\tau$; \emph{depth-first} co-deletes every
 entailer above $\tau$ in one shot with no re-probe. The reported collateral $k=|D|$
 is the measured price of the strong erasure notion (\S\ref{sec:formulation}): the
-exact planner attains $k=1.04$ at a measured optimality gap of $\approx0$, threshold
-nearly matches it ($k=1.10$), while depth-first over-deletes roughly sixfold
-($k=6.18$) (\S\ref{sec:res-planner}).
+exact planner attains $k=1.03$ at an optimality gap $\le0$ (provably minimal), threshold
+nearly matches it ($k=1.14$), while depth-first over-deletes roughly sixfold
+($k=6.60$) (\S\ref{sec:res-planner}).
 
 \paragraph{Certificate emitter.} For each target the emitter records the three
 channel scores, the final recoverability $R_{\mathcal{A}}=\max(\cdot)$, the
@@ -455,7 +455,7 @@ and \texttt{completeness\_certified}. The latter certifies erasure only under th
 \emph{worst modeled adversary} (the $\sup$ of Def.~4, i.e.\
 $\rho=\max_{\mathcal{A}}\rho^{\mathcal{A}}<\tau$), so a fact recoverable by the
 stronger reasoner is reported uncertified even when the weaker one fails; this
-conservative choice is why $84/250$, more than any single reasoner alone flags, are uncertifiable
+conservative choice is why $86/250$, more than any single reasoner alone flags, are uncertifiable
 (\S\ref{sec:res-rho}). A \texttt{floor\_reaching} but uncertified verdict is
 precisely the limit result (Def.~5), now an audited field. The certificate thus
 surfaces both the price ($k$) and the limit ($\rho$) of erasure; a recall caveat
@@ -477,7 +477,7 @@ training-time) access to the base model. Wherever recovery is model-dependent it
 a four-reasoner adversary panel spanning prior-generation and frontier models: %
 \texttt{gpt-4o-mini}, \texttt{gpt-4o}, Claude~Sonnet~5, and GPT-5.5. The
 certificate takes the worst of them (Def.~4). Because this panel already includes the
-frontier GPT-5.5 and Sonnet~5, and GPT-5.5 independently reproduces our recovery-judge
+frontier GPT-5.5 and Sonnet~5, and both frontier models reproduce our recovery-judge
 gold labels (\S\ref{sec:res-judge}), the results below are not an artifact of older
 models. Embeddings are local \texttt{all-MiniLM-L6-v2}. The completeness threshold is $\tau=0.10$. Datasets are
 synthetic subjects placed in realistic statistical contexts: 253 isolated PII facts,
@@ -485,9 +485,9 @@ synthetic subjects placed in realistic statistical contexts: 253 isolated PII fa
 threshold topologies whose targets are entailed only through \emph{unstored}
 intermediate facts) with their stored operands and bystanders, and 250
 parametric-gradient facts across three difficulty tiers.
-Recovery is scored by a validated LLM judge \citep{zheng2023judge} with a near-zero
-false-accept rate (\S\ref{sec:res-judge}: $1/139$ gold negatives, $95\%$ Wilson upper
-bound $\approx\!0.04$), so \emph{reported recovery rates are conservative lower bounds
+Recovery is scored by a validated LLM judge \citep{zheng2023judge} with a \emph{zero}
+false-accept rate on the gold negatives (\S\ref{sec:res-judge}: $0/194$ for the
+Sonnet~5 production judge, $95\%$ Wilson upper bound $\approx\!0.019$), so \emph{reported recovery rates are conservative lower bounds
 to within that small margin}. Table~\ref{tab:master} summarizes
 the headline numbers; results are presented in decreasing order of confidence.
 
@@ -498,12 +498,12 @@ the headline numbers; results are presented in decreasing order of confidence.
 \toprule
 \textbf{Result} & \textbf{System} & \textbf{Headline} & \textbf{Backing control} \\
 \midrule
-Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, exact $k{=}1.04$ & min-hitting-set over the entailment DAG; gap$\approx$0 \\
-$\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 84/250 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
-Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 56--74\%$\to$0\% & operands-only; verified-faithful co-delete \\
+Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, exact $k{=}1.03$ & min-hitting-set over the entailment DAG; gap$\,{\le}\,0$ \\
+$\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 86/250 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
+Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 62--69\%$\to$0\% & operands-only; verified-faithful co-delete \\
 Convergence (\S\ref{sec:res-converge})   & all three & 83\% / 100\% (Graphiti/Letta) & clean-delete verified first; explicit baseline \\
 Residual (\S\ref{sec:res-residual})      & Mem0     & 97.2\%; 97.2\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
-Judge (\S\ref{sec:res-judge})            & ---      & $1/139$ false-accept; 0 multi-hop miss (all 4) & 229 gold + 1{,}370 pairs; 4-model, pinned gpt-4o \\
+Judge (\S\ref{sec:res-judge})            & ---      & 0 false-accept (Sonnet~5); 0 multi-hop miss (all 4) & 351 gold + 1{,}370 pairs; 4-model, Sonnet~5 judge + pinned anchor \\
 \bottomrule
 \end{tabular}
 \caption{Headline results, ordered by confidence; each ``backing control'' is the
@@ -519,9 +519,9 @@ On all 298 multi-hop targets, the planner reads each target's entailment DAG and
 \emph{minimum hitting set} of it: the fewest surviving operands whose removal makes the
 target un-re-derivable. This closes the re-derivation channel on \emph{every} target
 (\textbf{100\% completeness}) while touching almost nothing extra: \textbf{zero spurious
-bystander deletions} and a mean of only \textbf{$k=1.04$} operands deleted per target.
+bystander deletions} and a mean of only \textbf{$k=1.03$} operands deleted per target.
 Because that hitting set is computed from the known structure, $k$ is not merely small but
-\emph{provably minimal}---the measured gap to the optimum is $\approx0$. It sits above one
+\emph{provably minimal}---the measured optimality gap is $\le0$ on every topology (aggregate $-0.067$). It sits above one
 only because the harder topologies demand it: an ``at least two of three'' target cannot be
 closed by deleting a single operand, so its optimum is $k^\star{=}2$, and the planner pays
 exactly that.
@@ -534,12 +534,12 @@ for an operand.
 
 \textbf{What structure buys, measured.} Two greedy comparators bound the exact planner
 (\S\ref{sec:method}). \emph{Threshold}---a confidence-ordered greedy that re-probes and
-stops early---nearly matches the optimum ($k=1.10$, gap $\approx0$) but leans on the
-entailment judge's selectivity, which is why it uses the stronger \texttt{gpt-4o}
-(\S\ref{sec:res-judge}); the smaller \texttt{gpt-4o-mini} mistakes partial operands for
-sufficient ones and would inflate $k$. \emph{Depth-first}---a single probe-free pass that
+stops early---nearly matches the optimum ($k=1.14$, gap $\approx0$) but leans on the
+entailment judge's selectivity, which is why it uses Sonnet~5, the judge that
+false-fires least (\S\ref{sec:res-judge}); weaker judges such as \texttt{gpt-4o-mini}
+mistake partial operands for sufficient ones and would inflate $k$. \emph{Depth-first}---a single probe-free pass that
 sweeps in every above-$\tau$ candidate---also reaches full completeness but at roughly
-\textbf{six times} the collateral ($k=6.18$) and with \textbf{over a thousand spurious
+\textbf{six times} the collateral ($k=6.60$) and with \textbf{over a thousand spurious
 deletions}, because without re-probing it cannot tell when to stop. The exact-to-depth-first
 gap is the measured price of ignoring structure; the near-zero exact-to-threshold gap shows
 a good greedy recovers most of it on these small graphs. The one place the greedy visibly
@@ -591,7 +591,7 @@ the authored tier is only a hypothesis and $\rho$ is the evidence.
 We score each fact against the \emph{worst} of our four adversaries. This sorts the 250
 facts into three groups (Table~\ref{tab:rho}): most fall at a certifiable floor, a middle
 band sits in an intermediate range, and the rest hit a hard floor, with the mean floor
-rising along the difficulty gradient. The headline follows: \textbf{84 of 250 facts are
+rising along the difficulty gradient. The headline follows: \textbf{86 of 250 facts are
 not erasure-certifiable} at $\tau{=}0.1$, \emph{even though their residual survival is
 zero and every re-derivation path was closed}. This is the limit result: once a value is
 inferable from world knowledge no one can delete, no co-deletion can certify its erasure.
@@ -631,18 +631,18 @@ the supplementary material.
 \toprule
 worst-adversary $\rho_{\max}$ & meaning & \#facts & certifiable? \\
 \midrule
-$\le\tau$ ($\tau{=}0.1$) & certifiable floor & 166 & \checkmark \\
-$\tau$ to $0.5$          & intermediate band & 42 & no \\
-$\ge 0.5$                & hard floor        & 42 & no \\
+$\le\tau$ ($\tau{=}0.1$) & certifiable floor & 164 & \checkmark \\
+$\tau$ to $0.5$          & intermediate band & 41 & no \\
+$\ge 0.5$                & hard floor        & 45 & no \\
 \midrule
-\multicolumn{2}{@{}l}{total} & 250 & 166 \\
+\multicolumn{2}{@{}l}{total} & 250 & 164 \\
 \bottomrule
 \end{tabular}
 \caption{Parametric floor $\rho$ on $n{=}250$ facts ($8$ samples each), binned by the
-worst of the four adversaries, $\rho_{\max}$. The floor is \emph{graded}: a $42$-fact
-intermediate band sits between the certifiable $166$ and the hard-floor $42$, so the
-$84/250$ uncertifiable count moves with $\tau$ (a policy dial). Measured band disagrees
-with authored tier for $74/250$ facts.}
+worst of the four adversaries, $\rho_{\max}$. The floor is \emph{graded}: a $41$-fact
+intermediate band sits between the certifiable $164$ and the hard-floor $45$, so the
+$86/250$ uncertifiable count moves with $\tau$ (a policy dial). Measured band disagrees
+with authored tier for $77/250$ facts.}
 \label{tab:rho}
 \end{table}
 
@@ -664,9 +664,9 @@ what that reasoning needs: \emph{stored-alone}, where the surviving operands suf
 re-derivation (\%) & mini & 4o & S5 & G5.5 & post \\
 \midrule
 Mem0 bin~1 (stored-alone)       & 100 & 97 & 100 & 100 & 0 \\
-Mem0 bin~2 (stored+world)       & 62  & 72 & 68  & 66  & 0 \\
+Mem0 bin~2 (stored+world)       & 62  & 69 & 69  & 66  & 0 \\
 Mem0 structured (5 topologies)  & 100 & 100 & 100 & 100 & 0 \\
-Letta bin~2 (stored+world)      & 59  & 65 & 59  & 65  & 0 \\
+Letta bin~2 (stored+world)      & 62  & 65 & 65  & 68  & 0 \\
 \bottomrule
 \end{tabular}
 \caption{Re-derivation rate at residual $0$ (operands-only control), by adversary
@@ -682,9 +682,9 @@ On Mem0, across all four adversaries, the target is re-derived on nearly every
 stored-alone fact and on about two-thirds of the stored+world facts, and co-deleting the
 operands drives both to zero, down to a parametric floor of $\rho=0$
 (Table~\ref{tab:rederiv}). Adversary strength is not one-dimensional: the worst
-stored+world rate the certificate must anticipate is set by \texttt{gpt-4o} ($72\%$), not
-by the frontier Sonnet~5 or GPT-5.5 ($68\%$/$66\%$)---a larger model is not uniformly a
-stronger re-deriver, which is exactly why we take the worst over a diverse panel. The
+stored+world rate the certificate must anticipate is set by \texttt{gpt-4o} and Sonnet~5
+(both $69\%$), while the newest GPT-5.5 sits lower ($66\%$)---a larger model is not
+uniformly a stronger re-deriver, which is exactly why we take the worst over a diverse panel. The
 five harder topologies stress the planner's reach: in each, the target is entailed not by
 stored facts but by \emph{derived} intermediates that are themselves entailed by stored
 roots, and for the disjunctive and threshold targets by more than one operand set. Every
@@ -819,15 +819,19 @@ target, so we validate both against hand-labeled gold.
 We validate both judges on large gold sets and under \emph{all four} adversary models,
 reporting rates with Wilson intervals and inter-model agreement (Cohen's $\kappa$).
 
-The \textbf{recovery judge} is checked on $229$ labeled cases spanning exact, paraphrase,
-numeric within- and out-of-tolerance, wrong-value, opposite, and refusal answers. The
-pinned \texttt{gpt-4o-mini} makes a single false accept in $139$ gold negatives
-($0.7\%$, $95\%$ Wilson upper bound $\approx\!0.04$); its errors otherwise run the safe
-way---scoring a close numeric near-miss as a non-recovery, never the reverse---so
-reported recovery rates are lower bounds to within that small margin. The stronger
-\texttt{gpt-4o} matches that false-accept rate at higher recall, and the frontier
-Sonnet~5 and GPT-5.5 make \emph{zero} false accepts, corroborating the pinned judge
-rather than replacing it (a rolling alias cannot be a reproducible production judge).
+The \textbf{recovery judge} is checked on $351$ labeled cases ($194$ negatives) spanning
+exact, paraphrase, numeric within- and out-of-tolerance, wrong-value, opposite, and
+refusal answers, including $22$ curated grey-zone cases (reconstruction phrasings,
+category-vs-specific, hedges, one-token flips). The frontier \textbf{Sonnet~5} production
+judge makes \emph{zero} false accepts in the $194$ gold negatives ($0\%$, $95\%$ Wilson
+upper bound $\approx\!0.019$) at $0.98$ recall; its errors run the safe way---scoring a
+close numeric near-miss as a non-recovery, never the reverse---so reported recovery rates
+are lower bounds to within that small margin. On this larger, harder gold the pinned
+models slip: \texttt{gpt-4o} makes one false accept ($0.5\%$) and \texttt{gpt-4o-mini}
+four ($2.1\%$), while GPT-5.5 also reaches zero. We therefore run the most capable model,
+Sonnet~5, as the production judge---empirically the safest on the gold---and keep the
+pinned \texttt{gpt-4o-mini}/\texttt{gpt-4o} rates as a reproducibility anchor, since
+neither Sonnet~5 nor GPT-5.5 has a dated snapshot a reviewer could pin against.
 
 The \textbf{entailment judge} is checked on $1{,}370$ pairs: positives (full operand
 sets, single- and multi-hop) and adversarial near-misses (single operands that do not
@@ -835,13 +839,16 @@ suffice). Two findings settle its use. First, \emph{every} model has a \textbf{z
 miss-rate on true multi-hop entailers}---none silently drops a genuine multi-hop
 dependency, exactly the error a co-deletion planner most needs to avoid, and the exact
 planner removes even that risk structurally (\S\ref{sec:method}). Second, on the
-near-misses the models diverge sharply: \texttt{gpt-4o-mini} treats $76\%$ of
-insufficient single operands as sufficient, \texttt{gpt-4o} $45\%$, GPT-5.5 $30\%$, and
-Sonnet~5 only $3.4\%$. A high rate here would inflate a \emph{judge-driven} planner's
-collateral, so the greedy comparator uses \texttt{gpt-4o}; the exact planner, co-deleting
-over the known DAG, is unaffected. We keep the pinned \texttt{gpt-4o} as production over
-the best-scoring but rolling-alias, panel-adversary Sonnet~5, preserving reproducibility
-and avoiding a reasoner grading its own recoveries. Full per-model rates and $\kappa$ are
+near-misses the models diverge sharply: \texttt{gpt-4o-mini} treats $75.7\%$ of
+insufficient single operands as sufficient, \texttt{gpt-4o} $45.5\%$, GPT-5.5 $30.5\%$,
+and Sonnet~5 only $3.4\%$. A high rate here would inflate a \emph{judge-driven} planner's
+collateral, so the greedy comparator uses Sonnet~5, the judge that false-fires least; the
+exact planner, co-deleting over the known DAG, is unaffected. Sonnet~5 is thus both a
+panel adversary and the production judge for recovery and entailment---an overlap we
+accept because the judge's guarantee is gold-validation ($0\%$ false-accept on the
+$351$-case ground-truth-by-construction gold), not the independence of its calls, since
+same-model errors correlate across calls in any case. The pinned \texttt{gpt-4o} numbers
+are retained alongside as a reproducibility anchor. Full per-model rates and $\kappa$ are
 in the supplementary material.
 
 %========================================================================
@@ -864,11 +871,12 @@ we cannot show it is fully erased.
 \paragraph{Our numbers inherit the judges' limits.} Both LLM judges are validated on
 large gold sets across four models (\S\ref{sec:res-judge}) but imperfect. On single
 insufficient operands the entailment judge can mistake a partial operand for a sufficient
-one, which is why the greedy comparator uses the stronger \texttt{gpt-4o} and the method
-itself co-deletes over the known DAG rather than trusting the judge. The recovery judge
-makes a small but non-zero rate of false accepts ($1/139$ gold negatives), so the
-``lower bound'' framing holds only to within that margin ($95\%$ Wilson upper bound
-$\approx\!0.04$); every model, though, has a zero miss-rate on true multi-hop entailers.
+one, which is why the greedy comparator uses the least-false-firing judge, Sonnet~5, and
+the method itself co-deletes over the known DAG rather than trusting the judge. The
+recovery judge (Sonnet~5) makes \emph{zero} false accepts on the $194$ gold negatives
+($95\%$ Wilson upper bound $\approx\!0.019$), so the ``lower bound'' framing holds to
+within that small margin; every model, though, has a zero miss-rate on true multi-hop
+entailers.
 
 \paragraph{The floor is a lower bound where it matters most.} We estimate the
 parametric floor by asking the base model for the value, and for sensitive attributes
@@ -901,7 +909,7 @@ the same gap recurs through different by-design mechanisms, and a \emph{measured
 parametric floor sets a hard limit on what any deletion can promise.
 
 That limit is the paper's broadest implication. When a fact is recoverable from
-world knowledge alone ($\rho\geq\tau$), as $84$ of our $250$ gradient facts are under
+world knowledge alone ($\rho\geq\tau$), as $86$ of our $250$ gradient facts are under
 the strongest modeled adversary, no external-store deletion can erase it: the value
 is reconstructed without ever reading the store. Right-to-be-forgotten compliance
 then cannot be a deletion operation; it requires not storing the fact in the first

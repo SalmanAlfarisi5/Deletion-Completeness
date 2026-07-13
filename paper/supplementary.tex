@@ -35,14 +35,14 @@ parametric-gradient.
 \toprule
 heuristic & completeness (Wilson 95\%) & mean $k$ & spurious \\
 \midrule
-exact (min hitting set, the method) & 100\% $[0.96, 1.0]$ & $1.04$ & 0 \\
-threshold (greedy comparator)       & 100\% $[0.96, 1.0]$ & $1.10$ & 0 \\
-depth-first (aggressive comparator) & 100\% $[0.96, 1.0]$ & $6.18$ & 1116 \\
+exact (min hitting set, the method) & 100\% $[0.96, 1.0]$ & $1.03$ & 0 \\
+threshold (greedy comparator)       & 100\% $[0.96, 1.0]$ & $1.14$ & 0 \\
+depth-first (aggressive comparator) & 100\% $[0.96, 1.0]$ & $6.60$ & 1192 \\
 \bottomrule
 \end{tabular}
-\caption{Planner on all 298 multi-hop targets (\texttt{gpt-4o} entailment judge for the
+\caption{Planner on all 298 multi-hop targets (Claude~Sonnet~5 entailment judge for the
 greedy comparators). The exact planner co-deletes a minimum hitting set of each target's
-boolean entailment DAG; the two greedy heuristics bound it. The exact planner spares 466
+boolean entailment DAG; the two greedy heuristics bound it. The exact planner spares 467
 operands relative to depth-first.}
 \end{table}
 
@@ -52,13 +52,13 @@ operands relative to depth-first.}
 \toprule
 topology ($n$) & $k^\star$ & exact $k$ & threshold $k$ & depth-first $k$ & depth spurious \\
 \midrule
-flat stored ($n{=}74$)        & 1 & 1.01 & 1.00 & 5.61 & 269 \\
-flat stored+world ($n{=}74$)  & 1 & 0.73 & 0.73 & 5.65 & 275 \\
-join ($n{=}30$)               & 1 & 1.00 & 1.00 & 7.03 & 111 \\
-chain ($n{=}30$)              & 1 & 1.00 & 1.00 & 7.00 & 111 \\
-diamond ($n{=}30$)            & 1 & 1.00 & 1.00 & 5.83 & 118 \\
-or\_and ($n{=}30$)            & 1 & \textbf{1.00} & \textbf{1.63} & 6.83 & 115 \\
-threshold ($n{=}30$)          & 2 & \textbf{2.00} & 2.00 & 6.90 & 117 \\
+flat stored ($n{=}74$)        & 1 & 1.00 & 1.01 & 6.00 & 296 \\
+flat stored+world ($n{=}74$)  & 1 & 0.73 & 0.73 & 5.99 & 296 \\
+join ($n{=}30$)               & 1 & 1.00 & 1.00 & 8.00 & 120 \\
+chain ($n{=}30$)              & 1 & 1.00 & 1.00 & 8.00 & 120 \\
+diamond ($n{=}30$)            & 1 & 1.00 & 1.00 & 6.00 & 120 \\
+or\_and ($n{=}30$)            & 1 & \textbf{1.00} & \textbf{2.00} & 7.00 & 120 \\
+threshold ($n{=}30$)          & 2 & \textbf{2.00} & 2.00 & 7.00 & 120 \\
 \bottomrule
 \end{tabular}
 \caption{Per-topology collateral vs.\ the ground-truth optimum $k^\star$ (exp12). The
@@ -66,8 +66,8 @@ exact planner attains $k^\star$ on every topology, and dips \emph{below} it on f
 stored+world (mean $0.73$), where Stage-2 artifact purge or an adversary that cannot
 re-derive closes the channel before any operand co-deletion. Two topologies make the
 minimum non-trivial: the disjunctive $((A\vee B)\wedge C)$ target has optimum
-$k^\star{=}1$ (delete $C$), yet the confidence-ordered greedy over-deletes to $1.63$ by
-removing the two OR-branches; the at-least-$2$-of-$3$ threshold target has $k^\star{=}2$,
+$k^\star{=}1$ (delete $C$), yet the confidence-ordered greedy over-deletes to $2.00$ by
+removing both OR-branches; the at-least-$2$-of-$3$ threshold target has $k^\star{=}2$,
 which the exact planner pays exactly. Depth-first over-deletes five- to sevenfold on
 every topology.}
 \end{table}
@@ -82,19 +82,22 @@ bin ($n$) & \texttt{gpt-4o-mini} & \texttt{gpt-4o} & Sonnet~5 & GPT-5.5 & after 
 \midrule
 \multicolumn{6}{@{}l}{\emph{Mem0}} \\
 bin~1 stored-alone ($n{=}74$)   & 100\% & 97\% & 100\% & 100\% & 0\% $[0,.05]$ \\
-bin~2 stored+world ($n{=}74$)   & 62\%  & 72\% & 68\%  & 66\%  & 0\% $[0,.05]$ \\
+bin~2 stored+world ($n{=}74$)   & 62\%  & 69\% & 69\%  & 66\%  & 2.7\% (F043) \\
 join/chain/or\_and/diamond/threshold ($n{=}30$ ea.) & 100\% & 100\% & 100\% & 100\% & 0\% \\
 \multicolumn{6}{@{}l}{\emph{Letta} (exp11)} \\
-bin~1 stored-alone ($n{=}23$)   & 100\% & 96\% & 100\% & 100\% & 0\% \\
-bin~2 stored+world ($n{=}17$)   & 59\%  & 65\% & 59\%  & 65\%  & 0\% \\
+bin~1 stored-alone ($n{=}74$)   & \multicolumn{4}{c}{$99$--$100\%$} & 0\% \\
+bin~2 stored+world ($n{=}74$)   & 62\%  & 65\% & 65\%  & 68\%  & 0\% \\
+join/chain/or\_and/diamond/threshold ($n{=}30$ ea.) & 100\% & 100\% & 100\% & 100\% & 0\% \\
 \bottomrule
 \end{tabular}
 \caption{Re-derivation rate per bin and adversary, at residual survival $0$ by
 construction (operands-only injection). Parametric floor $\rho=0\%$ on every bin. On
 Letta, faithful direct \texttt{passages.delete} and bystanders-intact are both verified at
-$100\%$. The worst stored+world adversary is \texttt{gpt-4o} ($72\%$ on Mem0), \emph{not}
-the frontier models. F043 (Catholic-High-School-to-Bishan) is an honest negative for the
-two backbone reasoners but is re-derived by the two frontier models.}
+$100\%$. The worst stored+world re-derivers are \texttt{gpt-4o} and Claude~Sonnet~5 (both
+$69\%$ on Mem0). F043 (Catholic-High-School-to-Bishan) is the one value-coupling
+honest-negative that survives co-deletion---the $2.7\%$ residual Mem0 bin-2 cell, where the
+value stays entailed by a fact outside the co-deleted set; the stricter judge found no
+\emph{new} residual recoveries.}
 \end{table}
 
 \section{Parametric Floor $\rho$ (main paper \S The Parametric Floor)}
@@ -111,11 +114,11 @@ high & 0.49 & 0.71 & 0.57 & 0.31 \\
 \bottomrule
 \end{tabular}
 \caption{Mean $\rho$ per authored tier and adversary, over $8$ samples per fact
-($n{=}250$). The worst-adversary $\rho_{\max}$ sorts the facts into 166 certifiable
-($\rho_{\max}{\le}\tau$), 42 intermediate ($\tau<\rho_{\max}<0.5$), and 42 hard-floor
-($\rho_{\max}{\ge}0.5$); \textbf{84 of 250 are uncertifiable}. Authored tier disagrees with
-the measured band for 74 of 250 facts. On sensitive high-tier items the frontier models
-refuse ($29$ flags, \emph{all} on high-tier facts --- verified against rate-limit
+($n{=}250$). The worst-adversary $\rho_{\max}$ sorts the facts into 164 certifiable
+($\rho_{\max}{\le}\tau$), 41 intermediate ($\tau<\rho_{\max}<0.5$), and 45 hard-floor
+($\rho_{\max}{\ge}0.5$); \textbf{86 of 250 are uncertifiable}. Authored tier disagrees with
+the measured band for 77 of 250 facts. On sensitive high-tier items the frontier models
+refuse ($30$ flags, \emph{all} on high-tier facts --- verified against rate-limit
 contamination), so their $\rho$ there is a lower bound and \texttt{gpt-4o} ($0.71$
 high-tier mean) is the worst adversary. The count is a Monte-Carlo estimate stable to
 $\pm1$--$2$ facts.}
@@ -135,26 +138,32 @@ write race).
 
 \section{Judge Validation (main paper \S Judge Validation)}
 
-All four adversary-panel models are validated as judges on the same gold; the production
-judges remain the pinned \texttt{gpt-4o-mini} (recovery) and \texttt{gpt-4o} (entailment).
+All four adversary-panel models are validated as judges on the same gold. The production
+judge is Claude~Sonnet~5 (the strongest model available) for both recovery and entailment,
+selected on its gold-validated $0\%$ false-accept; the pinned \texttt{gpt-4o-mini}
+(recovery) and \texttt{gpt-4o} (entailment) snapshots are retained as a reproducibility
+anchor. The guarantee is gold validation---not call-independence---since same-model errors
+correlate even across separate calls.
 
 \begin{table}[h]
 \centering
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-recovery judge ($229$ gold, $139$ neg.) & \texttt{gpt-4o-mini} & \texttt{gpt-4o} & Sonnet~5 & GPT-5.5 \\
+recovery judge ($351$ gold, $194$ neg.) & \texttt{gpt-4o-mini} & \texttt{gpt-4o} & Sonnet~5 & GPT-5.5 \\
 \midrule
-accuracy      & 0.887 & 0.961 & 0.991 & 0.987 \\
-false-accept  & 0.007 & 0.007 & 0.000 & 0.000 \\
-recall        & 0.72  & 0.91  & 0.98  & 0.97 \\
+accuracy      & 0.878 & 0.966 & 0.992 & 0.992 \\
+false-accept  & 0.021 & 0.005 & 0.000 & 0.000 \\
+recall        & 0.75  & 0.93  & 0.98  & 0.98 \\
 \bottomrule
 \end{tabular}
-\caption{Recovery judge over $229$ labeled cases (exact / paraphrase / numeric
-within- and out-of-tolerance / wrong-value / opposite / refusal). False-accept is the
-safety-critical error; the pinned \texttt{gpt-4o-mini} has $1/139$ ($95\%$ Wilson upper
-$\approx0.04$), so recovery rates are lower bounds to within that margin. The frontier
-models make zero false accepts but are rolling aliases and panel adversaries, so they
-corroborate rather than replace the pinned judge.}
+\caption{Recovery judge over $351$ labeled cases (157 positive / 194 negative, including 22
+curated adversarial grey-zone cases: reconstruction phrasings, category-vs-specific,
+hedges, one-token flips). False-accept is the safety-critical error. The production judge,
+Claude~Sonnet~5, makes zero false accepts ($0/194$, $95\%$ Wilson upper $\approx0.019$), so
+recovery rates are lower bounds to within that margin. On this larger, harder gold the
+pinned \texttt{gpt-4o-mini} rises to $2.1\%$ false-accept; it and \texttt{gpt-4o} are
+retained as a reproducibility anchor, since Claude~Sonnet~5 is a rolling alias and also a
+panel adversary.}
 \end{table}
 
 \begin{table}[h]
@@ -164,7 +173,7 @@ corroborate rather than replace the pinned judge.}
 entailment judge ($1{,}370$ pairs) & \texttt{gpt-4o-mini} & \texttt{gpt-4o} & Sonnet~5 & GPT-5.5 \\
 \midrule
 miss-rate on true multi-hop entailers    & 0.00 & 0.00 & 0.00 & 0.00 \\
-false-fire on near-miss single operands  & 0.76 & 0.45 & 0.034 & 0.30 \\
+false-fire on near-miss single operands  & 0.757 & 0.455 & 0.034 & 0.305 \\
 \bottomrule
 \end{tabular}
 \caption{Entailment judge over $1{,}370$ pairs (positives, trivial negatives, and
@@ -172,7 +181,9 @@ single-operand near-misses). \emph{Every} model has a zero miss-rate on true mul
 entailers---none drops a genuine multi-hop dependency, the error a co-deletion planner
 most needs to avoid---and the exact planner removes even that risk by co-deleting over the
 known DAG. Near-miss false-fire (treating one insufficient operand as sufficient) varies
-widely; the greedy comparator uses \texttt{gpt-4o}, and the exact planner is unaffected.}
+widely; the production Claude~Sonnet~5 entailment judge has the lowest ($3.4\%$) and orders
+the greedy comparators, while the pinned \texttt{gpt-4o} is retained as the reproducibility
+anchor; the exact planner co-deletes over the known DAG and is unaffected either way.}
 \end{table}
 
 \end{document}

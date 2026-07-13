@@ -8,10 +8,12 @@ confound. All numbers verified against `data/results/*.json` (timestamps in
 
 Stack (all runs): **local, no-sudo, pinned** — Mem0 OSS (`mem0ai 2.0.7`) + local
 Chroma; Graphiti (`graphiti-core 0.29.2`) + Neo4j 5.26 (JDK21 tarball); Letta
-(`letta 0.16.8`) + local Postgres 16.4 + pgvector. LLMs pinned:
-`gpt-4o-mini-2024-07-18` (judge/primary reasoner) + `gpt-4o-2024-08-06` (second
-reasoner / entailment). Embeddings: local `all-MiniLM-L6-v2`. Third-party
-telemetry disabled. τ = 0.10.
+(`letta 0.16.8`) + local Postgres 16.4 + pgvector. LLMs: **production judges =
+Claude Sonnet 5** (frontier, gold-validated — recovery *and* entailment); backbone
+reasoners pinned `gpt-4o-mini-2024-07-18` (primary) + `gpt-4o-2024-08-06` (second
+reasoner), which also serve as the **reproducibility anchor** for the judges. Adversary
+panel (4 models): the two pinned backbones + Claude Sonnet 5 + GPT-5.5. Embeddings:
+local `all-MiniLM-L6-v2`. Third-party telemetry disabled. τ = 0.10.
 
 ---
 
@@ -59,15 +61,18 @@ caveat / what it does *not* say.
 
 ### C3 — At residual = 0, facts still re-derive from surviving operands; faithful co-deletion closes the channel
 - **Support:** exp04 (Mem0), **exp11 (Letta)**.
-- **H (Mem0):** leak **bin1 .97–1.0** (stored-alone, n=74) / **bin2 .62/.72/.68/.66**
+- **H (Mem0):** leak **bin1 .97–1.0** (stored-alone, n=74) / **bin2 .62/.69/.69/.66**
   (stored+world, n=74) across the **4-reasoner adversary set** (gpt-4o-mini / gpt-4o /
-  Sonnet 5 / GPT-5.5) → **0% after co-delete** [CI 0, .05]; ρ = 0%. **The worst
-  re-deriver is gpt-4o (.72), not the frontier models** (Sonnet 5 .68, GPT-5.5 .66) —
-  the certificate is built for whichever reasoner is worst per fact. **NEW multi-level set** (join depth-2 + chain
-  depth-3, n=12 each): **1.0 re-derivation → 0% after co-delete**, ρ=0 — the target's
+  Sonnet 5 / GPT-5.5) → **bin1 0% / bin2 2.7% (F043 value-coupling residue)** after
+  co-delete [CI 0, .05]; ρ = 0%. **The worst re-derivers are gpt-4o and Sonnet 5 (both
+  .69)** (GPT-5.5 .66, gpt-4o-mini .62) — the certificate is built for whichever reasoner
+  is worst per fact. **NEW multi-level set** (join depth-2 + chain
+  depth-3, n=30 each): **1.0 re-derivation → 0% after co-delete**, ρ=0 — the target's
   direct entailers are themselves unstored, so co-deletion must recurse to the stored
-  roots. **Ports to Letta (exp11):** bin1 100%, bin2 **.59–.65** (4 reasoners, n=40) → 0%
-  after co-delete; faithful direct `passages.delete` = 100%, bystanders intact = 100%.
+  roots. **Ports to Letta (exp11, now FULL n=298 — all topologies):** bin1 **.99–1.0**,
+  bin2 **.62/.65/.65/.68** (4 reasoners) → **0%** after co-delete; all 5 structured
+  topologies (n=30 ea) 100% → 0; faithful direct `passages.delete` = 100%, bystanders
+  intact = 100%.
 - **Ctrl:** **operands-only** control — target value never stored, so residual = 0
   by construction (verified with the **narrow `delete_value`**, not the broad
   `probe_value`, so an operand sharing a surface form is not miscounted); **≥ 2
@@ -77,35 +82,39 @@ caveat / what it does *not* say.
   is not confounded with "the delete silently didn't run" (keeps exp10 and exp11
   separate).
 - **Scope:** re-derivation is **reasoner-dependent**; honest negative **F043**
-  (CHS → Bishan: model won't make the leap). Recovery scored by a validated judge
-  with **0% false-accept** (§ V1) ⇒ all leak rates are conservative lower bounds.
+  (CHS → Bishan) is a **value-coupling** residue — after co-deleting operands the value
+  stays entailed by a surviving fact, leaving the 2.7% Mem0 bin-2 residual. Recovery
+  scored by the **gold-validated Claude Sonnet 5 judge with 0% false-accept** (§ V1) ⇒
+  all leak rates are conservative lower bounds.
 
 ### C4 — An exact minimal co-deletion planner reaches completeness with minimal collateral, and emits a certificate
 - **Support:** exp03, exp12.
 - **H:** **100% completeness [Wilson .96, 1.0], 0 spurious bystander deletions,
-  exact mean collateral k = 1.04** (min-hitting-set over the entailment DAG, measured
-  optimality gap ≈0 vs the ground-truth optimum k*; greedy threshold k=1.10 / 0 spurious;
-  depth-first k=6.18 / 1116 spurious, exp12) — on the **full n=298** multi-hop set (incl.
-  the 5 hard topologies), gpt-4o entailment judge; **466 operands spared** by minimality.
+  exact mean collateral k = 1.03** (min-hitting-set over the entailment DAG, measured
+  optimality gap **−0.067, ≤0 on every topology** vs the ground-truth optimum k* — provably
+  minimal; greedy threshold k=1.14 / 0 spurious; depth-first k=6.60 / 1192 spurious, exp12)
+  — on the **full n=298** multi-hop set (incl. the 5 hard topologies), Claude Sonnet 5
+  entailment judge; **467 operands spared** by minimality.
 - **Ctrl:** bystanders must be **spared** (0 spurious is the selectivity test); the
   method is **structurally decoupled from the entailment judge** — the exact planner
   co-deletes over the *known* entailment DAG (recursing to stored roots), so a judge's
   false-fire cannot inflate k. The judge only orders the *greedy comparators*; V2 shows
-  every model has a **0% multi-hop miss-rate** (never loses a true entailer) and gpt-4o
-  is the lowest-false-fire reproducible snapshot used for those comparators.
+  every model has a **0% multi-hop miss-rate** (never loses a true entailer) and the
+  production **Claude Sonnet 5 entailment judge** (3.4% false-fire, the lowest) orders
+  those comparators, with pinned gpt-4o retained as the reproducibility anchor.
 - **Scope:** the dependency graphs are small, so Opt-P2E2 (NP-hard in general) is solved
-  **exactly**; "minimal" = a proven minimum hitting set (gap ≈0 vs k* per exp12), not just
-  a sufficient subset.
+  **exactly**; "minimal" = a proven minimum hitting set (gap **−0.067, ≤0 on every
+  topology** vs k* per exp12), not just a sufficient subset.
 
 ### C5 — The parametric floor ρ is *measured* on a gradient; when ρ > τ, completeness cannot be certified even at residual = 0 *(the limit result)*
 - **Support:** exp07.
 - **H:** measured worst-adversary ρ (sup over **4 reasoners**: gpt-4o-mini, gpt-4o,
-  Sonnet 5, GPT-5.5) on **n=250** facts: **166 certifiable (ρ≤τ) / 42 contested-middle
-  (τ<ρ<0.5) / 42 hard-floor (ρ≥0.5)** → **84 of 250 NOT certified-complete** (ρ>τ) at
-  τ=0.1 despite residual=0 [certifiable 166/250=.66, Wilson .60–.72]. ⚠ The floor is a
-  **τ-dependent GRADIENT, not bimodal** (42 facts in the contested middle; 74/250
+  Sonnet 5, GPT-5.5) on **n=250** facts: **164 certifiable (ρ≤τ) / 41 contested-middle
+  (τ<ρ<0.5) / 45 hard-floor (ρ≥0.5)** → **86 of 250 NOT certified-complete** (ρ>τ) at
+  τ=0.1 despite residual=0 [certifiable 164/250=.66, Wilson .60–.71]. ⚠ The floor is a
+  **τ-dependent GRADIENT, not bimodal** (41 facts in the contested middle; 77/250
   authored-tier vs measured-band mismatch). NUANCE (frontier safety filters): GPT-5.5
-  and Sonnet 5 **refuse sensitive high-tier ρ facts** (NSF→sex, licence→age; **29
+  and Sonnet 5 **refuse sensitive high-tier ρ facts** (NSF→sex, licence→age; **30
   refusal flags, all high-tier — verified no rate-limit contamination**) → their
   measured ρ there is a refusal-based **lower bound**, so the worst-adversary
   high-tier ρ is set by gpt-4o (which refuses less).
@@ -113,12 +122,12 @@ caveat / what it does *not* say.
   *cannot* lower it; **4-reasoner panel** (open + frontier); **mid-tier
   numeric-tolerance sweep** (floor persists at all tolerances, magnitude is
   tolerance-dependent); **base-rate vs context-lift** split; **high-tier refusal
-  audit** (20 refusal flags; GPT-5.5/Sonnet 5 refuse sensitive attrs → ρ there is an
-  adversarial *lower* bound).
+  audit** (30 refusal flags, all high-tier; GPT-5.5/Sonnet 5 refuse sensitive attrs → ρ
+  there is an adversarial *lower* bound).
 - **Scope:** ρ is reasoner-dependent (mid is the contested tier — why ≥ 2
   reasoners are mandatory). A COMPLETE certificate is "complete **modulo
-  recovery-judge recall ≈ 78%**"; INCOMPLETE and aggregate numbers are safe lower
-  bounds.
+  recovery-judge recall ≈ 98%** (the Claude Sonnet 5 production judge)"; INCOMPLETE and
+  aggregate numbers are safe lower bounds.
 
 ### C6 — Artifact-aware deletion restores membership-indistinguishability; at powered n≈60 naive's residual signal IS significant
 - **Support:** exp08.
@@ -141,11 +150,11 @@ caveat / what it does *not* say.
 - **H:** explicit dual-surface "delete from core **and** archival" → **100%
   faithful**; a **vague but realistic** RTBF request ("I'm not comfortable with
   you keeping X") with the fact also in archival → agent calls `memory_replace`,
-  scrubs **core**, never clears **archival** → **0% faithful / 100% archival
-  residue / 0% core residue**.
+  mostly scrubs **core** (10% residue), never clears **archival** → **0% faithful / 100%
+  archival residue / 10% core residue**.
 - **Ctrl:** the **explicit-instruction baseline (100% faithful)** isolates the
-  failure to *phrasing/surface coverage*, not to a missing capability; **n = 10**
-  sensitive-PII targets (scaled from 3; the 0% / 100% / 0% result holds at n=10).
+  failure to *phrasing/surface coverage*, not to a missing capability; **n = 30**
+  sensitive-PII targets (scaled from 3; the 0% / 100% / 10% result holds at n=30).
 - **Novelty (confirmed vs ForgetEval):** ForgetEval **deliberately bypassed
   Letta's agent loop** — "address archival-memory REST endpoints directly, keep the
   LLM out of the recall hot path." **We tested the agent loop they excluded**, so
@@ -159,24 +168,29 @@ caveat / what it does *not* say.
 ### Validation claims (load-bearing for everything above)
 
 - **V1 — Recovery judge makes leak rates near-lower-bounds.** exp `judge`, validated
-  across **all 4 models on n=229 gold** (90 pos / 139 neg): false-accept
-  **gpt-4o-mini .0072 (1/139)**, gpt-4o .0072 (1/139), **Sonnet 5 0**, GPT-5.5 0;
-  recall .72 / .91 / .98 / .97; κ vs gold .75 / .92 / .98 / .97. Production judge =
-  the pinned **gpt-4o-mini** backbone (Sonnet 5's 0 false-accept reported as
-  corroboration, but it's a rolling alias). **Ctrl/use:** the ≤0.72% false-accept
-  means every reported leak/recovery rate is a **lower bound to within that margin**
-  (95% Wilson upper ≈ .04) — not literally 0, stated honestly in the paper's Limitations.
-- **V2 — gpt-4o is the entailment judge (reproducible snapshot).** Validated on
+  across **all 4 models on n=351 gold** (157 pos / 194 neg, incl. 22 curated hard
+  grey-zone cases): false-accept **gpt-4o-mini .0206**, gpt-4o .0052, **Sonnet 5 0
+  [0,.019]**, GPT-5.5 0; recall .75 / .93 / .98 / .98; κ vs gold .747 / .930 / .983 /
+  .983. **Production judge = Claude Sonnet 5** (frontier, gold-validated **0%
+  false-accept** on the harder gold); pinned **gpt-4o-mini / gpt-4o** reported as the
+  **reproducibility anchor**. The defense is **gold-validation, not call-independence**
+  (same-model errors correlate even across calls; a judge validated to ~0% false-accept
+  scores reliably regardless of which adversary produced the answer). **Ctrl/use:** the
+  Sonnet 5 production judge's **0% false-accept (0/194, 95% Wilson upper ≈ .019)** means
+  every reported leak/recovery rate is a **lower bound to within that margin** — not
+  literally 0, stated honestly in the paper's Limitations; on the harder gold the pinned
+  anchor slips to .0206 (gpt-4o-mini) / .0052 (gpt-4o).
+- **V2 — Claude Sonnet 5 is the entailment judge (frontier, gold-validated).** Validated on
   **n=1370 pairs** across all 4 models. **Safety-critical result: multi-hop miss-rate
   = 0 for ALL four models** (recall_multihop = 1.0; per-topology recall 100% on
   chain/join/or_and/diamond/threshold) — no model ever *loses* a true entailer. On
-  near-miss negatives (partial operands) false-fire diverges: **gpt-4o-mini 76% /
-  gpt-4o 45% / GPT-5.5 30% / Sonnet 5 3.4%**. Production judge = **gpt-4o** (lowest
-  false-fire among *reproducible dated snapshots*; Sonnet 5 is best overall but a
-  rolling alias). **Ctrl/use:** the exact planner co-deletes over the *known* DAG, not
-  this judge, so its 45% near-miss false-fire never inflates k; the judge only orders
-  the greedy comparators. Inter-model κ (entailment): .26–.63, i.e. the near-miss
-  boundary is genuinely hard, which is exactly why the method does not rely on it.
+  near-miss negatives (partial operands) false-fire diverges: **gpt-4o-mini .757 /
+  gpt-4o .455 / GPT-5.5 .305 / Sonnet 5 .034**. Production judge = **Claude Sonnet 5**
+  (lowest false-fire, 3.4%); pinned **gpt-4o** retained as the **reproducibility anchor**.
+  **Ctrl/use:** the exact planner co-deletes over the *known* DAG, not this judge, so no
+  judge's near-miss false-fire can inflate k; the judge only orders the greedy comparators.
+  Inter-model κ (entailment): .26–.63, i.e. the near-miss boundary is genuinely hard,
+  which is exactly why the method does not rely on it.
 
 ---
 
@@ -188,14 +202,14 @@ caveat / what it does *not* say.
 | **02** | Mem0 | naive vs artifact-aware | **97.2% → 0%** [naive 94.4,98.7; aware 0,1.5] (n=253) | same facts, two strategies; uniqueness auto-enforced (dedup_isolated) |
 | **05** | Mem0 | duplication factorial | dup **80–82%** over corpus-unique facts (row-inflation +174–182%) | **2×2** embedder×cadence; byte+paraphrase both present (mixed dominance); GH issues |
 | **06** | Mem0 | infer=True derivation-capture | **0% — REJECTED** | infer=False control: 0 captured ⇒ it was consolidation/merging, not derivation |
-| **04** | Mem0 | re-derivation (operands-only) | bin1 97–100% / bin2 **.62/.72/.68/.66** (4 reasoners) → **0%**; **5 topologies (join/chain/or_and/diamond/threshold) 100%→0%**; ρ 0% (n=74/flat bin; 30/topology) | residual=0 by construction; **4-reasoner sup_A**, binned; worst bin2 = gpt-4o (.72), not frontier |
-| **03** | Mem0 | planner (exact / greedy / depth) | **exact 100% / 0 spurious / k=1.04** (gap≈0, n=298); threshold k=1.10 / 0 spurious; depth-first k=6.18 / 1116 spurious | min-hitting-set over the entailment DAG; **466 spared**; provably minimal (exp12) |
-| **07** | Mem0 | ρ gradient (measured, 4 reasoners) | ρ_max bins (n=250): **166 cert / 42 mid / 42 hard**; **84/250 not certifiable** (τ=0.1) | world-context-only probe; **τ-dependent gradient**; frontier REFUSE sensitive high-tier (29 flags, high-tier only ✓) → their ρ is a lower bound |
+| **04** | Mem0 | re-derivation (operands-only) | bin1 97–100%→**0%** / bin2 **.62/.69/.69/.66** (4 reasoners) → **2.7% (F043)**; **5 topologies (join/chain/or_and/diamond/threshold) 100%→0%**; ρ 0% (n=74/flat bin; 30/topology) | residual=0 by construction; **4-reasoner sup_A**, binned; worst bin2 = gpt-4o & Sonnet 5 (both .69) |
+| **03** | Mem0 | planner (exact / greedy / depth) | **exact 100% / 0 spurious / k=1.03** (gap −0.067, ≤0 every topology, n=298); threshold k=1.14 / 0 spurious; depth-first k=6.60 / 1192 spurious | min-hitting-set over the entailment DAG; **467 spared**; provably minimal (exp12) |
+| **07** | Mem0 | ρ gradient (measured, 4 reasoners) | ρ_max bins (n=250): **164 cert / 41 mid / 45 hard**; **86/250 not certifiable** (τ=0.1) | world-context-only probe; **τ-dependent gradient**; frontier REFUSE sensitive high-tier (30 flags, high-tier only ✓) → their ρ is a lower bound |
 | **08** | Mem0 | membership inference | intact **.66** / naive **.66 (p=.001, SIG)** / aware **.51 (p=.04)** | n=253 members + 759 twins (3/fact), bootstrap CI + perm p; intact = power sanity |
-| **judge** | — | judge validation (4 models) | recovery false-accept **.0072** (gpt-4o-mini/gpt-4o 1/139; Sonnet5/GPT-5.5 0); entail **0% multi-hop miss-rate all 4 models**; near-miss false-fire mini 76% / gpt-4o 45% / GPT-5.5 30% / Sonnet5 3.4% | **n=229 recovery gold / 1370 entailment pairs**; production: recovery gpt-4o-mini, entail gpt-4o (pinned snapshots) |
+| **judge** | — | judge validation (4 models) | recovery false-accept mini **.0206** / gpt-4o **.0052** / Sonnet5 **0** / GPT-5.5 0; entail **0% multi-hop miss-rate all 4 models**; near-miss false-fire mini .757 / gpt-4o .455 / GPT-5.5 .305 / Sonnet5 .034 | **n=351 recovery gold / 1370 entailment pairs**; production judge = **Claude Sonnet 5** (recovery+entailment, gold-validated 0% false-accept); pinned gpt-4o-mini/gpt-4o = reproducibility anchor |
 | **09** | Graphiti | KG residue after `remove_episode` | edge **20%**, **KG/summary 83%** (n=30) | clean episode hard-delete verified; residue = stale summaries + shared-entity edges |
-| **10** | Letta | agent-mediated deletion faithfulness | vague **0% faithful / 100% archival** / 13% core (n=30) | explicit-instruction baseline isolates phrasing/surface, not capability |
-| **11** | Letta | re-derivation + co-delete (ports) | bin1 **100%**, bin2 **.59–.65** (4 reasoners) → **0%**; ρ 0% (n=40) | operands-only; 4-reasoner sup_A; **direct verified-faithful `passages.delete`** |
+| **10** | Letta | agent-mediated deletion faithfulness | vague **0% faithful / 100% archival** / 10% core (n=30) | explicit-instruction baseline isolates phrasing/surface, not capability |
+| **11** | Letta | re-derivation + co-delete (ports) | bin1 **.99–1.0**, bin2 **.62/.65/.65/.68** (4 reasoners) → **0%**; 5 structured topologies 100%→0; faithful 100% / bystanders 100%; ρ 0% (**FULL n=298**: bin1 74 / bin2 74 / structured 30×5) | operands-only; 4-reasoner sup_A; **direct verified-faithful `passages.delete`** |
 
 ---
 
@@ -323,18 +337,25 @@ Three distinguished neighbours + the DB lineage. Full notes in `REFERENCES.md`.
 
 ## Provenance (result files this ledger is computed from)
 
-**3× expansion wave 2026-07-12/13 (CURRENT; supersedes the 2026-07-04 wave below).**
-Same 4-reasoner adversary panel (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5);
+**Frontier-judge 3× wave 2026-07-13 (CURRENT; supersedes the 2026-07-04 wave below).**
+**Production judges moved from the pinned OpenAI backbone to the frontier Claude Sonnet 5**
+for both recovery and entailment (gold-validated 0% false-accept); pinned
+gpt-4o-mini/gpt-4o retained as the **reproducibility anchor**. Judge-dependent experiments
+(exp03/04/07/10/11/12 + judge_validation) re-run on 2026-07-13; judge-independent ones
+(exp01/02/05/08/09) unchanged, retained from the 2026-07-12 3× wave. Same 4-reasoner
+adversary panel (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5);
 enlarged datasets **iso253 / mh298 / ctx963 / rho250**; 5 hard multi-hop topologies
 (join/chain/or_and/diamond/threshold) with a boolean **entailment DAG**; exact
 min-hitting-set planner (+ greedy/depth-first comparators, new `exp12`); 4-model judge
-validation (229 recovery gold, 1{,}370 entailment pairs). rho/re-derivation re-run with
+validation (**351 recovery gold**, 1{,}370 entailment pairs). rho/re-derivation re-run with
 `probes/parametric_probe` hardened so a rate-limit is never miscounted as a refusal
-(correct by construction); verified by `evaluation/verify_wave.py` (rho refusals high-tier
-only, 0 measurement errors, all post-co-delete re-derivation = 0). Files under
-`data/results/` with `...20260712T...` / `...20260713T...` timestamps (exp01/02/03×3/04/
-05/07/08/12 + judge_validation; exp09/10/11 from the cross-system phase). exp06 unchanged
-(rejected negative). See `docs/RESULTS_3X_WAVE.md`.
+(correct by construction); verified by `evaluation/verify_wave.py` (rho refusals 30
+high-tier only, 0 measurement errors, post-co-delete re-derivation → 0 with only the 2.7%
+Mem0 bin-2 F043 value-coupling residue). Files under
+`data/results/` with `...20260712T...` / `...20260713T...` timestamps (exp03×3/04/07/12 +
+`judge_validation_20260713T105713Z`; exp10/11 from the cross-system phase; exp01/02/05/08/09
+judge-independent, retained). exp06 unchanged
+(rejected negative). See `docs/RESULTS_3X_WAVE.md` and `docs/JUDGE_UPGRADE.md`.
 
 Prior wave, retained for history --- Frontier re-run 2026-07-04 (4-reasoner adversary
 panel: gpt-4o-mini, gpt-4o,
@@ -355,5 +376,7 @@ Judge frontier cross-check 2026-07-05 (`judge_validation_...102620Z.json`,
 (recovery κ=1.0 vs gold, 17/17, 0 false-accept; entailment 25% curated false-fire,
 κ(gpt-5.5,gpt-4o)=0.66) and refreshes the entailment validation stats to the
 enlarged corpus (426 pairs / 242 near-miss negatives, replacing the pre-expansion
-146/78). Production judges unchanged: pinned gpt-4o-mini (recovery) / gpt-4o
-(entailment). GPT-5.5 stays corroboration-only (rolling alias + panel adversary).
+146/78). Production judges at that date: pinned gpt-4o-mini (recovery) / gpt-4o
+(entailment) — **superseded 2026-07-13 by the frontier Claude Sonnet 5 judge** (current
+wave above; `docs/JUDGE_UPGRADE.md`); the pinned snapshots now serve as the reproducibility
+anchor. GPT-5.5 stays corroboration-only (rolling alias + panel adversary).

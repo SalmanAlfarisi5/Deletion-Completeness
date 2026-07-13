@@ -93,10 +93,10 @@ python experiments/exp11_letta_rederivation.py --n 6 -v
 > The table below is the small-scale pre-wave snapshot. The current numbers
 > (the **3× wave**: 253 isolated / 298 multi-hop / 963 context / 250 rho) live in
 > `docs/RESULTS_3X_WAVE.md`, the paper drafts (`paper/`), and `CLAIMS_LEDGER.md` —
-> e.g. residual **97.2% / 97.2%→0%** (exp01/02), **84/250** uncertifiable at τ=0.1
+> e.g. residual **97.2% / 97.2%→0%** (exp01/02), **86/250** uncertifiable at τ=0.1
 > (exp07), MIA naive AUC **0.66** (p=.001) / aware **0.51** (exp08), planner
-> **exact k=1.04 / 0 spurious** with a measured optimality gap ≈0 (exp03), and a new
-> **exp12** minimality result (depth-first over-deletes 6× with 1116 spurious). The
+> **exact k=1.03 / 0 spurious** with a measured optimality gap −0.067 (exp03), and a new
+> **exp12** minimality result (depth-first over-deletes 6× with 1192 spurious). The
 > planner now solves the exact min-hitting-set over a boolean **entailment DAG**, and
 > the multi-hop set adds 5 hard topologies (join, chain, disjunctive, diamond,
 > threshold). Do not cite the table.
@@ -132,10 +132,12 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
 - Residual-survival experiments use `infer=True` (realistic). exp04 is a
   **contamination-free control**: it injects *source facts only* (never the
   target value), verbatim, and verifies the target is absent before probing.
-- Recovery is scored by a **validated LLM judge**, checked across all 4 models on
-  n=229 gold (false-accept **.0072** = 1/139 for gpt-4o-mini/gpt-4o, 0 for Sonnet5/
-  GPT-5.5 → reported leak rates are lower bounds to within that <1% margin; κ up to
-  .98 vs gold).
+- Recovery is scored by a **validated LLM judge** — the production judge is now
+  **Claude Sonnet 5** (frontier, gold-validated), with the pinned **gpt-4o-mini/gpt-4o**
+  judge reported as the reproducibility anchor — checked across all 4 models on
+  n=351 gold (false-accept **0** [0,.019] for Sonnet5/GPT-5.5, **.0052** gpt-4o /
+  **.0206** gpt-4o-mini → reported leak rates are lower bounds to within the production
+  judge's ~0% false-accept margin; κ up to .98 vs gold).
 - Re-derivation is **binned by mechanism, never aggregated**, and run on the **4-reasoner
   adversary panel** (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5), taking the worst.
 - The parametric floor **ρ is measured on a gradient** (exp07), not asserted:
@@ -152,9 +154,10 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
   (AUC 0.66, p=.001) confirms the test has power.
 - The **entailment judge** is validated across all 4 models on n=1370 pairs: every
   model has a **0% multi-hop miss-rate** (never loses a true entailer — the safety
-  property). On near-miss partial operands, false-fire is mini **76%** / gpt-4o
-  **45%** / GPT-5.5 **30%** / Sonnet5 **3.4%**; the planner uses pinned **gpt-4o**,
-  but because it co-deletes over the *known* entailment DAG (not the judge), a
+  property). On near-miss partial operands, false-fire is mini **75.7%** / gpt-4o
+  **45.5%** / GPT-5.5 **30.5%** / Sonnet5 **3.4%**; the production entailment judge is
+  now **Claude Sonnet 5** (pinned **gpt-4o** kept as the reproducibility anchor), and
+  because the planner co-deletes over the *known* entailment DAG (not the judge), a
   judge's false-fire cannot inflate collateral *k*.
 - **Cross-system (exp09, Zep/Graphiti):** explicit `remove_episode` is *clean* for
   edges, but the deleted fact survives in **stale entity/community summaries** (not

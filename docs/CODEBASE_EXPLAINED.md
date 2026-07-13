@@ -193,7 +193,7 @@ LLM-as-judge: given surviving fact(s) and a deleted target, asks:
 
 Returns a confidence score; cached by (surviving_text, target_text).
 
-**Critical validation finding:** GPT-4o-mini false-fires on 42% of *partial* operand sets (e.g., just "Bob has a home loan" entailing the monthly payment). GPT-4o reduces this to 0%. The planner uses GPT-4o for entailment to avoid over-deleting bystanders.
+**Critical validation finding:** GPT-4o-mini false-fires on 75.7% of *partial* operand sets (e.g., just "Bob has a home loan" entailing the monthly payment). GPT-4o reduces this to 45.5%, and Claude Sonnet 5 to just 3.4%. The planner uses Claude Sonnet 5 for entailment (lowest false-fire; pinned GPT-4o kept as the reproducibility anchor) to avoid over-deleting bystanders.
 
 ### GreedyPlanner (`planner/optimizer.py`)
 Three-stage `heuristic_threshold`:
@@ -233,7 +233,7 @@ The planner distinguishes `delete_value` (narrow: the target's own surface forms
 | `facts_co_deleted` | Which context facts the planner co-deleted |
 | `collateral_k` | Number of co-deleted facts |
 
-**The limit result:** `floor_reaching=True AND completeness_certified=False` means: the system is as erased as deletion can make it, but the base model can still recover the value from world knowledge alone. 84 of 250 rho-gradient facts hit this case.
+**The limit result:** `floor_reaching=True AND completeness_certified=False` means: the system is as erased as deletion can make it, but the base model can still recover the value from world knowledge alone. 86 of 250 rho-gradient facts hit this case.
 
 ---
 
@@ -243,12 +243,12 @@ The planner distinguishes `delete_value` (narrow: the target's own surface forms
 |---|---|---|
 | **exp01** | How bad is naive (single-record) deletion? | **97.2% residual survival** — Mem0 duplicates facts silently |
 | **exp02** | Does artifact-aware deletion fix residual survival? | **97.2% → 0%** residual |
-| **exp03** | Can the planner close re-derivation with minimal collateral? | **exact planner 100% completeness, 0 spurious, mean k=1.04** (min-hitting-set over the DAG; depth-first 6.18 / 1116 spurious) |
-| **exp12** | Is the exact planner provably minimal per topology? | Yes — exact hits optimum k* (gap≈0); greedy over-deletes on `((A∨B)∧C)` (1.63 vs 1.00); threshold needs k*=2 |
-| **exp04** | Is re-derivation real? Does co-deletion close it? | bin1 (stored-alone): 97–100% → 0%; bin2 (stored+world): 62/72/68/66% (4 reasoners) → 0%; ρ=0% |
+| **exp03** | Can the planner close re-derivation with minimal collateral? | **exact planner 100% completeness, 0 spurious, mean k=1.03** (min-hitting-set over the DAG; depth-first 6.60 / 1192 spurious) |
+| **exp12** | Is the exact planner provably minimal per topology? | Yes — exact hits optimum k* (gap −0.067, ≤0 on every topology); greedy over-deletes on `((A∨B)∧C)` (1.63 vs 1.00); threshold needs k*=2 |
+| **exp04** | Is re-derivation real? Does co-deletion close it? | bin1 (stored-alone): 97–100% → 0%; bin2 (stored+world): 62/69/69/66% (4 reasoners) → 2.7% (F043 value-coupling residue); ρ=0% |
 | **exp05** | Is Mem0 duplication an embedder artifact or cadence artifact? | 2×2 factorial: 80–82% duplication (row-inflation ×1.75–1.82) in ALL cells → Mem0 design limitation |
 | **exp06** | Does `infer=True` capture derivations? | 0% — `infer` does *consolidation* (merge rows), not derivation capture |
-| **exp07** | What is the parametric floor ρ across fact tiers? | low≈0.0, mid≈0.1, high≈0.5–0.7 (per reasoner); 84/250 facts cannot be certified (166 cert / 42 mid / 42 hard) |
+| **exp07** | What is the parametric floor ρ across fact tiers? | low≈0.0, mid≈0.1, high≈0.5–0.7 (per reasoner); 86/250 facts cannot be certified (164 cert / 41 mid / 45 hard) |
 | **exp08** | Does deletion restore membership indistinguishability? | Artifact-aware: AUC 0.51, CI [0.498,0.523] includes 0.5 but permutation p=.04 (marginal); Naive: AUC 0.66, p=.001 (significant) |
 | **exp09** | Does Zep/Graphiti have KG-residual after `remove_episode`? | Edge 20% clean, but **summary 83%** survives in stale entity/community summaries (n=30) |
 | **exp10** | Is Letta's agent-mediated deletion faithful? | Explicit dual-surface: 100% faithful; Vague RTBF: 0% faithful, 100% archival residue |
@@ -271,7 +271,7 @@ All LLM calls go through a unified `chat()` function:
 
 ### Recovery Judge Validation (`evaluation/judge.py`)
 - **Recovery judge** validated on 17 hand-labelled (fact, answer, gold) pairs — 0% false-accept rate (never says "recovered" when it wasn't)
-- **Entailment judge** validated against hard near-miss negatives (insufficient operand sets): GPT-4o-mini 42% false-fire, GPT-4o 0%
+- **Entailment judge** validated against hard near-miss negatives (insufficient operand sets): gpt-4o-mini 75.7% false-fire, gpt-4o 45.5%, Claude Sonnet 5 3.4% (production; 0% multi-hop miss)
 - Cohen's kappa computed for inter-judge agreement
 
 ### Metrics (`evaluation/metrics.py`)
@@ -293,7 +293,7 @@ Key knobs:
 |---|---|---|
 | `MEM0_MODE` | `oss` | `oss` (local) or `hosted` |
 | `LLM_PROVIDER` | `anthropic` | `anthropic` or `openai` |
-| `JUDGE_MODEL` | `claude-haiku-4-5-20251001` / `gpt-4o-mini-2024-07-18` | Recovery judge + primary reasoner |
+| `JUDGE_MODEL` | `claude-sonnet-5` (production recovery + entailment judge; pinned `gpt-4o-mini`/`gpt-4o` = reproducibility anchor) | Recovery/entailment judge |
 | `SECOND_MODEL` | `gpt-4o-2024-08-06` | Second reasoner for agreement checks |
 | `EMBED_MODEL` | `all-MiniLM-L6-v2` | Local embeddings (GPU, free) |
 | `TAU` | `0.10` | Recoverability threshold; below = "complete" |
@@ -315,9 +315,9 @@ The paper argues the following chain:
 
 3. **Re-derivation is real, binned, and multi-reasoner.** With residual=0, multi-hop facts remain recoverable. It's binned by mechanism (stored-alone vs. stored+world) and verified on a four-reasoner panel (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5) so the result isn't model-specific.
 
-4. **The planner closes re-derivation with minimal collateral.** Greedy threshold heuristic achieves 100% completeness, 0 spurious deletions, average 0.90 extra facts deleted per target.
+4. **The planner closes re-derivation with minimal collateral.** The exact min-hitting-set planner achieves 100% completeness, 0 spurious deletions, and an average of 1.03 extra facts deleted per target (provably minimal).
 
-5. **The parametric floor is the hard limit.** Some facts (high-tier: driving licence → must be ≥18) can never be certified complete because the base model infers them from world knowledge alone. 84/250 rho-gradient facts hit this limit, producing `floor_reaching=True, completeness_certified=False` certificates.
+5. **The parametric floor is the hard limit.** Some facts (high-tier: driving licence → must be ≥18) can never be certified complete because the base model infers them from world knowledge alone. 86/250 rho-gradient facts hit this limit, producing `floor_reaching=True, completeness_certified=False` certificates.
 
 6. **Membership inference: naive deletion leaks; artifact-aware largely closes it.** Naive single-record deletion leaves a significant membership signal (AUC 0.66, p=.001). Artifact-aware deletion drives the AUC to 0.51 (CI [0.498, 0.523] includes 0.5, permutation p=.04) — attenuated toward chance but not provably eliminated at n=253.
 

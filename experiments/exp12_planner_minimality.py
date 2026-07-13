@@ -51,8 +51,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Planner minimality across topologies")
     ap.add_argument("--n", type=int, default=None, help="targets (default: all multi-hop)")
     ap.add_argument("--bystanders", type=int, default=4)
-    ap.add_argument("--entailment-model", default=config.SECOND_MODEL,
-                    help="entailment judge for the greedy comparators (default gpt-4o)")
+    ap.add_argument("--entailment-model", default=config.ENTAILMENT_JUDGE_MODEL,
+                    help="entailment judge for the greedy comparators (config.ENTAILMENT_JUDGE_MODEL; frontier wave = claude-sonnet-5)")
     ap.add_argument("--seed", type=int, default=config.GLOBAL_SEED)
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args()

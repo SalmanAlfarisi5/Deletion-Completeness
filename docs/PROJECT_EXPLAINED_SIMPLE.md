@@ -288,7 +288,10 @@ So there's a tension:
 The planner walks the tightrope: delete the **minimal set** of surviving facts that
 closes the rebuild path. We call the number of extra facts deleted the
 **collateral k**. Lower k is better. (k = 0 would mean "we didn't have to touch
-anything else"; k = 5 would mean "erasing this one fact cost five bystanders.")
+anything else"; k = 5 would mean "erasing this one fact forced us to co-delete
+five other facts it could be rebuilt from." Note these are *operands* — facts the
+target genuinely re-derives from — not bystanders; deleting a true bystander would
+be a *spurious* deletion, which is a separate error k never counts.)
 
 ### Why this is genuinely hard (and the theory bit)
 

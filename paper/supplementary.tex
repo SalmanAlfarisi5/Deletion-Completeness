@@ -21,13 +21,13 @@
 \maketitle
 
 This supplement reports the granular numbers behind the headline results in the main
-paper. Section references (\S) point to the corresponding subsection of the main text.
+paper. Section references point to the corresponding subsection of the main text.
 All adversary rates are over the four-reasoner panel: \texttt{gpt-4o-mini},
 \texttt{gpt-4o}, Claude~Sonnet~5, and GPT-5.5. The completeness threshold is
 $\tau=0.10$ throughout. Datasets: 253 isolated, 298 multi-hop, 963 context, 250
 world-recall-gradient.
 
-\section{Planner: Minimal Co-Deletion (main paper \S Minimal Co-Deletion)}
+\section{Planner: Minimal Co-Deletion (main paper, Minimal Co-Deletion)}
 
 \begin{table}[h]
 \centering
@@ -72,7 +72,7 @@ which the exact planner pays exactly. Depth-first over-deletes five- to sevenfol
 every topology.}
 \end{table}
 
-\section{Re-Derivation at Zero Residual (main paper \S Decomposing Recovery)}
+\section{Re-Derivation at Zero Residual (main paper, Decomposing Recovery)}
 
 \begin{table}[h]
 \centering
@@ -100,7 +100,7 @@ value stays entailed by a fact outside the co-deleted set; the stricter judge fo
 \emph{new} residual recoveries.}
 \end{table}
 
-\section{World Recall $\rho$ (main paper \S The World Recall)}
+\section{World Recall $\rho$ (main paper, The World Recall)}
 
 \begin{table}[h]
 \centering
@@ -124,7 +124,7 @@ high-tier mean) is the worst adversary. The count is a Monte-Carlo estimate stab
 $\pm1$--$2$ facts.}
 \end{table}
 
-\section{Residual Survival and Duplication (main paper \S Residual Survival)}
+\section{Residual Survival and Duplication (main paper, Residual Survival)}
 
 Naive single-record deletion leaves the value present in $97.2\%$ of isolated PII targets
 (Wilson $[94.4, 98.7]$; exp01, $n{=}253$). Artifact-aware deletion drives this to $0\%$
@@ -136,7 +136,7 @@ uniformly dominant, unlike the earlier smaller-scale run). The mechanism is inde
 documented in Mem0 issues \#4896 (hash-only dedup), \#4573, and \#687 (byte-identical
 write race).
 
-\section{Judge Validation (main paper \S Judge Validation)}
+\section{Judge Validation (main paper, Judge Validation)}
 
 All four adversary-panel models are validated as judges on the same gold. The production
 judge is Claude~Sonnet~5 (the strongest model available) for both recovery and entailment,

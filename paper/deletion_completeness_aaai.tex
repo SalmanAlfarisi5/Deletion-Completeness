@@ -117,20 +117,20 @@ certify. Concretely, we contribute:
 \begin{itemize}
 \item a formal, \emph{adversary-relative} deletion-completeness criterion for agent
 memory, strictly stronger than dependency-bounded database erasure, decomposing
-recoverability into residual, re-derivation, and world-recall channels (\S\ref{sec:formulation});
+recoverability into residual, re-derivation, and world-recall channels (Section~\ref{sec:formulation});
 \item a minimal co-deletion planner for the resulting NP-hard problem, reaching
 completeness at mean collateral $k=1.03$ with zero spurious deletions, plus an
 auditable certificate that separates what deletion achieved from what it cannot
-(\S\ref{sec:method},\,\S\ref{sec:res-planner});
+(Section~\ref{sec:method},\,Section~\ref{sec:res-planner});
 \item a \emph{measured} world recall and its limit result: under the strongest
 modeled adversary, $86/250$ facts cannot be certified erased even at zero residual
 survival. Measured as a recovery rate over $8$ samples per fact,
 the count is a Monte-Carlo estimate stable to $\pm1$--$2$ facts at the $n{=}8$-sample boundary
-(\S\ref{sec:res-rho});
+(Section~\ref{sec:res-rho});
 \item evidence of generality: the same probe/planner/certificate stack, run on
 three memory architectures, exposes residual survival in all three through
 different by-design mechanisms, including the agent-loop failure above that prior
-audits bypass (\S\ref{sec:res-converge}).
+audits bypass (Section~\ref{sec:res-converge}).
 \end{itemize}
 
 We call the resulting framework \textsc{Salman}: \textbf{S}tored-memory
@@ -153,14 +153,14 @@ prior work is \textsc{ForgetEval} \citep{forgeteval}, the most thorough existing
 audit of forgetting in deployed agent memory: a careful retrieval-based protocol
 spanning Mem0, Graphiti, Letta, and roughly a dozen further systems. We build directly
 on it. Its retrieval-based criterion is the \emph{necessary-but-not-sufficient}
-gap of \S\ref{sec:intro}. Our
+gap of Section~\ref{sec:intro}. Our
 contribution is therefore the stronger, channel-decomposed criterion, not the
 system coverage ForgetEval already establishes; correspondingly, our Mem0 figures
 (recoverability by \emph{any} channel) are complementary to its top-$k$
 forget-command rates, not in tension with them. Two of our results extend it
 directly. ForgetEval deliberately bypasses Letta's agent loop (addressing
 archival endpoints to keep the model out of the recall path), which is exactly the
-loop we exercise and find surface-incomplete (\S\ref{sec:res-converge}); and its
+loop we exercise and find surface-incomplete (Section~\ref{sec:res-converge}); and its
 own per-system observations (Graphiti shedding synthesized fact strings, Mem0's
 router favoring link-and-keep) name the mechanisms our decomposition isolates,
 independently corroborating the convergence result. A complementary governance
@@ -204,8 +204,8 @@ store $S'\subseteq S$. An adversary $\mathcal{A}$ has full read access to $S'$,
 black-box access to a base model $M$, and general world knowledge $W$; a query
 $q_f$ asks for $v$. We write $\mathrm{rec}(a)=1$ when an answer $a$ reveals a
 surface form in $\Sigma(v)$, as scored by the validated recovery judge
-(\S\ref{sec:res-judge}). Certification is relative to a tolerance $\tau\in(0,1)$;
-we use $\tau{=}0.10$ (\S\ref{sec:results}). We ask whether a deleted fact is still
+(Section~\ref{sec:res-judge}). Certification is relative to a tolerance $\tau\in(0,1)$;
+we use $\tau{=}0.10$ (Section~\ref{sec:results}). We ask whether a deleted fact is still
 recoverable, and we split recoverability into three channels that fail for
 different reasons. Two of them depend on the adversary's reasoning model, so
 recoverability is \emph{adversary-relative} (Def.~4).
@@ -248,7 +248,7 @@ four concrete adversaries spanning prior-generation and frontier models: $\mathc
 (Claude~Sonnet~5), and $\mathcal{A}_{\text{G5.5}}$ (GPT-5.5). A diverse panel
 matters because adversary strength is not one-dimensional: the frontier models
 re-derive benign facts more readily, yet they refuse sensitive attribute
-inferences, so which adversary is worst varies by fact (\S\ref{sec:res-rho}).
+inferences, so which adversary is worst varies by fact (Section~\ref{sec:res-rho}).
 
 \paragraph{Definition 5 (Floor-reaching and erasure-certification).}
 A deletion is \emph{floor-reaching} for $\mathcal{A}$ when
@@ -266,7 +266,7 @@ still remain world-inferable (R11, Table~\ref{tab:certs}). Reporting the two
 predicates separately is exact, and it avoids the misleading verdict ``complete but
 recoverable.'' This baseline (world knowledge only, every stored operand removed)
 is deliberately stronger than the dependency-bounded erasure of \citet{p2e2}, which
-we discuss in \S\ref{sec:related}.
+we discuss in Section~\ref{sec:related}.
 
 \paragraph{The optimization problem (Opt-P2E2).} Let $R_f\subseteq S$ be $f$'s own
 records. We seek the smallest co-deletion that makes $f$ floor-reaching:
@@ -299,8 +299,8 @@ $2$-uniform special case, which is exactly our dataset's pairwise-entailment reg
 when every fact has just two operands: it is intrinsic, not an artifact of
 high-arity rules. The relational hardness of \citet{p2e2} points the same way. We
 therefore adopt the greedy, entailment-confidence-ordered planner of
-\S\ref{sec:method}, which stays exact on the small dependency graphs seen in
-practice (mean $k=1.03$, \S\ref{sec:res-planner}).
+Section~\ref{sec:method}, which stays exact on the small dependency graphs seen in
+practice (mean $k=1.03$, Section~\ref{sec:res-planner}).
 
 \begin{figure*}[t]
 \centering
@@ -392,7 +392,7 @@ $\Rightarrow$ at least 18'', $\rho{=}1$) does not, so $\tau$ is auditor-chosen.}
 
 \section{Method}\label{sec:method}
 
-Our pipeline instantiates each object of \S\ref{sec:formulation} as a concrete,
+Our pipeline instantiates each object of Section~\ref{sec:formulation} as a concrete,
 reusable component (Figure~\ref{fig:pipeline}) behind a single
 \texttt{MemorySystemAdapter} interface, so the
 identical probe/planner/certificate stack runs unchanged on all three systems.
@@ -406,14 +406,14 @@ The \emph{world-recall} probe withholds the store entirely, conditioning only on
 subject's world-knowable context, and estimates $\rho^{\mathcal{A}}$ as a recovery
 rate over $n$ stochastic samples. The re-derivation \emph{probe} reads the full
 surviving store (the threat model) and is distinct from the operands-only
-\emph{injection control} of \S\ref{sec:res-rederiv}, which instead never stores the
+\emph{injection control} of Section~\ref{sec:res-rederiv}, which instead never stores the
 target value so as to isolate $\sigma_{\mathrm{red}}$ at $\sigma_{\mathrm{res}}=0$.
 Recovery is decided by the validated judge
-(\S\ref{sec:res-judge}): a substring match on the ground-truth surface forms,
+(Section~\ref{sec:res-judge}): a substring match on the ground-truth surface forms,
 falling back to an LLM adjudication for numeric/semantic approximation. Three
 auxiliary probes support specific results: a \emph{paraphrase} probe (residual by
-implication), a retrieval-score \emph{membership-inference} probe (\S\ref{sec:limitations}),
-and a \emph{KG-summary} probe for the graph system (\S\ref{sec:res-converge}).
+implication), a retrieval-score \emph{membership-inference} probe (Section~\ref{sec:limitations}),
+and a \emph{KG-summary} probe for the graph system (Section~\ref{sec:res-converge}).
 
 \paragraph{Entailment detector.} Candidate re-derivation edges are scored by an
 LLM-as-judge that returns, for a surviving fact (or set), the confidence that it
@@ -421,20 +421,20 @@ entails $v$ given world knowledge (\textsc{partial}/\textsc{no} are capped so a
 near-miss cannot read as full entailment). The exact planner co-deletes over the
 \emph{known} entailment DAG, so it does not depend on the judge to rediscover a
 multi-hop path; the judge instead orders the greedy comparators and, in a deployed
-store, would be the means of discovering the graph (\S\ref{sec:limitations}). Our
-four-model validation (\S\ref{sec:res-judge}) motivates using Sonnet~5 for
+store, would be the means of discovering the graph (Section~\ref{sec:limitations}). Our
+four-model validation (Section~\ref{sec:res-judge}) motivates using Sonnet~5 for
 the greedy comparator: every model has a \emph{zero} miss-rate on true multi-hop
 entailers, but the weaker judges false-fire on partial operands, which would inflate
 a judge-driven planner's collateral.
 
 \paragraph{Co-deletion planner.} Against a \emph{naive} baseline that deletes only
-the single surfaced record (no co-deletion; \S\ref{sec:res-residual}), our method
+the single surfaced record (no co-deletion; Section~\ref{sec:res-residual}), our method
 computes an \emph{exact} minimal co-deletion. Each target carries a boolean
 \emph{entailment DAG} whose leaves are its stored operands and whose formula (built
 from \textsc{and}/\textsc{or}/threshold nodes) is true exactly when the target is
 still re-derivable; the smallest $D$ that closes the channel is therefore a
 \emph{minimum hitting set} of that formula, i.e.\ the \textsc{Opt-P2E2} optimum of
-\S\ref{sec:formulation}. The dependency graphs are small, so we solve it exactly, and
+Section~\ref{sec:formulation}. The dependency graphs are small, so we solve it exactly, and
 because co-deletion follows the known structure it recurses to the stored roots and
 \emph{cannot miss a multi-hop entailer} for lack of an LLM-judged edge. Two
 confidence-ordered greedy comparators bound the method: \emph{threshold} probes,
@@ -442,10 +442,10 @@ purges the target's own artifacts, then co-deletes entailers in descending
 entailment confidence, re-probing after each until
 $\sigma_{\mathrm{red}}^{\mathcal{A}}<\tau$; \emph{depth-first} co-deletes every
 entailer above $\tau$ in one shot with no re-probe. The reported collateral $k=|D|$
-is the measured price of the strong erasure notion (\S\ref{sec:formulation}): the
+is the measured price of the strong erasure notion (Section~\ref{sec:formulation}): the
 exact planner attains $k=1.03$ at an optimality gap $\le0$ (provably minimal), threshold
 nearly matches it ($k=1.14$), while depth-first over-deletes roughly sixfold
-($k=6.60$) (\S\ref{sec:res-planner}).
+($k=6.60$) (Section~\ref{sec:res-planner}).
 
 \paragraph{Certificate emitter.} For each target the emitter records the three
 channel scores, the final recoverability $R_{\mathcal{A}}=\max(\cdot)$, the
@@ -457,10 +457,10 @@ and \texttt{completeness\_certified}. The latter certifies erasure only under th
 $\rho=\max_{\mathcal{A}}\rho^{\mathcal{A}}<\tau$), so a fact recoverable by the
 stronger reasoner is reported uncertified even when the weaker one fails; this
 conservative choice is why $86/250$, more than any single reasoner alone flags, are uncertifiable
-(\S\ref{sec:res-rho}). A \texttt{floor\_reaching} but uncertified verdict is
+(Section~\ref{sec:res-rho}). A \texttt{floor\_reaching} but uncertified verdict is
 precisely the limit result (Def.~5), now an audited field. The certificate thus
 surfaces both the price ($k$) and the limit ($\rho$) of erasure; a recall caveat
-(\S\ref{sec:res-judge}) qualifies certified verdicts, while uncertified ones are
+(Section~\ref{sec:res-judge}) qualifies certified verdicts, while uncertified ones are
 sound lower bounds.
 
 %========================================================================
@@ -479,7 +479,7 @@ a four-reasoner adversary panel spanning prior-generation and frontier models: %
 \texttt{gpt-4o-mini}, \texttt{gpt-4o}, Claude~Sonnet~5, and GPT-5.5. The
 certificate takes the worst of them (Def.~4). Because this panel already includes the
 frontier GPT-5.5 and Sonnet~5, and both frontier models reproduce our recovery-judge
-gold labels (\S\ref{sec:res-judge}), the results below are not an artifact of older
+gold labels (Section~\ref{sec:res-judge}), the results below are not an artifact of older
 models. Embeddings are local \texttt{all-MiniLM-L6-v2}. The completeness threshold is $\tau=0.10$. Datasets are
 synthetic subjects placed in realistic statistical contexts: 253 isolated PII facts,
 298 multi-hop facts (including harder join, chain, disjunctive, diamond, and
@@ -487,7 +487,7 @@ threshold topologies whose targets are entailed only through \emph{unstored}
 intermediate facts) with their stored operands and bystanders, and 250
 world-recall-gradient facts across three difficulty tiers.
 Recovery is scored by a validated LLM judge \citep{zheng2023judge} with a \emph{zero}
-false-accept rate on the gold negatives (\S\ref{sec:res-judge}: $0/194$ for the
+false-accept rate on the gold negatives (Section~\ref{sec:res-judge}: $0/194$ for the
 Sonnet~5 production judge, $95\%$ Wilson upper bound $\approx\!0.019$), so \emph{reported recovery rates are conservative lower bounds
 to within that small margin}. Table~\ref{tab:master} summarizes
 the headline numbers; results are presented in decreasing order of confidence.
@@ -499,12 +499,12 @@ the headline numbers; results are presented in decreasing order of confidence.
 \toprule
 \textbf{Result} & \textbf{System} & \textbf{Headline} & \textbf{Backing control} \\
 \midrule
-Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, exact $k{=}1.03$ & min-hitting-set over the entailment DAG; gap$\,{\le}\,0$ \\
-world recall (\S\ref{sec:res-rho})       & base model$^\dagger$ & 86/250 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
-Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 62--69\%$\to$0\% & operands-only; verified-faithful co-delete \\
-Convergence (\S\ref{sec:res-converge})   & all three & 83\% / 100\% (Graphiti/Letta) & clean-delete verified first; explicit baseline \\
-Residual (\S\ref{sec:res-residual})      & Mem0     & 97.2\%; 97.2\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
-Judge (\S\ref{sec:res-judge})            & ---      & 0 false-accept (Sonnet~5); 0 multi-hop miss (all 4) & 351 gold + 1{,}370 pairs; 4-model, Sonnet~5 judge + pinned anchor \\
+Planner (Section~\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, exact $k{=}1.03$ & min-hitting-set over the entailment DAG; gap$\,{\le}\,0$ \\
+world recall (Section~\ref{sec:res-rho})       & base model$^\dagger$ & 86/250 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
+Re-derivation (Section~\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 62--69\%$\to$0\% & operands-only; verified-faithful co-delete \\
+Convergence (Section~\ref{sec:res-converge})   & all three & 83\% / 100\% (Graphiti/Letta) & clean-delete verified first; explicit baseline \\
+Residual (Section~\ref{sec:res-residual})      & Mem0     & 97.2\%; 97.2\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
+Judge (Section~\ref{sec:res-judge})            & ---      & 0 false-accept (Sonnet~5); 0 multi-hop miss (all 4) & 351 gold + 1{,}370 pairs; 4-model, Sonnet~5 judge + pinned anchor \\
 \bottomrule
 \end{tabular}
 \caption{Headline results, ordered by confidence; each ``backing control'' is the
@@ -534,10 +534,10 @@ spurious across all 298 targets} confirms the recovered structure never mistakes
 for an operand.
 
 \textbf{What structure buys, measured.} Two greedy comparators bound the exact planner
-(\S\ref{sec:method}). \emph{Threshold}---a confidence-ordered greedy that re-probes and
+(Section~\ref{sec:method}). \emph{Threshold}---a confidence-ordered greedy that re-probes and
 stops early---nearly matches the optimum ($k=1.14$, gap $\approx0$) but leans on the
 entailment judge's selectivity, which is why it uses Sonnet~5, the judge that
-false-fires least (\S\ref{sec:res-judge}); weaker judges such as \texttt{gpt-4o-mini}
+false-fires least (Section~\ref{sec:res-judge}); weaker judges such as \texttt{gpt-4o-mini}
 mistake partial operands for sufficient ones and would inflate $k$. \emph{Depth-first}---a single probe-free pass that
 sweeps in every above-$\tau$ candidate---also reaches full completeness but at roughly
 \textbf{six times} the collateral ($k=6.60$) and with \textbf{over a thousand spurious
@@ -547,7 +547,7 @@ a good greedy recovers most of it on these small graphs. The one place the greed
 pays is the disjunctive topology $((A\vee B)\wedge C)$, where it removes both OR-branches
 ($k{=}1.63$) when deleting the single shared operand ($k^\star{=}1$) would suffice---a
 concrete case where structure-awareness beats confidence ordering. The lower baseline is
-naive single-record deletion (\S\ref{sec:res-residual}), which removes one record and closes
+naive single-record deletion (Section~\ref{sec:res-residual}), which removes one record and closes
 no re-derivation path.
 
 \begin{table}[t]
@@ -707,7 +707,7 @@ each co-deletion goes through the direct, deterministic \texttt{passages.delete}
 captured passage id, not a conversational request, and we verify every operand passage is
 actually gone. So ``re-derivation closed'' cannot be confused with ``the delete silently
 did not run,'' which keeps this result cleanly separate from the agent-mediated-deletion
-finding of \S\ref{sec:res-converge}. Confidence intervals and the full multi-level and
+finding of Section~\ref{sec:res-converge}. Confidence intervals and the full multi-level and
 Letta-faithfulness breakdowns are in the supplementary material.
 
 \subsection{Generalization: Three Families, One Phenomenon}\label{sec:res-converge}
@@ -755,7 +755,7 @@ ForgetEval \citep{forgeteval} bypassed by writing archival endpoints directly.}
 Residual survival is not a Mem0 quirk: it appears in all three architecture families,
 each through a \emph{different by-design mechanism}. We run these two cross-system probes
 on a small, high-stakes set of 30 sensitive-PII targets per system (see
-\S\ref{sec:limitations}).
+Section~\ref{sec:limitations}).
 
 In \textbf{Graphiti}, the explicit \texttt{remove\_episode} is clean at the graph level,
 hard-deleting the episode, its \texttt{RELATES\_TO} edges, and any orphaned entities (we
@@ -839,7 +839,7 @@ sets, single- and multi-hop) and adversarial near-misses (single operands that d
 suffice). Two findings settle its use. First, \emph{every} model has a \textbf{zero
 miss-rate on true multi-hop entailers}---none silently drops a genuine multi-hop
 dependency, exactly the error a co-deletion planner most needs to avoid, and the exact
-planner removes even that risk structurally (\S\ref{sec:method}). Second, on the
+planner removes even that risk structurally (Section~\ref{sec:method}). Second, on the
 near-misses the models diverge sharply: \texttt{gpt-4o-mini} treats $75.7\%$ of
 insufficient single operands as sufficient, \texttt{gpt-4o} $45.5\%$, GPT-5.5 $30.5\%$,
 and Sonnet~5 only $3.4\%$. A high rate here would inflate a \emph{judge-driven} planner's
@@ -869,7 +869,7 @@ artifact-aware deletion sharply reduces the membership signal but, at this sampl
 we cannot show it is fully erased.
 
 \paragraph{Our numbers inherit the judges' limits.} Both LLM judges are validated on
-large gold sets across four models (\S\ref{sec:res-judge}) but imperfect. On single
+large gold sets across four models (Section~\ref{sec:res-judge}) but imperfect. On single
 insufficient operands the entailment judge can mistake a partial operand for a sufficient
 one, which is why the greedy comparator uses the least-false-firing judge, Sonnet~5, and
 the method itself co-deletes over the known DAG rather than trusting the judge. The

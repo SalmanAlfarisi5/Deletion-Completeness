@@ -919,7 +919,7 @@ Everything you might want to cite, in one place. (Ground truth = the large-scale
 - ρ throughout: **0** (fictional subjects)
 
 **The planner (Tool 1) — exp03 / exp12, Mem0**
-- Completeness: **100%** [Wilson 0.96–1.0]
+- Completeness: **100%** [Wilson 0.987–1.0]
 - Spurious bystander deletions: **0**
 - Mean collateral: **exact k = 1.03** [0.98–1.08]; **467** operands spared
 - Comparators: threshold **k = 1.14** (0 spurious); depth-first **k = 6.60**, **1192** spurious

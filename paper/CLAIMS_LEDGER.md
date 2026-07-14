@@ -89,7 +89,7 @@ caveat / what it does *not* say.
 
 ### C4 — An exact minimal co-deletion planner reaches completeness with minimal collateral, and emits a certificate
 - **Support:** exp03, exp12.
-- **H:** **100% completeness [Wilson .96, 1.0], 0 spurious bystander deletions,
+- **H:** **100% completeness [Wilson .987, 1.0], 0 spurious bystander deletions,
   exact mean collateral k = 1.03** (min-hitting-set over the entailment DAG, measured
   optimality gap **−0.067, ≤0 on every topology** vs the ground-truth optimum k* — provably
   minimal; greedy threshold k=1.14 / 0 spurious; depth-first k=6.60 / 1192 spurious, exp12)

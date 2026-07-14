@@ -79,7 +79,7 @@ All CIs are 95%. Computed via `evaluation/stats.py` (Wilson for proportions, boo
 |-----------|-----|-----|---|
 | **exp01** naive residual (Mem0) | 96.4% [90.0, 98.8] | **97.2%** [94.4, 98.7] | 253 |
 | **exp02** naive → aware residual | 96.4% → 0% | **97.2%** [94.4, 98.7] → **0%** [0, 1.5] | 253 |
-| **exp03** planner completeness | 100% [96,100] | **100%** [96, 100] | 298 |
+| **exp03** planner completeness | 100% [96,100] | **100%** [98.7, 100] | 298 |
 | **exp03** mean collateral *k* | 0.90 [0.82, 0.99] | **1.03** [0.98, 1.08] | 298 |
 | **exp03** spurious deletions | 0 | **0** | 298 |
 | **exp03** depth-first comparator | k=6.05, 342 spurious | **k=6.60, 1192 spurious** | 298 |

@@ -8,14 +8,14 @@ surviving facts. This project detects, decomposes, plans, and certifies
 deletion completeness.
 
 Recoverability is decomposed into three channels — residual survival,
-re-derivation from surviving facts, and an irreducible parametric floor:
+re-derivation from surviving facts, and an irreducible world recall:
 
 1. **Residual survival** — a derived artifact still physically contains the fact.
    *Fix:* propagate deletion to derived artifacts.
 2. **Re-derivation** — all artifacts are gone but the fact is entailed by
    surviving facts and/or the base model's parametric knowledge.
    *Fix:* co-delete the entailing facts (Opt-P2E2, NP-hard → greedy heuristics);
-   an irreducible **parametric floor ρ** may remain.
+   an irreducible **world recall ρ** may remain.
 
 Target systems: **Mem0** (primary), **Zep/Graphiti** (secondary),
 **MemGPT/Letta** (tertiary). Black-box API only; no model training.
@@ -68,13 +68,13 @@ python experiments/exp01_baseline.py --facts data/facts/isolated_facts.json --n 
 python experiments/exp02_artifact_purge.py --facts data/facts/isolated_facts.json --n 12 --verbose
 # exp03 — planner end-to-end (threshold heuristic; emits certificates)
 python experiments/exp03_planner.py --n 6 -v
-# exp04 — re-derivation control + parametric floor (operands-only, 2 reasoners)
+# exp04 — re-derivation control + world recall (operands-only, 2 reasoners)
 python experiments/exp04_parametric.py --n 6 -v
 # exp05 — Mem0 duplication factorial (embedder x cadence)
 python experiments/exp05_duplication.py
 # exp06 — infer=True derivation-capture check
 python experiments/exp06_derivation_capture.py -v
-# exp07 — parametric floor rho on a gradient (measured, 2 reasoners)
+# exp07 — world recall rho on a gradient (measured, 2 reasoners)
 python experiments/exp07_rho_gradient.py --n-samples 6 -v
 # exp08 — membership inference (retrieval-score, naive vs artifact-aware)
 python experiments/exp08_mia.py
@@ -110,9 +110,9 @@ python experiments/exp11_letta_rederivation.py --n 6 -v
 | exp06 | infer=True derivation-capture | **0%** (it's consolidation, not derivation) |
 | exp04 | re-derivable, **bin1 stored-alone** | **100%** → 0% after co-delete |
 | exp04 | re-derivable, **bin2 stored+world** | **.56–.74 (4 reasoners)** → 0% after co-delete |
-| exp04 | parametric floor ρ | **0%** (synthetic subjects) |
+| exp04 | world recall ρ | **0%** (synthetic subjects) |
 | exp03 | planner: completeness / spurious / mean k | **100% / 0 / 0.90** |
-| exp07 | parametric floor ρ by tier (gpt-4o-mini / gpt-4o) | low **0.00**, mid **0.03 / 0.63**, high **0.83 / 1.00** |
+| exp07 | world recall ρ by tier (gpt-4o-mini / gpt-4o) | low **0.00**, mid **0.03 / 0.63**, high **0.83 / 1.00** |
 | exp07 | certs NOT certified-complete (ρ>τ, residual=0) | **30/81** (the limit result) |
 | exp08 | MIA AUC (n=33, bootstrap CI): intact / naive / aware | **0.72** (p=.002) / 0.61 (p=.07, ns) / **0.51** (CI incl. 0.5) → artifact-aware restores indistinguishability |
 | judge | recovery false-accept / entailment κ (trivial→hard neg) | **0%** / 0.83 → **0.46**; gpt-4o-mini false-fires **42%** on partial operands (gpt-4o 0%) |
@@ -125,7 +125,7 @@ python experiments/exp11_letta_rederivation.py --n 6 -v
 artifact-aware deletion fixes residual survival (exp02); but even with residual=0
 a **re-derivation** channel remains — multi-hop facts are reconstructable from
 surviving entailing facts (exp04, binned, four reasoners) — which the planner
-closes with minimal collateral (exp03), down to the parametric floor ρ.
+closes with minimal collateral (exp03), down to the world recall ρ.
 
 ### Key methodology notes
 - Deletion is **content/search-based**, not via Mem0's `add()` ids (which lag).
@@ -140,7 +140,7 @@ closes with minimal collateral (exp03), down to the parametric floor ρ.
   judge's ~0% false-accept margin; κ up to .98 vs gold).
 - Re-derivation is **binned by mechanism, never aggregated**, and run on the **4-reasoner
   adversary panel** (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5), taking the worst.
-- The parametric floor **ρ is measured on a gradient** (exp07), not asserted:
+- The world recall **ρ is measured on a gradient** (exp07), not asserted:
   some facts stay recoverable from non-deletable world knowledge alone, so
   completeness cannot be certified (ρ>τ) even with residual=0 — the limit result.
 - Both re-derivation and ρ are **reasoner-model-dependent**, so they are run on the

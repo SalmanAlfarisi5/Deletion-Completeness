@@ -26,7 +26,7 @@ caveat / what it does *not* say.
 ### C1 — Recoverability decomposes into three orthogonal channels *(the framework)*
 - **Claim:** post-"deletion" recoverability splits into **residual survival**
   (a surviving artifact still holds the value), **re-derivation** (entailed by
-  surviving facts), and **parametric ρ** (knowable from the base model + world
+  surviving facts), and **world recall ρ** (knowable from the base model + world
   knowledge alone).
 - **Support:** organizing framework; instantiated by exp02 (residual), exp04/11
   (re-derivation), exp07 (ρ).
@@ -106,7 +106,7 @@ caveat / what it does *not* say.
   **exactly**; "minimal" = a proven minimum hitting set (gap **−0.067, ≤0 on every
   topology** vs k* per exp12), not just a sufficient subset.
 
-### C5 — The parametric floor ρ is *measured* on a gradient; when ρ > τ, completeness cannot be certified even at residual = 0 *(the limit result)*
+### C5 — The world recall ρ is *measured* on a gradient; when ρ > τ, completeness cannot be certified even at residual = 0 *(the limit result)*
 - **Support:** exp07.
 - **H:** measured worst-adversary ρ (sup over **4 reasoners**: gpt-4o-mini, gpt-4o,
   Sonnet 5, GPT-5.5) on **n=250** facts: **164 certifiable (ρ≤τ) / 41 contested-middle
@@ -219,7 +219,7 @@ One phenomenon — **residual survival of a "deleted" fact** — reached in **th
 architecture families by three different by-design mechanisms**. **System coverage
 is NOT the novelty** (ForgetEval, arXiv 2606.15903, already benchmarks all three +
 ~10 more). The generalization claim is that a **strictly stronger,
-causally-decomposed recoverability notion** (residual / re-derivation / parametric)
+causally-decomposed recoverability notion** (residual / re-derivation / world recall)
 holds across these families — ForgetEval's *forget-command-leaves-top-k* check is
 **necessary but not sufficient** for completeness, and our decomposition exposes
 exactly what its check misses. Independent corroboration: ForgetEval's own
@@ -323,7 +323,7 @@ Three distinguished neighbours + the DB lineage. Full notes in `REFERENCES.md`.
     duplication, exp01/05). External support, not contradiction.
 - **ForgetAgent** (*IJRASET*) — a **synthetic unlearning *method*** (deletion
   receipts + counterfactual-indistinguishability). We are **deployed** systems, add
-  **re-derivation + parametric** channels, and emit a **diagnostic certificate**
+  **re-derivation + world recall** channels, and emit a **diagnostic certificate**
   (audit, not a method-with-guarantees). Neighbour, not overlap.
 - **Agentic Unlearning** (2602.17692) — **weight-access** dual-pathway edit; **we
   are memory-store-only** (black-box base model). Its backflow already separates

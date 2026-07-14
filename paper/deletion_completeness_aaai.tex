@@ -9,7 +9,7 @@
 %% (T2) Why Deleted Facts Recur: A Causal Recoverability Decomposition
 %%      and Co-Deletion Planner for Agent Memory
 %% (T3) Certifying Deletion-Completeness in LLM Agent Memory: Recoverability
-%%      Decomposition, Minimal Co-Deletion, and the Parametric Floor
+%%      Decomposition, Minimal Co-Deletion, and the World Recall
 
 \documentclass[letterpaper]{article}
 % TODO(AAAI kit): submission vs camera-ready. This uses \usepackage{aaai2027}
@@ -46,8 +46,8 @@
 
 \setcounter{secnumdepth}{2}
 
-\title{\textsc{Redact}: Recoverability Decomposition and Auditable\\
-       Co-Deletion for the Right to Be Forgotten in LLM Agent Memory}
+\title{\textsc{Salman}: Stored-memory Auditing of Leakage, Minimal Co-Deletion,\\
+       and Nondeletability for the Right to Be Forgotten in LLM Agent Memory}
 \author{
     Anonymous Submission
 }
@@ -67,10 +67,10 @@ check whether a forget command removes a value from retrieval, which is
 artifact or be re-derived from facts that were never deleted. We formalize
 \emph{deletion-completeness} for agent memory, decomposing post-deletion
 recoverability into three causally distinct channels (residual survival,
-re-derivation from surviving facts, and a parametric floor recoverable from the
+re-derivation from surviving facts, and world recall, the value recoverable from the
 base model alone) and give a planner that computes the minimal co-deletion
 closing the deletable channels, emitting an auditable certificate. Because the
-parametric floor cannot be deleted, certification has a hard limit: under the
+world recall cannot be deleted, certification has a hard limit: under the
 strongest modeled adversary, \textbf{86 of 250} facts cannot be certified erased
 (at threshold $\tau{=}0.1$), even with zero residual survival and no helpful
 co-deletion. The same stack, run across three memory architectures (a
@@ -107,22 +107,22 @@ AAAI's policy on the use of generative AI.}
 We cast deletion-completeness as whether a deleted fact remains recoverable, and
 decompose recoverability into three causally distinct channels: residual survival
 (a surviving artifact still contains the value), re-derivation (surviving facts
-entail it), and a parametric floor (the base model recovers it from world knowledge
+entail it), and a world recall (the base model recovers it from world knowledge
 alone). The first two are closable by deleting more; the third is not. A greedy
 planner computes the minimal additional co-deletion that closes the closable
 channels, and a certificate records what deletion achieved, at what collateral
-cost, and when the parametric floor makes erasure impossible to
+cost, and when the world recall makes erasure impossible to
 certify. Concretely, we contribute:
 
 \begin{itemize}
 \item a formal, \emph{adversary-relative} deletion-completeness criterion for agent
 memory, strictly stronger than dependency-bounded database erasure, decomposing
-recoverability into residual, re-derivation, and parametric channels (\S\ref{sec:formulation});
+recoverability into residual, re-derivation, and world-recall channels (\S\ref{sec:formulation});
 \item a minimal co-deletion planner for the resulting NP-hard problem, reaching
 completeness at mean collateral $k=1.03$ with zero spurious deletions, plus an
 auditable certificate that separates what deletion achieved from what it cannot
 (\S\ref{sec:method},\,\S\ref{sec:res-planner});
-\item a \emph{measured} parametric floor and its limit result: under the strongest
+\item a \emph{measured} world recall and its limit result: under the strongest
 modeled adversary, $86/250$ facts cannot be certified erased even at zero residual
 survival. Measured as a recovery rate over $8$ samples per fact,
 the count is a Monte-Carlo estimate stable to $\pm1$--$2$ facts at the $n{=}8$-sample boundary
@@ -133,8 +133,9 @@ different by-design mechanisms, including the agent-loop failure above that prio
 audits bypass (\S\ref{sec:res-converge}).
 \end{itemize}
 
-We call the resulting framework \textsc{Redact}: \textbf{Re}coverability
-\textbf{D}ecomposition and \textbf{A}uditable \textbf{C}o-Dele\textbf{t}ion.
+We call the resulting framework \textsc{Salman}: \textbf{S}tored-memory
+\textbf{A}uditing of \textbf{L}eakage, \textbf{M}inimal co-deletion, \textbf{a}nd
+\textbf{N}ondeletability.
 
 The breadth across systems is evidence for a stronger, causally-decomposed notion
 of erasure. This is not a claim to be first to evaluate these systems, since ForgetEval
@@ -178,8 +179,8 @@ which is the re-derivation channel we isolate and then close. Closest to us,
 \textsc{Agentic Unlearning} \citep{agenticunlearning} also splits parametric from memory
 recovery (its ``backflow'') and, on the memory side, prunes dependent artifacts by a
 dependency closure that needs no weight access. We differ by making the decomposition
-adversary-relative, by separating re-derivation from an \emph{irreducible} parametric
-floor that we \emph{measure} rather than assume, and by emitting a minimal-collateral,
+adversary-relative, by separating re-derivation from an \emph{irreducible} world
+recall that we \emph{measure} rather than assume, and by emitting a minimal-collateral,
 auditable certificate; we thus neither claim the parametric/memory split as novel nor
 edit weights. Forgetting by editing the retrieval store rather than the model also links
 us to RAG-unlearning \citep{ragunlearn}.
@@ -220,7 +221,7 @@ $\sigma_{\mathrm{red}}^{\mathcal{A}}(f,S')=\mathrm{rec}\!\left(\mathcal{A}(q_f \
 S',M,W)\right)$: the adversary reconstructs $v$ by reasoning over the surviving
 store together with world knowledge, even when no record states $v$ outright.
 
-\paragraph{Definition 3 (Parametric floor).}
+\paragraph{Definition 3 (World recall).}
 $\rho^{\mathcal{A}}(f)=\mathrm{rec}\!\left(\mathcal{A}(q_f \mid \varnothing, M, C)\right)$, where
 $C\subseteq W$ is the subject's world-knowable context and the store is
 \emph{empty}. Because $\rho^{\mathcal{A}}$ never reads $S$, it is
@@ -232,7 +233,7 @@ verbatim in a leftover summary note is residual survival ($\sigma_{\mathrm{res}}
 A deleted salary that an adversary rebuilds from a surviving job title plus a
 public pay band is re-derivation ($\sigma_{\mathrm{red}}$). A deleted ``holds a
 Class-3 licence,'' whose implication ``at least 18'' any model already knows on its
-own, is the parametric floor ($\rho$). Deleting more shrinks the first two; it
+own, is the world recall ($\rho$). Deleting more shrinks the first two; it
 cannot touch the third. Figure~\ref{fig:pipeline} shows how the probe, planner, and
 certificate act on each channel.
 
@@ -252,14 +253,14 @@ inferences, so which adversary is worst varies by fact (\S\ref{sec:res-rho}).
 \paragraph{Definition 5 (Floor-reaching and erasure-certification).}
 A deletion is \emph{floor-reaching} for $\mathcal{A}$ when
 $\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}^{\mathcal{A}}=0$: recoverability has
-been driven down to the parametric floor, and nothing further can be deleted to
+been driven down to the world recall, and nothing further can be deleted to
 help. It is \emph{erasure-certified} when it is floor-reaching for every modeled
-adversary and the floor itself is below tolerance,
+adversary and the world recall itself is below tolerance,
 $\max_{\mathcal{A}}\rho^{\mathcal{A}}<\tau$ (the $\sup$ of Def.~4). These two come
 apart in exactly one way, and that gap is the limit result of the paper.
 Floor-reaching is always achievable: co-delete operands until
 $\sigma_{\mathrm{red}}=0$. Certification, by contrast, fails whenever
-$\rho^{\mathcal{A}}\geq\tau$, because no co-deletion can lower a floor that never
+$\rho^{\mathcal{A}}\geq\tau$, because no co-deletion can lower world recall, which never
 depended on the store. A fact can then be as erased as deletion can make it and
 still remain world-inferable (R11, Table~\ref{tab:certs}). Reporting the two
 predicates separately is exact, and it avoids the misleading verdict ``complete but
@@ -277,12 +278,12 @@ where $|D|=k$ is the collateral cost; erasure-certification additionally require
 $\rho^{\mathcal{A}}<\tau$ (Def.~5). The co-deleted set $D$ is made of entailers the
 user never named, which can read as a data-minimization violation, but it is the
 opposite: leaving them is not minimization but failed erasure, since $f$ simply
-re-derives. The planner minimizes $k$, the floor $\rho$ bounds what no deletion can
+re-derives. The planner minimizes $k$, the world recall $\rho$ bounds what no deletion can
 remove, and because the certificate reports $k$, paying it (strong erasure) or not
 (data minimization) becomes an explicit, audited policy choice rather than a hidden
 side effect.
 
-\paragraph{Proposition 1 (NP-hardness).} \textsc{Opt-P2E2} is NP-hard, by reduction
+\paragraph{Proposition 1 (NP-hardness).} \textsc{Opt-P2E2} is NP-hard \citep{p2e2}, by a self-contained reduction
 from \textsc{Minimum Hitting Set}
 \citep{karp1972reducibility,garey1979computers}. Given a universe $U$ and sets
 $\mathcal{S}=\{S_1,\dots,S_m\}$ with $S_j\subseteq U$, build an instance with one
@@ -326,7 +327,7 @@ practice (mean $k=1.03$, \S\ref{sec:res-planner}).
 % ----- channel labels (left column) -----
 \node[lab, draw=teal!55!black,   fill=teal!16]   (LR) at (1.0,0)     {\textbf{Residual} $\sigma_{\mathrm{res}}$\\[1pt]\scriptsize surviving artifact holds $v$};
 \node[lab, draw=orange!80!black, fill=orange!20] (LD) at (1.0,-1.35) {\textbf{Re-derivation} $\sigma_{\mathrm{red}}$\\[1pt]\scriptsize surviving facts entail $v$};
-\node[lab, draw=violet!70!black, fill=violet!16] (LP) at (1.0,-2.70) {\textbf{Parametric floor} $\rho$\\[1pt]\scriptsize world-knowable, \emph{irreducible}};
+\node[lab, draw=violet!70!black, fill=violet!16] (LP) at (1.0,-2.70) {\textbf{World recall} $\rho$\\[1pt]\scriptsize world-knowable, \emph{irreducible}};
 % ----- store column -----
 \node[cell, draw=teal!55!black]   (SR) at (4.2,0)     {a duplicate / summary\\still contains $v$};
 \node[cell, draw=orange!80!black] (SD) at (4.2,-1.35) {operands $o_1\!\wedge\!o_2\vdash v$\\survive};
@@ -339,14 +340,14 @@ practice (mean $k=1.03$, \S\ref{sec:res-planner}).
 \node[cell, draw=teal!55!black,   fill=teal!6]   (CR) at (10.6,0)     {delete the artifact\\[1pt]\textcolor{teal!45!black}{\textbf{$\sigma_{\mathrm{res}}{\to}0$}\ $\checkmark$}};
 \node[cell, draw=orange!80!black, fill=orange!6] (CD) at (10.6,-1.35) {co-delete an operand\\[1pt]\textcolor{orange!60!black}{\textbf{$\sigma_{\mathrm{red}}{\to}0$}\ $\checkmark$}};
 \node[cell, draw=violet!70!black, fill=violet!6, very thick] (CP) at (10.6,-2.70) {$\rho$ \emph{unchanged}:\\no deletion lowers it};
-% ----- the WALL between probe and co-deletion on the floor row -----
+% ----- the WALL between probe and co-deletion on the world recall row -----
 \fill[violet!70!black] (8.98,-3.25) rectangle (9.16,-2.15);
 \node[white, font=\scriptsize\bfseries, rotate=90] at (9.07,-2.70) {WALL};
 % ----- arrows: store -> probe -----
 \draw[arr] (SR) -- (PR);
 \draw[arr] (SD) -- (PD);
 \draw[arr] (SP) -- (PP);
-% ----- probe -> co-deletion (floor row is stopped by the wall) -----
+% ----- probe -> co-deletion (world recall row is stopped by the wall) -----
 \draw[arr] (PR) -- (CR);
 \draw[arr] (PD) -- (CD);
 \draw[-{Bar[width=3.2mm]}, semithick, violet!70!black] (PP) -- (8.95,-2.70);
@@ -360,9 +361,9 @@ practice (mean $k=1.03$, \S\ref{sec:res-planner}).
 \draw[into] (CD.east) to[out=0,in=192] (CERT.west);
 % ----- CERT reads rho against tau (down into the gauge) -----
 \draw[into] (CERT.south) -- (15.0,-2.45) node[midway,right,font=\scriptsize]{$\rho$ vs $\tau$};
-% ----- the parametric floor feeds the gauge -----
+% ----- the world recall feeds the gauge -----
 \draw[into] (CP.east) -- (12.95,-2.70);
-% ----- gauge: the rho axis / tau policy dial -----
+% ----- gauge: the rho axis / tau threshold -----
 \fill[teal!16]   (13.10,-2.84) rectangle (13.48,-2.56);
 \fill[violet!14] (13.48,-2.84) rectangle (16.90,-2.56);
 \draw[semithick] (13.10,-2.70) -- (16.90,-2.70);
@@ -376,16 +377,16 @@ practice (mean $k=1.03$, \S\ref{sec:res-planner}).
 \node[font=\scriptsize, text=violet!60!black, align=center, anchor=south] at (16.15,-2.46) {R11 $\rho{=}1$\\uncertifiable};
 \end{tikzpicture}%
 }
-\caption{\textbf{The \textsc{Redact} pipeline.} Recoverability decomposes into three
+\caption{\textbf{The \textsc{Salman} pipeline.} Recoverability decomposes into three
 channels (rows), each measured by a dedicated probe: \emph{residual}
 $\sigma_{\mathrm{res}}$, \emph{re-derivation} $\sigma_{\mathrm{red}}$, and the
-\emph{parametric floor} $\rho$; overall recoverability is the worst open channel,
+\emph{world recall} $\rho$; overall recoverability is the worst open channel,
 $R{=}\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho)$ (Def.~4). The greedy
 planner closes the two deletable channels, but $\rho$ is a \emph{wall} no co-deletion
 can lower. The certificate (Def.~5) is thus \texttt{floor\_reaching} (always
 achievable) yet \texttt{completeness\_certified} only when $\rho<\tau$. The gauge
 shows this limit result: F040 ($\rho{=}0$) certifies, while R11 (``Class-3 licence
-$\Rightarrow$ at least 18'', $\rho{=}1$) does not, so $\tau$ is an explicit policy dial.}
+$\Rightarrow$ at least 18'', $\rho{=}1$) does not, so $\tau$ is auditor-chosen.}
 \label{fig:pipeline}
 \end{figure*}
 
@@ -401,7 +402,7 @@ The \emph{exact-match} probe scans every surviving record for a surface form of
 $v$ ($\sigma_{\mathrm{res}}$). The \emph{re-derivation} probe gives the adversary
 the full surviving store as notes (plus today's date and general world knowledge)
 and elicits $v$ in a value-first format ($\sigma_{\mathrm{red}}^{\mathcal{A}}$).
-The \emph{parametric} probe withholds the store entirely, conditioning only on the
+The \emph{world-recall} probe withholds the store entirely, conditioning only on the
 subject's world-knowable context, and estimates $\rho^{\mathcal{A}}$ as a recovery
 rate over $n$ stochastic samples. The re-derivation \emph{probe} reads the full
 surviving store (the threat model) and is distinct from the operands-only
@@ -484,7 +485,7 @@ synthetic subjects placed in realistic statistical contexts: 253 isolated PII fa
 298 multi-hop facts (including harder join, chain, disjunctive, diamond, and
 threshold topologies whose targets are entailed only through \emph{unstored}
 intermediate facts) with their stored operands and bystanders, and 250
-parametric-gradient facts across three difficulty tiers.
+world-recall-gradient facts across three difficulty tiers.
 Recovery is scored by a validated LLM judge \citep{zheng2023judge} with a \emph{zero}
 false-accept rate on the gold negatives (\S\ref{sec:res-judge}: $0/194$ for the
 Sonnet~5 production judge, $95\%$ Wilson upper bound $\approx\!0.019$), so \emph{reported recovery rates are conservative lower bounds
@@ -499,7 +500,7 @@ the headline numbers; results are presented in decreasing order of confidence.
 \textbf{Result} & \textbf{System} & \textbf{Headline} & \textbf{Backing control} \\
 \midrule
 Planner (\S\ref{sec:res-planner})        & Mem0     & 100\% complete, 0 spurious, exact $k{=}1.03$ & min-hitting-set over the entailment DAG; gap$\,{\le}\,0$ \\
-$\rho$ floor (\S\ref{sec:res-rho})       & base model$^\dagger$ & 86/250 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
+world recall (\S\ref{sec:res-rho})       & base model$^\dagger$ & 86/250 \emph{uncertifiable} at residual $0$ & worst-adversary $\rho$; refusal audit \\
 Re-derivation (\S\ref{sec:res-rederiv})  & Mem0, Letta & bin1 100\%, bin2 62--69\%$\to$0\% & operands-only; verified-faithful co-delete \\
 Convergence (\S\ref{sec:res-converge})   & all three & 83\% / 100\% (Graphiti/Letta) & clean-delete verified first; explicit baseline \\
 Residual (\S\ref{sec:res-residual})      & Mem0     & 97.2\%; 97.2\%$\to$0\% & $2{\times}2$ embedder$\times$cadence factorial \\
@@ -573,30 +574,30 @@ example (system)                 & F040 (Letta)   & R11 (Mem0 run) \\
 \caption{Two real certificates. \emph{F040} (\textsc{complete}, Letta): re-derivation
 was open before co-deletion (\texttt{rederiv\_with\_operands}$=1.0$) and closed after
 (\texttt{re\_derivation\_score}$=0.0$). \emph{R11} (\textsc{incomplete}, Mem0):
-residual and re-derivation are both $0$, yet the base-model floor $\rho{=}1.0$ forces
+residual and re-derivation are both $0$, yet the base-model world recall $\rho{=}1.0$ forces
 \textsc{incomplete}, the limit result. Both are \texttt{floor\_reaching}; only F040
 is \texttt{completeness\_certified}. Different systems, one format.}
 \label{tab:certs}
 \end{table}
 
-\subsection{The Parametric Floor and the Limit of Certifiable Deletion}\label{sec:res-rho}
+\subsection{The World Recall and the Limit of Certifiable Deletion}\label{sec:res-rho}
 
-The parametric floor $\rho$ is the one channel deletion cannot touch: the rate at which
+The world recall $\rho$ is the one channel deletion cannot touch: the rate at which
 the base model reconstructs a value from world-knowable context alone, with the store
 withheld. We \emph{measure} it rather than assume it, on 250 facts written across a
-low/mid/high difficulty gradient. We always report the \emph{measured} floor, not the
+low/mid/high difficulty gradient. We always report the \emph{measured} world recall, not the
 authored tier; where the two disagree we keep the fact and report the measurement, since
 the authored tier is only a hypothesis and $\rho$ is the evidence.
 
 We score each fact against the \emph{worst} of our four adversaries. This sorts the 250
-facts into three groups (Table~\ref{tab:rho}): most fall at a certifiable floor, a middle
-band sits in an intermediate range, and the rest hit a hard floor, with the mean floor
+facts into three groups (Table~\ref{tab:rho}): most are certifiable, a middle
+band sits in an intermediate range, and the rest hit a hard tier, with the mean world recall
 rising along the difficulty gradient. The headline follows: \textbf{86 of 250 facts are
 not erasure-certifiable} at $\tau{=}0.1$, \emph{even though their residual survival is
 zero and every re-derivation path was closed}. This is the limit result: once a value is
 inferable from world knowledge no one can delete, no co-deletion can certify its erasure.
-And because the floor is a smooth gradient rather than an all-or-nothing split, the
-uncertifiable count moves with $\tau$, which makes $\tau$ a deliberate policy dial:
+And because the world recall is a smooth gradient rather than an all-or-nothing split, the
+uncertifiable count moves with $\tau$, which makes $\tau$ auditor-chosen:
 setting it is choosing how much residual world-inferability to tolerate.
 
 \textbf{Which adversary is worst varies by fact.} The four-model panel is not a
@@ -606,15 +607,15 @@ status that implies sex or a licence class that implies a minimum age, the front
 models often \emph{refuse} the inference outright, which turns their measured $\rho$ into
 a lower bound and leaves the older \texttt{gpt-4o} as the worst adversary there. Stronger
 models are thus not uniformly stronger adversaries, and taking the worst over a diverse
-panel is what captures that. This positive floor does not contradict the $\rho{=}0$ we
+panel is what captures that. This positive world recall does not contradict the $\rho{=}0$ we
 report for the multi-hop facts: there the world-knowable part is inert without the
 fictional stored operand and collapses under co-deletion, whereas here the context is
 itself world-knowable and pins the target down, so its recovery sits in the irreducible
-floor rather than the deletable channel.
+world recall rather than the deletable channel.
 
 \textbf{Control.} By construction the $\rho$ probe sees \emph{only} the subject's
 world-knowable context and never the stored facts, so co-deletion provably cannot lower
-it. Three checks harden the gradient: a numeric-tolerance sweep shows the floor survives
+it. Three checks harden the gradient: a numeric-tolerance sweep shows the world recall survives
 at every tolerance; a base-rate versus context-lift split separates real inference from
 mere prior plausibility; and a refusal audit confirms that $\rho$ on sensitive
 attributes is an adversarial lower bound. Two caveats bound the reading. Because $\rho$
@@ -631,17 +632,17 @@ the supplementary material.
 \toprule
 worst-adversary $\rho_{\max}$ & meaning & \#facts & certifiable? \\
 \midrule
-$\le\tau$ ($\tau{=}0.1$) & certifiable floor & 164 & \checkmark \\
+$\le\tau$ ($\tau{=}0.1$) & certifiable & 164 & \checkmark \\
 $\tau$ to $0.5$          & intermediate band & 41 & no \\
-$\ge 0.5$                & hard floor        & 45 & no \\
+$\ge 0.5$                & hard tier        & 45 & no \\
 \midrule
 \multicolumn{2}{@{}l}{total} & 250 & 164 \\
 \bottomrule
 \end{tabular}
-\caption{Parametric floor $\rho$ on $n{=}250$ facts ($8$ samples each), binned by the
-worst of the four adversaries, $\rho_{\max}$. The floor is \emph{graded}: a $41$-fact
-intermediate band sits between the certifiable $164$ and the hard-floor $45$, so the
-$86/250$ uncertifiable count moves with $\tau$ (a policy dial). Measured band disagrees
+\caption{World recall $\rho$ on $n{=}250$ facts ($8$ samples each), binned by the
+worst of the four adversaries, $\rho_{\max}$. The world recall is \emph{graded}: a $41$-fact
+intermediate band sits between the certifiable $164$ and the hard tier $45$, so the
+$86/250$ uncertifiable count moves with $\tau$ (auditor-chosen). Measured band disagrees
 with authored tier for $77/250$ facts.}
 \label{tab:rho}
 \end{table}
@@ -673,14 +674,14 @@ Letta bin~2 (stored+world)      & 62  & 65 & 65  & 68  & 0 \\
 (\texttt{gpt-4o-mini}, \texttt{gpt-4o}, Sonnet~5, GPT-5.5); ``post'' is after
 co-deleting the operands. The five harder topologies (join, chain, disjunctive
 $((A\vee B)\wedge C)$, diamond, and at-least-$k$-of-$n$ threshold) re-derive at $100\%$
-and also collapse to $0$; the parametric floor is $\rho=0$ throughout. Extended detail
+and also collapse to $0$; the world recall is $\rho=0$ throughout. Extended detail
 (confidence intervals, Letta faithfulness) is in the supplementary material.}
 \label{tab:rederiv}
 \end{table}
 
 On Mem0, across all four adversaries, the target is re-derived on nearly every
 stored-alone fact and on about two-thirds of the stored+world facts, and co-deleting the
-operands drives both to zero, down to a parametric floor of $\rho=0$
+operands drives both to zero, down to a world recall of $\rho=0$
 (Table~\ref{tab:rederiv}). Adversary strength is not one-dimensional: the worst
 stored+world rate the certificate must anticipate is set by \texttt{gpt-4o} and Sonnet~5
 (both $69\%$), while the newest GPT-5.5 sits lower ($66\%$)---a larger model is not
@@ -698,7 +699,7 @@ co-deletion. The probe is not firing indiscriminately: on a fact like F043 (a
 Catholic-High-School-to-Bishan geographic leap) the two backbone reasoners never make the
 inference, and only the frontier models do---an honest per-fact negative for the weaker
 adversaries, and another reminder that which adversary is worst varies by fact. Re-derivation is thus a recovery channel orthogonal to
-residual survival, and minimal co-deletion closes it down to the parametric floor.
+residual survival, and minimal co-deletion closes it down to the world recall.
 
 \textbf{Control.} We bin recovery by mechanism and never average across bins, and run all
 four reasoners because re-derivation is model-dependent. On Letta this matters twice over:
@@ -856,10 +857,9 @@ in the supplementary material.
 
 We state the boundaries of the evidence, leading with the issue we caught and fixed.
 
-\paragraph{Membership inference: retracted, then powered.} An early version of this
-work reported a membership-inference signal, but the test was underpowered (only
-$n{=}6$ members), so we withdrew the claim and re-ran it properly on $n{=}253$ members,
-each with three matched near-twins. The powered picture is nuanced. The test clearly has
+\paragraph{Membership inference: retracted, then powered.} Our initial
+membership-inference probe was underpowered (only $n{=}6$ members), so we withdrew that
+reading and re-ran it properly on $n{=}253$ members, each with three matched near-twins. The powered picture is nuanced. The test clearly has
 power: before any deletion, an adversary tells stored facts from unstored ones well
 above chance (AUC $0.66$). Naive single-record deletion barely dents that signal
 (AUC $0.66$). Artifact-aware deletion pushes it down close to chance (AUC $0.51$), but
@@ -878,8 +878,8 @@ recovery judge (Sonnet~5) makes \emph{zero} false accepts on the $194$ gold nega
 within that small margin; every model, though, has a zero miss-rate on true multi-hop
 entailers.
 
-\paragraph{The floor is a lower bound where it matters most.} We estimate the
-parametric floor by asking the base model for the value, and for sensitive attributes
+\paragraph{The world recall is a lower bound where it matters most.} We estimate the
+world recall by asking the base model for the value, and for sensitive attributes
 the model often refuses. A refusal makes the measured $\rho$ an underestimate of true
 world-inferability, precisely for the attributes a privacy audit cares about most. A
 more willing adversary could only push the uncertifiable count higher, never lower, so
@@ -906,19 +906,19 @@ post-deletion recoverability, a planner that closes the deletable channels with
 minimal collateral, and a certificate that states, per fact, both the cost of
 erasure and whether it can be certified at all. Across three memory architectures
 the same gap recurs through different by-design mechanisms, and a \emph{measured}
-parametric floor sets a hard limit on what any deletion can promise.
+world recall sets a hard limit on what any deletion can promise.
 
 That limit is the paper's broadest implication. When a fact is recoverable from
 world knowledge alone ($\rho\geq\tau$), as $86$ of our $250$ gradient facts are under
 the strongest modeled adversary, no external-store deletion can erase it: the value
 is reconstructed without ever reading the store. Right-to-be-forgotten compliance
 then cannot be a deletion operation; it requires not storing the fact in the first
-place, or accepting and disclosing the residual floor. Deletion engineering closes
-the re-derivation and residual channels, not the parametric one.
+place, or accepting and disclosing the residual world recall. Deletion engineering closes
+the re-derivation and residual channels, not the world-recall one.
 
 One extension is immediate: a fourth memory architecture, to test whether the
 three-family convergence is universal. The deeper open problem is certifying erasure
-against an unbounded adversary rather than a modeled bracket: the floor we measure is
+against an unbounded adversary rather than a modeled bracket: the world recall we measure is
 a lower bound, so the true limit of forgetting in agent memory may be higher still.
 
 \paragraph{Broader impact.} Our goal is to make deletion in agent memory

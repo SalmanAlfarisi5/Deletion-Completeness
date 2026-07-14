@@ -70,7 +70,7 @@ pipeline/
 probes/
   exact_match.py       ← Scan all rows for the value's surface form (residual probe)
   paraphrase_probe.py  ← Generate N paraphrases, query system, check retrieval
-  parametric_probe.py  ← Re-derivation AND parametric floor (rho) probe
+  parametric_probe.py  ← Re-derivation AND world recall (rho) probe
   membership_inference.py ← AUC-based MIA via top-1 retrieval scores
   kg_node_residue.py   ← Graphiti: scan entity/community summaries for residue
 
@@ -124,7 +124,7 @@ Each probe answers: *"Can an adversary recover fact F from the current system st
 | `ParaphraseProbe` | Retrieval with N paraphrased queries | Value appears in retrieval hits for semantically varied queries |
 | `ParametricProbe.run_rederivation()` | Model given full surviving store, asked to reconstruct value | Surviving context facts entail the target |
 | `ParametricProbe.run_parametric()` | Model given NO store, only subject's world-knowable context | Base model alone can infer the value |
-| `ParametricProbe.estimate_rho()` | Stochastic sampling (n=8, temp=0.7) over world-context only | Measures empirical parametric floor ρ |
+| `ParametricProbe.estimate_rho()` | Stochastic sampling (n=8, temp=0.7) over world-context only | Measures empirical world recall ρ |
 | `MembershipInferenceProbe` | AUC of top-1 retrieval score (member vs never-stored near-twin) | Signal leaks through retrieval similarity |
 | `KGNodeResidueProbe` | Scan KG entity/community summaries + edges | Value in stale summaries or surviving edges |
 
@@ -228,7 +228,7 @@ The planner distinguishes `delete_value` (narrow: the target's own surface forms
 | `parametric_risk_rho` | Base model floor — irreducible |
 | `final_recoverability` | `max(residual, rederiv, rho)` |
 | `floor_reaching` | `max(residual, rederiv) < τ` — deletable channels closed |
-| `completeness_certified` | `final < τ` — also passes the parametric floor |
+| `completeness_certified` | `final < τ` — also passes the world recall |
 | `status` | `COMPLETE` / `PARTIAL` / `INCOMPLETE` |
 | `facts_co_deleted` | Which context facts the planner co-deleted |
 | `collateral_k` | Number of co-deleted facts |
@@ -248,7 +248,7 @@ The planner distinguishes `delete_value` (narrow: the target's own surface forms
 | **exp04** | Is re-derivation real? Does co-deletion close it? | bin1 (stored-alone): 97–100% → 0%; bin2 (stored+world): 62/69/69/66% (4 reasoners) → 2.7% (F043 value-coupling residue); ρ=0% |
 | **exp05** | Is Mem0 duplication an embedder artifact or cadence artifact? | 2×2 factorial: 80–82% duplication (row-inflation ×1.75–1.82) in ALL cells → Mem0 design limitation |
 | **exp06** | Does `infer=True` capture derivations? | 0% — `infer` does *consolidation* (merge rows), not derivation capture |
-| **exp07** | What is the parametric floor ρ across fact tiers? | low≈0.0, mid≈0.1, high≈0.5–0.7 (per reasoner); 86/250 facts cannot be certified (164 cert / 41 mid / 45 hard) |
+| **exp07** | What is the world recall ρ across fact tiers? | low≈0.0, mid≈0.1, high≈0.5–0.7 (per reasoner); 86/250 facts cannot be certified (164 cert / 41 mid / 45 hard) |
 | **exp08** | Does deletion restore membership indistinguishability? | Artifact-aware: AUC 0.51, CI [0.498,0.523] includes 0.5 but permutation p=.04 (marginal); Naive: AUC 0.66, p=.001 (significant) |
 | **exp09** | Does Zep/Graphiti have KG-residual after `remove_episode`? | Edge 20% clean, but **summary 83%** survives in stale entity/community summaries (n=30) |
 | **exp10** | Is Letta's agent-mediated deletion faithful? | Explicit dual-surface: 100% faithful; Vague RTBF: 0% faithful, 100% archival residue |
@@ -317,7 +317,7 @@ The paper argues the following chain:
 
 4. **The planner closes re-derivation with minimal collateral.** The exact min-hitting-set planner achieves 100% completeness, 0 spurious deletions, and an average of 1.03 extra facts deleted per target (provably minimal).
 
-5. **The parametric floor is the hard limit.** Some facts (high-tier: driving licence → must be ≥18) can never be certified complete because the base model infers them from world knowledge alone. 86/250 rho-gradient facts hit this limit, producing `floor_reaching=True, completeness_certified=False` certificates.
+5. **The world recall is the hard limit.** Some facts (high-tier: driving licence → must be ≥18) can never be certified complete because the base model infers them from world knowledge alone. 86/250 rho-gradient facts hit this limit, producing `floor_reaching=True, completeness_certified=False` certificates.
 
 6. **Membership inference: naive deletion leaks; artifact-aware largely closes it.** Naive single-record deletion leaves a significant membership signal (AUC 0.66, p=.001). Artifact-aware deletion drives the AUC to 0.51 (CI [0.498, 0.523] includes 0.5, permutation p=.04) — attenuated toward chance but not provably eliminated at n=253.
 

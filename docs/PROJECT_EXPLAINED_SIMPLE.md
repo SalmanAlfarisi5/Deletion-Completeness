@@ -28,7 +28,7 @@ number. Everything here is grounded in the actual code and the current results.*
 6. [Tool 1 — the planner (minimal co-deletion)](#6-tool-1--the-planner-minimal-co-deletion)
 7. [Tool 2 — the certificate](#7-tool-2--the-certificate)
 8. [A full walkthrough: one fact, from stored to certified](#8-a-full-walkthrough-one-fact-from-stored-to-certified)
-9. [The parametric floor: the hard limit of deletion](#9-the-parametric-floor-the-hard-limit-of-deletion)
+9. [The world recall: the hard limit of deletion](#9-the-world-recall-the-hard-limit-of-deletion)
 10. [The three memory systems we tested](#10-the-three-memory-systems-we-tested)
 11. [Every experiment, in plain words](#11-every-experiment-in-plain-words)
 12. [The numbers cheat-sheet](#12-the-numbers-cheat-sheet)
@@ -54,8 +54,8 @@ issue a **certificate** — an honest receipt that says exactly how erased a fac
 what it cost to get there, and when true erasure is *impossible*. We show all of this
 on three real, popular AI-memory systems.
 
-The framework has a name in the paper: **REDACT** = **R**ecoverability
-**D**ecomposition **a**nd **A**uditable **C**o-Dele**t**ion.
+The framework has a name in the paper: **SALMAN** = **S**tored-memory
+**A**uditing of **L**eakage, **M**inimal co-deletion, **a**nd **N**ondeletability.
 
 If you remember only one sentence, make it this: **the word "delete" hides at least
 three different failures, and telling them apart is the whole game.**
@@ -161,7 +161,7 @@ Picture deleting a fact, and three doors it can escape through:
         ┌──────────────────────┼──────────────────────┐
         ▼                      ▼                      ▼
   CHANNEL 1              CHANNEL 2              CHANNEL 3
-  Residual survival      Re-derivation          Parametric floor (ρ)
+  Residual survival      Re-derivation          World recall (ρ)
         │                      │                      │
   A leftover copy /      All copies gone, but   The AI model already
   summary still          surviving facts let    knows the value from
@@ -213,7 +213,7 @@ the value can be **reconstructed by reasoning** over facts that *are* still ther
   rebuild possible (the "operands"). That's what the planner does, and the trick is
   doing it *without* deleting a pile of innocent facts too.
 
-### Channel 3 — Parametric floor, written **ρ** (rho) ("the model already knew it")
+### Channel 3 — World recall, written **ρ** (rho) ("the model already knew it")
 
 The deepest, and the one you **cannot fix**. Even with the store **completely
 empty**, the AI model can sometimes produce the value from **general world
@@ -223,7 +223,7 @@ training, as opposed to sitting in the memory store.)
 - **Example:** you delete "holds a Class-3 driving licence." But *anyone* knows a
   licence holder must be **at least 18**. So "at least 18" is recoverable from world
   knowledge — no store needed. Deleting things from the store can never lower this.
-- **How we measure it:** the parametric probe gives the model **nothing from the
+- **How we measure it:** the world-recall probe gives the model **nothing from the
   store**, only the subject's world-knowable context, and asks for the value. We run
   this many times and measure the **fraction of times** it succeeds. That fraction is
   **ρ**, a number between 0 and 1.
@@ -452,7 +452,7 @@ disagree:
 - **`floor_reaching`** = we closed everything **deletion can close** (residual = 0
   and re-derivation = 0). This is **always achievable** — just keep co-deleting until
   both are down.
-- **`completeness_certified`** = floor-reaching **AND** the parametric floor is also
+- **`completeness_certified`** = floor-reaching **AND** the world recall is also
   low (`ρ < τ`). This is *not* always achievable, because you can't delete ρ.
 
 The gap between them — **`floor_reaching = true` but `completeness_certified =
@@ -561,7 +561,7 @@ limit result.
 
 ---
 
-## 9. The parametric floor: the hard limit of deletion
+## 9. The world recall: the hard limit of deletion
 
 This deserves its own section because it's the paper's most important scientific
 result — its "limit result."
@@ -607,7 +607,7 @@ its erasure.**
 
 1. **The floor is a gradient, not a clean on/off.** There's a **41-fact intermediate
    band** (0.1 < ρ < 0.5) sitting between "certifiable" and "hopeless." That means the
-   count of uncertifiable facts **moves with τ**. So **τ is a policy dial**: choosing
+   count of uncertifiable facts **moves with τ**. So **τ is auditor-chosen**: choosing
    τ = 0.1 is literally choosing "how much residual world-guessability am I willing to
    tolerate?" (An earlier, smaller version of the data happened to look perfectly
    bimodal / all-or-nothing; the larger data shows it's actually a smooth gradient. Use
@@ -802,11 +802,11 @@ operands.
 not real derivation. So **we do NOT claim Mem0 derives facts.** (An honest negative we
 keep to stay defensible — see Section 17.)
 
-### exp07 — What is the parametric floor ρ, across difficulty tiers? *(base model)*
+### exp07 — What is the world recall ρ, across difficulty tiers? *(base model)*
 Withhold the store, ask the model for each of 250 facts 8 times, four adversaries, keep
 the worst ρ per fact. (Full detail in Section 9.)
 **Result: 164 certifiable / 41 intermediate / 45 hard-floor → 86 of 250 cannot be
-certified erased at τ = 0.1.** The floor is a **gradient**, so τ is a policy dial.
+certified erased at τ = 0.1.** The floor is a **gradient**, so τ is auditor-chosen.
 The measured band disagrees with the *authored* difficulty tier on 77/250 facts (we
 always trust the measurement, not the guess).
 
@@ -925,7 +925,7 @@ Everything you might want to cite, in one place. (Ground truth = the large-scale
 - Comparators: threshold **k = 1.14** (0 spurious); depth-first **k = 6.60**, **1192** spurious
 - Minimality vs optimum k\* (exp12): exact gap **≈0** (−0.067, optimal, ≤0 every topology); threshold **+0.037**; depth-first **+5.50**
 
-**Parametric floor (Channel 3) — exp07, base model**
+**World recall (Channel 3) — exp07, base model**
 - **86 of 250** facts uncertifiable at τ = 0.1 (41 intermediate + 45 hard-floor)
 - 164 certifiable
 - 77/250 measured band ≠ authored tier; 30 refusal flags (all high-tier by authored tier); 0 errors
@@ -963,7 +963,7 @@ Read this before the paper; it will make the notation painless.
 | **Surviving store (S′)** | What's left in memory after deletion. |
 | **Residual survival (σ_res)** | Channel 1: a surviving record still literally contains the value. |
 | **Re-derivation (σ_red)** | Channel 2: surviving facts let you *rebuild* the value by reasoning. |
-| **Parametric floor (ρ, "rho")** | Channel 3: the model recovers the value from world knowledge, store empty. Irreducible. |
+| **World recall (ρ, "rho")** | Channel 3: the model recovers the value from world knowledge, store empty. Irreducible. |
 | **Parametric** | Stored in the model's trained weights (parameters), as opposed to in the memory store. |
 | **Operands** | The surviving "ingredient" facts that make re-derivation possible. |
 | **Bystanders** | Innocent facts the planner must NOT delete. Deleting one = a "spurious" deletion. |
@@ -971,7 +971,7 @@ Read this before the paper; it will make the notation painless.
 | **Collateral k** | How many extra facts were co-deleted. The "price" of erasure. Lower is better. |
 | **Optimum k\*** | The provably smallest correct co-deletion for a fact. The planner's k is measured against it. |
 | **Gap** | k − k\*: how far a strategy is from optimal. Exact ≈ 0; depth-first ≈ +5. |
-| **τ ("tau")** | The tolerance threshold, 0.10. Below it = "channel closed." Also a policy dial. |
+| **τ ("tau")** | The tolerance threshold, 0.10. Below it = "channel closed." Also auditor-chosen. |
 | **Entailment** | "These facts logically imply the target." Detected by an LLM judge, recorded in the DAG. |
 | **Entailment DAG** | The little boolean formula (recipe map) for how a fact can be rebuilt. The planner's source of truth. |
 | **Minimum Hitting Set** | The smallest set of facts that "hits" (breaks) every rebuild recipe. Our co-deletion problem is exactly this. |
@@ -986,7 +986,7 @@ Read this before the paper; it will make the notation painless.
 | **Operands-only control** | The clean test: inject ingredients but never the target value, so residual = 0 by construction. |
 | **AUC** | Attack accuracy for membership inference. 0.5 = random guessing (good/safe), 1.0 = perfectly leaky. |
 | **MIA** | Membership Inference Attack — can you tell if a fact was ever stored? |
-| **REDACT** | The framework name: Recoverability Decomposition and Auditable Co-Deletion. |
+| **SALMAN** | The framework name: Stored-memory Auditing of Leakage, Minimal co-deletion, and Nondeletability. |
 
 ---
 
@@ -1119,14 +1119,14 @@ sufficient** — the value can hide in an artifact or be rebuilt from surviving 
 **The claimed contributions (what to get credit for):**
 1. A formal, **adversary-relative deletion-completeness** criterion that
    **decomposes recoverability into three channels** (residual / re-derivation /
-   parametric floor). This is stronger than existing database "deletion under
+   world recall). This is stronger than existing database "deletion under
    dependencies" theory.
 2. A **minimal co-deletion planner** for the resulting NP-hard problem — an **exact
    minimum-hitting-set solver** over the entailment DAG that reaches 100% completeness
    at mean **k = 1.03** with **0 spurious** deletions (verified minimal against the
    ground-truth optimum in exp12, gap ≈ 0) — plus an **auditable certificate** separating
    what deletion achieved from what it cannot.
-3. A **measured** parametric floor and its **limit result**: under the strongest
+3. A **measured** world recall and its **limit result**: under the strongest
    adversary, **86/250 facts cannot be certified erased** even at zero residual.
 4. **Evidence of generality**: the same stack on three architectures finds residual
    survival in all three via different by-design mechanisms — including the agent-loop
@@ -1139,7 +1139,7 @@ sufficient** — the value can hide in an artifact or be rebuilt from surviving 
   ours is a *stronger, decomposed* question, not broader system coverage. Also:
   unlearning methods, and the database deletion-under-dependencies lineage (P2E2).
 - **§3 Problem Formulation** — the definitions: residual (Def 1), re-derivation (Def
-  2), parametric floor (Def 3), recoverability = max (Def 4, adversary-relative),
+  2), world recall (Def 3), recoverability = max (Def 4, adversary-relative),
   floor-reaching vs certified (Def 5). Then the optimization problem and the
   NP-hardness proof.
 - **§4 Method** — the concrete components: probe battery, entailment detector, boolean
@@ -1201,7 +1201,7 @@ rejection. Keep them straight in the rewrite.
    honest claim is "sharply reduces, does not provably eliminate."
 
 7. **We do NOT claim the ρ floor is bimodal / all-or-nothing.** The large data shows a
-   **gradient** with a 41-fact intermediate band. τ is a policy dial. (An earlier
+   **gradient** with a 41-fact intermediate band. τ is auditor-chosen. (An earlier
    smaller run looked bimodal — that framing is retired.)
 
 8. **The planner assumes the entailment graph is known.** In our controlled setup we
@@ -1229,7 +1229,7 @@ rejection. Keep them straight in the rewrite.
 
 *That's the whole project. If you've read this far, you now know: the problem
 (deleting a record ≠ erasing a fact), the three channels (residual, re-derivation,
-parametric floor), the two tools (planner + certificate), a full run on one fact, the
+world recall), the two tools (planner + certificate), a full run on one fact, the
 hard limit (ρ), the three systems (Mem0, Graphiti, Letta), every experiment and number,
 and exactly what to claim and not claim. You're ready to re-write the paper in your own
 words.*

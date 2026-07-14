@@ -52,6 +52,29 @@ TIER_ORDER = ["low", "mid", "high"]
 SWEEP_TOLS = [0.0, 0.05, 0.10, 0.20]
 
 
+def _cp_upper(k: int, n: int, alpha: float) -> float:
+    """One-sided upper Clopper-Pearson confidence bound for a binomial rate k/n.
+
+    Certification uses THIS, not the point estimate rho=k/n: a fact is certified only
+    if the true recovery rate can be bounded below tau with (1-alpha) confidence. For 0
+    recoveries this equals 1 - alpha**(1/n) (e.g. 0/42 at alpha=.0125 -> 0.099); the
+    general case is found by bisection on P(X<=k | n, p) = alpha. Pure-stdlib so the
+    certification math carries no numpy dependency.
+    """
+    if n <= 0:
+        return 1.0
+    from math import comb
+    lo, hi = 0.0, 1.0
+    for _ in range(200):
+        p = (lo + hi) / 2.0
+        cdf = sum(comb(n, i) * p**i * (1 - p)**(n - i) for i in range(k + 1))
+        if cdf > alpha:
+            lo = p
+        else:
+            hi = p
+    return (lo + hi) / 2.0
+
+
 def _measure_fact(param: ParametricProbe, f: dict, n: int) -> dict:
     """Measure rho (context) and the base-rate condition for one fact. estimate_rho
     already treats a per-sample refusal/API error as a non-recovery, so this does not
@@ -71,6 +94,10 @@ def _measure_fact(param: ParametricProbe, f: dict, n: int) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser(description="rho-gradient measurement + pipeline")
     ap.add_argument("--n-samples", type=int, default=8)
+    ap.add_argument("--alpha", type=float, default=0.05,
+                    help="one-sided CI level for UCB certification; Bonferroni-corrected "
+                         "across reasoners (alpha/n_reasoners) for the worst-adversary bound. "
+                         "At n-samples=42 and 4 reasoners, 0 recoveries -> UCB 9.9%% < tau=0.1.")
     ap.add_argument("--workers", type=int, default=8,
                     help="parallel facts per reasoner (rho calls are independent + cached)")
     ap.add_argument("--single", action="store_true")
@@ -163,9 +190,19 @@ def main() -> None:
     # pipeline + certificate (worst modeled adversary: max rho over reasoners, Def. 4)
     adapter = __import__("systems.mem0_adapter", fromlist=["Mem0Adapter"]).Mem0Adapter()
     injector, deleter, exact = Injector(adapter), Deleter(adapter), ExactMatchProbe()
+    m_reasoners = max(1, len(reasoners))
+    alpha_c = args.alpha / m_reasoners   # Bonferroni across the adversary panel (worst-of-m)
     cert_rows = []
     for f in facts:
         rho = max(rho_by_fact[f["id"]].values())  # worst (highest) modeled adversary, Def. 4
+        # UCB certification (reviewer hardening): bound EACH adversary's true recovery
+        # rate at the Bonferroni one-sided (1-alpha) level, then certify only if the
+        # WORST adversary's UPPER bound is still below tau -- not merely the point
+        # estimate rho<tau. 0 recoveries in n=42 at alpha/4 gives UCB 0.099 < tau=0.1.
+        per_reasoner_ucb = {rz: _cp_upper(round(rr * args.n_samples), args.n_samples, alpha_c)
+                            for rz, rr in rho_by_fact[f["id"]].items()}
+        rho_ucb = max(per_reasoner_ucb.values())
+        certified_ucb = bool(rho_ucb < config.TAU)
         del_vals = normalize_values(f.get("delete_value", f["probe_value"]))
         uid = f"{config.USER_ID_PREFIX}_rho_{f['id']}"
         adapter.delete_all_memories(uid)
@@ -181,6 +218,7 @@ def main() -> None:
             probe_battery=["exact_match", "parametric_rho"])
         save_certificate(cert)
         cert_rows.append({"fact_id": f["id"], "tier": f["tier"], "rho": round(rho, 3),
+                          "rho_ucb": round(rho_ucb, 3), "certified_ucb": certified_ucb,
                           "residual_after_delete": residual, "status": cert.status,
                           "certified_complete": cert.completeness_certified})
         if not args.keep:
@@ -217,14 +255,20 @@ def main() -> None:
     n_false = sum(not c["certified_complete"] for c in cert_rows)
     # Headline certifiable rate (X/N facts certified complete) -> Wilson CI.
     n_certifiable = sum(c["certified_complete"] for c in cert_rows)
+    n_certifiable_ucb = sum(c["certified_ucb"] for c in cert_rows)
     n_total = len(cert_rows)
     cert_ci = wilson_ci(n_certifiable, n_total)
+    cert_ci_ucb = wilson_ci(n_certifiable_ucb, n_total)
     base_p.with_suffix(".json").write_text(json.dumps(
         {"experiment": "exp07_rho_gradient", "timestamp_utc": stamp, "tau": config.TAU,
          "n_samples": args.n_samples, "reasoners": reasoners, "scoring": "_recovered (probe_value union judge); mid sweep = numeric tolerance",
          "certifiable_complete": n_certifiable, "n_certificates": n_total,
          "certifiable_rate": round(n_certifiable / n_total, 3) if n_total else 0.0,
          "certifiable_rate_ci95": [round(cert_ci[0], 4), round(cert_ci[1], 4)],
+         "certifiable_complete_ucb": n_certifiable_ucb,
+         "certifiable_rate_ucb": round(n_certifiable_ucb / n_total, 3) if n_total else 0.0,
+         "certifiable_rate_ucb_ci95": [round(cert_ci_ucb[0], 4), round(cert_ci_ucb[1], 4)],
+         "certification_alpha": args.alpha, "certification_alpha_bonferroni": alpha_c,
          "rho_by_tier": by_tier, "rho_by_measured_bin": measured_bins,
          "hypothesis_vs_measured": hyp_vs_measured, "bimodality": bimodality,
          "mid_tolerance_sweep": sweep, "refusal_flags": refusal_flags,
@@ -247,8 +291,10 @@ def main() -> None:
         for fl in refusal_flags:
             print(f"    {fl['fact_id']} [{fl['reasoner'].split('-')[0]}]: {fl['refusals']}/{fl['n']} refused")
     print(f"\n  tau={config.TAU}  ->  NOT certified-complete (rho>tau, limit result): {n_false}/{len(cert_rows)}")
-    print(f"  certifiable-complete (rho<=tau)        : {n_certifiable}/{n_total} "
+    print(f"  certifiable-complete (rho<=tau, point est.): {n_certifiable}/{n_total} "
           f"[{cert_ci[0]:.0%}, {cert_ci[1]:.0%}]")
+    print(f"  UCB-certifiable (worst adv, {1-args.alpha:.0%} 1-sided Bonferroni, n={args.n_samples}): "
+          f"{n_certifiable_ucb}/{n_total} [{cert_ci_ucb[0]:.0%}, {cert_ci_ucb[1]:.0%}]  <- REPORTED")
     print(f"\n  MEASURED-rho binning (worst adversary, n={len(cert_rows)} facts):")
     for mt in TIER_ORDER:
         b = measured_bins[mt]

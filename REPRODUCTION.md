@@ -22,7 +22,7 @@
 
 **Reading:** the headline residual reproduces *exactly* (47/48). The only difference is `store_rows_after_inject` (459 → 401) — not noise but the **exp05 finding in action**: Mem0's silent duplication yields a *stochastic* row count across runs (149 injections → 459 one run, 401 another) while the per-fact residual stays stable. The row-count difference corroborates exp05 rather than contradicting exp01. **In range.**
 
-## exp07 — parametric floor ρ (worst-adversary; n=49, 6 samples, temp 0.7, both reasoners)
+## exp07 — world recall ρ (worst-adversary; n=49, 6 samples, temp 0.7, both reasoners)
 
 | metric | committed relock | reproduced (06-29) |
 |--------|------------------|--------------------|

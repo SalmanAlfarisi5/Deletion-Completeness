@@ -1,5 +1,5 @@
 %% Supplementary Material for
-%% "REDACT: Recoverability Decomposition and Auditable Co-Deletion for the
+%% "SALMAN: Stored-memory Auditing of Leakage, Minimal Co-Deletion, and Nondeletability for the
 %%  Right to Be Forgotten in LLM Agent Memory"
 %%
 %% AAAI-27 requires the technical appendix to be submitted SEPARATELY from the
@@ -13,7 +13,7 @@
 \usepackage{amssymb}
 \usepackage{caption}
 
-\title{Supplementary Material:\\ Full Per-Model, Per-Bin, and Per-Topology Results for \textsc{Redact}}
+\title{Supplementary Material:\\ Full Per-Model, Per-Bin, and Per-Topology Results for \textsc{Salman}}
 \author{}
 \date{}
 
@@ -25,7 +25,7 @@ paper. Section references (\S) point to the corresponding subsection of the main
 All adversary rates are over the four-reasoner panel: \texttt{gpt-4o-mini},
 \texttt{gpt-4o}, Claude~Sonnet~5, and GPT-5.5. The completeness threshold is
 $\tau=0.10$ throughout. Datasets: 253 isolated, 298 multi-hop, 963 context, 250
-parametric-gradient.
+world-recall-gradient.
 
 \section{Planner: Minimal Co-Deletion (main paper \S Minimal Co-Deletion)}
 
@@ -91,7 +91,7 @@ join/chain/or\_and/diamond/threshold ($n{=}30$ ea.) & 100\% & 100\% & 100\% & 10
 \bottomrule
 \end{tabular}
 \caption{Re-derivation rate per bin and adversary, at residual survival $0$ by
-construction (operands-only injection). Parametric floor $\rho=0\%$ on every bin. On
+construction (operands-only injection). World recall $\rho=0\%$ on every bin. On
 Letta, faithful direct \texttt{passages.delete} and bystanders-intact are both verified at
 $100\%$. The worst stored+world re-derivers are \texttt{gpt-4o} and Claude~Sonnet~5 (both
 $69\%$ on Mem0). F043 (Catholic-High-School-to-Bishan) is the one value-coupling
@@ -100,7 +100,7 @@ value stays entailed by a fact outside the co-deleted set; the stricter judge fo
 \emph{new} residual recoveries.}
 \end{table}
 
-\section{Parametric Floor $\rho$ (main paper \S The Parametric Floor)}
+\section{World Recall $\rho$ (main paper \S The World Recall)}
 
 \begin{table}[h]
 \centering
@@ -115,7 +115,7 @@ high & 0.49 & 0.71 & 0.57 & 0.31 \\
 \end{tabular}
 \caption{Mean $\rho$ per authored tier and adversary, over $8$ samples per fact
 ($n{=}250$). The worst-adversary $\rho_{\max}$ sorts the facts into 164 certifiable
-($\rho_{\max}{\le}\tau$), 41 intermediate ($\tau<\rho_{\max}<0.5$), and 45 hard-floor
+($\rho_{\max}{\le}\tau$), 41 intermediate ($\tau<\rho_{\max}<0.5$), and 45 hard tier
 ($\rho_{\max}{\ge}0.5$); \textbf{86 of 250 are uncertifiable}. Authored tier disagrees with
 the measured band for 77 of 250 facts. On sensitive high-tier items the frontier models
 refuse ($30$ flags, \emph{all} on high-tier facts --- verified against rate-limit

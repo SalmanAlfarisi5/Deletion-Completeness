@@ -98,7 +98,7 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 - **Anti-selection-bias rule:** ρ-gradient tier mismatches are **flagged, not discarded** (silently dropping them would manufacture a clean gradient). 77/250 facts mismatched.
 - **Persona guard** caught and removed 2 real public figures (Halimah Yacob, Sukhbir Singh Badal).
 - **Two findings the larger n overturned (ratified + locked):**
-  - **A — ρ floor:** the n=15 "sharply bimodal, τ-invariant 9/15" did **not** replicate. At n=250 it's a **measured gradient** (164/41/45), the count is **τ-dependent**, and τ is reframed as a **policy dial**. The limit result survives (34% uncertifiable, 86/250); only bimodality/invariance died.
+  - **A — ρ floor:** the n=15 "sharply bimodal, τ-invariant 9/15" did **not** replicate. At n=250 it's a **measured gradient** (164/41/45), the count is **τ-dependent**, and τ is reframed as **auditor-chosen**. The limit result survives (34% uncertifiable, 86/250); only bimodality/invariance died.
   - **B — MIA:** naive deletion now leaves a **statistically significant** membership signal (AUC 0.66, p=.001); artifact-aware deletion drives the AUC to 0.51 (CI [0.498, 0.523] includes 0.5, but permutation p=.04 — attenuated toward chance, not provably eliminated). Promoted from a "borderline / retracted" hedge to a demonstrated leak; still a *supporting* result, **not** a 4th pillar, kept out of the abstract.
 
 ---

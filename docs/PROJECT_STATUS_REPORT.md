@@ -16,19 +16,19 @@
 
 ## 1. Executive summary
 
-The project formalizes **deletion-completeness** for LLM agent memory: when a fact is "deleted," is it actually unrecoverable? It decomposes post-deletion recoverability into **three causally distinct channels** — residual survival, re-derivation from surviving facts, and a parametric floor — gives a **planner** that computes the minimal co-deletion closing the deletable channels, and emits an **auditable certificate**. Because the parametric floor cannot be deleted, certification has a hard limit.
+The project formalizes **deletion-completeness** for LLM agent memory: when a fact is "deleted," is it actually unrecoverable? It decomposes post-deletion recoverability into **three causally distinct channels** — residual survival, re-derivation from surviving facts, and a world recall — gives a **planner** that computes the minimal co-deletion closing the deletable channels, and emits an **auditable certificate**. Because the world recall cannot be deleted, certification has a hard limit.
 
 This session took the project from **small-n point estimates** to **statistically-backed results with confidence intervals**, by scaling every dataset ~3–4×, re-running the full experiment battery, and honestly reframing the two findings that the larger sample overturned. Two backup commits checkpoint the work; the science is **locked** (ratified by the research-planning session). What remains is purely mechanical submission prep.
 
-**Headline outcome:** every pillar survived at larger n with tighter CIs; the cross-system hooks replicated at n=10; and two claims were corrected in the open — the ρ-floor is a **measured gradient** (not a sharp bimodal split), and naive-deletion membership leakage became **statistically significant** at the powered sample.
+**Headline outcome:** every pillar survived at larger n with tighter CIs; the cross-system hooks replicated at n=10; and two claims were corrected in the open — world recall is a **measured gradient** (not a sharp bimodal split), and naive-deletion membership leakage became **statistically significant** at the powered sample.
 
 ---
 
 ## 2. Core contributions (locked framing)
 
-1. **A formal, adversary-relative deletion-completeness criterion** for agent memory, strictly stronger than dependency-bounded database erasure (P2E2), decomposing recoverability into residual / re-derivation / parametric channels.
+1. **A formal, adversary-relative deletion-completeness criterion** for agent memory, strictly stronger than dependency-bounded database erasure (P2E2), decomposing recoverability into residual / re-derivation / world-recall channels.
 2. **A minimal co-deletion planner** for the resulting NP-hard problem (reduction from Minimum Hitting Set; Vertex Cover = the 2-operand regime), reaching completeness at **mean collateral k = 1.03** with **0 spurious deletions**, plus a machine-readable certificate separating what deletion achieved from what it cannot.
-3. **A *measured* parametric floor ρ and its limit result:** under the worst modeled adversary, **86/250 facts cannot be certified erased** even at zero residual survival — and the count is threshold-dependent, so the certification threshold τ is a deliberate **policy dial**.
+3. **A *measured* world recall ρ and its limit result:** under the worst modeled adversary, **86/250 facts cannot be certified erased** even at zero residual survival — and the count is threshold-dependent, so the certification threshold τ is **auditor-chosen**.
 4. **Evidence of generality:** the same probe/planner/certificate stack, run on three memory architectures (Mem0 dedup pipeline, Graphiti bi-temporal KG, Letta paging agent), exposes residual survival in all three through *different by-design mechanisms* — including an agent-loop failure prior audits bypass.
 
 **Claims we deliberately do NOT make:** first to evaluate these systems (ForgetEval already benchmarks all three); the parametric/memory split as novel (Agentic Unlearning's "backflow"); the agent-loop finding as a standalone contribution (it is the sharpest *instance* of generality, not the headline).
@@ -101,10 +101,10 @@ All CIs are 95%. Computed via `evaluation/stats.py` (Wilson for proportions, boo
 
 ## 5. The two reframes (ratified and locked)
 
-### A — ρ floor: bimodality died, gradient + policy-dial survives
+### A — world recall (ρ): bimodality died, gradient survives (threshold-dependent)
 At n=15 the worst-adversary ρ was *sharply bimodal* (`{0 ×6, ≥0.5 ×9}`, nothing between), which made "9/15 uncertifiable" τ-invariant. **This did not replicate at scale (n=250):** the split is **164 at ρ≤τ / 41 in an intermediate band / 45 at ρ≥0.5** (`is_bimodal=False`), and **77/250** facts measured a different tier than authored. Consequences, applied to the paper:
 - Every "bimodal" / "τ-invariant" / "cherry-pick" line **deleted**.
-- Reframed positively as a **measured gradient of parametric recoverability**, with τ a **deliberate policy dial** — real facts sit on either side of wherever the auditor sets it.
+- Reframed positively as a **measured gradient of world recall**, with τ **auditor-chosen** — real facts sit on either side of wherever the auditor sets it.
 - The **limit result survives** (ρ≥τ ⇒ no deletion certifies erasure); only the bimodality/invariance gloss died. Uncertifiable fraction moved 60% → **34%** (86/250).
 
 ### B — MIA: borderline flipped to significant

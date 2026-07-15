@@ -32,7 +32,7 @@ rate-limit/timeout can never be miscounted as a refusal (re-raises instead). Ver
 - **Judge = Sonnet 5** (`judge_validation_20260713T105713Z.json`): production recovery +
   entailment; 0% false-accept / 3.4% false-fire / 0 multi-hop miss on the expanded gold.
 - exp03 exact / threshold / depth_first comparators — **done** (k=**1.03 / 1.14 / 6.60**);
-  exp12 minimality **done** (exact provably minimal, gap ≤0 every topology).
+  exp12 minimality **done** (exact near-minimal, gap ≤0 every topology).
 - exp04 re-derivation by bin × 4 reasoners (flat + or_and/diamond/threshold/join/chain) — **done**.
 - exp07 rho — **done** (86/250). exp11 Letta re-derivation — **done, full 298**.
   exp10 Letta — **done**. exp09 Graphiti / exp05 duplication (80–82%) / exp01-02 / exp08 —
@@ -56,7 +56,7 @@ rate-limit/timeout can never be miscounted as a refusal (re-raises instead). Ver
   gold the frontier judge holds **0% false-accept** while gpt-4o-mini rose to 2%.
 - rho limit **84 → 86/250** uncertifiable (higher-recall judge caught 2 more borderline facts).
 - planner **k 1.04 → 1.03** (F040 value-carrier fix), 466 → **467** spared, exact gap ≤0 on
-  every topology (provably minimal, airtight); comparators threshold 1.10→1.14, depth 6.18→6.60.
+  every topology (near-minimal, airtight); comparators threshold 1.10→1.14, depth 6.18→6.60.
 - exp11 Letta **n=40 → full 298** (all topologies) — fixes the "cross-system n is modest"
   weakness; everything → 0 after co-delete. exp10 core residue 13% → 10%.
 - Closure claims **held** under the stricter judge (planner 100%, re-derivation → 0); the

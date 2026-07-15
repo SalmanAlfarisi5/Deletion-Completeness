@@ -87,7 +87,7 @@ caveat / what it does *not* say.
   scored by the **gold-validated Claude Sonnet 5 judge with 0% false-accept** (§ V1) ⇒
   all leak rates are conservative lower bounds.
 
-### C4 — An exact minimal co-deletion planner reaches completeness with minimal collateral, and emits a certificate
+### C4 — An exact near-minimal co-deletion planner reaches completeness with near-minimal collateral, and emits a certificate
 - **Support:** exp03, exp12.
 - **H:** **100% completeness [Wilson .987, 1.0], 0 spurious bystander deletions,
   exact mean collateral k = 1.03** (min-hitting-set over the entailment DAG, measured
@@ -203,7 +203,7 @@ caveat / what it does *not* say.
 | **05** | Mem0 | duplication factorial | dup **80–82%** over corpus-unique facts (row-inflation +174–182%) | **2×2** embedder×cadence; byte+paraphrase both present (mixed dominance); GH issues |
 | **06** | Mem0 | infer=True derivation-capture | **0% — REJECTED** | infer=False control: 0 captured ⇒ it was consolidation/merging, not derivation |
 | **04** | Mem0 | re-derivation (operands-only) | bin1 97–100%→**0%** / bin2 **.62/.69/.69/.66** (4 reasoners) → **2.7% (F043)**; **5 topologies (join/chain/or_and/diamond/threshold) 100%→0%**; ρ 0% (n=74/flat bin; 30/topology) | residual=0 by construction; **4-reasoner sup_A**, binned; worst bin2 = gpt-4o & Sonnet 5 (both .69) |
-| **03** | Mem0 | planner (exact / greedy / depth) | **exact 100% / 0 spurious / k=1.03** (gap −0.067, ≤0 every topology, n=298); threshold k=1.14 / 0 spurious; depth-first k=6.60 / 1192 spurious | min-hitting-set over the entailment DAG; **467 spared**; provably minimal (exp12) |
+| **03** | Mem0 | planner (exact / greedy / depth) | **exact 100% / 0 spurious / k=1.03** (gap −0.067, ≤0 every topology, n=298); threshold k=1.14 / 0 spurious; depth-first k=6.60 / 1192 spurious | min-hitting-set over the entailment DAG; **467 spared**; near-minimal (exp12) |
 | **07** | Mem0 | ρ gradient (measured, 4 reasoners) | ρ_max bins (n=250): **164 cert / 41 mid / 45 hard**; **86/250 not certifiable** (τ=0.1) | world-context-only probe; **τ-dependent gradient**; frontier REFUSE sensitive high-tier (30 flags, high-tier only ✓) → their ρ is a lower bound |
 | **08** | Mem0 | membership inference | intact **.66** / naive **.66 (p=.001, SIG)** / aware **.51 (p=.04)** | n=253 members + 759 twins (3/fact), bootstrap CI + perm p; intact = power sanity |
 | **judge** | — | judge validation (4 models) | recovery false-accept mini **.0206** / gpt-4o **.0052** / Sonnet5 **0** / GPT-5.5 0; entail **0% multi-hop miss-rate all 4 models**; near-miss false-fire mini .757 / gpt-4o .455 / GPT-5.5 .305 / Sonnet5 .034 | **n=351 recovery gold / 1370 entailment pairs**; production judge = **Claude Sonnet 5** (recovery+entailment, gold-validated 0% false-accept); pinned gpt-4o-mini/gpt-4o = reproducibility anchor |

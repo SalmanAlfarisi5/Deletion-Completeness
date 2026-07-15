@@ -25,7 +25,7 @@ number. Everything here is grounded in the actual code and the current results.*
 3. [The core insight: deleting a record is not erasing a fact](#3-the-core-insight-deleting-a-record-is-not-erasing-a-fact)
 4. [The three ways a deleted fact survives](#4-the-three-ways-a-deleted-fact-survives)
 5. [What we built to fix it (the two tools)](#5-what-we-built-to-fix-it-the-two-tools)
-6. [Tool 1 — the planner (minimal co-deletion)](#6-tool-1--the-planner-minimal-co-deletion)
+6. [Tool 1 — the planner (near-minimal co-deletion)](#6-tool-1--the-planner-minimal-co-deletion)
 7. [Tool 2 — the certificate](#7-tool-2--the-certificate)
 8. [A full walkthrough: one fact, from stored to certified](#8-a-full-walkthrough-one-fact-from-stored-to-certified)
 9. [The world recall: the hard limit of deletion](#9-the-world-recall-the-hard-limit-of-deletion)
@@ -54,7 +54,7 @@ issue a **certificate** — an honest receipt that says exactly how erased a fac
 what it cost to get there, and when true erasure is *impossible*. We show all of this
 on three real, popular AI-memory systems.
 
-The framework has a name in the paper: **SALMAN** = **S**tored-memory
+The framework has a name in the paper: **CoDA** = **S**tored-memory
 **A**uditing of **L**eakage, **M**inimal co-deletion, **a**nd **N**ondeletability.
 
 If you remember only one sentence, make it this: **the word "delete" hides at least
@@ -271,7 +271,7 @@ same approach works against a model you can only send prompts to.)
 
 ---
 
-## 6. Tool 1 — the planner (minimal co-deletion)
+## 6. Tool 1 — the planner (near-minimal co-deletion)
 
 The planner's job: given a fact whose residual is already handled, **close the
 re-derivation channel by deleting as few extra facts as possible.**
@@ -345,13 +345,13 @@ formula over the surviving facts — for example "target is recoverable if
 (job title AND pay band)" or "if ((A OR B) AND C)". The formula records every recipe
 at once. Deleting a **minimum hitting set** of that formula is, by construction, the
 smallest set of facts whose removal makes *every* recipe fail. This lives in
-`planner/entailment_dag.py`, and it's what makes "provably minimal" a real claim rather
+`planner/entailment_dag.py`, and it's what makes "near-minimal" a real claim rather
 than a hope.
 
 ### The exact planner — the method we recommend
 
 The recommended planner is `heuristic_exact` (in `planner/optimizer.py`). It reads the
-target's entailment DAG and deletes a **provably minimal hitting set** of it. Two
+target's entailment DAG and deletes a **near-minimal hitting set** of it. Two
 properties make it the right default:
 
 1. **Minimal with respect to the entailment DAG** — no smaller set of deletions closes
@@ -399,7 +399,7 @@ optimum):
 
 - **Exact**: gap ≈ 0 (technically −0.067 — it sometimes even dips *below* k\* when the
   residual purge closes re-derivation early, so no ingredient deletion is needed), and
-  the per-topology gap is now **≤ 0 on every single topology** — provably minimal,
+  the per-topology gap is now **≤ 0 on every single topology** — near-minimal,
   airtight. It is optimal.
 - **Threshold**: gap ≈ 0 (+0.037) — essentially optimal in practice.
 - **Depth-first**: gap **+5.50** — it over-deletes by about five facts per target.
@@ -762,7 +762,7 @@ Same facts, but now delete *every* record carrying the value.
 duplication and extraction counts land on ~97–98% independently — a small built-in
 replication.)
 
-### exp03 — Can the planner close re-derivation with minimal collateral? *(Mem0)*
+### exp03 — Can the planner close re-derivation with near-minimal collateral? *(Mem0)*
 Run the full exact planner on all 298 multi-hop targets.
 **Result: 100% completeness, 0 spurious bystander deletions, mean k = 1.03** (467
 operands spared by only deleting what's needed). The dumb comparator (depth-first) also
@@ -986,7 +986,7 @@ Read this before the paper; it will make the notation painless.
 | **Operands-only control** | The clean test: inject ingredients but never the target value, so residual = 0 by construction. |
 | **AUC** | Attack accuracy for membership inference. 0.5 = random guessing (good/safe), 1.0 = perfectly leaky. |
 | **MIA** | Membership Inference Attack — can you tell if a fact was ever stored? |
-| **SALMAN** | The framework name: Stored-memory Auditing of Leakage, Minimal co-deletion, and Nondeletability. |
+| **CoDA** | The framework name: Stored-memory Auditing of Leakage, Near-minimal co-deletion, and Nondeletability. |
 
 ---
 
@@ -1121,7 +1121,7 @@ sufficient** — the value can hide in an artifact or be rebuilt from surviving 
    **decomposes recoverability into three channels** (residual / re-derivation /
    world recall). This is stronger than existing database "deletion under
    dependencies" theory.
-2. A **minimal co-deletion planner** for the resulting NP-hard problem — an **exact
+2. A **near-minimal co-deletion planner** for the resulting NP-hard problem — an **exact
    minimum-hitting-set solver** over the entailment DAG that reaches 100% completeness
    at mean **k = 1.03** with **0 spurious** deletions (verified minimal against the
    ground-truth optimum in exp12, gap ≈ 0) — plus an **auditable certificate** separating
@@ -1134,7 +1134,7 @@ sufficient** — the value can hide in an artifact or be rebuilt from surviving 
 
 **The section order in the current draft:**
 - **§1 Intro** — hook + the two questions ("why do deleted facts return?" and "what
-  minimal further deletion closes the leak?") + the 4 contributions.
+  near-minimal further deletion closes the leak?") + the 4 contributions.
 - **§2 Related Work** — credit ForgetEval first (closest neighbor), then distinguish:
   ours is a *stronger, decomposed* question, not broader system coverage. Also:
   unlearning methods, and the database deletion-under-dependencies lineage (P2E2).

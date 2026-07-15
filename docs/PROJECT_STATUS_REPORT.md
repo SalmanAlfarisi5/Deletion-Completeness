@@ -6,7 +6,7 @@
 > k=1.03; rho 86/250 uncertifiable; MIA .66/.66/.51; Graphiti 83% / Letta 0%-faithful).
 > Verified by `evaluation/verify_wave.py` → ALL CHECKS PASS.
 
-**Project:** Decomposing Recoverability — Minimal Co-Deletion for the Right to be Forgotten in LLM Agent Memory
+**Project:** Decomposing Recoverability — Near-Minimal Co-Deletion for the Right to be Forgotten in LLM Agent Memory
 **Author:** Muhammad Salman Al Farisi (NUS School of Computing) · Advisor: Tan Tian Huat
 **Target venue:** AAAI 2027 (abstract 2026-07-21, full paper 2026-07-28)
 **Report date:** 2026-07-13 (updated to the frontier-judge wave)
@@ -16,7 +16,7 @@
 
 ## 1. Executive summary
 
-The project formalizes **deletion-completeness** for LLM agent memory: when a fact is "deleted," is it actually unrecoverable? It decomposes post-deletion recoverability into **three causally distinct channels** — residual survival, re-derivation from surviving facts, and a world recall — gives a **planner** that computes the minimal co-deletion closing the deletable channels, and emits an **auditable certificate**. Because the world recall cannot be deleted, certification has a hard limit.
+The project formalizes **deletion-completeness** for LLM agent memory: when a fact is "deleted," is it actually unrecoverable? It decomposes post-deletion recoverability into **three causally distinct channels** — residual survival, re-derivation from surviving facts, and a world recall — gives a **planner** that computes the near-minimal co-deletion closing the deletable channels, and emits an **auditable certificate**. Because the world recall cannot be deleted, certification has a hard limit.
 
 This session took the project from **small-n point estimates** to **statistically-backed results with confidence intervals**, by scaling every dataset ~3–4×, re-running the full experiment battery, and honestly reframing the two findings that the larger sample overturned. Two backup commits checkpoint the work; the science is **locked** (ratified by the research-planning session). What remains is purely mechanical submission prep.
 
@@ -27,7 +27,7 @@ This session took the project from **small-n point estimates** to **statisticall
 ## 2. Core contributions (locked framing)
 
 1. **A formal, adversary-relative deletion-completeness criterion** for agent memory, strictly stronger than dependency-bounded database erasure (P2E2), decomposing recoverability into residual / re-derivation / world-recall channels.
-2. **A minimal co-deletion planner** for the resulting NP-hard problem (reduction from Minimum Hitting Set; Vertex Cover = the 2-operand regime), reaching completeness at **mean collateral k = 1.03** with **0 spurious deletions**, plus a machine-readable certificate separating what deletion achieved from what it cannot.
+2. **A near-minimal co-deletion planner** for the resulting NP-hard problem (reduction from Minimum Hitting Set; Vertex Cover = the 2-operand regime), reaching completeness at **mean collateral k = 1.03** with **0 spurious deletions**, plus a machine-readable certificate separating what deletion achieved from what it cannot.
 3. **A *measured* world recall ρ and its limit result:** under the worst modeled adversary, **86/250 facts cannot be certified erased** even at zero residual survival — and the count is threshold-dependent, so the certification threshold τ is **auditor-chosen**.
 4. **Evidence of generality:** the same probe/planner/certificate stack, run on three memory architectures (Mem0 dedup pipeline, Graphiti bi-temporal KG, Letta paging agent), exposes residual survival in all three through *different by-design mechanisms* — including an agent-loop failure prior audits bypass.
 
@@ -83,7 +83,7 @@ All CIs are 95%. Computed via `evaluation/stats.py` (Wilson for proportions, boo
 | **exp03** mean collateral *k* | 0.90 [0.82, 0.99] | **1.03** [0.98, 1.08] | 298 |
 | **exp03** spurious deletions | 0 | **0** | 298 |
 | **exp03** depth-first comparator | k=6.05, 342 spurious | **k=6.60, 1192 spurious** | 298 |
-| **exp03** exact vs optimum k* (exp12) | — | **gap −0.067 (≤0 every topology, provably minimal)** | 298 |
+| **exp03** exact vs optimum k* (exp12) | — | **gap −0.067 (≤0 every topology, near-minimal)** | 298 |
 | **exp04** bin1 leak (stored) | 94–100% (4 reasoners) | **97–100%** (4 reasoners) | 74 |
 | **exp04** bin2 leak (stored+world) | 56/59/68/74% | **62/69/69/66%** (mini/4o/Sonnet5/GPT-5.5) | 74 |
 | **exp04** after co-delete | 0% | **2.7%** (F043 value-coupling residue) | 74 |

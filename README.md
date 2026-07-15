@@ -125,7 +125,7 @@ python experiments/exp11_letta_rederivation.py --n 6 -v
 artifact-aware deletion fixes residual survival (exp02); but even with residual=0
 a **re-derivation** channel remains — multi-hop facts are reconstructable from
 surviving entailing facts (exp04, binned, four reasoners) — which the planner
-closes with minimal collateral (exp03), down to the world recall ρ.
+closes with near-minimal collateral (exp03), down to the world recall ρ.
 
 ### Key methodology notes
 - Deletion is **content/search-based**, not via Mem0's `add()` ids (which lag).
@@ -167,7 +167,7 @@ closes with minimal collateral (exp03), down to the world recall ρ.
   two surfaces (core blocks + archival). A vague but realistic RTBF request makes
   the agent scrub the *core* block it reasons about and **silently miss archival**
   (exp10: 0% faithful, 100% archival residue) — surface-incomplete deletion. The
-  re-derivation channel and minimal co-deletion **port unchanged** (exp11: same
+  re-derivation channel and near-minimal co-deletion **port unchanged** (exp11: same
   probe/certificate stack), with the planner's co-deletes issued through the
   **direct, verified-faithful** op (not the agent) so the channel is measured cleanly.
 - **Three architecture families, one phenomenon:** residual survival appears in all

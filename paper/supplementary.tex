@@ -1,5 +1,5 @@
 %% Supplementary Material for
-%% "SALMAN: Stored-memory Auditing of Leakage, Minimal Co-Deletion, and Nondeletability for the
+%% "CoDA: Stored-memory Auditing of Leakage, Near-Minimal Co-Deletion, and Nondeletability for the
 %%  Right to Be Forgotten in LLM Agent Memory"
 %%
 %% AAAI-27 requires the technical appendix to be submitted SEPARATELY from the
@@ -13,7 +13,7 @@
 \usepackage{amssymb}
 \usepackage{caption}
 
-\title{Supplementary Material:\\ Full Per-Model, Per-Bin, and Per-Topology Results for \textsc{Salman}}
+\title{Supplementary Material:\\ Full Per-Model, Per-Bin, and Per-Topology Results for CoDA}
 \author{}
 \date{}
 
@@ -27,7 +27,17 @@ All adversary rates are over the four-reasoner panel: \texttt{gpt-4o-mini},
 $\tau=0.10$ throughout. Datasets: 253 isolated, 298 multi-hop, 963 context, 250
 world-recall-gradient.
 
-\section{Planner: Minimal Co-Deletion (main paper, Minimal Co-Deletion)}
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}llcp{50mm}@{}}
+\toprule Tier & Topologies & $n$ & Why it is hard \\ \midrule
+Easy & flat & 148 & direct entailment; delete the operand(s) \\
+Medium & join, chain & 60 & multi-hop: operands are themselves derived, so co-deletion recurses to stored roots \\
+Hard & or\_and, diamond, threshold & 90 & disjunctive/threshold: the minimum co-deletion is non-obvious ($((A\vee B)\wedge C)$ needs only $C$; ``$\geq2$ of $3$'' needs two) \\ \bottomrule
+\end{tabular}
+\caption{Difficulty breakdown of the 298 multi-hop targets.}
+\end{table}
+
+\section{Planner: Near-Minimal Co-Deletion (main paper, Near-Minimal Co-Deletion)}
 
 \begin{table}[h]
 \centering
@@ -70,6 +80,21 @@ $k^\star{=}1$ (delete $C$), yet the confidence-ordered greedy over-deletes to $2
 removing both OR-branches; the at-least-$2$-of-$3$ threshold target has $k^\star{=}2$,
 which the exact planner pays exactly. Depth-first over-deletes five- to sevenfold on
 every topology.}
+\end{table}
+
+\section{Certificate Fields (main paper, Certificate Emitter)}
+
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}p{20mm}p{30mm}p{58mm}@{}}
+\toprule Group & Field & Meaning \\ \midrule
+Identity & \texttt{fact\_id}, \texttt{system}, \texttt{threat\_model} & target, memory system, adversary assumed \\ \addlinespace
+Controllable & \texttt{artifacts\_purged}, \texttt{facts\_co\_deleted}, \texttt{collateral\_k} & copies removed; operands co-deleted; the near-minimal extra-deletion cost $k$ \\ \addlinespace
+Uncontrollable & \texttt{world\_recall}~$\rho$, \texttt{final\_recoverability} & what the base model still infers from public knowledge; $\max$ over channels \\ \addlinespace
+Verdict & \texttt{floor\_reaching}, \texttt{completeness\_certified} & deletable channels closed; also $\rho<\tau$ (worst adversary) \\ \addlinespace
+Evidence & \texttt{probe\_battery}, \texttt{probe\_scores} & per-channel proof trace (why each co-deletion was necessary) \\ \bottomrule
+\end{tabular}
+\caption{Fields of the auditable certificate, grouped into controllable (what deletion
+removed, at cost $k$) vs.\ uncontrollable (what a strong adversary still infers, $\rho$) risk.}
 \end{table}
 
 \section{Re-Derivation at Zero Residual (main paper, Decomposing Recovery)}

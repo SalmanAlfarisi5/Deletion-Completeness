@@ -183,7 +183,7 @@ Three deletion modes:
 
 ## 8. The Planner (Co-Deletion)
 
-The planner solves **Opt-P2E2**: given that residual survival is zero, close the re-derivation channel with **minimal collateral** (fewest extra facts deleted). This is NP-hard in general; the codebase implements greedy heuristics.
+The planner solves **Opt-P2E2**: given that residual survival is zero, close the re-derivation channel with **near-minimal collateral** (fewest extra facts deleted). This is NP-hard in general; the codebase implements greedy heuristics.
 
 ### Entailment Detector (`planner/entailment_detector.py`)
 LLM-as-judge: given surviving fact(s) and a deleted target, asks:
@@ -243,8 +243,8 @@ The planner distinguishes `delete_value` (narrow: the target's own surface forms
 |---|---|---|
 | **exp01** | How bad is naive (single-record) deletion? | **97.2% residual survival** — Mem0 duplicates facts silently |
 | **exp02** | Does artifact-aware deletion fix residual survival? | **97.2% → 0%** residual |
-| **exp03** | Can the planner close re-derivation with minimal collateral? | **exact planner 100% completeness, 0 spurious, mean k=1.03** (min-hitting-set over the DAG; depth-first 6.60 / 1192 spurious) |
-| **exp12** | Is the exact planner provably minimal per topology? | Yes — exact hits optimum k* (gap −0.067, ≤0 on every topology); greedy over-deletes on `((A∨B)∧C)` (1.63 vs 1.00); threshold needs k*=2 |
+| **exp03** | Can the planner close re-derivation with near-minimal collateral? | **exact planner 100% completeness, 0 spurious, mean k=1.03** (min-hitting-set over the DAG; depth-first 6.60 / 1192 spurious) |
+| **exp12** | Is the exact planner near-minimal per topology? | Yes — exact hits optimum k* (gap −0.067, ≤0 on every topology); greedy over-deletes on `((A∨B)∧C)` (1.63 vs 1.00); threshold needs k*=2 |
 | **exp04** | Is re-derivation real? Does co-deletion close it? | bin1 (stored-alone): 97–100% → 0%; bin2 (stored+world): 62/69/69/66% (4 reasoners) → 2.7% (F043 value-coupling residue); ρ=0% |
 | **exp05** | Is Mem0 duplication an embedder artifact or cadence artifact? | 2×2 factorial: 80–82% duplication (row-inflation ×1.75–1.82) in ALL cells → Mem0 design limitation |
 | **exp06** | Does `infer=True` capture derivations? | 0% — `infer` does *consolidation* (merge rows), not derivation capture |
@@ -315,7 +315,7 @@ The paper argues the following chain:
 
 3. **Re-derivation is real, binned, and multi-reasoner.** With residual=0, multi-hop facts remain recoverable. It's binned by mechanism (stored-alone vs. stored+world) and verified on a four-reasoner panel (gpt-4o-mini, gpt-4o, Claude Sonnet 5, GPT-5.5) so the result isn't model-specific.
 
-4. **The planner closes re-derivation with minimal collateral.** The exact min-hitting-set planner achieves 100% completeness, 0 spurious deletions, and an average of 1.03 extra facts deleted per target (provably minimal).
+4. **The planner closes re-derivation with near-minimal collateral.** The exact min-hitting-set planner achieves 100% completeness, 0 spurious deletions, and an average of 1.03 extra facts deleted per target (near-minimal).
 
 5. **The world recall is the hard limit.** Some facts (high-tier: driving licence → must be ≥18) can never be certified complete because the base model infers them from world knowledge alone. 86/250 rho-gradient facts hit this limit, producing `floor_reaching=True, completeness_certified=False` certificates.
 

@@ -47,6 +47,28 @@ class DeletionCertificate(BaseModel):
     floor_reaching: bool = False
     completeness_certified: bool = False
 
+    # ---- Audit evidence (proof traces) -------------------------------------
+    # These make the certificate auditable rather than a bare verdict:
+    #   entailment_structure  -- the boolean re-derivation formula, its leaves, and the
+    #                            deletion-propagation optimum k* (the ground-truth reason
+    #                            the co-deletion set is what it is).
+    #   co_deletion_justifications -- per co-deleted fact, WHY it was removed: it lies on
+    #                            a re-derivation path, and whether dropping it from the
+    #                            plan would re-open the channel (its necessity).
+    #   operands_spared       -- entailers deliberately NOT deleted (minimality evidence:
+    #                            proof the planner did not over-delete).
+    #   minimality            -- collateral k vs optimum k* (gap, is_minimum).
+    #   probe_trace           -- per-channel evidence (probe, score, supporting detail).
+    #   reliability           -- what lets a user weigh the verdict: validated judge
+    #                            false-accept / recall, adversary panel, per-adversary
+    #                            world recall, sample sizes.
+    entailment_structure: dict | None = None
+    co_deletion_justifications: list[dict] = Field(default_factory=list)
+    operands_spared: list[dict] = Field(default_factory=list)
+    minimality: dict | None = None
+    probe_trace: list[dict] = Field(default_factory=list)
+    reliability: dict = Field(default_factory=dict)
+
     def to_text(self) -> str:
         """Human-readable certificate."""
         lines = [
@@ -74,10 +96,37 @@ class DeletionCertificate(BaseModel):
             f"    heuristic         : {self.heuristic_used}",
             f"    artifacts purged  : {len(self.artifacts_purged)}",
             f"    collateral facts k: {self.collateral_k} {self.facts_co_deleted}",
+        ]
+        if self.minimality:
+            m = self.minimality
+            lines.append(f"    collateral vs optimum : k={m.get('collateral_k')} "
+                         f"vs k*={m.get('k_star')} (gap {m.get('gap')}; "
+                         f"{'MINIMUM' if m.get('is_minimum') else 'above optimum'})")
+        if self.co_deletion_justifications:
+            lines.append("-" * 64)
+            lines.append("  Why each co-deletion was necessary")
+            for j in self.co_deletion_justifications:
+                tag = ("necessary" if j.get("necessary_for_plan")
+                       else "redundant-in-set" if j.get("on_rederivation_path")
+                       else "residual-copy")
+                lines.append(f"    - {j.get('fact_id')} [{tag}]: {j.get('explanation','')}")
+        if self.operands_spared:
+            lines.append("  Entailers spared (minimality)")
+            for s in self.operands_spared:
+                lines.append(f"    - {s.get('fact_id')}: {s.get('reason','')}")
+        lines += [
             "-" * 64,
             f"  Threat model   : {self.threat_model}",
             f"  Probes run     : {', '.join(self.probe_battery)}",
         ]
+        if self.reliability:
+            r = self.reliability
+            if r.get("recovery_judge_false_accept") is not None:
+                lines.append(f"  Recovery judge : {r.get('recovery_judge')} "
+                             f"(false-accept {r.get('recovery_judge_false_accept')}, "
+                             f"recall {r.get('recovery_judge_recall')})")
+            if r.get("rho_per_adversary"):
+                lines.append(f"  World recall by adversary: {r.get('rho_per_adversary')}")
         if self.human_judge_agreement is not None:
             lines.append(f"  Judge kappa    : {self.human_judge_agreement:.3f}")
         if self.completeness_certified and self.judge_recall is not None:

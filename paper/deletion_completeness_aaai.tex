@@ -46,7 +46,7 @@
 
 \setcounter{secnumdepth}{2}
 
-\title{CoDA: Completing Deletion in Agentic Memory via Scalable Co-Deletion\\
+\title{CoDA: Completing Deletion in Agentic Memory via Co-Deletion\\
        and Auditable Certificates}
 \author{
     Anonymous Submission
@@ -58,87 +58,80 @@
 \maketitle
 
 \begin{abstract}
-When instructed to remove knowledge, an LLM agent may erase the portion of short-term memory it references while allowing the knowledge to remain intact in permanent memory: even though the process appears to be complete, it is not. To illustrate this point, the deletion of a memory record does not necessarily equate to an implicit loss of knowledge: it can be stored as a secondary result, possibly retrieved as a derivative of earlier knowledge. We articulate what memory complete deletion means, by breaking it down into three channels: residual survival, re-derivation from surviving facts, and world recall (the value recoverable from the base model 
-knowledge alone).  Next, we demonstrate how to achieve complete deletion through the use of an accessible co-deletion planner, which removes memory elements in compliance with the minimum hitting set maximization principle, and through a certificate that describes both the deletion process as well as its naturally occurring cost. We demonstrate our ideas through three memory architectures, a de-duplication pipeline, a bi-temporal knowledge graph, and a paging agent. Each of these strategies proves the existence of residual facts. Since this effect happens across all settings, one may conclude that the reason for this property is not some feature inherent in a specific system but rather the very process through which agents store and acquire knowledge.
+When instructed to remove knowledge, an LLM agent may erase the portion of short-term memory it references while allowing the knowledge to remain intact in permanent memory: even though the process appears to be complete, it is not. To illustrate this point, the deletion of a memory record does not necessarily entails the fact is forgotten: it can be stored as a secondary result, possibly retrieved as a derivative of earlier knowledge. We propose criterion for deletion-completeness by breaking it down into three channels: residual survival, re-derivation from surviving facts, and world recall (the value recoverable from the base model 
+knowledge alone).  Next, we present CoDA, a framework to audit deletion-completeness in agent memory: an accessible co-deletion planner, which removes memory elements and a certificate that describes both the deletion process and its cost of deletion. We demonstrate our ideas through three memory architectures, a de-duplication pipeline, a bi-temporal knowledge graph, and a paging agent. Each of these strategies proves the existence of residual facts. Since this effect happens across all settings, one may conclude that the reason for this property is not some feature inherent in a specific system but rather the very process through which agents store and acquire knowledge.
 \end{abstract}
 
 %========================================================================
 \section{Introduction}\label{sec:intro}
 
-If a user requires their right to be forgotten \citep{gdpr2016} and asks an LLM agent to erase their home address, an agent with long-term memory (such as MemGPT) should delete the address. However, since the address was already saved in the agent’s archive, as the agent has no access to the original information anymore, it remains undiscoverable in future retrievals, and as a result, a subsequent acquisition has found an ordinary instance of the address. The deletion of the record looks complete but actually not.
+If a user requires their right to be forgotten \citep{gdpr2016} and asks an LLM agent to erase their home address, an agent with long-term memory (such as MemGPT) should delete the address. However, since the address was already saved in the agent’s archive, it remains hidden and not deleted until an adversary find the address by attacking the memory. The deletion of the record looks complete but actually not.
 
-This is not a random incident. Even if information is deleted, it can still exist in a generated object such as duplicates, summaries, consolidated notes and other derived materials. The deletion of records in depth audits conducted by \citep{forgeteval} verifies if the record has been removed from the top-$k$ retrieval. Although that is quite important, the method does not allow seeing the reason that made the deleted fact appear again in retrievals nor provides any near-minimal means of correction. 
+This is not a random incident. Even if information is deleted, it can still exist in a generated object such as duplicates, summaries, consolidated notes and other derived materials. The deletion of records in depth audits conducted by \citep{forgeteval} verifies if the record has been removed from the top-k retrieval. Although that is quite important, the method does not allow seeing the reason that made the deleted fact appear again in retrievals nor provides any near-minimal means of correction. 
 
-Deletion-completeness is defined as a deleted truth that still has a chance to be restored, with three channels of recoverability: residual survival (a surviving artifact still contains the value), re-derivation (surviving facts entail it), and a world recall (the large language model recovers it from world knowledge alone). Notably, the first two channels can be closed through subsequent deletions, while the last one cannot. Thus, a greedy planner devises a nearly optimal method of co-deletion and summarizes in a certificate what types of deletion have taken place, their cost, and the moment that makes the world recall undeniable. We pose the question of how to ensure that deletion is achieved in memory gradually according to the three-channel framework described earlier. Notably, we contribute:
+Deletion-completeness is defined as a deleted truth that still has a chance to be restored, with three channels of recoverability: residual survival (a surviving artifact still contains the value), re-derivation (surviving facts entail it), and a world recall (the large language model recovers it from world knowledge alone). Notably, the first two channels can be closed through subsequent deletions, while the last one cannot. Thus, a greedy planner devises a nearly optimal method of co-deletion and summarizes in a certificate what types of deletion have taken place, their cost, and the moment that makes the world recall undeniable. We pose the question of how to audit whether deletion is complete in memory, according to the three-channel framework described earlier. Formally, we contribute:
 
 \begin{itemize}
-\item a \textbf{co-deletion planner} that alters the task of deletion in the memory of the agent, changing it from the removal of one record to the minimal removal of such records that close every way to getting the deleted fact again. This is a contribution in terms of the objective used and the system-independent interface it introduces: it differentiates between the actual challenge of deriving the entailment structure of a fact when stored and the already solved problem of its closure; thus, the pipeline can have a new technique applied that performs the discovery task quicker 
+\item a \textbf{co-deletion planner} that alters the task of deletion in the memory of the agent, changing it from the removal of one record to the near-minimal removal of such records that close every way to getting the deleted fact again. This is a contribution in terms of the objective used and the system-independent interface it introduces
 (Section~\ref{sec:method},\,Section~\ref{sec:res-planner});
-\item an \textbf{auditable deletion certificate}: a record per fact in machine-readable form, so that the term “deleted” becomes a proof, not just a boolean word; it separates what can be lost due to deletion (residual copies of the fact, derivable operands, and some collateral cost) from what is impossible to lose (the value recovered from public information by a strong adversary); the meaningfulness of the contribution. As a fixed format that can be modified in the future
-(bool or checks required), the schema facilitates the work of auditors across different systems and papers (Section~\ref{sec:method},\,Section~\ref{sec:res-rho});
-\item a \textbf{benchmark and the generator of benchmarks } enabling to check the
-deletion completeness: the fact contains the value of the true minimal co-deletion and its world recall classification, thus an auditor/planner has a baseline to check their solution against.] (Section~\ref{sec:results}).
+\item an \textbf{auditable deletion certificate}: a record per fact in machine-readable form, so that the term “deleted” becomes a proof; it separates what can be lost due to deletion (residual copies of the fact and derivable operands) from what is impossible to lose (the value recovered from public information by a an adversary) (Section~\ref{sec:method},\,Section~\ref{sec:res-rho});
+\item a \textbf{benchmark and the generator of benchmarks} enabling to check the deletion completeness: the fact contains the value of the true minimal co-deletion and its world recall classification, thus an auditor/planner has a baseline to check their solution against (Section~\ref{sec:results}).
 \end{itemize}
 
 We call the framework CoDA (\textbf{Co}-\textbf{D}eletion \textbf{A}uditing): a
-framework to audit agentic memory system on the capability to delete facts from 
-its storage and omitting an auditable certificate that reports both what deletion removed and what remains inferable from public knowledge.
+framework to audit agentic memory systems on the capability to delete facts from
+their storage and emitting an auditable certificate that reports both what deletion removed and what remains inferable from public knowledge.
 
 The breadth across systems is evidence for a stronger, causally-decomposed notion
 of erasure. This is not a claim to be first to evaluate these systems, since ForgetEval
 \citep{forgeteval} already benchmarks all three, but to look into why the facts remain stored 
 and how to terminally delete those facts without touching unrelated facts.
+
 \section{Related Work}\label{sec:related}
 
 \paragraph{Auditing forgetting in agent memory.} Agent memory is now routinely
-benchmarked for long-term \emph{retention}, whether an assistant recalls facts
+benchmarked for long-term retention, whether an assistant recalls facts
 across long histories \citep{maharana2024locomo,wu2025longmemeval}; its inverse,
-whether a fact can be reliably \emph{forgotten}, is far less examined. The closest
+whether a fact can be reliably forgotten, is far less examined. The closest
 prior work is \textsc{ForgetEval} \citep{forgeteval}, the most thorough existing
 audit of forgetting in deployed agent memory: a careful retrieval-based protocol
-spanning Mem0, Graphiti, Letta, and roughly a dozen further systems. We build directly
-on it. Its retrieval-based criterion is the \emph{necessary-but-not-sufficient}
-gap of Section~\ref{sec:intro}. Our
+spanning Mem0, Graphiti, Letta, and roughly a dozen further systems. 
+Its retrieval-based criterion is the necessary but not sufficient, our
 contribution is therefore the stronger, channel-decomposed criterion, not the
-system coverage ForgetEval already establishes; correspondingly, our Mem0 figures
-(recoverability by \emph{any} channel) are complementary to its top-$k$
-forget-command rates, not in tension with them. Two of our results extend it
-directly. ForgetEval deliberately bypasses Letta's agent loop (addressing
+system coverage ForgetEval already establishes. 
+ForgetEval deliberately bypasses Letta's agent loop (addressing
 archival endpoints to keep the model out of the recall path), which is exactly the
 loop we exercise and find surface-incomplete (Section~\ref{sec:res-converge}); and its
 own per-system observations (Graphiti shedding synthesized fact strings, Mem0's
 router favoring link-and-keep) name the mechanisms our decomposition isolates,
 independently corroborating the convergence result. A complementary governance
-direction attaches \emph{provenance} to agent memory: \textsc{MemLineage}
+direction attaches provenance to agent memory: \textsc{MemLineage}
 \citep{memlineage} signs each entry and tracks its derivation lineage so that actions
 descending from untrusted content can be gated. It shares our premise that memories
-derive from one another, but it enforces \emph{trust} while keeping the content in
-place, whereas we \emph{remove} a fact and certify the removal.
+derive from one another, but it enforces trust while keeping the content in
+place, whereas we remove a fact and certify the removal.
 
 \paragraph{Unlearning methods.} Classical machine unlearning removes a training example
 by retraining or editing model weights
 \citep{bourtoule2021unlearning,cao2015towards,nguyen2022survey}; recent work shows that
-such isolated-fact removal overlooks \emph{latent inferential dependencies}, so a
-``forgotten'' fact persists through correlated surviving knowledge \citep{dollmsforget},
-which is the re-derivation channel we isolate and then close. Closest to us,
+such isolated-fact removal overlooks latent inferential dependencies, so a forgotten fact persists through correlated surviving knowledge \citep{dollmsforget}, which is the re-derivation channel we isolate and then close. Closest to us,
 \textsc{Agentic Unlearning} \citep{agenticunlearning} also splits parametric from memory
-recovery (its ``backflow'') and, on the memory side, prunes dependent artifacts by a
+recovery and, on the memory side, prunes dependent artifacts by a
 dependency closure that needs no weight access. We differ by making the decomposition
-adversary-relative, by separating re-derivation from an \emph{irreducible} world
-recall that we \emph{measure} rather than assume, and by emitting a near-minimal-collateral,
-auditable certificate; we thus neither claim the parametric/memory split as novel nor
-edit weights. Forgetting by editing the retrieval store rather than the model also links
+adversary-relative, by separating re-derivation from an irreducible world
+recall that we measure rather than assume, and by emitting a near-minimal-collateral,
+auditable certificate. Forgetting by editing the retrieval store rather than the model also links
 us to RAG-unlearning \citep{ragunlearn}.
 
 \paragraph{Deletion under dependencies.} Our formal grounding is the database line
 on erasure when records are inter-derivable: P2E2's meaningful-erasure criterion
 \citep{p2e2} and inference-aware deletion \citep{seqdb}. Concretely, our near-minimal
-co-deletion is the classical problem of \emph{deletion propagation with minimum source
-side-effects}---the fewest base records whose removal eliminates a derived value
-\citep{buneman2002propagation}---so the per-fact optimum $k^\star$ inherits that line's
-minimum-hitting-set hardness and its exact and LP-relaxation solvers. We port P2E2's
-\emph{dependency-bounded} criterion to agent memory and deliberately
-\emph{strengthen} it (its baseline keeps pre-existing operands present, which is
+co-deletion is the cannonical problem of deletion propagation with minimum source
+side-effects, the fewest base records whose removal eliminates a derived value
+\citep{buneman2002propagation}, so the per-fact optimum $k^\star$ inherits that line's
+minimum-hitting-set hardness and its exact and LP-relaxation solvers. We port P2E2's 
+dependency-bounded criterion to agent memory and deliberately
+strengthen it (its baseline keeps pre-existing operands present, which is
 vacuous for the right to be forgotten) while inheriting its NP-hardness. This
 bridge, from relational deletion theory to LLM agent memory, is one the
 agent-memory works above do not make, and it is where the next section begins.
@@ -219,13 +212,14 @@ re-derives.
 
 \paragraph{Complexity.} \textsc{Opt-P2E2} is NP-hard: it contains \textsc{Minimum
 Hitting Set} \citep{p2e2,karp1972reducibility,garey1979computers}, already in the
-two-operand (vertex-cover) regime our dataset uses, so the hardness is intrinsic
-rather than an artifact of high-arity rules. Because the dependency graphs seen in
-practice are small, we solve the minimum co-deletion exactly
-(Section~\ref{sec:method}; mean $k=1.03$, Section~\ref{sec:res-planner}).
+two-operand (vertex-cover) regime our dataset uses, so the hardness is intrinsic. 
+Because the dependency graphs seen in practice are small, we approximate the 
+co-deletion with heuristic strategy.
+(Section~\ref{sec:method}, Section~\ref{sec:res-planner}).
+
 \begin{figure*}[t]
 \centering
-\resizebox{\textwidth}{!}{%
+\resizebox{0.85\textwidth}{!}{%
 \begin{tikzpicture}[
   font=\small,
   >={Latex[length=2.4mm]},
@@ -298,137 +292,105 @@ practice are small, we solve the minimum co-deletion exactly
 \node[font=\scriptsize, text=violet!60!black, align=center, anchor=south] at (16.15,-2.46) {R11 $\rho{=}1$\\uncertifiable};
 \end{tikzpicture}%
 }
-\caption{\textbf{The CoDA pipeline.} Recoverability decomposes into three
-channels (rows), each measured by a dedicated probe: \emph{residual}
-$\sigma_{\mathrm{res}}$, \emph{re-derivation} $\sigma_{\mathrm{red}}$, and the
-\emph{world recall} $\rho$; overall recoverability is the worst open channel,
-$R{=}\max(\sigma_{\mathrm{res}},\sigma_{\mathrm{red}},\rho)$ (Def.~4). The greedy
-planner closes the two deletable channels, but $\rho$ is a \emph{wall} no co-deletion
-can lower. The certificate (Def.~5) is thus \texttt{floor\_reaching} (always
-achievable) yet \texttt{completeness\_certified} only when $\rho<\tau$. The gauge
-shows this limit result: F040 ($\rho{=}0$) certifies, while R11 (``Class-3 licence
-$\Rightarrow$ at least 18'', $\rho{=}1$) does not, so $\tau$ is auditor-chosen.}
+\caption{\textbf{The CoDA pipeline.} Recoverability splits into three channels: residual
+$\sigma_{\mathrm{res}}$, re-derivation $\sigma_{\mathrm{red}}$, and world recall
+$\rho$. Each measured by its own probe; $R{=}\max(\cdot)$ (Def.~4). Co-deletion closes the two
+deletable channels, but $\rho$ is a wall. The certificate is \texttt{floor\_reaching} always, yet
+\texttt{completeness\_certified} only when $\rho<\tau$}
 \label{fig:pipeline}
 \end{figure*}
 
-\section{Method}\label{sec:method}
+\section{The CoDA Framework}\label{sec:method}
 
-Our pipeline instantiates each object of Section~\ref{sec:formulation} as a concrete,
-reusable component (Figure~\ref{fig:pipeline}) behind a single
-\texttt{MemorySystemAdapter} interface, so the
-identical probe/planner/certificate stack runs unchanged on all three systems.
+CoDA is an auditing framework, not a memory system. It turns each object of
+Section~\ref{sec:formulation} into a reusable component (Figure~\ref{fig:pipeline}) that
+plugs together behind one \texttt{MemorySystemAdapter} interface. An auditor supplies
+three things---a memory system (through the adapter), a set of facts to test, and a
+deletion procedure---and the same probe battery, co-deletion planner, and certificate
+emitter (its per-fact output fields are grouped in Table~\ref{tab:certfields}) run on top unchanged. That the identical stack runs across all three systems we
+study and a new system could be integrated by writing a single adapter.
 
-\paragraph{Probe battery.} Three probes measure the three channels of Def.~4.
-The \emph{exact-match} probe scans every surviving record for a surface form of
-$v$ ($\sigma_{\mathrm{res}}$). The \emph{re-derivation} probe gives the adversary
+\paragraph{Probe battery (the measurement layer).} The framework measures each of the
+three channels of Def.~4 with its own probe, so an audit reports which channel a
+fact leaks through rather than a single pass/fail.
+The exact-match probe scans every surviving record for a surface form of
+$v$ ($\sigma_{\mathrm{res}}$). The re-derivation probe gives the adversary
 the full surviving store as notes (plus today's date and general world knowledge)
-and elicits $v$ in a value-first format ($\sigma_{\mathrm{red}}^{\mathcal{A}}$).
-The \emph{world-recall} probe withholds the store entirely, conditioning only on the
-subject's world-knowable context, and estimates $\rho^{\mathcal{A}}$ as a recovery
-rate over $n$ stochastic samples. The re-derivation \emph{probe} reads the full
-surviving store (the threat model) and is distinct from the operands-only
-\emph{injection control} of Section~\ref{sec:res-rederiv}, which instead never stores the
-target value so as to isolate $\sigma_{\mathrm{red}}$ at $\sigma_{\mathrm{res}}=0$.
-Recovery is decided by the validated judge
-(Section~\ref{sec:res-judge}): a substring match on the ground-truth surface forms,
-falling back to an LLM adjudication for numeric/semantic approximation. Three
-auxiliary probes support specific results: a \emph{paraphrase} probe (residual by
-implication), a retrieval-score \emph{membership-inference} probe (Section~\ref{sec:limitations}),
-and a \emph{KG-summary} probe for the graph system (Section~\ref{sec:res-converge}).
+and elicits $v$ ($\sigma_{\mathrm{red}}^{\mathcal{A}}$).The world-recall 
+probe withholds the store entirely, conditioning only on the subject's world-knowable context, 
+and estimates $\rho^{\mathcal{A}}$ as a recovery
+rate over $n$ stochastic samples. The re-derivation probe reads the full
+surviving store (the threat model) and is distinct from the operands-only injection control of 
+Section~\ref{sec:res-rederiv}, which instead never stores the target value so as to isolate $\sigma_{\mathrm{red}}$ at $\sigma_{\mathrm{res}}=0$. Recovery is decided by the validated judge (Section~\ref{sec:res-judge}): 
+a substring match on the ground-truth surface forms, falling back to an LLM adjudication for numeric/semantic approximation. The battery is extensible: three auxiliary probes plug in for specific settings---a paraphrase
+probe (residual by implication), a retrieval-score membership-inference probe
+(Section~\ref{sec:limitations}), and a KG-summary probe for the graph system
+(Section~\ref{sec:res-converge})---and an auditor with a new recovery channel adds a probe
+without disturbing the rest of the stack.
 
-\paragraph{Entailment detector.} Candidate re-derivation edges are scored by an
-LLM-as-judge that returns, for a surviving fact (or set), the confidence that it
-entails $v$ given world knowledge (\textsc{partial}/\textsc{no} are capped so a
-near-miss cannot read as full entailment). The exact planner co-deletes over the
-\emph{known} entailment DAG, so it does not depend on the judge to rediscover a
-multi-hop path; the judge instead orders the greedy comparators and, in a deployed
-store, would be the means of discovering the graph (Section~\ref{sec:limitations}). Our
-four-model validation (Section~\ref{sec:res-judge}) motivates using Sonnet~5 for
+\paragraph{Entailment detector (edge discovery).} Which surviving facts let $v$ be
+reconstructed is scored by an LLM-as-judge that returns the confidence that it entails $v$ given world knowledge. 
+In the framework, the exact planner co-deletes over the known entailment
+DAG, so it does not depend on the judge to rediscover a multi-hop path.
+(Section~\ref{sec:limitations}). Our four-model validation (Section~\ref{sec:res-judge}) motivates using Sonnet~5 for
 the greedy comparator: every model has a \emph{zero} miss-rate on true multi-hop
 entailers, but the weaker judges false-fire on partial operands, which would inflate
 a judge-driven planner's collateral.
 
-\paragraph{Co-deletion planner.} Against a \emph{naive} baseline that deletes only
-the single surfaced record (no co-deletion; Section~\ref{sec:res-residual}), our method
-computes an \emph{exact} co-deletion. Each target carries a boolean
-\emph{entailment DAG} (Figure~\ref{fig:entailment}) whose leaves are its stored operands and whose formula (built
-from \textsc{and}/\textsc{or}/threshold nodes) is true exactly when the target is
-still re-derivable; the smallest $D$ that closes the channel is therefore a
-\emph{minimum hitting set} of that formula, i.e.\ the \textsc{Opt-P2E2} optimum of
-Section~\ref{sec:formulation}. The dependency graphs are small, so we solve it exactly, and
-because co-deletion follows the known structure it recurses to the stored roots and
-\emph{cannot miss a multi-hop entailer} for lack of an LLM-judged edge. Two
-confidence-ordered greedy comparators bound the method: \emph{threshold} probes,
-purges the target's own artifacts, then co-deletes entailers in descending
-entailment confidence, re-probing after each until
-$\sigma_{\mathrm{red}}^{\mathcal{A}}<\tau$; \emph{depth-first} co-deletes every
-entailer above $\tau$ in one shot with no re-probe. The reported collateral $k=|D|$
-is the measured price of the strong erasure notion (Section~\ref{sec:formulation}): the
-exact planner attains $k=1.03$ at an optimality gap $\le0$ (near-minimal), threshold
-nearly matches it ($k=1.14$), while depth-first over-deletes roughly sixfold
-($k=6.60$) (Section~\ref{sec:res-planner}).
+\paragraph{Co-deletion planner (the deletion-fixing component).} Given what the detector
+found, the planner returns the set $D$ of surviving facts to co-delete so $v$ can no longer
+be re-derived; its objective is fixed by the framework, but the solver is pluggable.
+Each target carries a boolean entailment DAG (Figure~\ref{fig:entailment}) whose
+leaves are its stored operands and whose formula is true exactly when the target is still
+re-derivable; the smallest $D$ that closes the channel is therefore a minimum hitting
+set of that formula, i.e.\ the \textsc{Opt-P2E2} optimum of Section~\ref{sec:formulation}.
+Three further planners map the design space around it, \emph{threshold} probes, purges the target's own artifacts, then co-deletes entailers in descending entailment confidence, re-probing after each until
+$\sigma_{\mathrm{red}}^{\mathcal{A}}<\tau$; \emph{depth-first} co-deletes every entailer
+above $\tau$ in one shot with no re-probe and the naive baseline deletes only the
+single surfaced record with no co-deletion at all (Section~\ref{sec:res-residual}). The
+reported collateral $k=|D|$ is the measured price of the erasure notion
+(Section~\ref{sec:formulation}): the exact planner attains $k=1.03$ at an optimality gap
+$\le0$ (near-minimal), threshold nearly matches it ($k=1.14$), while depth-first
+over-deletes roughly sixfold ($k=6.60$) (Section~\ref{sec:res-planner}). 
 
 \begin{figure*}[t]\centering
-\begin{tikzpicture}[>=Stealth, font=\scriptsize,
-  op/.style={draw,rounded corners,fill=blue!5,minimum width=10mm,minimum height=5mm,inner sep=1pt},
-  mid/.style={draw,dashed,rounded corners,fill=gray!8,minimum width=10mm,minimum height=5mm,inner sep=1pt},
-  tgt/.style={draw,rounded corners,fill=orange!12,minimum width=10mm,minimum height=5mm,inner sep=1pt}]
-% (a) flat conjunctive
-\node[op](a1)at(0,0.55){C001}; \node[op](a2)at(0,-0.55){C002};
-\node[tgt](at)at(1.8,0){F040}; \draw[->](a1)--(at); \draw[->](a2)--(at);
-\node[font=\scriptsize\itshape]at(0.9,-1.25){(a) flat: delete either, $k{=}1$};
-\draw[gray!35](2.9,-1.45)--(2.9,1.0);
-% (b) multi-hop chain: intermediate unstored, recurse to root
-\node[op](b1)at(3.5,0){C605}; \node[mid](b2)at(5.1,0){$m$ (unstored)}; \node[tgt](bt)at(7.0,0){F1325};
+\resizebox{0.85\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, font=\small,
+  op/.style={draw,rounded corners,fill=blue!5,text width=19mm,align=center,minimum height=9mm,inner sep=2pt},
+  mid/.style={draw,dashed,rounded corners,fill=gray!8,text width=19mm,align=center,minimum height=9mm,inner sep=2pt},
+  tgt/.style={draw,rounded corners,fill=orange!14,text width=19mm,align=center,minimum height=9mm,inner sep=2pt},
+  plab/.style={font=\itshape, align=center, text width=34mm}]
+% (a) flat conjunctive -- Alice's salary from job title AND pay band
+\node[op](a1)at(0,1.0){job: Senior SWE\\at Google SG};
+\node[op](a2)at(0,-1.0){that role pays\\SGD 8--9k/mo};
+\node[tgt](at)at(3.3,0){\textbf{salary}\\$\approx$SGD 8{,}500};
+\draw[->](a1)--(at); \draw[->](a2)--(at);
+\node[plab]at(1.65,-2.25){(a) flat ($k{=}1$)};
+\draw[gray!35](4.6,-1.85)--(4.6,1.8);
+% (b) chain -- Nurul's reward; the direct entailer (reward-points) is unstored
+\node[op](b1)at(5.5,0){6 rowing sessions\\at FitHub};
+\node[mid](b2)at(8.1,0){reward-points\\(never stored)};
+\node[tgt](bt)at(10.7,0){\textbf{reward}\\$\approx$SGD 60};
 \draw[->](b1)--(b2); \draw[->](b2)--(bt);
-\node[font=\scriptsize\itshape]at(5.3,-1.25){(b) chain: delete stored root, $k{=}1$};
-\draw[gray!35](8.2,-1.45)--(8.2,1.0);
-% (c) threshold >=2 of 3
-\node[op](c1)at(8.8,0.65){C875}; \node[op](c2)at(8.8,0){C876}; \node[op](c3)at(8.8,-0.65){C877};
-\node[draw,circle,minimum size=6mm,inner sep=0pt](g)at(10.3,0){$\geq2$}; \node[tgt](ct)at(12.0,0){F1415};
+\node[plab]at(8.1,-2.25){(b) chain ($k{=}1$)};
+\draw[gray!35](12.0,-1.85)--(12.0,1.8);
+% (c) threshold >=2 of 3 -- Nurul's spend from three overlapping statements
+\node[op](c1)at(12.9,1.3){spend $+$ tokens\\$=23$};
+\node[op](c2)at(12.9,0){spend $+$ 2$\times$tokens\\$=26$};
+\node[op](c3)at(12.9,-1.3){2$\times$spend $+$ tokens\\$=43$};
+\node[draw,circle,minimum size=7mm,inner sep=0pt](g)at(15.3,0){$\geq2$};
+\node[tgt](ct)at(17.5,0){\textbf{spend}\\$=$SGD 20};
 \draw[->](c1)--(g); \draw[->](c2)--(g); \draw[->](c3)--(g); \draw[->](g)--(ct);
-\node[font=\scriptsize\itshape]at(10.4,-1.25){(c) threshold: $\geq2$ of $3$; delete two, $k{=}2$};
-\end{tikzpicture}
-\caption{Entailment structure and the near-minimal co-deletion, easy to hard.
-\textbf{(a)} A flat conjunctive target closes by deleting \emph{either} operand ($k{=}1$).
-\textbf{(b)} A multi-hop chain: the intermediate $m$ is \emph{unstored}, so co-deletion
-recurses to the stored root ($k{=}1$). \textbf{(c)} A threshold target ($\geq2$ of $3$)
-survives any single deletion, so the minimum co-deletion removes \emph{two}---a
-delete-one heuristic under-deletes, a delete-all baseline overshoots.}
+\node[plab]at(15.2,-2.25){(c) threshold ($k{=}2$)};
+\end{tikzpicture}%
+}
+\caption{\textbf{Entailment structure.}
+Orange is the deleted target; blue boxes are surviving stored facts; the dashed box is a
+value never stored. \textbf{(a)}~\emph{Flat}: job title \emph{and} pay band together pin
+the salary, so deleting either suffices ($k{=}1$). \textbf{(b)}~\emph{Chain}: the reward
+routes through an unstored reward-point total, so co-deletion recurses ($k{=}1$). \textbf{(c)}~Threshold: any two of three overlapping
+statements fix the spend, so the minimum co-deletion removes two ($k{=}2$)}
 \label{fig:entailment}\end{figure*}
-
-\paragraph{Near-minimality and the optimum.} The cost $k$ is measured against a
-well-defined optimum. Closing re-derivation by deleting the fewest surviving operands
-is exactly \emph{source-side deletion propagation}---removing the minimum set of base
-records so a derived value disappears \citep{buneman2002propagation}---which is a
-\textsc{Minimum Hitting Set} over the target's re-derivation paths, NP-hard in general
-\citep{karp1972reducibility,p2e2}. Its per-fact optimum $k^\star$ is what any planner is
-graded against. On our benchmark the entailment DAGs are small, so we compute $k^\star$
-exactly by search (Section~\ref{sec:res-planner}); the exact planner attains it (gap
-$\le0$) and the confidence-ordered greedy stays within $+0.04$. Two facts make the claim
-survive beyond exact solving: the greedy hitting-set heuristic carries a worst-case
-$\ln d$ approximation guarantee (with $d$ the largest operand set), essentially the best
-any polynomial method can promise \citep{chvatal1979greedy,dinur2014setcover}; and the
-LP relaxation of the same program returns a \emph{certified lower bound} on $k^\star$, so
-near-minimality can be audited without an exact solve. We therefore report $k$ as
-near-minimal with a stated, checkable gap to the optimum rather than an unqualified
-``minimal.''
-
-\paragraph{Certificate emitter.} For each target the emitter records the three
-channel scores, the final recoverability $R_{\mathcal{A}}=\max(\cdot)$, the
-heuristic, the co-deleted set and its size $k$, and the threat model (Table~\ref{tab:certfields}). It exposes
-\emph{two} machine-readable predicates from Def.~5: \texttt{floor\_reaching}
-($\sigma_{\mathrm{res}}=\sigma_{\mathrm{red}}<\tau$, the deletable channels closed)
-and \texttt{completeness\_certified}. The latter certifies erasure only under the
-\emph{worst modeled adversary} (the $\sup$ of Def.~4, i.e.\
-$\rho=\max_{\mathcal{A}}\rho^{\mathcal{A}}<\tau$), so a fact recoverable by the
-stronger reasoner is reported uncertified even when the weaker one fails; this
-conservative choice is why $86/250$, more than any single reasoner alone flags, are uncertifiable
-(Section~\ref{sec:res-rho}). A \texttt{floor\_reaching} but uncertified verdict is
-precisely the limit result (Def.~5), now an audited field. The certificate thus
-surfaces both the price ($k$) and the limit ($\rho$) of erasure; a recall caveat
-(Section~\ref{sec:res-judge}) qualifies certified verdicts, while uncertified ones are
-sound lower bounds.
 
 \begin{table*}[t]\centering\small
 \begin{tabular}{@{}p{22mm}p{52mm}p{92mm}@{}}
@@ -437,7 +399,7 @@ Identity & \texttt{fact\_id}, \texttt{system}, \texttt{threat\_model} & target, 
 Controllable & \texttt{artifacts\_purged}, \texttt{facts\_co\_deleted}, \texttt{collateral\_k} & copies removed; operands co-deleted; the near-minimal extra-deletion cost $k$ \\ \addlinespace
 Uncontrollable & \texttt{world\_recall}~$\rho$, \texttt{final\_recoverability} & what the base model still infers from public knowledge; $\max$ over channels \\ \addlinespace
 Verdict & \texttt{floor\_reaching}, \texttt{completeness\_certified} & deletable channels closed; also $\rho<\tau$ (worst adversary) \\ \addlinespace
-Evidence & \texttt{probe\_battery}, \texttt{probe\_scores} & per-channel proof trace \\ \bottomrule
+Evidence & \texttt{probe\_scores}, \texttt{co\_deletion\_justifications}, \texttt{minimality}, \texttt{reliability} & per-channel scores; why each co-deletion was necessary; collateral vs.\ the optimum $k^\star$; validated-judge and per-adversary reliability \\ \bottomrule
 \end{tabular}
 \caption{The auditable certificate, grouped into what a controller \emph{can} act on and
 what it cannot. The \emph{controllable} block records what deletion removed and its
@@ -448,50 +410,32 @@ necessary (it lies on a re-derivation path).}
 \label{tab:certfields}\end{table*}
 
 %========================================================================
-\section{Experiments}\label{sec:results}
+\section{Demonstration: Running the Framework on Deployed Systems}\label{sec:results}
 
-We evaluate on three deployed agent-memory systems spanning three architecture
+We demonstrate the framework by running the same probe/planner/certificate stack,
+unchanged, on three deployed agent-memory systems spanning three architecture
 families: \textbf{Mem0} \citep{mem0} (\texttt{mem0ai} 2.0.7, a deduplicating
 extraction pipeline over local Chroma), \textbf{Zep/Graphiti}
 \citep{rasmussen2025zep} (\texttt{graphiti-core} 0.29.2, a bi-temporal knowledge
 graph over Neo4j~5.26), and \textbf{Letta/MemGPT} \citep{packer2024memgpt}
 (\texttt{letta}~0.16.8, an LLM-paging agent over Postgres + pgvector). Every
 component runs locally with pinned versions and disabled telemetry. The deletion
-adversary has full read access to the surviving store and black-box (no
-training-time) access to the base model. Wherever recovery is model-dependent it is measured against
+adversary has full read access to the surviving store and base model. 
+Wherever recovery is model-dependent it is measured against
 a four-reasoner adversary panel spanning prior-generation and frontier models: %
 \texttt{gpt-4o-mini}, \texttt{gpt-4o}, Claude~Sonnet~5, and GPT-5.5. The
-certificate takes the worst of them (Def.~4). Because this panel already includes the
-frontier GPT-5.5 and Sonnet~5, and both frontier models reproduce our recovery-judge
-gold labels (Section~\ref{sec:res-judge}), the results below are not an artifact of older
-models. Embeddings are local \texttt{all-MiniLM-L6-v2}. The completeness threshold is $\tau=0.10$. Datasets are
+certificate takes the worst of them (Def.~4). Embeddings are local \texttt{all-MiniLM-L6-v2}. 
+The completeness threshold is $\tau=0.10$. Datasets are
 synthetic subjects placed in realistic statistical contexts: 253 isolated PII facts,
 298 multi-hop facts (including harder join, chain, disjunctive, diamond, and
-threshold topologies whose targets are entailed only through \emph{unstored}
+threshold topologies whose targets are entailed only through unstored
 intermediate facts) with their stored operands and bystanders, and 250
-world-recall-gradient facts across three difficulty tiers. The 298 multi-hop targets
-themselves span an easy--medium--hard difficulty gradient (Table~\ref{tab:difficulty}),
-so ``planner completeness'' is not dominated by trivial single-hop cases.
+world-recall-gradient facts across three difficulty tiers (easy flat through hard
+disjunctive/threshold topologies; per-tier breakdown in the supplementary material).
 
-\begin{table}[t]\centering\footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}l p{15mm} c p{33mm}@{}}
-\toprule Tier & Topologies & $n$ & Why it is hard \\ \midrule
-Easy & flat & 148 & direct; delete the operand(s) \\
-Medium & join, chain & 60 & operands are themselves derived; co-deletion recurses to stored roots \\
-Hard & or\_and, diamond, threshold & 90 & disjunctive/threshold; the minimum co-deletion is non-obvious \\ \bottomrule
-\end{tabular}
-\caption{The 298 multi-hop targets by difficulty. Hard targets are where a delete-one
-heuristic under-deletes and a delete-all baseline over-deletes; the exact planner attains
-the optimum $k^\star$ on all three tiers (per-topology $k$ in the appendix).}
-\label{tab:difficulty}\end{table}
-
-Recovery is scored by a validated LLM judge \citep{zheng2023judge} with a \emph{zero}
-false-accept rate on the gold negatives (Section~\ref{sec:res-judge}: $0/194$ for the
-Sonnet~5 production judge, $95\%$ Wilson upper bound $\approx\!0.019$), so \emph{reported recovery rates are conservative lower bounds
-to within that small margin}. Table~\ref{tab:master} summarizes
-the headline numbers; results are presented in decreasing order of confidence.
-
+Recovery is scored by a validated LLM judge \citep{zheng2023judge} with a zero
+false-accept rate on the gold negatives (Section~\ref{sec:res-judge}).
+Table~\ref{tab:master} summarizes what the audit surfaces on each system.
 \begin{table*}[t]
 \centering
 \small
@@ -517,198 +461,78 @@ result; those certificates were emitted during the Mem0 run.}
 \subsection{Near-Minimal Co-Deletion: The Planner}\label{sec:res-planner}
 
 On all 298 multi-hop targets, the planner reads each target's entailment DAG and deletes a
-\emph{minimum hitting set} of it: the fewest surviving operands whose removal makes the
-target un-re-derivable. This closes the re-derivation channel on \emph{every} target
+minimum hitting set of it: the fewest surviving operands whose removal makes the
+target un-re-derivable. This closes the re-derivation channel on every target
 (\textbf{100\% completeness}) while touching almost nothing extra: \textbf{zero spurious
 bystander deletions} and a mean of only \textbf{$k=1.03$} operands deleted per target.
 Because that hitting set is computed from the known structure, $k$ is not merely small but
-\emph{near-minimal}---the measured optimality gap is $\le0$ on every topology (aggregate $-0.067$). It sits above one
+\emph{near-minimal}---the measured optimality gap is $\le0$ on every topology. It sits above one
 only because the harder topologies demand it: an ``at least two of three'' target cannot be
 closed by deleting a single operand, so its optimum is $k^\star{=}2$, and the planner pays
-exactly that.
+exactly that. Each target's candidate pool mixes its true operands with fixed bystanders
+the planner must never delete; because the exact planner deletes only operands named in the
+target's DAG, zero spurious across all 298 targets confirms the recovered structure never
+mistakes a bystander for an operand.
 
-\textbf{Why ``zero spurious'' is the real test.} Each target's candidate pool mixes its
-true operands with fixed bystanders the planner must never delete. The exact planner
-deletes only operands named in the target's DAG, so selectivity is structural; \textbf{zero
-spurious across all 298 targets} confirms the recovered structure never mistakes a bystander
-for an operand.
-
-\textbf{What structure buys, measured.} Two greedy comparators bound the exact planner
-(Section~\ref{sec:method}). \emph{Threshold}---a confidence-ordered greedy that re-probes and
-stops early---nearly matches the optimum ($k=1.14$, gap $\approx0$) but leans on the
-entailment judge's selectivity, which is why it uses Sonnet~5, the judge that
-false-fires least (Section~\ref{sec:res-judge}); weaker judges such as \texttt{gpt-4o-mini}
-mistake partial operands for sufficient ones and would inflate $k$. \emph{Depth-first}---a single probe-free pass that
-sweeps in every above-$\tau$ candidate---also reaches full completeness but at roughly
-\textbf{six times} the collateral ($k=6.60$) and with \textbf{over a thousand spurious
-deletions}, because without re-probing it cannot tell when to stop. The exact-to-depth-first
-gap is the measured price of ignoring structure; the near-zero exact-to-threshold gap shows
-a good greedy recovers most of it on these small graphs. The one place the greedy visibly
-pays is the disjunctive topology $((A\vee B)\wedge C)$, where it removes both OR-branches
-($k{=}1.63$) when deleting the single shared operand ($k^\star{=}1$) would suffice---a
-concrete case where structure-awareness beats confidence ordering. The lower baseline is
-naive single-record deletion (Section~\ref{sec:res-residual}), which removes one record and closes
-no re-derivation path.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}lcc@{}}
-\toprule
-field & \textsc{complete} & \textsc{incomplete} \\
-\midrule
-example (system)                 & F040 (Letta)   & R11 (Mem0 run) \\
-\texttt{residual\_survival}      & 0.0            & 0.0 \\
-\texttt{rederiv\_with\_operands} (pre)  & 1.0     & --- \\
-\texttt{re\_derivation\_score} (final)  & 0.0     & 0.0 \\
-\texttt{parametric\_risk\_rho}   & 0.0            & \textbf{1.0} \\
-\texttt{facts\_co\_deleted} ($k$)& C001,C002 (2)  & --- (0) \\
-\texttt{final\_recoverability}   & 0.0            & 1.0 \\
-\texttt{floor\_reaching}         & true           & \textbf{true} \\
-\texttt{completeness\_certified} & \textbf{true}  & \textbf{false} \\
-\bottomrule
-\end{tabular}%
-}
-\caption{Two real certificates. \emph{F040} (\textsc{complete}, Letta): re-derivation
-was open before co-deletion (\texttt{rederiv\_with\_operands}$=1.0$) and closed after
-(\texttt{re\_derivation\_score}$=0.0$). \emph{R11} (\textsc{incomplete}, Mem0):
-residual and re-derivation are both $0$, yet the base-model world recall $\rho{=}1.0$ forces
-\textsc{incomplete}, the limit result. Both are \texttt{floor\_reaching}; only F040
-is \texttt{completeness\_certified}. Different systems, one format.}
-\label{tab:certs}
-\end{table}
+\textbf{What structure buys.} Two greedy comparators bound the exact planner
+(Section~\ref{sec:method}). \emph{Threshold}, a confidence-ordered greedy, nearly matches the
+optimum but leans on the entailment judge's selectivity: it visibly over-deletes on the
+disjunctive topology $((A\vee B)\wedge C)$, removing both OR-branches when deleting the
+single shared operand would suffice. \emph{Depth-first} sweeps in every above-$\tau$
+candidate and also reaches full completeness, but at roughly \textbf{six times} the
+collateral and over a thousand spurious deletions, because without re-probing it cannot tell
+when to stop. The exact-to-depth-first gap is the measured price of ignoring structure; the
+near-zero exact-to-threshold gap shows a good greedy recovers most of it on these small
+graphs. Per-topology $k$ and spurious counts are in the supplementary material.
 
 \subsection{The World Recall and the Limit of Certifiable Deletion}\label{sec:res-rho}
 
-The world recall $\rho$ is the one channel deletion cannot touch: the rate at which
-the base model reconstructs a value from world-knowable context alone, with the store
-withheld. We \emph{measure} it rather than assume it, on 250 facts written across a
-low/mid/high difficulty gradient. We always report the \emph{measured} world recall, not the
-authored tier; where the two disagree we keep the fact and report the measurement, since
-the authored tier is only a hypothesis and $\rho$ is the evidence.
+The world recall $\rho$ is the one channel deletion cannot touch: the rate at which the
+base model reconstructs a value from world-knowable context alone, with the store withheld.
+We \emph{measure} it rather than assume it, on 250 facts written across a low/mid/high
+difficulty gradient, always reporting the \emph{measured} world recall rather than the
+authored tier. Scoring each fact against the \emph{worst} of our four adversaries gives the
+headline: \textbf{86 of 250 facts are not erasure-certifiable} at $\tau{=}0.1$, \emph{even
+though their residual survival is zero and every re-derivation path was closed}. This is the
+limit result---once a value is inferable from world knowledge no one can delete, no
+co-deletion can certify its erasure---and because $\rho$ is a smooth gradient rather than an
+all-or-nothing split, the uncertifiable count moves with $\tau$, making $\tau$
+auditor-chosen: setting it is choosing how much residual world-inferability to tolerate.
 
-We score each fact against the \emph{worst} of our four adversaries. This sorts the 250
-facts into three groups (Table~\ref{tab:rho}): most are certifiable, a middle
-band sits in an intermediate range, and the rest hit a hard tier, with the mean world recall
-rising along the difficulty gradient. The headline follows: \textbf{86 of 250 facts are
-not erasure-certifiable} at $\tau{=}0.1$, \emph{even though their residual survival is
-zero and every re-derivation path was closed}. This is the limit result: once a value is
-inferable from world knowledge no one can delete, no co-deletion can certify its erasure.
-And because the world recall is a smooth gradient rather than an all-or-nothing split, the
-uncertifiable count moves with $\tau$, which makes $\tau$ auditor-chosen:
-setting it is choosing how much residual world-inferability to tolerate.
-
-\textbf{Which adversary is worst varies by fact.} The four-model panel is not a
-formality. On \emph{benign} facts the frontier models re-derive more readily, so they set
-the worst case. But on \emph{sensitive} high-tier facts, such as a national-service
-status that implies sex or a licence class that implies a minimum age, the frontier
-models often \emph{refuse} the inference outright, which turns their measured $\rho$ into
-a lower bound and leaves the older \texttt{gpt-4o} as the worst adversary there. Stronger
-models are thus not uniformly stronger adversaries, and taking the worst over a diverse
-panel is what captures that. This positive world recall does not contradict the $\rho{=}0$ we
-report for the multi-hop facts: there the world-knowable part is inert without the
-fictional stored operand and collapses under co-deletion, whereas here the context is
-itself world-knowable and pins the target down, so its recovery sits in the irreducible
-world recall rather than the deletable channel.
-
-\textbf{Control.} By construction the $\rho$ probe sees \emph{only} the subject's
-world-knowable context and never the stored facts, so co-deletion provably cannot lower
-it. Three checks harden the gradient: a numeric-tolerance sweep shows the world recall survives
-at every tolerance; a base-rate versus context-lift split separates real inference from
-mere prior plausibility; and a refusal audit confirms that $\rho$ on sensitive
-attributes is an adversarial lower bound. Two caveats bound the reading. Because $\rho$
-is a rate over a handful of stochastic samples per fact, the count is a Monte-Carlo
-estimate good to a fact or two; and a \textsc{complete} certificate is complete only
-modulo the recovery judge's imperfect recall, while \textsc{incomplete} and aggregate
-figures stay safe lower bounds. Per-tier means, refusal counts, and sample sizes are in
-the supplementary material.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{@{}llcc@{}}
-\toprule
-worst-adversary $\rho_{\max}$ & meaning & \#facts & certifiable? \\
-\midrule
-$\le\tau$ ($\tau{=}0.1$) & certifiable & 164 & \checkmark \\
-$\tau$ to $0.5$          & intermediate band & 41 & no \\
-$\ge 0.5$                & hard tier        & 45 & no \\
-\midrule
-\multicolumn{2}{@{}l}{total} & 250 & 164 \\
-\bottomrule
-\end{tabular}
-\caption{World recall $\rho$ on $n{=}250$ facts ($8$ samples each), binned by the
-worst of the four adversaries, $\rho_{\max}$. The world recall is \emph{graded}: a $41$-fact
-intermediate band sits between the certifiable $164$ and the hard tier $45$, so the
-$86/250$ uncertifiable count moves with $\tau$ (auditor-chosen). Measured band disagrees
-with authored tier for $77/250$ facts.}
-\label{tab:rho}
-\end{table}
+\textbf{Which adversary is worst varies by fact.} On \emph{benign} facts the frontier models
+re-derive more readily and set the worst case; but on \emph{sensitive} high-tier facts---a
+national-service status that implies sex, a licence class that implies a minimum age---the
+frontier models often \emph{refuse} the inference, turning their measured $\rho$ into a lower
+bound and leaving the older \texttt{gpt-4o} as the worst adversary there. Stronger models
+are thus not uniformly stronger adversaries, and taking the worst over a diverse panel is
+what captures that. By construction the $\rho$ probe sees \emph{only} the subject's
+world-knowable context and never the stored facts, so co-deletion provably cannot lower it;
+three checks harden the gradient (a numeric-tolerance sweep, a base-rate versus context-lift
+split, and a refusal audit), with per-tier means, refusal counts, and sample sizes in the
+supplementary material.
 
 \subsection{Decomposing Recovery: Re-Derivation at Zero Residual}\label{sec:res-rederiv}
 
-To isolate re-derivation from residual survival, we use an \emph{operands-only control}:
-we inject a target's entailing facts but never store the target value itself, so residual
+To isolate re-derivation from residual survival, we use an \emph{operands-only control}: we
+inject a target's entailing facts but never store the target value itself, so residual
 survival is zero by construction. Whatever the adversary now recovers, it recovered by
-\emph{reasoning}, not by reading a leftover copy. We sort the targets into two bins by
-what that reasoning needs: \emph{stored-alone}, where the surviving operands suffice, and
-\emph{stored+world}, where they must be combined with world knowledge.
+\emph{reasoning}, not by reading a leftover copy. On Mem0, across all four adversaries, the
+target is re-derived on nearly every \emph{stored-alone} fact and on about two-thirds of the
+\emph{stored+world} facts, and co-deleting the operands drives both to zero, down to a world
+recall of $\rho=0$. The five harder topologies stress the planner's reach: in each the
+target is entailed not by stored facts but by \emph{derived} intermediates that are
+themselves entailed by stored roots. Every adversary re-derives all of them, and co-deletion
+again drives recovery to zero---but only because the planner recurses \emph{past} the
+unstored direct entailers to the stored roots and deletes a true minimum hitting set, both
+of which a one-hop or delete-everything planner would get wrong.
 
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lccccc@{}}
-\toprule
-re-derivation (\%) & mini & 4o & S5 & G5.5 & post \\
-\midrule
-Mem0 bin~1 (stored-alone)       & 100 & 97 & 100 & 100 & 0 \\
-Mem0 bin~2 (stored+world)       & 62  & 69 & 69  & 66  & 0 \\
-Mem0 structured (5 topologies)  & 100 & 100 & 100 & 100 & 0 \\
-Letta bin~2 (stored+world)      & 62  & 65 & 65  & 68  & 0 \\
-\bottomrule
-\end{tabular}
-\caption{Re-derivation rate at residual $0$ (operands-only control), by adversary
-(\texttt{gpt-4o-mini}, \texttt{gpt-4o}, Sonnet~5, GPT-5.5); ``post'' is after
-co-deleting the operands. The five harder topologies (join, chain, disjunctive
-$((A\vee B)\wedge C)$, diamond, and at-least-$k$-of-$n$ threshold) re-derive at $100\%$
-and also collapse to $0$; the world recall is $\rho=0$ throughout. Extended detail
-(confidence intervals, Letta faithfulness) is in the supplementary material.}
-\label{tab:rederiv}
-\end{table}
-
-On Mem0, across all four adversaries, the target is re-derived on nearly every
-stored-alone fact and on about two-thirds of the stored+world facts, and co-deleting the
-operands drives both to zero, down to a world recall of $\rho=0$
-(Table~\ref{tab:rederiv}). Adversary strength is not one-dimensional: the worst
-stored+world rate the certificate must anticipate is set by \texttt{gpt-4o} and Sonnet~5
-(both $69\%$), while the newest GPT-5.5 sits lower ($66\%$)---a larger model is not
-uniformly a stronger re-deriver, which is exactly why we take the worst over a diverse panel. The
-five harder topologies stress the planner's reach: in each, the target is entailed not by
-stored facts but by \emph{derived} intermediates that are themselves entailed by stored
-roots, and for the disjunctive and threshold targets by more than one operand set. Every
-adversary re-derives all of them, and co-deletion again drives recovery to zero---but only
-because the planner recurses \emph{past} the unstored direct entailers to the stored roots
-and deletes a true minimum hitting set, both of which a one-hop or delete-everything
-planner would get wrong.
-
-The whole control ports to Letta with the same pattern and the same collapse to zero after
-co-deletion. The probe is not firing indiscriminately: on a fact like F043 (a
-Catholic-High-School-to-Bishan geographic leap) the two backbone reasoners never make the
-inference, and only the frontier models do---an honest per-fact negative for the weaker
-adversaries, and another reminder that which adversary is worst varies by fact. Re-derivation is thus a recovery channel orthogonal to
-residual survival, and near-minimal co-deletion closes it down to the world recall.
-
-\textbf{Control.} We bin recovery by mechanism and never average across bins, and run all
-four reasoners because re-derivation is model-dependent. On Letta this matters twice over:
-each co-deletion goes through the direct, deterministic \texttt{passages.delete} by
-captured passage id, not a conversational request, and we verify every operand passage is
-actually gone. So ``re-derivation closed'' cannot be confused with ``the delete silently
-did not run,'' which keeps this result cleanly separate from the agent-mediated-deletion
-finding of Section~\ref{sec:res-converge}. Confidence intervals and the full multi-level and
-Letta-faithfulness breakdowns are in the supplementary material.
+The control ports to Letta with the same collapse to zero. There each co-deletion goes
+through the direct, deterministic \texttt{passages.delete} by captured passage id, and we
+verify every operand passage is actually gone, so ``re-derivation closed'' cannot be confused
+with ``the delete silently did not run.'' Re-derivation is thus a recovery channel orthogonal
+to residual survival, and near-minimal co-deletion closes it down to the world recall.
+Per-adversary rates, confidence intervals, and the Letta-faithfulness breakdown are in the
+supplementary material.
 
 \subsection{Generalization: Three Families, One Phenomenon}\label{sec:res-converge}
 
@@ -752,105 +576,61 @@ ForgetEval \citep{forgeteval} bypassed by writing archival endpoints directly.}
 \label{fig:agentloop}
 \end{figure*}
 
-Residual survival is not a Mem0 quirk: it appears in all three architecture families,
-each through a \emph{different by-design mechanism}. We run these two cross-system probes
-on a small, high-stakes set of 30 sensitive-PII targets per system (see
-Section~\ref{sec:limitations}).
+Residual survival is not a Mem0 quirk: it appears in all three architecture families, each
+through a \emph{different by-design mechanism}. We run two cross-system probes on a small,
+high-stakes set of 30 sensitive-PII targets per system (see Section~\ref{sec:limitations}).
+In \textbf{Graphiti}, the explicit \texttt{remove\_episode} is clean at the graph level (we
+verify the hard delete first), yet the deleted value lives on in \textbf{stale entity and
+community summaries that the system never recomputes on deletion}: summary residue reaches
+$83\%$. In \textbf{Letta}, deletion is agent-mediated across the in-context \emph{core}
+blocks and the \emph{archival} passages, and the outcome depends on phrasing: an explicit
+dual-surface instruction is \textbf{$100\%$ faithful}, but a \emph{vague,
+deployment-realistic} request (``I'm not comfortable with you keeping X''), with the fact
+also in archival, makes the agent scrub the core block and silently miss
+archival---\textbf{$0\%$ faithful, $100\%$ archival residue} (Figure~\ref{fig:agentloop}).
+The agent even confirms a successful forget while the fact persists, an over-compliant
+acknowledgment consistent with known sycophancy \citep{sharma2024sycophancy}.
 
-In \textbf{Graphiti}, the explicit \texttt{remove\_episode} is clean at the graph level,
-hard-deleting the episode, its \texttt{RELATES\_TO} edges, and any orphaned entities (we
-verify this first). Yet the deleted value lives on in \textbf{stale entity and community
-summaries that the system never recomputes on deletion}. Edge residue is low, but
-\textbf{summary residue reaches $83\%$} (we count a value present in any surviving edge or
-summary, regardless of its bi-temporal validity fields, consistent with the
-full-read-access threat model). In \textbf{Letta}, deletion is agent-mediated across two
-surfaces, the in-context \emph{core} blocks and the \emph{archival} passages, and the
-outcome depends on how the request is phrased. An explicit dual-surface instruction is
-\textbf{$100\%$ faithful}. But a \emph{vague, deployment-realistic} request (``I'm not
-comfortable with you keeping X''), with the fact also sitting in archival, makes the agent
-scrub the core block it is reasoning over and silently miss archival: \textbf{$0\%$
-faithful, $100\%$ archival residue} (Figure~\ref{fig:agentloop}). The agent even confirms a
-successful forget while the fact persists, an over-compliant acknowledgment consistent with
-known sycophancy \citep{sharma2024sycophancy}. Agent-mediated deletion is thus
-\emph{surface-incomplete} and instruction-dependent.
-
-\textbf{Novelty and corroboration.} This agent-loop failure is genuinely new:
-ForgetEval \citep{forgeteval} deliberately bypassed Letta's agent loop
-(addressing the archival REST endpoints directly, keeping the LLM out of the
-recall hot path), so we test exactly the path it excluded. Conversely,
-ForgetEval's own per-system notes \emph{independently corroborate} our convergence
-thesis: its observation that Graphiti ``sheds surface forms / synthesised fact
-strings'' is our stale-summary residue, and that Mem0's router prefers
-``link-and-keep over delete-old'' is our duplication residue.
-
-\textbf{Control.} For Graphiti, verifying the clean hard delete \emph{first}
-establishes that the residue is stale summaries, not failed edge removal. For
-Letta, the $100\%$-faithful explicit baseline isolates the failure to
-phrasing/surface coverage, not to a missing capability.
+This agent-loop failure is genuinely new: ForgetEval \citep{forgeteval} deliberately bypassed
+Letta's agent loop by addressing the archival endpoints directly, so we test exactly the path
+it excluded; conversely its per-system notes independently corroborate our convergence thesis
+(Graphiti ``sheds surface forms,'' Mem0 prefers ``link-and-keep over delete-old''). The
+controls isolate each mechanism: for Graphiti, verifying the clean hard delete first
+establishes that the residue is stale summaries, not failed edge removal; for Letta, the
+$100\%$-faithful explicit baseline isolates the failure to phrasing, not a missing
+capability.
 
 \subsection{Residual Survival and the Duplication Mechanism}\label{sec:res-residual}
 
 Naive single-record deletion on Mem0 is residually incomplete for one reason: the store
 \emph{silently duplicates} facts, so deleting the single surfaced record leaves copies
-behind. That single-record delete leaves the value present in \textbf{$97.2\%$} of
-isolated PII targets, whereas an \emph{artifact-aware} delete, one that purges every
-record carrying the value, drives residual survival \textbf{to $0\%$}. Both arms run on
-the same isolated PII set, whose probe values are all globally distinct so that one
-fact's measurement cannot contaminate another's, and the two runs land independently on
-the same rate, a small replication of the effect.
-
-\textbf{Control.} A $2{\times}2$ factorial over embedder and injection cadence shows
-value duplication in \emph{all four} cells (row inflation $+174$--$182\%$), with both
-byte-identical and paraphrase-variant duplicates present throughout; restricting to facts
-whose value is unique in the corpus, so vocabulary overlap cannot be miscounted, the
-duplication persists at a high rate ($80$--$82\%$ incidence). It is therefore a semantic-dedup \emph{design limitation}, not an artifact of
-our embedder or an injection-timing race, and it is independently documented in Mem0's
-own issue tracker. These rates are not in tension with ForgetEval's Mem0 numbers: their
-figure is forget-command success in top-$k$ retrieval, whereas ours is post-deletion
-recoverability by \emph{any} channel, complementary measures of necessary versus
-sufficient conditions for completeness. Exact cell rates and issue references are in the
-supplementary material.
+behind. That single-record delete leaves the value present in \textbf{$97.2\%$} of isolated
+PII targets, whereas an \emph{artifact-aware} delete that purges every record carrying the
+value drives residual survival \textbf{to $0\%$}. A $2{\times}2$ factorial over embedder and
+injection cadence shows the duplication in \emph{all four} cells, so it is a semantic-dedup
+\emph{design limitation}, not an artifact of our embedder or an injection-timing race, and it
+is independently documented in Mem0's own issue tracker. Exact cell rates and issue
+references are in the supplementary material.
 
 \subsection{Judge Validation}\label{sec:res-judge}
 
-Two LLM judges do load-bearing work, one deciding whether an answer counts as
-\emph{recovery} and the other whether a set of surviving facts \emph{entails} the
-target, so we validate both against hand-labeled gold.
-
-We validate both judges on large gold sets and under \emph{all four} adversary models,
-reporting rates with Wilson intervals and inter-model agreement (Cohen's $\kappa$).
+Two LLM judges do load-bearing work---one deciding whether an answer counts as
+\emph{recovery}, the other whether a set of surviving facts \emph{entails} the target---so we
+validate both against hand-labeled gold under all four adversary models, reporting rates with
+Wilson intervals and inter-model agreement.
 
 The \textbf{recovery judge} is checked on $351$ labeled cases ($194$ negatives) spanning
-exact, paraphrase, numeric within- and out-of-tolerance, wrong-value, opposite, and
-refusal answers, including $22$ curated grey-zone cases (reconstruction phrasings,
-category-vs-specific, hedges, one-token flips). The frontier \textbf{Sonnet~5} production
-judge makes \emph{zero} false accepts in the $194$ gold negatives ($0\%$, $95\%$ Wilson
-upper bound $\approx\!0.019$) at $0.98$ recall; its errors run the safe way---scoring a
-close numeric near-miss as a non-recovery, never the reverse---so reported recovery rates
-are lower bounds to within that small margin. On this larger, harder gold the pinned
-models slip: \texttt{gpt-4o} makes one false accept ($0.5\%$) and \texttt{gpt-4o-mini}
-four ($2.1\%$), while GPT-5.5 also reaches zero. We therefore run the most capable model,
-Sonnet~5, as the production judge---empirically the safest on the gold---and keep the
-pinned \texttt{gpt-4o-mini}/\texttt{gpt-4o} rates as a reproducibility anchor, since
-neither Sonnet~5 nor GPT-5.5 has a dated snapshot a reviewer could pin against.
-
-The \textbf{entailment judge} is checked on $1{,}370$ pairs: positives (full operand
-sets, single- and multi-hop) and adversarial near-misses (single operands that do not
-suffice). Two findings settle its use. First, \emph{every} model has a \textbf{zero
-miss-rate on true multi-hop entailers}---none silently drops a genuine multi-hop
-dependency, exactly the error a co-deletion planner most needs to avoid, and the exact
-planner removes even that risk structurally (Section~\ref{sec:method}). Second, on the
-near-misses the models diverge sharply: \texttt{gpt-4o-mini} treats $75.7\%$ of
-insufficient single operands as sufficient, \texttt{gpt-4o} $45.5\%$, GPT-5.5 $30.5\%$,
-and Sonnet~5 only $3.4\%$. A high rate here would inflate a \emph{judge-driven} planner's
-collateral, so the greedy comparator uses Sonnet~5, the judge that false-fires least; the
-exact planner, co-deleting over the known DAG, is unaffected. Sonnet~5 is thus both a
-panel adversary and the production judge for recovery and entailment---an overlap we
-accept because the judge's guarantee is gold-validation ($0\%$ false-accept on the
-$351$-case ground-truth-by-construction gold), not the independence of its calls, since
-same-model errors correlate across calls in any case. The pinned \texttt{gpt-4o} numbers
-are retained alongside as a reproducibility anchor. Full per-model rates and $\kappa$ are
-in the supplementary material.
+exact, paraphrase, numeric within- and out-of-tolerance, wrong-value, opposite, and refusal
+answers. The frontier \textbf{Sonnet~5} production judge makes \emph{zero} false accepts in
+the $194$ gold negatives at $0.98$ recall, and its errors run the safe way, so reported
+recovery rates are lower bounds; we keep the pinned \texttt{gpt-4o-mini}/\texttt{gpt-4o}
+rates as a reproducibility anchor. The \textbf{entailment judge} is checked on $1{,}370$
+pairs. Two findings settle its use: \emph{every} model has a \textbf{zero miss-rate on true
+multi-hop entailers}---none silently drops a genuine multi-hop dependency, exactly the error
+a co-deletion planner most needs to avoid---and on adversarial near-misses the models diverge
+sharply, so the greedy comparator uses Sonnet~5 (the judge that false-fires least) while the
+exact planner, co-deleting over the known DAG, is unaffected. Full per-model rates and
+$\kappa$ are in the supplementary material.
 
 %========================================================================
 \section{Limitations}\label{sec:limitations}
@@ -885,16 +665,18 @@ world-inferability, precisely for the attributes a privacy audit cares about mos
 more willing adversary could only push the uncertifiable count higher, never lower, so
 the limit result is conservative.
 
-\paragraph{The planner needs a known entailment graph.} Our decomposition assumes the
-entailment graph is given, as it is in our controlled setup, where we injected the
-operands ourselves. A deployed store hands the auditor no such graph and it is hard to
-recover, so the planner can only close paths through entailers it can see. An unmodeled
-entailer stays open, and recovering the full graph of a live memory is its own open
-problem. Even at zero residual and re-derivation, then, completeness is relative to what
-the auditor knows.
+\paragraph{The planner needs a known entailment graph (the framework's open slot).} Our
+decomposition assumes the entailment graph is given, as it is in our controlled setup, where
+we injected the operands ourselves. A deployed store hands the auditor no such graph and it
+is hard to recover, so the planner can only close paths through entailers it can see. The
+framework isolates this as its \emph{discovery} component (the entailment detector), so
+recovering the graph of a live memory is the open problem it invites others to fill: a
+better detector plugs in without changing the planner, the certificate, or the objective.
+An unmodeled entailer stays open, and even at zero residual and re-derivation, completeness
+is relative to what the auditor knows.
 
-\paragraph{Scalability of the planner.} We solve the co-deletion optimum exactly
-because each target's dependency graph is small (a handful of operands). At store scale
+\paragraph{Scalability of the planner (an extension point).} We solve the co-deletion
+optimum exactly because each target's dependency graph is small (a handful of operands). At store scale
 a single deletion may touch thousands of facts, and \textsc{Minimum Hitting Set} is
 NP-hard, so exact solving does not scale directly. Three routes keep it practical, and
 we leave their empirical study to future work. \emph{(i) Locality:} co-deletion only
@@ -917,13 +699,15 @@ reflect re-derivability, not memorization of real people.
 
 \section{Conclusion and Future Work}\label{sec:conclusion}
 
-Deleting a record is not erasing a fact. CoDA makes deletion in agent memory
-\emph{complete} and \emph{auditable}: a scalable, near-minimal co-deletion planner
-closes the deletable channels---residual survival and re-derivation---by removing a
-minimum hitting set of each fact's entailment structure, provably close to the
-deletion-propagation optimum; and a per-fact certificate reports both what deletion
-removed at what collateral cost (controllable) and what a strong adversary can still
-infer from public knowledge (uncontrollable). Across three memory architectures the same
+Deleting a record is not erasing a fact. CoDA is a framework that makes deletion in agent
+memory \emph{auditable}: a channel decomposition that names which kind of recoverability
+remains, a co-deletion planner that closes the deletable channels---residual survival and
+re-derivation---by removing a minimum hitting set of each fact's entailment structure,
+provably close to the deletion-propagation optimum, and a per-fact certificate that reports
+both what deletion removed at what collateral cost (controllable) and what a strong
+adversary can still infer from public knowledge (uncontrollable). Its components plug
+together behind one adapter, so a new memory system, dataset, or deletion procedure is
+brought under the same audit by supplying that one piece. Across three deployed architectures the same
 incompleteness recurs through different by-design mechanisms, so the gap is a property of
 how agent memory derives and retains facts, not of any single system.
 
@@ -933,13 +717,14 @@ reports that residual rather than promising an erasure it cannot deliver.
 Right-to-be-forgotten compliance is then a design choice---not storing the fact, or
 disclosing the residual---rather than a deletion operation alone.
 
-Two directions follow. \emph{Scale:} the planner is exact on the small per-fact
-dependency graphs seen here; indexing the store as a knowledge graph keyed by logical
-entailment, with bounded greedy heuristics that still ship a certified near-minimality
-gap, should extend CoDA to thousand-fact histories. \emph{Coverage:} a fourth memory
-architecture would test whether the three-family convergence is universal, and
-certifying against an unbounded rather than a modeled adversary would tighten the
-world-recall bound we measure.
+The framework invites two extensions, both open. \emph{Scale:} the planner is exact on the
+small per-fact dependency graphs seen here; indexing the store as a knowledge graph keyed by
+logical entailment, with bounded greedy heuristics that still ship a certified
+near-minimality gap, would carry the same audit to thousand-fact histories.
+\emph{Coverage:} because a new system joins by writing a single adapter, a fourth memory
+architecture would test whether the three-family convergence is universal, and certifying
+against an unbounded rather than a modeled adversary would tighten the world-recall bound we
+measure. Both plug into the framework rather than replacing it.
 
 \paragraph{Broader impact.} Our goal is to make deletion in agent memory
 \emph{auditable}: the certificate tells an operator when a fact is truly gone and, more

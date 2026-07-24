@@ -113,22 +113,21 @@ plus the single `\bibliographystyle` line. The body was not touched.
    kit samples (`AnonymousSubmission2027.tex`, `CameraReady2027.tex`) omit all
    three. A comment noting this was left in place.
 
-3. **`\pdfinfo` — added the mandated version tag.** Added
+3. **`\pdfinfo` — added the mandated version tag; anonymized for review.** Added
    `/TemplateVersion (2027.1)` (the exact value both kit samples use). The
-   pre-existing `/Title` and `/Author` lines were kept (harmless metadata) — but
-   see the anonymization TODO below.
+   `/Title` and `/Author` lines have been **removed** — `\pdfinfo` now carries only
+   `/TemplateVersion`, so no author name leaks via PDF metadata (see item 4, resolved).
 
-### Flagged for you to decide (`% TODO(AAAI kit)` comments in the .tex)
+### Done — anonymous submission mode (reverse for camera-ready)
 
-4. **Submission vs. camera-ready / anonymity.** The paper currently uses
-   `\usepackage{aaai2027}` (no option = **camera-ready / non-anonymous**) with
-   real author names. AAAI review is **double-blind**. If you are submitting for
-   review, you must:
-   - change to `\usepackage[submission]{aaai2027}`,
-   - anonymize the `\author`/`\affiliations` block, **and**
-   - remove the `/Author (...)` line from `\pdfinfo` (otherwise your name leaks
-     via PDF metadata).
-   Leave it as-is only if this is the accepted **camera-ready**.
+4. **Submission vs. camera-ready / anonymity — DONE for review.** The paper is
+   already in AAAI double-blind **submission** mode:
+   - `\usepackage[submission]{aaai2027}` (line 19),
+   - the `\author` block reads `Anonymous Submission`, **and**
+   - the `/Author` line has been removed from `\pdfinfo` (only `/TemplateVersion`
+     remains), so no name leaks via PDF metadata.
+   For the accepted **camera-ready**, reverse all three: drop `[submission]`,
+   restore the real `\author`/`\affiliations`, and (optionally) re-add `/Author`.
 
 ### Recommended (not enforced by the sty; optional)
 

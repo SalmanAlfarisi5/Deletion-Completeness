@@ -33,9 +33,14 @@ The exact abstract mechanism (find minimal entailing subsets → repair by hitti
 - **P2E2 / "Meaningful Data Erasure in the Presence of Dependencies"** (VLDB 2025, arXiv 2507.00343) — min-cost cell-nulling to block inference (hitting-set-style, NP-hard); **assumes dependency rules given, explicitly defers their discovery**; relational DB, not NL.
 - **"Do LLMs Really Forget?"** (Wei et al. 2025, arXiv 2506.05735) — validates our *motivation* (unlearning misses inferential dependencies) but is **evaluation-only**, no deletion method. → cite as motivation.
 
-### C. Deep unlearning — strongest re-derivation collision *(MUST CITE; high confidence)*
-- **"Evaluating Deep Unlearning in LLMs"** (arXiv 2410.15153, Oct 2024) — defines deep unlearning (a fact must not be re-deducible from retained knowledge), a **minimal deep-unlearning set**, and **hitting-set-style pruning**. **BUT:** deduction rules are **given** (hand-written + MQuAKE), knowledge is **parametric weights** (not stored NL memories), it is an **evaluation benchmark**, monotone logical entailment only, no LLM judge, no non-monotone cases.
-- **Why it matters:** it independently has re-derivation + minimal set + hitting set, so it **pre-empts any novelty claim of the form "we first note a deleted fact re-derives and compute a minimal deletion set."** It does **not** collide with our core (discovery-by-intervention over NL memory), but it forces novelty to be pinned to discovery + setting + decoder.
+### C. Deep unlearning — strongest re-derivation collision *(MUST CITE; VERIFIED from full text, arXiv 2410.15153v2)*
+Wu, Yadav, Salakhutdinov & Chaudhuri, "Evaluating Deep Unlearning in LLMs" (Oct 2024). Confirmed by reading the paper:
+- **Objective (Def. 2):** a fact is unlearned only if not in the **deductive closure** Ω(𝒦\U, ℛ) of retained knowledge — same goal as our re-derivation closure.
+- **Minimal deep unlearning set (Def. 3)** = minimal set breaking every deduction path; built by a **randomized hitting-set** construction (Alg. 1 DUS + Alg. 2 prune-to-minimal). Same downstream as ours.
+- **Rules are GIVEN, verbatim:** *"The logical rules are realistic rules describing family relationships … The unlearning method is tested on a subset of facts on family relationships **together with the rules**."* (author-authored rule set over synthetic KB EDU-RELAT).
+- **Substrate = PARAMETRIC:** finetunes LLMs, then applies weight-editing unlearning (Gradient Ascent, NPO, Task Vector, Who's-Harry-Potter). Not stored NL memory.
+- **Regime:** white-box, **monotone** first-order logic, direct QA; **no LLM-judge, no black-box probing, no non-monotone** handling.
+- **Why it matters:** it independently has the re-derivation objective + minimal set + hitting set, so it **pre-empts any novelty of the form "we note a deleted fact re-derives and compute a minimal deletion set."** It does **not** collide with our core — its rule set ℛ is **given**, ours is **unknown and discovered by black-box probing of a noisy LLM over NL memory** — but it forces novelty to be pinned to discovery + setting + noisy-oracle decoder.
 
 ### D. Context attribution — closest Stage-2 *method* *(high confidence, unanimous)*
 All output **per-source importance SCORES, not minimal sufficient SETS** — a linear/additive surrogate *structurally cannot* represent conjunction (A∧B required, neither alone).

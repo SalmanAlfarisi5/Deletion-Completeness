@@ -46,8 +46,8 @@
 
 \setcounter{secnumdepth}{2}
 
-\title{CoDA: Completing Deletion in Agentic Memory via Co-Deletion\\
-       and Auditable Certificates}
+\title{Discovering Re-Derivation Paths in LLM Agent Memory\\
+       for Right-to-Be-Forgotten Deletion}
 \author{
     Anonymous Submission
 }
@@ -58,8 +58,7 @@
 \maketitle
 
 \begin{abstract}
-When instructed to remove knowledge, an LLM agent may erase the portion of short-term memory it references while allowing the knowledge to remain intact in permanent memory: even though the process appears to be complete, it is not. To illustrate this point, the deletion of a memory record does not necessarily entails the fact is forgotten: it can be stored as a secondary result, possibly retrieved as a derivative of earlier knowledge. We propose criterion for deletion-completeness by breaking it down into three channels: residual survival, re-derivation from surviving facts, and world recall (the value recoverable from the base model 
-knowledge alone).  Next, we present CoDA, a framework to audit deletion-completeness in agent memory: an accessible co-deletion planner, which removes memory elements and a certificate that describes both the deletion process and its cost of deletion. We demonstrate our ideas through three memory architectures, a de-duplication pipeline, a bi-temporal knowledge graph, and a paging agent. Each of these strategies proves the existence of residual facts. Since this effect happens across all settings, one may conclude that the reason for this property is not some feature inherent in a specific system but rather the very process through which agents store and acquire knowledge.
+Deleting the memory that states a fact does not make an LLM agent forget it: the value often survives as a duplicate or a summary, or---more subtly---can be re-derived from other memories that remain, together with the model's world knowledge. Truly forgetting a fact therefore requires removing enough surviving memories that it can no longer be reconstructed, which depends on knowing \emph{which combinations} of memories re-derive the target---a dependency structure that prior work assumes is given, but that no deployed memory system provides. We introduce a method that \emph{discovers} this structure by black-box intervention: it masks subsets of an agent's stored memories, tests whether an adversary can still reconstruct the target (decided by a validated judge), and recovers the minimal sufficient sets of memories that jointly re-derive it. From these it computes a minimum co-deletion---the fewest memories whose removal closes every re-derivation path---and reports an explicit bound on the paths that probing may have missed, together with non-monotone cases in which a memory \emph{suppresses} recovery so that deleting it re-opens the leak. We evaluate discovery against known dependency structure and study the approach across deployed memory architectures. To our knowledge, this is the first method to \emph{recover}, rather than assume, the re-derivation structure of natural-language agent memory for right-to-be-forgotten deletion.
 \end{abstract}
 
 %========================================================================

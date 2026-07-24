@@ -17,7 +17,7 @@ These are on-machine or gitignored, so a pasted codebase has zero visibility int
 
 - **Python env:** project venv at `/home/salman/Desktop/venv/myenv` (Python 3.12.3). `make test` runs the 46 unit tests through it. Pinned deps in `requirements.txt`; full freeze in `requirements.lock`.
 - **`.env` (gitignored):** holds `OPENAI_API_KEY`, `LETTA_PG_URI`, telemetry flags. `.env.example` shows the shape but not the values.
-- **Gitignored heavy artifacts:** `data/results/chroma_huggingface/` (local Chroma vector store), `data/results/llm_cache.json` (on-disk LLM response cache — this is what makes re-runs cheap/deterministic), `data/results/*.csv`, `data/results/certificates/`, `openapi_letta.json` (1.7 MB vendor spec).
+- **Gitignored heavy artifacts:** `data/results/chroma_huggingface/` (local Chroma vector store), `data/results/llm_cache.json` (on-disk LLM response cache — this is what makes re-runs cheap/deterministic), `data/results/*.csv`, `data/results/certificates/`.
 
 **The three local memory systems run no-sudo, locally, and must be started by hand before the cross-system experiments (exp09/exp10/exp11):**
 
@@ -139,5 +139,5 @@ These are torn down at the end of a session (we stopped all three this run). Mem
 ## 11. Git / commit state (not visible from a code paste)
 
 - **4 commits on `main`, pushed** to origin: the robustness wave, the §5.2 lock, the supervisor-sync + tidy + report, and your "added results" commit (the result JSONs).
-- **Gitignored (so absent from any code paste):** `.env`, Chroma store, `llm_cache.json`, `data/results/*.csv`, `data/results/certificates/`, `openapi_letta.json`, `__pycache__/`, `.pytest_cache/`.
+- **Gitignored (so absent from any code paste):** `.env`, Chroma store, `llm_cache.json`, `data/results/*.csv`, `data/results/certificates/`, `__pycache__/`, `.pytest_cache/`.
 - The repo was tidied: build artifacts removed, `CODEBASE_EXPLAINED.md` moved into `docs/`. The `certificates/` directory now holds 884 certs across 173 fact IDs (R11/F040 preserved).

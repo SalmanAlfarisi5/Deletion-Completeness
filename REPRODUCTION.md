@@ -52,4 +52,4 @@ Plus **R38** (committed 2/6) dropped to 0; two committed-zeros **rose** — R31 
 
 ---
 
-*Evidence (local): current frontier re-run under `data/results/exp*_20260704T*.json` (4-reasoner adversary panel; see the ledger Provenance section for the full list). Committed via git.*
+*Evidence (local): the current canonical numbers come from the **2026-07-13 frontier-judge wave** — `data/results/exp*_20260713T*.json` (judge-dependent exps) plus `data/results/exp*_20260712T*.json` (judge-independent exp01/02/05/08/09), 4-reasoner adversary panel; see `paper/CLAIMS_LEDGER.md` § Provenance for the full list. The exp01/exp07 tables above are the earlier **2026-06-29 small-scale clean-regeneration** (n=48 isolated / n=49 ρ, two reasoners), retained as a historical reproduction record — not the current headline numbers. Committed via git.*

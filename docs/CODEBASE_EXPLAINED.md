@@ -153,7 +153,7 @@ Two roles:
 - **Entailing facts** (231, `role="entailing"`): the operands that let multi-hop targets be re-derived. The planner must co-delete these.
 - **Bystander facts**: innocent context that the planner must **never** touch (measures collateral damage).
 
-### `rho_gradient_facts.json` (R01–R81)
+### `rho_gradient_facts.json` (R01–R250)
 Facts tiered by how recoverable they are from world knowledge alone:
 - **Low tier**: arbitrary codes/secrets (locker PINs, wifi passwords) — expect ρ ≈ 0
 - **Mid tier**: loosely constrained by occupation priors (occupation → income range) — expect ρ ≈ 0.3–0.6
